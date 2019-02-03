@@ -100,6 +100,7 @@ for (f,r,v,j,c) in
      (:wclrtobot,     Cint,        ["win"],                                         ["Ptr{WINDOW}"],                                          ["Ptr{WINDOW}"]),
      (:wclrtoeol,     Cint,        ["win"],                                         ["Ptr{WINDOW}"],                                          ["Ptr{WINDOW}"]),
      (:werase,        Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
+     (:wgetch,        Cint,        ["win"],                                         ["Ptr{WINDOW}"],                                          ["Ptr{WINDOW}"]),
      (:whline,        Cint,        ["win","ch","n"],                                ["Ptr{WINDOW}","jlchtype","Integer"],                     ["Ptr{WINDOW}","chtype","Cint"]),
      (:wmove,         Cvoid,       ["win","y","x"],                                 ["Ptr{WINDOW}","Integer","Integer"],                      ["Ptr{WINDOW}","Cint","Cint"]),
      (:wnoutrefresh,  Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
