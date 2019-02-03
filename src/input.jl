@@ -58,7 +58,11 @@ will be used instead of `wgetch(win)` to listen for the keystroke.
 
 """
 function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
-    c::UInt32  = (win == nothing) ? getch() : wgetch(win)
+    c_raw = (win == nothing) ? getch() : wgetch(win)
+
+    c_raw < 0 && return c_raw, Keystroke(value = "ERR", ktype = :undefined)
+
+    c::UInt32  = UInt32(c_raw)
     nc::UInt32 = 0
 
     if c == 27
