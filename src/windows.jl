@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export clear_win, create_window, create_window_layout, destroy_window,
+export clear_window, create_window, create_window_layout, destroy_window,
        destroy_all_windows, refresh_window, refresh_all_windows, window_print,
        window_println, set_window_title!
 
