@@ -210,7 +210,7 @@ For more information, consult `libncurses` documentation.
 
 """
 function COLS()
-    ncurses.COLS == C_NULL && ( ncurses.COLS = cglobal((:COLS, "libncurses"), Cint) )
+    ncurses.COLS == C_NULL && ( ncurses.COLS = cglobal( dlsym(ncurses.libncurses, :COLS), Cint) )
     return unsafe_load(ncurses.COLS)
 end
 export COLS
@@ -225,7 +225,7 @@ For more information, consult `libncurses` documentation.
 
 """
 function LINES()
-    ncurses.LINES == C_NULL && ( ncurses.LINES = cglobal((:LINES, "libncurses"), Cint) )
+    ncurses.LINES == C_NULL && ( ncurses.LINES = cglobal( dlsym(ncurses.libncurses, :LINES), Cint) )
     return unsafe_load(ncurses.LINES)
 end
 export LINES
