@@ -99,7 +99,15 @@ function __init__()
     try
         ncurses.libncurses = Libdl.dlopen("libncursesw")
     catch
-        ncurses.libncurses = Libdl.dlopen("libncurses")
+        try
+            ncurses.libncurses = Libdl.dlopen("libncurses")
+        catch
+            try
+                ncurses.libncurses = Libdl.dlopen("libncurses.so")
+            catch
+                ncurses.libncurses = Libdl.dlopen("libncurses.so.5")
+            end
+        end
     end
 
     try
