@@ -95,40 +95,145 @@ include("panels.jl")
 #                        Initialization and destruction
 ################################################################################
 
-function __init__()
-    try
-        ncurses.libncurses = Libdl.dlopen("libncursesw")
-    catch
-        ncurses.libncurses = Libdl.dlopen("libncurses")
-    end
+"""
+    function init_tui(dir::String = "")
 
-    try
-        ncurses.libform  = Libdl.dlopen("libformw")
-    catch
-        ncurses.libform  = Libdl.dlopen("libform")
-    end
-
-    try
-        ncurses.libmenu  = Libdl.dlopen("libmenuw")
-    catch
-        ncurses.libmenu  = Libdl.dlopen("libmenu")
-    end
-
-    try
-        ncurses.libpanel = Libdl.dlopen("libpanelw")
-    catch
-        ncurses.libpanel = Libdl.dlopen("libpanel")
-    end
-end
+Initialize the Text User Interface (TUI). The full-path of the ncurses directory
+can be specified by `dir`. If it is empty or omitted, then it will look on the
+default library directories.
 
 """
-    function init_tui()
-
-Initialize the Text User Interface (TUI).
-
-"""
-function init_tui()
+function init_tui(dir::String = "")
     tui.init && error("The text user interface was already initialized.")
+
+    # Load the libraries
+    # ==========================================================================
+
+    l = nothing
+
+    # libncurses
+    # --------------------------------------------------------------------------
+
+    try
+        l = Libdl.dlopen(dir * "libncursesw")
+    catch
+        try
+            l = Libdl.dlopen(dir * "libncurses")
+        catch
+            try
+                l = Libdl.dlopen(dir * "libncursesw.so.6")
+            catch
+                try
+                    l = Libdl.dlopen(dir * "libncurses.so.6")
+                catch
+                    try
+                        l = Libdl.dlopen(dir * "libncursesw.so.5")
+                    catch
+                        try
+                            l = Libdl.dlopen(dir * "libncurses.so.5")
+                        catch
+                            error("Could not load libncurses. Check your installation.")
+                        end
+                    end
+                end
+            end
+        end
+    end
+    ncurses.libncurses = l
+
+    # libpanel
+    # --------------------------------------------------------------------------
+
+    try
+        l = Libdl.dlopen(dir * "libpanelw")
+    catch
+        try
+            l = Libdl.dlopen(dir * "libpanel")
+        catch
+            try
+                l = Libdl.dlopen(dir * "libpanelw.so.6")
+            catch
+                try
+                    l = Libdl.dlopen(dir * "libpanel.so.6")
+                catch
+                    try
+                        l = Libdl.dlopen(dir * "libpanelw.so.5")
+                    catch
+                        try
+                            l = Libdl.dlopen(dir * "libpanel.so.5")
+                        catch
+                            error("Could not load libpanel. Check your installation.")
+                        end
+                    end
+                end
+            end
+        end
+    end
+    ncurses.libpanel = l
+
+    # libform
+    # --------------------------------------------------------------------------
+
+    try
+        l = Libdl.dlopen(dir * "libformw")
+    catch
+        try
+            l = Libdl.dlopen(dir * "libform")
+        catch
+            try
+                l = Libdl.dlopen(dir * "libformw.so.6")
+            catch
+                try
+                    l = Libdl.dlopen(dir * "libform.so.6")
+                catch
+                    try
+                        l = Libdl.dlopen(dir * "libformw.so.5")
+                    catch
+                        try
+                            l = Libdl.dlopen(dir * "libform.so.5")
+                        catch
+                            error("Could not load libform. Check your installation.")
+                        end
+                    end
+                end
+            end
+        end
+    end
+    ncurses.libform = l
+
+    # libmenu
+    # --------------------------------------------------------------------------
+
+    try
+        l = Libdl.dlopen(dir * "libmenuw")
+    catch
+        try
+            l = Libdl.dlopen(dir * "libmenu")
+        catch
+            try
+                l = Libdl.dlopen(dir * "libmenuw.so.6")
+            catch
+                try
+                    l = Libdl.dlopen(dir * "libmenu.so.6")
+                catch
+                    try
+                        l = Libdl.dlopen(dir * "libmenuw.so.5")
+                    catch
+                        try
+                            l = Libdl.dlopen(dir * "libmenu.so.5")
+                        catch
+                            error("Could not load libmenu. Check your installation.")
+                        end
+                    end
+                end
+            end
+        end
+    end
+    ncurses.libmenu = l
+
+    # Initialize ncurses
+    # ==========================================================================
+
     rootwin  = initscr()
     tui.init = true
     push!(tui.wins, TUI_WINDOW(id = "rootwin", parent = nothing, ptr = rootwin))
@@ -136,7 +241,6 @@ function init_tui()
     return tui
 end
 export init_tui
-
 
 """
     function destroy_tui()
