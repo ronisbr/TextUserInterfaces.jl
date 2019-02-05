@@ -240,3 +240,34 @@ Call the function `wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)`.
 
 """
 wborder(win::Ptr{WINDOW}) = wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)
+
+# NCurses version
+# ==============================================================================
+
+"""
+    function curses_version()
+
+Return the NCurses version in a named tuple with the following fields:
+
+* `major`: Major version.
+* `minor`: Minor version.
+* `patch`: Patch version.
+
+"""
+function curses_version()
+    ver_ptr  = ccall( dlsym(ncurses.libncurses, :curses_version), Cstring, () )
+    ver_str  = unsafe_string(ver_ptr)
+    tokens   = split(ver_str, ' ')
+    ver_toks = split(tokens[2], '.')
+
+    try
+        major = parse(Int, ver_toks[1])
+        minor = parse(Int, ver_toks[2])
+        patch = parse(Int, ver_toks[3])
+
+        return (major = major, minor = minor, patch = patch)
+    catch
+        error("Could not obtain the NCurses version. Returned string: $(tokens[2])")
+    end
+end
+export curses_version
