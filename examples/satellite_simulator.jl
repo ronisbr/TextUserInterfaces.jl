@@ -10,8 +10,16 @@ function satellite_simulator()
     noecho()
     curs_set(0)
 
+    # Initialize the colors that will be used.
+    init_color(:light_blue, 700, 700, 1000)
+    p0 = ncurses_color(bold = true)
+    p1 = ncurses_color(:yellow,     :black, bold = true)
+    p2 = ncurses_color(:green,      :black, underline = true)
+    p3 = ncurses_color(:light_blue, :black)
+
     # Create the menu window.
-    win_menu = create_window(LINES()-2, 20, 0, 0; border = true, title = " Menu ")
+    win_menu = create_window(LINES()-2, 20, 0, 0; border = true, title = " Menu ",
+                             border_color = p1, title_color = p1)
 
     # Do not wait for a key to be pressed. Hence, we can call `jlgetch()`
     # without blocking everything.
@@ -20,18 +28,24 @@ function satellite_simulator()
     # Create the bottom window with the instructions.
     win_inst = create_window(2, COLS(), LINES()-2, 0; border = false)
 
+    set_color(win_inst, p3)
     window_println(win_inst, """
                    Press ENTER to change the window.
                    Press F1 to exit.
                    """)
+    unset_color(win_inst, p3)
 
     # Latitude and longitude information.
-    win_lat_lon  = create_window(LINES()-2, COLS()-20, 0, 20; border = true,
-                                 title = " Satellite Simulator - Latitude and longitude ")
+    win_lat_lon  = create_window(LINES()-2, COLS()-20, 0, 20;
+                                 border = true, border_color = p1,
+                                 title = " Satellite Simulator - Latitude and longitude ",
+                                 title_color = p1)
 
     # Orbital elements information.
-    win_orb_elem = create_window(LINES()-2, COLS()-20, 0, 20; border = true,
-                                 title = " Satellite Simulator - Orbit elements ")
+    win_orb_elem = create_window(LINES()-2, COLS()-20, 0, 20;
+                                 border = true, border_color = p1,
+                                 title = " Satellite Simulator - Orbit elements ",
+                                 title_color = p1)
 
     # Create the menu.
     menu = create_menu([" Lat. and Lon. ", " Orbit Elements "]; mark = "")
@@ -118,8 +132,12 @@ function satellite_simulator()
                           width = COLS()-52,
                           height = 20) |> string
 
+        set_color(win_lat_lon, p2)
         window_print(win_lat_lon, 1, "Propagating SCD-1 orbit"; alignment = :c)
+        unset_color(win_lat_lon, p2)
+        set_color(win_lat_lon, p0)
         window_print(win_lat_lon, 3, str)
+        unset_color(win_lat_lon, p0)
 
         # Update window: Orbit elements
         # ======================================================================
@@ -131,7 +149,9 @@ function satellite_simulator()
               "Arg. of Perigee: " * string(round(o.ω*180/pi, digits = 3)) * "°\n" *
               "   True anomaly: " * string(round(o.f*180/pi, digits = 3)) * "°"
 
+        set_color(win_orb_elem,p0)
         window_print(win_orb_elem, 2, str; pad = 5)
+        unset_color(win_orb_elem,p0)
 
         update_panels()
         doupdate()

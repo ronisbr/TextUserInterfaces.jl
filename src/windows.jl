@@ -23,8 +23,14 @@ to identify the new window in the global window list.
 
 * `border`: If `true`, then the window will have a border. (**Default** =
             `true`)
+* `border_color`: Color mask that will be used to print the border. See function
+                  `ncurses_color`. If negative, then the color will not be
+                  changed. (**Default** = -1)
 * `title`: The title of the window, which will only be printed if `border` is
            `true`. (**Default** = "")
+* `title_color`: Color mask that will be used to print the title. See
+                 function `ncurses_color`. If negative, then the color will not
+                 be changed. (**Default** = -1)
 
 """
 create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
@@ -33,7 +39,9 @@ create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
 
 function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer,
                        ncols::Integer, begin_y::Integer, begin_x::Integer,
-                       id::String = ""; border = true, title = "")
+                       id::String = "";
+                       border::Bool = true, border_color::Int = -1,
+                       title::String = "", title_color::Int = -1)
 
     # Check if the TUI has been initialized.
     !tui.init && error("The text user interface was not initialized.")
@@ -47,12 +55,14 @@ function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer,
     if border
         win_border = (parent == nothing) ? newwin(            nlines, ncols, begin_y, begin_x) :
                                            derwin(parent.ptr, nlines, ncols, begin_y, begin_x)
+        border_color >= 0 && wattron(win_border, border_color)
         wborder(win_border)
+        border_color >= 0 && wattroff(win_border, border_color)
 
         ptr = derwin(win_border, nlines-2, ncols-2, 1, 1)
         win = TUI_WINDOW(id = id, parent = parent, border = win_border,
                          title = title, ptr = ptr)
-        set_window_title!(win, title)
+        set_window_title!(win, title; title_color = title_color)
 
         push!(tui.wins, win)
     else
@@ -241,12 +251,19 @@ end
 # ==============================================================================
 
 """
-    function set_window_title!(win::TUI_WINDOW, title::AbstractString)
+    function set_window_title!(win::TUI_WINDOW, title::AbstractString; ...)
 
 Set the title of the window `win` to `title`.
 
+# Keywords
+
+* `title_color`: Color mask that will be used to print the title. See
+                 function `ncurses_color`. If negative, then the color will not
+                 be changed. (**Default** = -1)
+
 """
-function set_window_title!(win::TUI_WINDOW, title::AbstractString)
+function set_window_title!(win::TUI_WINDOW, title::AbstractString;
+                          title_color::Int = -1)
     win.title = title
 
     if win.border != C_NULL
@@ -262,7 +279,9 @@ function set_window_title!(win::TUI_WINDOW, title::AbstractString)
 
         if length_title_esc > 0
             col = div(wsx - length(title_esc), 2)
+            title_color > 0 && wattron(win.border, title_color)
             mvwprintw(win.border, 0, col, title_esc)
+            title_color > 0 && wattroff(win.border, title_color)
         end
     end
 

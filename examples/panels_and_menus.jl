@@ -7,23 +7,39 @@ tui = init_tui()
 noecho()
 curs_set(0)
 
+# Initialize the colors that will be used.
+init_color(:light_blue, 700, 700, 1000)
+p0 = ncurses_color(bold = true)
+p1 = ncurses_color(:yellow,     :black)
+p2 = ncurses_color(:green,      :black)
+p3 = ncurses_color(:blue,       :black)
+p4 = ncurses_color(:light_blue, :black)
+
 # Create the side window that will contain the menu.
-win_menu = create_window(LINES()-4, 20, 0, 0; border = true, title = " Menu ")
+win_menu = create_window(LINES()-4, 20, 0, 0; border = true, title = " Menu ",
+                         title_color = p0)
 
 # Create the bottom window with the instructions.
 win_inst = create_window(4, COLS(), LINES()-4, 0; border = false)
 
+# Write the instructions in `bold`.
+set_color(win_inst,ncurses_color(bold = true))
 window_println(win_inst, """
 Press ENTER to move the panel to top.
 Press X to hide/show the panel.
 Press F1 to exit.
 """)
+unset_color(win_inst,ncurses_color(bold = true))
 
 # Create the windows and panels.
-win1 = create_window(10, 40, 0, 22; border = true, title = " Panel 1 ")
-win2 = create_window(10, 40, 3, 32; border = true, title = " Panel 2 ")
-win3 = create_window(10, 40, 6, 42; border = true, title = " Panel 3 ")
-win4 = create_window(10, 40, 9, 52; border = true, title = " Panel 4 ")
+win1 = create_window(10, 40, 0, 22; border = true, title = " Panel 1 ",
+                     title_color = p2, border_color = p1)
+win2 = create_window(10, 40, 3, 32; border = true, title = " Panel 2 ",
+                     title_color = p2, border_color = p1)
+win3 = create_window(10, 40, 6, 42; border = true, title = " Panel 3 ",
+                     title_color = p2, border_color = p1)
+win4 = create_window(10, 40, 9, 52; border = true, title = " Panel 4 ",
+                     title_color = p2, border_color = p1)
 
 panels = [create_panel(win1),
           create_panel(win2),
@@ -31,18 +47,26 @@ panels = [create_panel(win1),
           create_panel(win4)]
 
 # Add text to the windows.
+set_color(win1, p4)
 window_println(win1, 0, "Text with multiple lines\nwith center alignment";
                alignment = :c, pad = 0)
+unset_color(win1,p4)
 
+set_color(win2, p4)
 window_println(win2, 0, "Text with multiple lines\nwith left alignment";
                alignment = :l, pad = 1)
+unset_color(win2,p4)
 
+set_color(win3, p4)
 window_println(win3, 0, "Text with multiple lines\nwith right alignment";
                alignment = :r, pad = 1)
+unset_color(win3,p4)
 
+set_color(win4, p4)
 window_println(win4, 0, "Line with right alignment";  alignment = :r, pad = 1)
 window_println(win4,    "Line with center alignment"; alignment = :c, pad = 0)
 window_println(win4,    "Line with left alignment";   alignment = :l, pad = 1)
+unset_color(win4,p4)
 
 # Create the menu.
 menu = create_menu(["Panel 1", "Panel 2", "Panel 3", "Panel 4"])
