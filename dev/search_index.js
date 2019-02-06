@@ -181,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
     "category": "function",
-    "text": "function createwindow([parent::Union{Nothing,TUIWINDOW}, ]nlines::Integer, ncols::Integer, beginy::Integer, beginx::Integer, id::String = \"\"; border = true)\n\nCreate a window inside the parent window parent. If parent is nothing or if it is omitted, then the root window will be used as the parent window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the parent window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nborder: If true, then the window will have a border. (Default =           true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\n\n\n\n\n\n"
+    "text": "function createwindow([parent::Union{Nothing,TUIWINDOW}, ]nlines::Integer, ncols::Integer, beginy::Integer, beginx::Integer, id::String = \"\"; border = true)\n\nCreate a window inside the parent window parent. If parent is nothing or if it is omitted, then the root window will be used as the parent window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the parent window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -230,6 +230,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.curs_set",
     "category": "function",
     "text": "function curs_set(visibility::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.curses_version-Tuple{}",
+    "page": "Library",
+    "title": "TextUserInterfaces.curses_version",
+    "category": "method",
+    "text": "function curses_version()\n\nReturn the NCurses version in a named tuple with the following fields:\n\nmajor: Major version.\nminor: Minor version.\npatch: Patch version.\n\n\n\n\n\n"
 },
 
 {
@@ -377,11 +385,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_color_pair-Tuple{Symbol,Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_color_pair",
+    "category": "method",
+    "text": "function get_color_pair(foreground::Symbol, background::Symbol)\n\nReturn the ID of the color pair (foreground, background), or nothing if the color pair is not initialized.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.getch",
     "page": "Library",
     "title": "TextUserInterfaces.getch",
     "category": "function",
     "text": "function getch()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.has_colors",
+    "page": "Library",
+    "title": "TextUserInterfaces.has_colors",
+    "category": "function",
+    "text": "function has_colors()\n\nReturn type: UInt8\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -413,7 +437,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.init_color",
     "category": "function",
-    "text": "function init_color(color::Integer, f::Integer, b::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function init_color(color::Integer, r::Integer, g::Integer, b::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.init_color-Tuple{Symbol,Int64,Int64,Int64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.init_color",
+    "category": "method",
+    "text": "function init_color(name::Symbol, r::Int, g::Int, b::Int)\n\nInitialize the color with name name and RGB color r, g, and b.  Notice that the range for the last three variables is [0,1000].\n\nIf the color is already initialized, then nothing will be changed.\n\nIf the color was initialized, then it returns the color ID. Otherwise, it returns -1.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.init_color_pair-Tuple{Symbol,Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces.init_color_pair",
+    "category": "method",
+    "text": "function init_color_pair(foreground::Symbol, background::Symbol)\n\nInitialize the color pair (foreground, background) and return its ID. If the pair already exists, then just the function just returns its ID.\n\n\n\n\n\n"
 },
 
 {
@@ -665,6 +705,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.ncurses_color",
+    "page": "Library",
+    "title": "TextUserInterfaces.ncurses_color",
+    "category": "function",
+    "text": "function ncurses_color([foreground::Symbol, background::Symbol,] attrs::Int = 0; kwargs...)\n\nReturn a mask to apply a color format with the foreground color foreground, background color background, and the attributes attrs.\n\nIf the pair (foreground, background) is omitted, then the foreground and background color will not be changed.\n\nKeywords\n\nbold: If true, then apply bold format mask to attrs.         (Default = false)\nunderline: If true, then apply underline format mask to attrs.              (Default = false)\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.new_form",
     "page": "Library",
     "title": "TextUserInterfaces.new_form",
@@ -857,6 +905,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.set_color-Tuple{Int64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_color",
+    "category": "method",
+    "text": "function set_color([win::TUI_WINDOW,] color::Int)\n\nSet the color of the window win to color (see ncurses_color). If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.set_field_back",
     "page": "Library",
     "title": "TextUserInterfaces.set_field_back",
@@ -965,7 +1021,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.set_window_title!",
     "category": "method",
-    "text": "function set_window_title!(win::TUI_WINDOW, title::AbstractString)\n\nSet the title of the window win to title.\n\n\n\n\n\n"
+    "text": "function set_window_title!(win::TUI_WINDOW, title::AbstractString; ...)\n\nSet the title of the window win to title.\n\nKeywords\n\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -1022,6 +1078,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.unpost_menu",
     "category": "method",
     "text": "function unpost_menu(menu::TUI_MENU)\n\nUnpost the menu menu.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.unset_color-Tuple{Int64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.unset_color",
+    "category": "method",
+    "text": "function unset_color([win::TUI_WINDOW,] color::Number)\n\nUnset the color color (see ncurses_color) in the window win. If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
 },
 
 {
