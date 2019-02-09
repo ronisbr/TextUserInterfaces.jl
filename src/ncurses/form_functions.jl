@@ -67,18 +67,20 @@ export new_field
 
 for (f,r,v,j,c) in
     (
-     (:field_buffer,     Cstring,    ["field","buffer"],       ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cint"]),
-     (:form_driver,      Cint,       ["form","ch"],            ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cint"]),
-     (:free_field,       Cint,       ["field"],                ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
-     (:free_form,        Cint,       ["form"],                 ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
-     (:new_form,         Ptr{Cvoid}, ["fields"],               ["Vector{Ptr{Cvoid}}"],         ["Ptr{Ptr{Cvoid}}"]),
-     (:pos_form_cursor,  Cint,       ["form"],                 ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
-     (:post_form,        Cint,       ["form"],                 ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
-     (:set_field_back,   Cint,       ["field","value"],        ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cuint"]),
-     (:set_field_opts,   Cint,       ["field","form_options"], ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cuint"]),
-     (:set_form_win,     Cint,       ["form","win_form"],      ["Ptr{Cvoid}","Ptr{WINDOW}"],   ["Ptr{Cvoid}","Ptr{WINDOW}"]),
-     (:set_form_sub,     Cint,       ["form","win_form"],      ["Ptr{Cvoid}","Ptr{WINDOW}"],   ["Ptr{Cvoid}","Ptr{WINDOW}"]),
-     (:unpost_form,      Cint,       ["form"],                 ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
+     (:field_buffer,     Cstring,    ["field","buffer"],        ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cint"]),
+     (:form_driver,      Cint,       ["form","ch"],             ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cint"]),
+     (:free_field,       Cint,       ["field"],                 ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
+     (:free_form,        Cint,       ["form"],                  ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
+     (:new_form,         Ptr{Cvoid}, ["fields"],                ["Vector{Ptr{Cvoid}}"],         ["Ptr{Ptr{Cvoid}}"]),
+     (:pos_form_cursor,  Cint,       ["form"],                  ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
+     (:post_form,        Cint,       ["form"],                  ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
+     (:set_field_back,   Cint,       ["field","value"],         ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cuint"]),
+     (:set_field_opts,   Cint,       ["field","field_options"], ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cuint"]),
+     (:set_field_just,   Cint,       ["field","justification"], ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cint"]),
+     (:set_form_opts,    Cint,       ["form","form_options"],   ["Ptr{Cvoid}","Integer"],       ["Ptr{Cvoid}","Cuint"]),
+     (:set_form_win,     Cint,       ["form","win_form"],       ["Ptr{Cvoid}","Ptr{WINDOW}"],   ["Ptr{Cvoid}","Ptr{WINDOW}"]),
+     (:set_form_sub,     Cint,       ["form","win_form"],       ["Ptr{Cvoid}","Ptr{WINDOW}"],   ["Ptr{Cvoid}","Ptr{WINDOW}"]),
+     (:unpost_form,      Cint,       ["form"],                  ["Ptr{Cvoid}"],                 ["Ptr{Cvoid}"]),
     )
 
     fb    = Meta.quot(f)

@@ -5,9 +5,9 @@ Dictionary defining values of the field justification.
 const fieldjust =
 Dict{Symbol,Int}(
     :no_justification => 0,
-    :justify_right    => 1,
-    :justify_left     => 2,
-    :justify_center   => 3,
+    :justify_left     => 1,
+    :justify_center   => 2,
+    :justify_right    => 3,
 )
 export fieldjust
 
@@ -30,6 +30,12 @@ Dict{Symbol,Int}(
     :o_reformat => 0x400,   # Insert newlines at linebreaks on buffer get.
    )
 export fieldopts
+
+const formopts =
+Dict{Symbol,Int}(
+    :o_nl_overload => 0x001,  # Enable overloading of `REQ_NEW_LINE`.
+    :o_bs_overload => 0x002,  # Enable overloading of `REQ_DEL_PREV`.
+   )
 
 """
 Dictionary defining values of the form commands.

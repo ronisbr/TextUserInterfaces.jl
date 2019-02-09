@@ -51,6 +51,11 @@ struct NCURSES_COLOR_PAIR
     background::Symbol
 end
 
+@with_kw mutable struct TUI_FORM
+    fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
+    ptr::Ptr{Cvoid}            = Ptr{Cvoid}(0)
+end
+
 @with_kw mutable struct TUI_MENU
     names::Vector{String}        = String[]
     descriptions::Vector{String} = String[]
@@ -103,3 +108,26 @@ end
     initialized_color_pairs::Vector{NCURSES_COLOR_PAIR} =
         NCURSES_COLOR_PAIR[]
 end
+
+"""
+    struct Keystorke
+
+Structure that defines a keystroke.
+
+# Fields
+
+* `value`: String representing the keystroke.
+* `ktype`: Type of the key (`:char`, `:F1`, `:up`, etc.).
+* `alt`: `true` if ALT key was pressed (only valid if `ktype != :char`).
+* `ctrl`: `true` if CTRL key was pressed (only valid if `ktype != :char`).
+* `shift`: `true` if SHIFT key was pressed (only valid if `ktype != :char`).
+
+"""
+@with_kw struct Keystroke
+    value::String
+    ktype::Symbol
+    alt::Bool   = false
+    ctrl::Bool  = false
+    shift::Bool = false
+end
+

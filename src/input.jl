@@ -10,32 +10,6 @@ export Keystroke
 export jlgetch
 
 ################################################################################
-#                                    Types
-################################################################################
-
-"""
-    struct Keystorke
-
-Structure that defines a keystroke.
-
-# Fields
-
-* `value`: String representing the keystroke.
-* `ktype`: Type of the key (`:char`, `:F1`, `:up`, etc.).
-* `alt`: `true` if ALT key was pressed (only valid if `ktype != :char`).
-* `ctrl`: `true` if CTRL key was pressed (only valid if `ktype != :char`).
-* `shift`: `true` if SHIFT key was pressed (only valid if `ktype != :char`).
-
-"""
-@with_kw struct Keystroke
-    value::String
-    ktype::Symbol
-    alt::Bool   = false
-    ctrl::Bool  = false
-    shift::Bool = false
-end
-
-################################################################################
 #                                  Constants
 ################################################################################
 
@@ -86,7 +60,13 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
     elseif c == nocharval
         return c, Keystroke(value = c, ktype = :undefined)
     elseif c < 192 || c > 253
-        return c, Keystroke(value = string(Char(c)), ktype = :char)
+        if c == 9
+            return c, Keystroke(value = string(Char(c)), ktype = :tab)
+        elseif c == 127
+            return c, Keystroke(value = string(Char(c)), ktype = :backspace)
+        else
+            return c, Keystroke(value = string(Char(c)), ktype = :char)
+        end
     elseif 192 <= c <= 223 # utf8 based logic starts here
         bs1 = UInt8(c)
         bs2 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))

@@ -116,6 +116,7 @@ Dict(
      "\e\e[6~"                => Keystroke("\e\e[6~"                , :pagedown        , true  , false , false) ,
      "\e"*string(Char(0x153)) => Keystroke("\e"*string(Char(0x153)) , :pageup          , true  , false , false) ,
      "\e"*string(Char(0x152)) => Keystroke("\e"*string(Char(0x152)) , :pagedown        , true  , false , false) ,
+     "\e[Z"                   => Keystroke("\e[Z"                   , :tab             , false , false ,  true) ,
     )
 
 const nocharval = typemax(UInt32)

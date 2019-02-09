@@ -406,7 +406,7 @@ end
 # ==============================================================================
 
 # Default commands.
-const _default_cmds = Dict{Union{String,Tuple{Symbol,Bool,Bool,Bool}},Function}(
+const _default_menu_cmds = Dict{Union{String,Tuple{Symbol,Bool,Bool,Bool}},Function}(
     (:down,     false,false,false) => menu_down_item,
     (:left,     false,false,false) => menu_left_item,
     (:right,    false,false,false) => menu_right_item,
@@ -422,7 +422,7 @@ function menu_driver(menu::TUI_MENU, k::Keystroke;
                      Dict{Union{String,Tuple{Symbol,Bool,Bool,Bool}},Function}())
 
     # Merge the commands to the default.
-    cmds = merge(_default_cmds, user_cmds)
+    cmds = merge(_default_menu_cmds, user_cmds)
 
     # Check if we must execute a command.
     menu_func = nothing
