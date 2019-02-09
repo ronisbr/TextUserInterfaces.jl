@@ -153,6 +153,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.create_field",
+    "page": "Library",
+    "title": "TextUserInterfaces.create_field",
+    "category": "function",
+    "text": "function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = \"\", offscreen::Int = 0, nbuffers::Int = 0; ...)\n\nCreate a field with height height and width width, positioned at y and x coordinates. The initial buffer string can be set by the variable buffer. The number of off-screen rows is set by offscreen and the number of buffers nbuffers.\n\nKeywords\n\ncolor_foreground: Color mask that will be used in the field foreground. See                     function ncurses_color. If negative, then the color will                     not be changed. (Default = -1)\ncolor_background: Color mask that will be used in the field background. See                     function ncurses_color. If negative, then the color will                     not be changed. (Default = -1)\njustification: Justification of the form. It can be :l for left, :c for                  center, and :r for right. For any other symbol, the left                  justification is used. (Default = :l)\nvisible: If true, then the control is visible on the screen.            (Default = true)\nactive: If true, then the control is active. (Default = true)\npublic: If true, then the data of the field is displayed during entry. For           example, set this to false for password fields.           (Default = true)\nedit: If true, then the data of the field can be modified.         (Default = true)\nwrap: If true, then the word will be wrapped in multi-line fields.         (Default = true)\nblank: If true, then entering a character at the first field position          erases the entire fields. (Default = false)\nautoskip: If true, then the field will be automatically skipped when             filled. (Default = false)\nnullok: If true, then the validation is not applied to blank fields.           (Default = true)\npassok: If true, then the validation will occur on every exit. Otherwise,           it will only occur when the field is modified.           (Default = false)\nstatic: If true, then the field is fixed to the initial dimensions.           Otherwise, it will stretch to fit the entered data.           (Default = true)\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.create_form-Tuple{Array{Ptr{Nothing},1}}",
+    "page": "Library",
+    "title": "TextUserInterfaces.create_form",
+    "category": "method",
+    "text": "function create_form(fields::Vector{Ptr{Cvoid}}; ...)\n\nCreate a new form with the fields fields.\n\nKeywords\n\nnewline_overload: Enable overloading of REQ_NEW_LINE.                     (Default = false)\nbackspace_overload: Enable overloading of REQ_DEL_PREV.                       (Default = false)\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.create_menu-Union{Tuple{Array{T1,1}}, Tuple{T2}, Tuple{T1}, Tuple{Array{T1,1},Union{Nothing, Array{T2,1}}}} where T2<:AbstractString where T1<:AbstractString",
     "page": "Library",
     "title": "TextUserInterfaces.create_menu",
@@ -281,6 +297,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.destroy_field-Tuple{Ptr{Nothing}}",
+    "page": "Library",
+    "title": "TextUserInterfaces.destroy_field",
+    "category": "method",
+    "text": "function destroy_field(field::Ptr{Cvoid})\n\nDestroy the field field.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.destroy_form-Tuple{TextUserInterfaces.TUI_FORM}",
+    "page": "Library",
+    "title": "TextUserInterfaces.destroy_form",
+    "category": "method",
+    "text": "function destroy_form(form::TUI_FORM)\n\nDestroy the form form.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.destroy_menu-Tuple{TextUserInterfaces.TUI_MENU}",
     "page": "Library",
     "title": "TextUserInterfaces.destroy_menu",
@@ -345,11 +377,115 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.form_add_char-Tuple{TextUserInterfaces.TUI_FORM,UInt32}",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_add_char",
+    "category": "method",
+    "text": "function form_add_char(form::TUI_FORM, ch::Int)\n\nAdd the character ch to the active field of the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_beg_field",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_beg_field",
+    "category": "function",
+    "text": "function form_beg_field(form::TUI_FORM)\n\nMove to the beginning of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_del_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_del_char",
+    "category": "function",
+    "text": "function form_del_char(form::TUI_FORM)\n\nDelete the character at the cursor of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_del_prev",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_del_prev",
+    "category": "function",
+    "text": "function form_del_prev(form::TUI_FORM)\n\nDelete the previous character from the cursor of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_down_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_down_char",
+    "category": "function",
+    "text": "function form_down_char(form::TUI_FORM)\n\nMove to the down character of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.form_driver",
     "page": "Library",
     "title": "TextUserInterfaces.form_driver",
     "category": "function",
     "text": "function form_driver(form::Ptr{Cvoid}, ch::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_end_field",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_end_field",
+    "category": "function",
+    "text": "function form_end_field(form::TUI_FORM)\n\nMove to the end of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_left_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_left_char",
+    "category": "function",
+    "text": "function form_left_char(form::TUI_FORM)\n\nMove to the left character of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_next_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_next_char",
+    "category": "function",
+    "text": "function form_next_char(form::TUI_FORM)\n\nMove to the next character of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_next_field",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_next_field",
+    "category": "function",
+    "text": "function form_next_field(form::TUI_FORM)\n\nMove to the next field of the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_prev_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_prev_char",
+    "category": "function",
+    "text": "function form_prev_char(form::TUI_FORM)\n\nMove to the previous character of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_prev_field",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_prev_field",
+    "category": "function",
+    "text": "function form_prev_field(form::TUI_FORM)\n\nMove to the previous field of the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_right_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_right_char",
+    "category": "function",
+    "text": "function form_right_char(form::TUI_FORM)\n\nMove to the right character of the active field in the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.form_up_char",
+    "page": "Library",
+    "title": "TextUserInterfaces.form_up_char",
+    "category": "function",
+    "text": "function form_up_char(form::TUI_FORM)\n\nMove to the up character of the active field in the form form.\n\n\n\n\n\n"
 },
 
 {
@@ -817,6 +953,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.post_form-Tuple{TextUserInterfaces.TUI_FORM}",
+    "page": "Library",
+    "title": "TextUserInterfaces.post_form",
+    "category": "method",
+    "text": "function post_form(form::TUI_FORM)\n\nPost the for form.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.post_menu",
     "page": "Library",
     "title": "TextUserInterfaces.post_menu",
@@ -929,11 +1073,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.set_field_just",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_field_just",
+    "category": "function",
+    "text": "function set_field_just(field::Ptr{Cvoid}, justification::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.set_field_opts",
     "page": "Library",
     "title": "TextUserInterfaces.set_field_opts",
     "category": "function",
-    "text": "function set_field_opts(field::Ptr{Cvoid}, form_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+    "text": "function set_field_opts(field::Ptr{Cvoid}, field_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_form_opts",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_form_opts",
+    "category": "function",
+    "text": "function set_form_opts(form::Ptr{Cvoid}, form_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -945,11 +1105,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.set_form_sub-Tuple{TextUserInterfaces.TUI_FORM,TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_form_sub",
+    "category": "method",
+    "text": "function set_form_sub(form::TUI_FORM, win::TUI_WINDOW)\n\nSet the form form sub-window to sub.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.set_form_win",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_win",
     "category": "function",
     "text": "function set_form_win(form::Ptr{Cvoid}, win_form::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{TextUserInterfaces.TUI_FORM,TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_form_win",
+    "category": "method",
+    "text": "function set_form_win(form::TUI_FORM, win::TUI_WINDOW)\n\nSet the form form window to win.\n\n\n\n\n\n"
 },
 
 {
@@ -1062,6 +1238,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.unpost_form",
     "category": "function",
     "text": "function unpost_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.unpost_form-Tuple{TextUserInterfaces.TUI_FORM}",
+    "page": "Library",
+    "title": "TextUserInterfaces.unpost_form",
+    "category": "method",
+    "text": "function unpost_form(form::TUI_FORM)\n\nUnpost the form form.\n\n\n\n\n\n"
 },
 
 {
