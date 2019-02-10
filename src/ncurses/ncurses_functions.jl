@@ -189,7 +189,7 @@ from `ACS_(:HLINE)`.
 """
 function ACS_(s::Symbol)
     if ncurses.acs_map == C_NULL
-        ncurses.acs_map     = cglobal((:acs_map, "libncurses"), Cuint)
+        ncurses.acs_map     = cglobal( dlsym(ncurses.libncurses, :acs_map), Cuint)
         ncurses.acs_map_arr = unsafe_wrap(Array, ncurses.acs_map, 128)
     end
 
