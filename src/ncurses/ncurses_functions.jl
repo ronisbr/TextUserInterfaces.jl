@@ -96,7 +96,7 @@ for (f,r,v,j,c) in
      (:waddch,        Cvoid,       ["win","ch"],                                    ["Ptr{WINDOW}","jlchtype"],                               ["Ptr{WINDOW}","chtype"]),
      (:wattroff,      Cint,        ["win","attrs"],                                 ["Ptr{WINDOW}","Integer"],                                ["Ptr{WINDOW}","Cint"]),
      (:wattron,       Cint,        ["win","attrs"],                                 ["Ptr{WINDOW}","Integer"],                                ["Ptr{WINDOW}","Cint"]),
-     (:wborder,       Cvoid,       ["win","ls","rs","ts","bs","tl","tr","bl","br"], ["Ptr{WINDOW}",["jlchtype" for _ = 1:8]...],              ["Ptr{WINDOW}",["Cchar" for _ = 1:8]...]),
+     (:wborder,       Cvoid,       ["win","ls","rs","ts","bs","tl","tr","bl","br"], ["Ptr{WINDOW}",["jlchtype" for _ = 1:8]...],              ["Ptr{WINDOW}",["chtype" for _ = 1:8]...]),
      (:wclear,        Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
      (:wclrtobot,     Cint,        ["win"],                                         ["Ptr{WINDOW}"],                                          ["Ptr{WINDOW}"]),
      (:wclrtoeol,     Cint,        ["win"],                                         ["Ptr{WINDOW}"],                                          ["Ptr{WINDOW}"]),
