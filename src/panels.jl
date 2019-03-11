@@ -91,8 +91,8 @@ Destroy all panels managed by the TUI.
 
 """
 function destroy_all_panels()
-    for panel in tui.panels
-        destroy_panel(panel)
+    while length(tui.panels) > 0
+        destroy_panel(tui.panels[1])
     end
 end
 
