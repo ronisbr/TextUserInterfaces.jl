@@ -197,6 +197,12 @@ function destroy_tui()
         destroy_all_panels()
         destroy_all_windows()
         endwin()
+
+        # After `endwin`, we can remove the root window from the list.
+        pop!(tui.wins)
+
+        # Mark the TUI as not initialized.
+        tui.init = false
     end
 end
 export destroy_tui

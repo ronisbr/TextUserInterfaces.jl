@@ -197,8 +197,10 @@ Destroy all windows managed by the TUI.
 
 """
 function destroy_all_windows()
-    for win in tui.wins
-        destroy_window(win)
+    # Notice that we must not delete the root window, which is the first one in
+    # the array.
+    while length(tui.wins) > 1
+        destroy_window(tui.wins[end])
     end
 end
 
