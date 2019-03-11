@@ -7,7 +7,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export create_field, create_form, destroy_field, destroy_form, post_form,
-       unpost_form, form_driver
+       unpost_form, form_driver, set_field_type
 
 """
     function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = "", offscreen::Int = 0, nbuffers::Int = 0; ...)
@@ -103,11 +103,11 @@ function create_field(height::Int, width::Int, y::Int, x::Int,
     # Set the buffer.
     length(buffer) > 0 && set_field_buffer(field, 0, buffer)
 
-    return field
+    return TUI_FIELD(ptr = field)
 end
 
 """
-    function create_form(fields::Vector{Ptr{Cvoid}}; ...)
+    function create_form(fields::Vector{TUI_FIELD}; ...)
 
 Create a new form with the fields `fields`.
 
@@ -119,15 +119,18 @@ Create a new form with the fields `fields`.
                         (**Default** = `false`)
 
 """
-function create_form(fields::Vector{Ptr{Cvoid}};
+function create_form(fields::Vector{TUI_FIELD};
                      newline_overload::Bool = false,
                      backspace_overload::Bool = false)
 
+    # Assemble the vector with the pointers to the fields.
+    ptr_fields = [f.ptr for f in fields]
+
     # The last element of the `fields` vector must be `null`.
-    fields[end] != C_NULL && push!(fields, C_NULL)
+    ptr_fields[end] != C_NULL && push!(ptr_fields, C_NULL)
 
     # Create the form.
-    form = new_form(fields)
+    form = new_form(ptr_fields)
 
     # Create the attributes based on the user selections.
     attrs  = 0x00
@@ -137,7 +140,7 @@ function create_form(fields::Vector{Ptr{Cvoid}};
 
     set_form_opts(form, attrs)
 
-    return TUI_FORM(fields = fields, ptr = form)
+    return TUI_FORM(fields = fields, ptr_fields = ptr_fields, ptr = form)
 end
 
 """
@@ -146,8 +149,8 @@ end
 Destroy the field `field`.
 
 """
-function destroy_field(field::Ptr{Cvoid})
-    field != C_NULL && free_field(field)
+function destroy_field(field::TUI_FIELD)
+    field.ptr   != C_NULL && free_field(field.ptr)
     return nothing
 end
 
@@ -186,6 +189,44 @@ function unpost_form(form::TUI_FORM)
     form.ptr != C_NULL && unpost_form(form.ptr)
     return nothing
 end
+
+set_field_type(field::TUI_FIELD, ::Type{Val{:alnum}}, min_width::Integer) =
+    set_field_type(field.ptr, TYPE_ALNUM(), args[1])
+
+set_field_type(field::TUI_FIELD, ::Type{Val{:alpha}}, min_width::Integer) =
+    set_field_type(field.ptr, TYPE_ALPHA(), args[1])
+
+function set_field_type(field::TUI_FIELD, ::Type{Val{:enum}},
+                        values::Vector{String}, check_case::Bool = false,
+                        check_unique::Bool = false)
+
+    # Create the array with the pointer to the strings.
+    pointers = [ Cstring(pointer(v)) for v in values ]
+
+    # The array must be NULL terminated.
+    push!(pointers, C_NULL)
+
+    # Store `pointers` to avoid being collect by the GC.
+    field.penum = pointers
+
+    # Set the field type.
+    set_field_type(field.ptr, TYPE_ENUM(), pointers, check_case, check_unique)
+end
+
+set_field_type(field::TUI_FIELD, ::Type{Val{:integer}}, padding::Int,
+               vmin::Int, vmax::Int) =
+    set_field_type(field.ptr, TYPE_INTEGER(), padding, vmin, vmax)
+
+set_field_type(field::TUI_FIELD, ::Type{Val{:numeric}}, padding::Int,
+               vmin::Int, vmax::Int) =
+    set_field_type(field, Val{:numeric}, padding, Float64(vmin), Float64(vmax))
+
+set_field_type(field::TUI_FIELD, ::Type{Val{:numeric}}, padding::Int,
+               vmin::Float64, vmax::Float64) =
+    set_field_type(field.ptr, TYPE_NUMERIC(), padding, vmin, vmax)
+
+set_field_type(field::TUI_FIELD, ::Type{Val{:regexp}}, regex::Regex) =
+    set_field_type(field.ptr, TYPE_REGEXP(), regex.pattern)
 
 """
     function set_form_win(form::TUI_FORM, win::TUI_WINDOW)

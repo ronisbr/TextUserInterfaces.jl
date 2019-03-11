@@ -16,20 +16,35 @@ This private structure handles some global variables that are used in the
 ncurses wrapper.
 
 """
-mutable struct NCURSES
-    libncurses::Ptr{Nothing}
-    libform::Ptr{Nothing}
-    libmenu::Ptr{Nothing}
-    libpanel::Ptr{Nothing}
-    LINES::Ptr{Cint}
-    COLS::Ptr{Cint}
-    acs_map::Ptr{Cuint}
-    acs_map_arr::Vector{UInt32}
+@with_kw mutable struct NCURSES
+    libncurses::Ptr{Nothing} = Ptr{Nothing}(0)
+    libform::Ptr{Nothing}    = Ptr{Nothing}(0)
+    libmenu::Ptr{Nothing}    = Ptr{Nothing}(0)
+    libpanel::Ptr{Nothing}   = Ptr{Nothing}(0)
+
+    # libncurses global symbols
+    # ==========================================================================
+
+    LINES::Ptr{Cint}            = Ptr{Cint}(0)
+    COLS::Ptr{Cint}             = Ptr{Cint}(0)
+    acs_map::Ptr{Cuint}         = Ptr{Cuint}(0)
+    acs_map_arr::Vector{UInt32} = UInt32[]
+
+    # libforms global symbols
+    # ==========================================================================
+
+    TYPE_ALNUM::Ptr{Nothing}   = Ptr{Nothing}(0)
+    TYPE_ALPHA::Ptr{Nothing}   = Ptr{Nothing}(0)
+    TYPE_ENUM::Ptr{Nothing}    = Ptr{Nothing}(0)
+    TYPE_INTEGER::Ptr{Nothing} = Ptr{Nothing}(0)
+    TYPE_NUMERIC::Ptr{Nothing} = Ptr{Nothing}(0)
+    TYPE_REGEXP::Ptr{Nothing}  = Ptr{Nothing}(0)
+    TYPE_IPV4::Ptr{Nothing}    = Ptr{Nothing}(0)
+    TYPE_IPV6::Ptr{Nothing}    = Ptr{Nothing}(0)
+
 end
 
-const ncurses = NCURSES(Ptr{Nothing}(0), Ptr{Nothing}(0), Ptr{Nothing}(0),
-                        Ptr{Nothing}(0), Ptr{Cint}(0), Ptr{Cint}(0),
-                        Ptr{Cuint}(0), UInt32[])
+const ncurses = NCURSES()
 
 include("./ncurses/ncurses_types.jl")
 include("./ncurses/ncurses_attributes.jl")
@@ -51,9 +66,15 @@ struct NCURSES_COLOR_PAIR
     background::Symbol
 end
 
+@with_kw mutable struct TUI_FIELD
+    ptr::Ptr{Cvoid}        = Ptr{Cvoid}(0)
+    penum::Vector{Cstring} = Cstring[]
+end
+
 @with_kw mutable struct TUI_FORM
-    fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
-    ptr::Ptr{Cvoid}            = Ptr{Cvoid}(0)
+    fields::Vector{TUI_FIELD}      = Vector{TUI_FIELD}(undef,0)
+    ptr_fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
+    ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
 end
 
 @with_kw mutable struct TUI_MENU
