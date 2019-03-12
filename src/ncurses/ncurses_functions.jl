@@ -81,6 +81,7 @@ for (f,r,v,j,c) in
      (:init_pair,     Cint,        ["pair","f","b"],                                ["Integer","Integer","Integer"],                          ["Cshort","Cshort","Cshort"]),
      (:initscr,       Ptr{WINDOW}, [],                                              [],                                                       []),
      (:keypad,        Cvoid,       ["win","bf"],                                    ["Ptr{WINDOW}","Bool"],                                   ["Ptr{WINDOW}","Cuchar"]),
+     (:leaveok,       Cvoid,       ["win","bf"],                                    ["Ptr{WINDOW}","Bool"],                                   ["Ptr{WINDOW}","Cuchar"]),
      (:mouseinterval, Cint,        ["n"],                                           ["Integer"],                                              ["Cint"]),
      (:mvhline,       Cint,        ["y","x","ch","n"],                              ["Integer","Integer","jlchtype","Integer"],               ["Cint","Cint","chtype","Cint"]),
      (:mvvline,       Cint,        ["y","x","ch","n"],                              ["Integer","Integer","jlchtype","Integer"],               ["Cint","Cint","chtype","Cint"]),

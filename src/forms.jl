@@ -6,16 +6,16 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export create_field, create_form, destroy_field, destroy_form, post_form,
-       unpost_form, form_driver, set_field_type
+export create_field, create_form, destroy_field, destroy_form, get_field_data,
+       post_form, unpost_form, form_driver, set_field_type
 
 """
-    function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = "", offscreen::Int = 0, nbuffers::Int = 0; ...)
+    function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = "", id::String = "", offscreen::Int = 0, nbuffers::Int = 0; ...)
 
-Create a field with height `height` and width `width`, positioned at `y` and `x`
-coordinates. The initial buffer string can be set by the variable `buffer`. The
-number of off-screen rows is set by `offscreen` and the number of buffers
-`nbuffers`.
+Create a field with id `id`, height `height` and width `width`, positioned at
+`y` and `x` coordinates. The initial buffer string can be set by the variable
+`buffer`. The number of off-screen rows is set by `offscreen` and the number of
+buffers `nbuffers`.
 
 # Keywords
 
@@ -53,7 +53,8 @@ number of off-screen rows is set by `offscreen` and the number of buffers
 
 """
 function create_field(height::Int, width::Int, y::Int, x::Int,
-                      buffer::String = "", offscreen::Int = 0, nbuffers::Int = 0;
+                      buffer::String = "", id::String = "", offscreen::Int = 0,
+                      nbuffers::Int = 0;
                       color_foreground::Int = -1,
                       color_background::Int = -1,
                       justification::Symbol = :l,
@@ -103,7 +104,28 @@ function create_field(height::Int, width::Int, y::Int, x::Int,
     # Set the buffer.
     length(buffer) > 0 && set_field_buffer(field, 0, buffer)
 
-    return TUI_FIELD(ptr = field)
+    return TUI_FIELD(id               = id,
+                     ptr              = field,
+                     height           = height,
+                     width            = width,
+                     y                = y,
+                     x                = x,
+                     buffer           = buffer,
+                     offscreen        = offscreen,
+                     nbuffers         = nbuffers,
+                     color_foreground = color_foreground,
+                     color_background = color_background,
+                     justification    = justification,
+                     visible          = visible,
+                     active           = active,
+                     public           = public,
+                     edit             = edit,
+                     wrap             = wrap,
+                     blank            = blank,
+                     autoskip         = autoskip,
+                     nullok           = nullok,
+                     passok           = passok,
+                     static           = static)
 end
 
 """
@@ -168,6 +190,33 @@ function destroy_form(form::TUI_FORM)
     return nothing
 end
 
+
+"""
+    function get_field_data(field::TUI_FIELD, buffer::Int = 0)
+
+Get the data of the field `field` at buffer `buffer`.
+
+"""
+function get_field_data(field::TUI_FIELD, buffer::Int = 0)
+    pstr = field_buffer(field.ptr, buffer)
+    return unsafe_string(pstr)
+end
+
+"""
+    function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)
+
+Get the data of the field with ID `field_id` at buffer `buffer` in the form
+`form`
+
+"""
+function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)
+    field_ind = findfirst( x->x.id == field_id, form.fields )
+
+    field_ind == nothing && error("Field $field_id was not found in the form.")
+
+    return get_field_data(form.fields[field_ind])
+end
+
 """
     function post_form(form::TUI_FORM)
 
@@ -188,6 +237,14 @@ Unpost the form `form`.
 function unpost_form(form::TUI_FORM)
     form.ptr != C_NULL && unpost_form(form.ptr)
     return nothing
+end
+
+function set_field_type(form::TUI_FORM, field_id::String, T::Type, args...)
+    field_ind = findfirst( x->x.id == field_id, form.fields )
+
+    field_ind == nothing && error("Field $field_id was not found in the form.")
+
+    set_field_type(form.fields[field_ind], T, args...)
 end
 
 set_field_type(field::TUI_FIELD, ::Type{Val{:alnum}}, min_width::Integer) =
@@ -218,12 +275,8 @@ set_field_type(field::TUI_FIELD, ::Type{Val{:integer}}, padding::Int,
     set_field_type(field.ptr, TYPE_INTEGER(), padding, vmin, vmax)
 
 set_field_type(field::TUI_FIELD, ::Type{Val{:numeric}}, padding::Int,
-               vmin::Int, vmax::Int) =
-    set_field_type(field, Val{:numeric}, padding, Float64(vmin), Float64(vmax))
-
-set_field_type(field::TUI_FIELD, ::Type{Val{:numeric}}, padding::Int,
-               vmin::Float64, vmax::Float64) =
-    set_field_type(field.ptr, TYPE_NUMERIC(), padding, vmin, vmax)
+               vmin::Number, vmax::Number) =
+    set_field_type(field.ptr, TYPE_NUMERIC(), padding, Float64(vmin), Float64(vmax))
 
 set_field_type(field::TUI_FIELD, ::Type{Val{:regexp}}, regex::Regex) =
     set_field_type(field.ptr, TYPE_REGEXP(), regex.pattern)

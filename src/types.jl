@@ -67,7 +67,33 @@ struct NCURSES_COLOR_PAIR
 end
 
 @with_kw mutable struct TUI_FIELD
-    ptr::Ptr{Cvoid}        = Ptr{Cvoid}(0)
+    id::String
+    ptr::Ptr{Cvoid}       = Ptr{Cvoid}(0)
+
+    # Field properties.
+    height::Int           = 0
+    width::Int            = 0
+    y::Int                = 0
+    x::Int                = 0
+    buffer::String        = ""
+    offscreen::Int        = 0
+    nbuffers::Int         = 0
+    color_foreground::Int = -1
+    color_background::Int = -1
+    justification::Symbol = :l
+    visible::Bool         = true
+    active::Bool          = true
+    public::Bool          = true
+    edit::Bool            = true
+    wrap::Bool            = true
+    blank::Bool           = false
+    autoskip::Bool        = false
+    nullok::Bool          = true
+    passok::Bool          = false
+    static::Bool          = true
+
+    # Store the pointer if the field type is `TYPE_ENUM` to avoid deallocation
+    # by the GC.
     penum::Vector{Cstring} = Cstring[]
 end
 

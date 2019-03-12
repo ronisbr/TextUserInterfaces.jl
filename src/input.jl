@@ -62,6 +62,8 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
     elseif c < 192 || c > 253
         if c == 9
             return c, Keystroke(value = string(Char(c)), ktype = :tab)
+        elseif c == 10
+            return c, Keystroke(value = "\n", ktype = :enter)
         elseif c == 127
             return c, Keystroke(value = string(Char(c)), ktype = :backspace)
         else
