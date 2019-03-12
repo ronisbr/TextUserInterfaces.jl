@@ -89,6 +89,70 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.TYPE_ALNUM",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_ALNUM",
+    "category": "function",
+    "text": "function TYPE_ALNUM()\n\nReturn a pointer to the global symbol TYPE_ALNUM of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_ALPHA",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_ALPHA",
+    "category": "function",
+    "text": "function TYPE_ALPHA()\n\nReturn a pointer to the global symbol TYPE_ALPHA of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_ENUM",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_ENUM",
+    "category": "function",
+    "text": "function TYPE_ENUM()\n\nReturn a pointer to the global symbol TYPE_ENUM of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_INTEGER",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_INTEGER",
+    "category": "function",
+    "text": "function TYPE_INTEGER()\n\nReturn a pointer to the global symbol TYPE_INTEGER of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_IPV4",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_IPV4",
+    "category": "function",
+    "text": "function TYPE_IPV4()\n\nReturn a pointer to the global symbol TYPE_IPV4 of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_IPV6",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_IPV6",
+    "category": "function",
+    "text": "function TYPE_IPV6()\n\nReturn a pointer to the global symbol TYPE_IPV6 of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_NUMERIC",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_NUMERIC",
+    "category": "function",
+    "text": "function TYPE_NUMERIC()\n\nReturn a pointer to the global symbol TYPE_NUMERIC of libform.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.TYPE_REGEXP",
+    "page": "Library",
+    "title": "TextUserInterfaces.TYPE_REGEXP",
+    "category": "function",
+    "text": "function TYPE_REGEXP()\n\nReturn a pointer to the global symbol TYPE_REGEXP of libform.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.attroff",
     "page": "Library",
     "title": "TextUserInterfaces.attroff",
@@ -157,15 +221,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_field",
     "category": "function",
-    "text": "function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = \"\", offscreen::Int = 0, nbuffers::Int = 0; ...)\n\nCreate a field with height height and width width, positioned at y and x coordinates. The initial buffer string can be set by the variable buffer. The number of off-screen rows is set by offscreen and the number of buffers nbuffers.\n\nKeywords\n\ncolor_foreground: Color mask that will be used in the field foreground. See                     function ncurses_color. If negative, then the color will                     not be changed. (Default = -1)\ncolor_background: Color mask that will be used in the field background. See                     function ncurses_color. If negative, then the color will                     not be changed. (Default = -1)\njustification: Justification of the form. It can be :l for left, :c for                  center, and :r for right. For any other symbol, the left                  justification is used. (Default = :l)\nvisible: If true, then the control is visible on the screen.            (Default = true)\nactive: If true, then the control is active. (Default = true)\npublic: If true, then the data of the field is displayed during entry. For           example, set this to false for password fields.           (Default = true)\nedit: If true, then the data of the field can be modified.         (Default = true)\nwrap: If true, then the word will be wrapped in multi-line fields.         (Default = true)\nblank: If true, then entering a character at the first field position          erases the entire fields. (Default = false)\nautoskip: If true, then the field will be automatically skipped when             filled. (Default = false)\nnullok: If true, then the validation is not applied to blank fields.           (Default = true)\npassok: If true, then the validation will occur on every exit. Otherwise,           it will only occur when the field is modified.           (Default = false)\nstatic: If true, then the field is fixed to the initial dimensions.           Otherwise, it will stretch to fit the entered data.           (Default = true)\n\n\n\n\n\n"
+    "text": "function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = \"\", id::String = \"\", offscreen::Int = 0, nbuffers::Int = 0; ...)\n\nCreate a field with id id, height height and width width, positioned at y and x coordinates. The initial buffer string can be set by the variable buffer. The number of off-screen rows is set by offscreen and the number of buffers nbuffers.\n\nKeywords\n\ncolor_foreground: Color mask that will be used in the field foreground. See                     function ncurses_color. If negative, then the color will                     not be changed. (Default = -1)\ncolor_background: Color mask that will be used in the field background. See                     function ncurses_color. If negative, then the color will                     not be changed. (Default = -1)\njustification: Justification of the form. It can be :l for left, :c for                  center, and :r for right. For any other symbol, the left                  justification is used. (Default = :l)\nvisible: If true, then the control is visible on the screen.            (Default = true)\nactive: If true, then the control is active. (Default = true)\npublic: If true, then the data of the field is displayed during entry. For           example, set this to false for password fields.           (Default = true)\nedit: If true, then the data of the field can be modified.         (Default = true)\nwrap: If true, then the word will be wrapped in multi-line fields.         (Default = true)\nblank: If true, then entering a character at the first field position          erases the entire fields. (Default = false)\nautoskip: If true, then the field will be automatically skipped when             filled. (Default = false)\nnullok: If true, then the validation is not applied to blank fields.           (Default = true)\npassok: If true, then the validation will occur on every exit. Otherwise,           it will only occur when the field is modified.           (Default = false)\nstatic: If true, then the field is fixed to the initial dimensions.           Otherwise, it will stretch to fit the entered data.           (Default = true)\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_form-Tuple{Array{Ptr{Nothing},1}}",
+    "location": "lib/library/#TextUserInterfaces.create_form-Tuple{Array{TextUserInterfaces.TUI_FIELD,1}}",
     "page": "Library",
     "title": "TextUserInterfaces.create_form",
     "category": "method",
-    "text": "function create_form(fields::Vector{Ptr{Cvoid}}; ...)\n\nCreate a new form with the fields fields.\n\nKeywords\n\nnewline_overload: Enable overloading of REQ_NEW_LINE.                     (Default = false)\nbackspace_overload: Enable overloading of REQ_DEL_PREV.                       (Default = false)\n\n\n\n\n\n"
+    "text": "function create_form(fields::Vector{TUI_FIELD}; ...)\n\nCreate a new form with the fields fields.\n\nKeywords\n\nnewline_overload: Enable overloading of REQ_NEW_LINE.                     (Default = false)\nbackspace_overload: Enable overloading of REQ_DEL_PREV.                       (Default = false)\n\n\n\n\n\n"
 },
 
 {
@@ -297,7 +361,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.destroy_field-Tuple{Ptr{Nothing}}",
+    "location": "lib/library/#TextUserInterfaces.destroy_field-Tuple{TextUserInterfaces.TUI_FIELD}",
     "page": "Library",
     "title": "TextUserInterfaces.destroy_field",
     "category": "method",
@@ -369,10 +433,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.field_buffer",
+    "location": "lib/library/#TextUserInterfaces.field_buffer-Tuple{Ptr{Nothing},Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.field_buffer",
-    "category": "function",
+    "category": "method",
     "text": "function field_buffer(field::Ptr{Cvoid}, buffer::Integer)\n\nReturn type: Cstring\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -417,10 +481,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.form_driver",
+    "location": "lib/library/#TextUserInterfaces.form_driver-Tuple{Ptr{Nothing},Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.form_driver",
-    "category": "function",
+    "category": "method",
     "text": "function form_driver(form::Ptr{Cvoid}, ch::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -489,18 +553,18 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.free_field",
+    "location": "lib/library/#TextUserInterfaces.free_field-Tuple{Ptr{Nothing}}",
     "page": "Library",
     "title": "TextUserInterfaces.free_field",
-    "category": "function",
+    "category": "method",
     "text": "function free_field(field::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.free_form",
+    "location": "lib/library/#TextUserInterfaces.free_form-Tuple{Ptr{Nothing}}",
     "page": "Library",
     "title": "TextUserInterfaces.free_form",
-    "category": "function",
+    "category": "method",
     "text": "function free_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -526,6 +590,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.get_color_pair",
     "category": "method",
     "text": "function get_color_pair(foreground::Symbol, background::Symbol)\n\nReturn the ID of the color pair (foreground, background), or nothing if the color pair is not initialized.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_field_data",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_field_data",
+    "category": "function",
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_field_data",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_field_data",
+    "category": "function",
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -662,6 +742,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.keypad",
     "category": "function",
     "text": "function keypad(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.leaveok",
+    "page": "Library",
+    "title": "TextUserInterfaces.leaveok",
+    "category": "function",
+    "text": "function leaveok(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -849,10 +937,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.new_form",
+    "location": "lib/library/#TextUserInterfaces.new_form-Tuple{Array{Ptr{Nothing},1}}",
     "page": "Library",
     "title": "TextUserInterfaces.new_form",
-    "category": "function",
+    "category": "method",
     "text": "function new_form(fields::Vector{Ptr{Cvoid}})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -929,10 +1017,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.pos_form_cursor",
+    "location": "lib/library/#TextUserInterfaces.pos_form_cursor-Tuple{Ptr{Nothing}}",
     "page": "Library",
     "title": "TextUserInterfaces.pos_form_cursor",
-    "category": "function",
+    "category": "method",
     "text": "function pos_form_cursor(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -945,10 +1033,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.post_form",
+    "location": "lib/library/#TextUserInterfaces.post_form-Tuple{Ptr{Nothing}}",
     "page": "Library",
     "title": "TextUserInterfaces.post_form",
-    "category": "function",
+    "category": "method",
     "text": "function post_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -1057,10 +1145,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_field_back",
+    "location": "lib/library/#TextUserInterfaces.set_field_back-Tuple{Ptr{Nothing},Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.set_field_back",
-    "category": "function",
+    "category": "method",
     "text": "function set_field_back(field::Ptr{Cvoid}, value::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -1073,34 +1161,74 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_field_just",
+    "location": "lib/library/#TextUserInterfaces.set_field_just-Tuple{Ptr{Nothing},Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.set_field_just",
-    "category": "function",
+    "category": "method",
     "text": "function set_field_just(field::Ptr{Cvoid}, justification::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_field_opts",
+    "location": "lib/library/#TextUserInterfaces.set_field_opts-Tuple{Ptr{Nothing},Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.set_field_opts",
-    "category": "function",
+    "category": "method",
     "text": "function set_field_opts(field::Ptr{Cvoid}, field_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_opts",
+    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Array{T,1} where T,Integer,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_field_type",
+    "category": "method",
+    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, valuelist::Vector, checkcase::Integer, checkunique::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Integer,Float64,Float64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_field_type",
+    "category": "method",
+    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, padding::Integer, vmin::Float64, vmax::Float64)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Integer,Integer,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_field_type",
+    "category": "method",
+    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, padding::Integer, vmin::Integer, vmax::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_field_type",
+    "category": "method",
+    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, arg::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},String}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_field_type",
+    "category": "method",
+    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, regex::String)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_form_opts-Tuple{Ptr{Nothing},Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_opts",
-    "category": "function",
+    "category": "method",
     "text": "function set_form_opts(form::Ptr{Cvoid}, form_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_sub",
+    "location": "lib/library/#TextUserInterfaces.set_form_sub-Tuple{Ptr{Nothing},Ptr{TextUserInterfaces.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_sub",
-    "category": "function",
+    "category": "method",
     "text": "function set_form_sub(form::Ptr{Cvoid}, win_form::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -1113,10 +1241,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_win",
+    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{Ptr{Nothing},Ptr{TextUserInterfaces.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_win",
-    "category": "function",
+    "category": "method",
     "text": "function set_form_win(form::Ptr{Cvoid}, win_form::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
@@ -1233,10 +1361,10 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.unpost_form",
+    "location": "lib/library/#TextUserInterfaces.unpost_form-Tuple{Ptr{Nothing}}",
     "page": "Library",
     "title": "TextUserInterfaces.unpost_form",
-    "category": "function",
+    "category": "method",
     "text": "function unpost_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
