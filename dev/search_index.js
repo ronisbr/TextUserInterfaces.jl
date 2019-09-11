@@ -441,6 +441,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.force_focus_change-Tuple{Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.force_focus_change",
+    "category": "method",
+    "text": "function force_focus_change(new_focus_id::Integer)\n\nForce the focus to change to the element with ID new_focus_id in the focus chain.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.form_add_char-Tuple{TextUserInterfaces.TUI_FORM,UInt32}",
     "page": "Library",
     "title": "TextUserInterfaces.form_add_char",
@@ -670,6 +678,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.init_color_pair",
     "category": "method",
     "text": "function init_color_pair(foreground::Symbol, background::Symbol)\n\nInitialize the color pair (foreground, background) and return its ID. If the pair already exists, then just the function just returns its ID.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.init_focus_manager-Tuple{}",
+    "page": "Library",
+    "title": "TextUserInterfaces.init_focus_manager",
+    "category": "method",
+    "text": "function init_focus_manager()\n\nInitialization of the focus manager. The elements in focus_chain are iterated to find the first one that can accept the focus.\n\n\n\n\n\n"
 },
 
 {
@@ -1081,6 +1097,46 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{Keystroke}",
+    "page": "Library",
+    "title": "TextUserInterfaces.process_focus",
+    "category": "method",
+    "text": "function process_focus(k::Keystroke)\n\nProcess the focus considering the user\'s keystorke k.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_FORM,Keystroke}",
+    "page": "Library",
+    "title": "TextUserInterfaces.process_focus",
+    "category": "method",
+    "text": "function process_focus(form::TUI_FORM, k::Keystroke)\n\nProcess the actions when the form form is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_MENU,Keystroke}",
+    "page": "Library",
+    "title": "TextUserInterfaces.process_focus",
+    "category": "method",
+    "text": "function process_focus(menu::TUI_MENU, k::Keystroke)\n\nProcess the actions when the menu menu is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_PANEL,Keystroke}",
+    "page": "Library",
+    "title": "TextUserInterfaces.process_focus",
+    "category": "method",
+    "text": "function process_focus(panel::TUI_PANEL, k::Keystroke)\n\nProcess the actions when the panel panel is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_WINDOW,Keystroke}",
+    "page": "Library",
+    "title": "TextUserInterfaces.process_focus",
+    "category": "method",
+    "text": "function process_focus(win::TUI_WINDOW, k::Keystroke)\n\nProcess the actions when the window win is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.refresh",
     "page": "Library",
     "title": "TextUserInterfaces.refresh",
@@ -1110,6 +1166,30 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.refresh_window",
     "category": "method",
     "text": "function refresh_window(win::Ptr{WINDOW}; update = true)\n\nRefresh the window win and all its parents windows except for the root window. If update is true, then doupdate() is called and the physical screen is updated.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_focus_change-Tuple{TextUserInterfaces.TUI_PANEL}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus_change",
+    "category": "method",
+    "text": "function request_focus_change(panel::TUI_PANEL)\n\nRequest to change the focus of the children elements in panel panel. If all the children has already been cycled, then this function returns true to state that the focus should be released from the panel.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_focus_change-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus_change",
+    "category": "method",
+    "text": "function request_focus_change(win::TUI_WINDOW)\n\nRequest to change the focus of the children elements in window win. If all the children has already been cycled, then this function returns true to state that the focus should be released from the window.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_focus_change-Tuple{}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus_change",
+    "category": "method",
+    "text": "function request_focus_change()\n\nRequest that the current panel (in focus) changes its child that has the focus. If the panel has cycled all its children elements, than search for the next panel that can accept the focus.\n\n\n\n\n\n"
 },
 
 {
@@ -1214,6 +1294,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.set_field_type",
     "category": "method",
     "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, regex::String)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_focus_chain-Tuple{Vararg{TextUserInterfaces.TUI_PANEL,N} where N}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_focus_chain",
+    "category": "method",
+    "text": "function set_focus_chain(panels::TUI_PANEL...; new_focus_id::Integer = 1)\n\nSet the focus chain, i.e. the ordered list of panels that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
 },
 
 {
@@ -1598,6 +1686,70 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._get_window_dims",
     "category": "method",
     "text": "function _get_window_dims(win::TUI_WINDOW)\n\nGet the dimensions of the window win and return it on a tuple (dim_y,dim_x). If the window is not initialized, then this function returns (-1,-1).\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_FORM}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(form::TUI_FORM)\n\nCommand executed when form form must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_MENU}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(menu::TUI_MENU)\n\nCommand executed when menu menu must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_PANEL}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(panel::TUI_PANEL)\n\nCommand executed when panel panel must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(win::TUI_WINDOW)\n\nCommand executed when window win must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_FORM}",
+    "page": "Library",
+    "title": "TextUserInterfaces.release_focus",
+    "category": "method",
+    "text": "function release_focus(form::TUI_FORM)\n\nRelease the focus from the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_MENU}",
+    "page": "Library",
+    "title": "TextUserInterfaces.release_focus",
+    "category": "method",
+    "text": "function release_focus(menu::TUI_MENU)\n\nRelease the focus from the menu menu.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_PANEL}",
+    "page": "Library",
+    "title": "TextUserInterfaces.release_focus",
+    "category": "method",
+    "text": "function release_focus(panel::TUI_PANEL)\n\nRelease the focus from the panel panel.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.release_focus",
+    "category": "method",
+    "text": "function release_focus(win::TUI_WINDOW)\n\nRelease the focus from the window win.\n\n\n\n\n\n"
 },
 
 {
