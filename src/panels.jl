@@ -168,4 +168,55 @@ function show_panel(panel::TUI_PANEL)
     panel.ptr_border != C_NULL && show_panel(panel.ptr_border)
 end
 
+################################################################################
+#                                     API
+################################################################################
 
+# Focus manager
+# ==============================================================================
+
+"""
+    function accept_focus(panel::TUI_PANEL)
+
+Command executed when panel `panel` must state whether or not it accepts the
+focus. If the focus is accepted, then this function returns `true`. Otherwise,
+it returns `false`.
+
+"""
+function accept_focus(panel::TUI_PANEL)
+    # If the window related to this panel accepts the focus, then we must move
+    # this panel to the top.
+    if accept_focus(panel.win)
+        move_panel_to_top(panel)
+        return true
+    end
+
+    return false
+end
+
+"""
+    function process_focus(panel::TUI_PANEL, k::Keystroke)
+
+Process the actions when the panel `panel` is in focus and the keystroke `k` was
+issued by the user.
+
+"""
+process_focus(panel::TUI_PANEL, k::Keystroke) = process_focus(panel.win, k)
+
+"""
+    function release_focus(panel::TUI_PANEL)
+
+Release the focus from the panel `panel`.
+
+"""
+release_focus(panel::TUI_PANEL) = release_focus(panel.win)
+
+"""
+    function request_focus_change(panel::TUI_PANEL)
+
+Request to change the focus of the children elements in panel `panel`. If all
+the children has already been cycled, then this function returns `true` to state
+that the focus should be released from the panel.
+
+"""
+request_focus_change(panel::TUI_PANEL) = request_focus_change(panel.win)

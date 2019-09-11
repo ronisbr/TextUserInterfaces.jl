@@ -101,6 +101,14 @@ end
     fields::Vector{TUI_FIELD}      = Vector{TUI_FIELD}(undef,0)
     ptr_fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
     ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
+
+    # Focus manager
+    # ==========================================================================
+    has_focus::Bool = false
+
+    # Signals
+    # ==========================================================================
+    on_return_pressed::Function = (form)->return nothing
 end
 
 @with_kw mutable struct TUI_MENU
@@ -108,6 +116,14 @@ end
     descriptions::Vector{String} = String[]
     items::Vector{Ptr{Cvoid}}    = Vector{Ptr{Cvoid}}(undef,0)
     ptr::Ptr{Cvoid}              = Ptr{Cvoid}(0)
+
+    # Focus manager
+    # ==========================================================================
+    has_focus::Bool = false
+
+    # Signals
+    # ==========================================================================
+    on_return_pressed::Function = (form)->return nothing
 end
 
 @with_kw mutable struct TUI_WINDOW
@@ -116,6 +132,18 @@ end
     border::Ptr{WINDOW} = Ptr{WINDOW}(0)
     title::String = ""
     ptr::Ptr{WINDOW} = Ptr{WINDOW}(0)
+    children::Vector{Any} = Any[]
+
+    # Focus manager
+    # ==========================================================================
+    has_focus::Bool = false
+    focus_id::Int = 1
+    focus_ptr::Any = nothing
+
+    # Signals
+    # ==========================================================================
+    on_focus_acquired::Function = (win)->return nothing
+    on_focus_released::Function = (win)->return nothing
 end
 
 @with_kw mutable struct TUI_PANEL
@@ -154,6 +182,12 @@ end
 
     initialized_color_pairs::Vector{NCURSES_COLOR_PAIR} =
         NCURSES_COLOR_PAIR[]
+
+    # Focus manager
+    # ==========================================================================
+    focus_chain::Vector{TUI_PANEL} = Vector{TUI_PANEL}[]
+    focus_id::Int = 1
+    focus_ptr::Union{Nothing,TUI_PANEL} = nothing
 end
 
 """

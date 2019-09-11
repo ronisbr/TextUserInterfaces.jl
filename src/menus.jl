@@ -107,7 +107,8 @@ function create_menu(names::Vector{T1},
 
     set_menu_opts(menu, opts)
 
-    return TUI_MENU(names_copy, descriptions_copy, items, menu)
+    return TUI_MENU(names = names_copy, descriptions = descriptions_copy,
+                    items = items, ptr = menu)
 end
 
 """
@@ -166,8 +167,9 @@ Set menu `menu` window to `win`.
 
 """
 function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)
-    if menu.ptr != C_NULL && win.ptr != C_NULL
+    if (menu.ptr != C_NULL) && (win.ptr != C_NULL)
         set_menu_win(menu.ptr, win.ptr)
+        push!(win.children, menu)
     end
 end
 
@@ -436,7 +438,52 @@ function menu_driver(menu::TUI_MENU, k::Keystroke;
     if menu_func != nothing
         menu_func(menu)
         return true
+    elseif k.ktype == :enter
+        menu.on_return_pressed(menu)
+        return true
     else
         return false
     end
+end
+
+################################################################################
+#                                     API
+################################################################################
+
+# Focus manager
+# ==============================================================================
+
+"""
+    function accept_focus(menu::TUI_MENU)
+
+Command executed when menu `menu` must state whether or not it accepts the
+focus. If the focus is accepted, then this function returns `true`. Otherwise,
+it returns `false`.
+
+"""
+function accept_focus(menu::TUI_MENU)
+    menu.has_focus = true
+    return true
+end
+
+"""
+    function process_focus(menu::TUI_MENU, k::Keystroke)
+
+Process the actions when the menu `menu` is in focus and the keystroke `k` was
+issued by the user.
+
+"""
+function process_focus(menu::TUI_MENU, k::Keystroke)
+    return menu_driver(menu, k)
+end
+
+"""
+    function release_focus(menu::TUI_MENU)
+
+Release the focus from the menu `menu`.
+
+"""
+function release_focus(menu::TUI_MENU)
+    menu.has_focus = false
+    return nothing
 end

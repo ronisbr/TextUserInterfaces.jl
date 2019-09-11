@@ -66,13 +66,15 @@ function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer,
 
         push!(tui.wins, win)
     else
-        ptr = (parent == nothing) ? newwin(        nlines, ncols, begin_y, begin_x) :
-                                    derwin(parent, nlines, ncols, begin_y, begin_x)
+        ptr = (parent == nothing) ? newwin(            nlines, ncols, begin_y, begin_x) :
+                                    derwin(parent.ptr, nlines, ncols, begin_y, begin_x)
 
         # Add the windows to the list.
         win = TUI_WINDOW(id = id, parent = parent, title = title, ptr = ptr)
         push!(tui.wins, win)
     end
+
+    parent != nothing && push!(parent.children, win)
 
     # Return the pointer to the window.
     return win
@@ -369,6 +371,107 @@ window_println(win::TUI_WINDOW, str::AbstractString; kwargs...) =
 
 window_println(win::TUI_WINDOW, row::Integer, str::AbstractString; kwargs...) =
     window_print(win, row, str * "\n"; kwargs...)
+
+################################################################################
+#                                     API
+################################################################################
+
+# Focus manager
+# ==============================================================================
+
+
+"""
+    function accept_focus(win::TUI_WINDOW)
+
+Command executed when window `win` must state whether or not it accepts the
+focus. If the focus is accepted, then this function returns `true`. Otherwise,
+it returns `false`.
+
+"""
+function accept_focus(win::TUI_WINDOW)
+    # Search for a child that can accept the focus.
+    for i = 1:length(win.children)
+        if accept_focus(win.children[i])
+            win.focus_id  = i
+            win.focus_ptr = win.children[i]
+            win.has_focus = true
+            win.on_focus_acquired(win)
+            return true
+        end
+    end
+
+    return false
+end
+
+"""
+    function process_focus(win::TUI_WINDOW, k::Keystroke)
+
+Process the actions when the window `win` is in focus and the keystroke `k` was
+issued by the user.
+
+"""
+function process_focus(win::TUI_WINDOW, k::Keystroke)
+    num_children = length(win.children)
+    num_children == 0 && return false
+
+    if win.focus_ptr != nothing
+        return process_focus(win.focus_ptr, k)
+    else
+        return false
+    end
+end
+
+"""
+    function release_focus(win::TUI_WINDOW)
+
+Release the focus from the window `win`.
+
+"""
+function release_focus(win::TUI_WINDOW)
+    if win.focus_ptr != nothing
+        release_focus(win.focus_ptr)
+    end
+
+    win.focus_id  = 1
+    win.focus_ptr = nothing
+    win.has_focus = false
+
+    win.on_focus_released(win)
+
+    return nothing
+end
+
+"""
+    function request_focus_change(win::TUI_WINDOW)
+
+Request to change the focus of the children elements in window `win`. If all the
+children has already been cycled, then this function returns `true` to state
+that the focus should be released from the window.
+
+"""
+function request_focus_change(win::TUI_WINDOW)
+    # If we have not child, than just allow focus change.
+    num_children = length(win.children)
+    num_children == 0 && return true
+
+    # Otherwise, move to the next child until hit the last one.
+    win.focus_ptr != nothing && release_focus(win.focus_ptr)
+
+    # Loop the children to find one that can accept the focus.
+    for i = win.focus_id+1:num_children
+        if accept_focus(win.children[i])
+            win.focus_id  = i
+            win.focus_ptr = win.children[i]
+            win.has_focus = true
+
+            return false
+        end
+    end
+
+    release_focus(win)
+
+    return true
+end
 
 ################################################################################
 #                              Private Functions

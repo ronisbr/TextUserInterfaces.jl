@@ -28,6 +28,7 @@ include("./ncurses/panel_functions.jl")
 # ==============================================================================
 
 include("colors.jl")
+include("focus_manager.jl")
 include("forms.jl")
 include("input.jl")
 include("menus.jl")

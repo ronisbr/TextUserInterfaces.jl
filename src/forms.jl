@@ -288,7 +288,11 @@ Set the form `form` window to `win`.
 
 """
 function set_form_win(form::TUI_FORM, win::TUI_WINDOW)
-    (form.ptr != C_NULL) && (win.ptr != C_NULL) && set_form_win(form.ptr, win.ptr)
+    if (form.ptr != C_NULL) && (win.ptr != C_NULL)
+        set_form_win(form.ptr, win.ptr)
+        push!(win.children, form)
+    end
+
     return nothing
 end
 
@@ -390,11 +394,56 @@ function form_driver(form::TUI_FORM, k::Keystroke;
         form_func(form)
         return true
     else
-        if k.ktype == :char || k.ktype == :utf8
+        if k.ktype == :enter
+            form.on_return_pressed(form)
+            return true
+        elseif (k.ktype == :char) || (k.ktype == :utf8)
             form_add_char(form, UInt32(k.value[1]))
             return true
         end
     end
 
     return false
+end
+
+################################################################################
+#                                     API
+################################################################################
+
+# Focus manager
+# ==============================================================================
+
+"""
+    function accept_focus(form::TUI_FORM)
+
+Command executed when form `form` must state whether or not it accepts the
+focus. If the focus is accepted, then this function returns `true`. Otherwise,
+it returns `false`.
+
+"""
+function accept_focus(form::TUI_FORM)
+    form.has_focus = true
+    return true
+end
+
+"""
+    function process_focus(form::TUI_FORM, k::Keystroke)
+
+Process the actions when the form `form` is in focus and the keystroke `k` was
+issued by the user.
+
+"""
+function process_focus(form::TUI_FORM, k::Keystroke)
+    return form_driver(form, k)
+end
+
+"""
+    function release_focus(form::TUI_FORM)
+
+Release the focus from the form `form`.
+
+"""
+function release_focus(form::TUI_FORM)
+    form.has_focus = false
+    return nothing
 end
