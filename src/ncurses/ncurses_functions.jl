@@ -112,8 +112,9 @@ for (f,r,v,j,c) in
      (:wtimeout,      Cvoid,       ["win","delay"],                                 ["Ptr{WINDOW}","Integer"],                                ["Ptr{WINDOW}","Cint"]),
      (:wvline,        Cint,        ["win","ch","n"],                                ["Ptr{WINDOW}","jlchtype","Integer"],                     ["Ptr{WINDOW}","chtype","Cint"]),
      # Functions with very long arguments.
-     (:prefresh,     Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"], ["Ptr{WINDOW}",["Integer" for _ = 1:6]...], ["Ptr{WINDOW}",["Cint" for _ = 1:6]...]),
-     (:pnoutrefresh, Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"], ["Ptr{WINDOW}",["Integer" for _ = 1:6]...], ["Ptr{WINDOW}",["Cint" for _ = 1:6]...])
+     (:copywin,      Cint, ["scr","dest","sminrow","smincol","dminrow","dmincol","dmaxrow","dmaxcol","overlay"], ["Ptr{WINDOW}","Ptr{WINDOW}",["Integer" for _ = 1:7]...], ["Ptr{WINDOW}","Ptr{WINDOW}",["Cint" for _ = 1:7]...]),
+     (:prefresh,     Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"],                  ["Ptr{WINDOW}",["Integer" for _ = 1:6]...],               ["Ptr{WINDOW}",["Cint" for _ = 1:6]...]),
+     (:pnoutrefresh, Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"],                  ["Ptr{WINDOW}",["Integer" for _ = 1:6]...],               ["Ptr{WINDOW}",["Cint" for _ = 1:6]...])
     )
 
     fb    = Meta.quot(f)
