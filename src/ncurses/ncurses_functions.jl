@@ -92,6 +92,7 @@ for (f,r,v,j,c) in
      (:noecho,        Cvoid,       [],                                              [],                                                       []),
      (:notimeout,     Cvoid,       ["win","bf"],                                    ["Ptr{WINDOW}","Bool"],                                   ["Ptr{WINDOW}","Cuchar"]),
      (:refresh,       Cvoid,       [],                                              [],                                                       []),
+     (:resizeterm,    Cint,        ["lines","columns"],                             ["Integer","Integer"],                                    ["Cint","Cint"]),
      (:start_color,   Cint,        [],                                              [],                                                       []),
      (:vline,         Cint,        ["ch","n"],                                      ["jlchtype","Integer"],                                   ["chtype","Cint"]),
      (:waddch,        Cvoid,       ["win","ch"],                                    ["Ptr{WINDOW}","jlchtype"],                               ["Ptr{WINDOW}","chtype"]),
