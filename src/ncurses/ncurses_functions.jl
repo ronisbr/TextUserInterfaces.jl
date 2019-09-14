@@ -87,6 +87,7 @@ for (f,r,v,j,c) in
      (:mvvline,       Cint,        ["y","x","ch","n"],                              ["Integer","Integer","jlchtype","Integer"],               ["Cint","Cint","chtype","Cint"]),
      (:mvwhline,      Cint,        ["win","y","x","ch","n"],                        ["Ptr{WINDOW}","Integer","Integer","jlchtype","Integer"], ["Ptr{WINDOW}","Cint","Cint","chtype","Cint"]),
      (:mvwvline,      Cint,        ["win","y","x","ch","n"],                        ["Ptr{WINDOW}","Integer","Integer","jlchtype","Integer"], ["Ptr{WINDOW}","Cint","Cint","chtype","Cint"]),
+     (:newpad,        Ptr{WINDOW}, ["lines","cols"],                                ["Integer","Integer"],                                    ["Cint","Cint"]),
      (:newwin,        Ptr{WINDOW}, ["lines","cols","y","x"],                        ["Integer" for _ = 1:4],                                  ["Cint" for _ = 1:4]),
      (:nodelay,       Cvoid,       ["win","bf"],                                    ["Ptr{WINDOW}","Bool"],                                   ["Ptr{WINDOW}","Cuchar"]),
      (:noecho,        Cvoid,       [],                                              [],                                                       []),
@@ -110,6 +111,9 @@ for (f,r,v,j,c) in
      (:wrefresh,      Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
      (:wtimeout,      Cvoid,       ["win","delay"],                                 ["Ptr{WINDOW}","Integer"],                                ["Ptr{WINDOW}","Cint"]),
      (:wvline,        Cint,        ["win","ch","n"],                                ["Ptr{WINDOW}","jlchtype","Integer"],                     ["Ptr{WINDOW}","chtype","Cint"]),
+     # Functions with very long arguments.
+     (:prefresh,     Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"], ["Ptr{WINDOW}",["Integer" for _ = 1:6]...], ["Ptr{WINDOW}",["Cint" for _ = 1:6]...]),
+     (:pnoutrefresh, Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"], ["Ptr{WINDOW}",["Integer" for _ = 1:6]...], ["Ptr{WINDOW}",["Cint" for _ = 1:6]...])
     )
 
     fb    = Meta.quot(f)
