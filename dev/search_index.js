@@ -605,7 +605,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -613,7 +613,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
@@ -1190,6 +1190,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.request_focus_change",
     "category": "method",
     "text": "function request_focus_change()\n\nRequest that the current panel (in focus) changes its child that has the focus. If the panel has cycled all its children elements, than search for the next panel that can accept the focus.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.resizeterm",
+    "page": "Library",
+    "title": "TextUserInterfaces.resizeterm",
+    "category": "function",
+    "text": "function resizeterm(lines::Integer, columns::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
