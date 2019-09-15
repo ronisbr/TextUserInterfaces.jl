@@ -169,6 +169,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.bottom_panel",
+    "page": "Library",
+    "title": "TextUserInterfaces.bottom_panel",
+    "category": "function",
+    "text": "function bottom_panel(pan::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.box",
     "page": "Library",
     "title": "TextUserInterfaces.box",
@@ -217,6 +225,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.copywin",
+    "page": "Library",
+    "title": "TextUserInterfaces.copywin",
+    "category": "function",
+    "text": "function copywin(scr::Ptr{WINDOW}, dest::Ptr{WINDOW}, sminrow::Integer, smincol::Integer, dminrow::Integer, dmincol::Integer, dmaxrow::Integer, dmaxcol::Integer, overlay::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.create_field",
     "page": "Library",
     "title": "TextUserInterfaces.create_field",
@@ -241,27 +257,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.create_panel",
-    "category": "function",
-    "text": "function create_panel(win::TUI_WINDOW, prev::Union{Nothing,TUI_PANEL} = nothing, next::Union{Nothing,TUI_PANEL} = nothing)\n\nCreate a panel for the window win in which the previous panel is prev and the next panel is next.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.create_panel_chain-Tuple{Vararg{TextUserInterfaces.TUI_PANEL,N} where N}",
-    "page": "Library",
-    "title": "TextUserInterfaces.create_panel_chain",
-    "category": "method",
-    "text": "function create_panel_chain(panels::TUI_PANEL...; circular = true)\n\nCreate a chain of panels by assigning the prev and next pointers of each one. If the keyword circular is true, then the list will be circular.\n\nExample\n\ncreate_panel_chain(panel1, panel2, panel3; circular = false)\n\nnothing <--> panel1 <--> panel2 <--> panel3 <--> nothing\n\ncreate_panel_chain(panel1, panel2, panel3; circular = true)\n\n.---> panel1 <--> panel2 <--> panel3 <--.\n|                                       |\n|                                       |\n\'---------------------------------------\'\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.create_window",
+    "location": "lib/library/#TextUserInterfaces.create_window-Tuple",
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
-    "category": "function",
-    "text": "function createwindow([parent::Union{Nothing,TUIWINDOW}, ]nlines::Integer, ncols::Integer, beginy::Integer, beginx::Integer, id::String = \"\"; border = true)\n\nCreate a window inside the parent window parent. If parent is nothing or if it is omitted, then the root window will be used as the parent window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the parent window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
+    "category": "method",
+    "text": "function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = \"\"; has_buffer::Bool = true, bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = \"\", title_color::Int = -1)\n\nCreate a window inside the parent window parent. If parent is nothing or if it is omitted, then the root window will be used as the parent window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the parent window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nhas_buffer: If true, then the window will have a buffer.               (Default = false)\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window          (ncols). (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window           (nlines). (Default = 0)\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -345,14 +345,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.destroy_all_panels-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.destroy_all_panels",
-    "category": "method",
-    "text": "function destroy_all_panels()\n\nDestroy all panels managed by the TUI.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.destroy_all_windows-Tuple{}",
     "page": "Library",
     "title": "TextUserInterfaces.destroy_all_windows",
@@ -382,14 +374,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.destroy_menu",
     "category": "method",
     "text": "function destroy_menu(menu::TUI_MENU)\n\nDestroy the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.destroy_panel-Tuple{TextUserInterfaces.TUI_PANEL}",
-    "page": "Library",
-    "title": "TextUserInterfaces.destroy_panel",
-    "category": "method",
-    "text": "function destroy_panel(panel::TUI_PANEL)\n\nDestroy the panel panel.\n\n\n\n\n\n"
 },
 
 {
@@ -605,7 +589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
@@ -613,7 +597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -638,14 +622,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.hide_panel",
     "category": "function",
     "text": "function hide_panel(panel::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.hide_panel-Tuple{TextUserInterfaces.TUI_PANEL}",
-    "page": "Library",
-    "title": "TextUserInterfaces.hide_panel",
-    "category": "method",
-    "text": "function hide_panel(panel::TUI_PANEL)\n\nHide the panel panel.\n\n\n\n\n\n"
 },
 
 {
@@ -889,11 +865,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.move_panel_to_top-Tuple{TextUserInterfaces.TUI_PANEL}",
+    "location": "lib/library/#TextUserInterfaces.move_view-Tuple{TextUserInterfaces.TUI_WINDOW,Integer,Integer}",
     "page": "Library",
-    "title": "TextUserInterfaces.move_panel_to_top",
+    "title": "TextUserInterfaces.move_view",
     "category": "method",
-    "text": "function move_panel_to_top(panel::TUI_PANEL)\n\nMove the panel panel to the top.\n\n\n\n\n\n"
+    "text": "function move_view(win::TUI_WINDOW, y::Integer, x::Integer; update::Bool = true)\n\nMove the origin of the view of window win to the position (y,x). This routine makes sure that the view will never reach positions outside the buffer.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.move_view_inc-Tuple{TextUserInterfaces.TUI_WINDOW,Integer,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.move_view_inc",
+    "category": "method",
+    "text": "function move_view_inc(win::TUI_WINDOW; Δy::Integer, Δx::Integer; kwargs...)\n\nMove the view of the window win to the position (y+Δy, x+Δx). This function has the same set of keywords of the function move_view.\n\n\n\n\n\n"
 },
 
 {
@@ -985,19 +969,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.newpad",
+    "page": "Library",
+    "title": "TextUserInterfaces.newpad",
+    "category": "function",
+    "text": "function newpad(lines::Integer, cols::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.newwin",
     "page": "Library",
     "title": "TextUserInterfaces.newwin",
     "category": "function",
     "text": "function newwin(lines::Integer, cols::Integer, y::Integer, x::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.next_panel-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.next_panel",
-    "category": "method",
-    "text": "function next_panel([panel::TUI_PANEL])\n\nMake the next panel of panel be the top panel. If panel is not specified, then it will use the current top panel in the structure tui.\n\n\n\n\n\n"
 },
 
 {
@@ -1030,6 +1014,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.panel_userptr",
     "category": "function",
     "text": "function panel_userptr(pan::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.pnoutrefresh",
+    "page": "Library",
+    "title": "TextUserInterfaces.pnoutrefresh",
+    "category": "function",
+    "text": "function pnoutrefresh(win::Ptr{WINDOW}, pminrow::Integer, pmincol::Integer, sminrow::Integer, smincol::Integer, smaxrow::Integer, smaxcol::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1081,11 +1073,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.prev_panel-Tuple{}",
+    "location": "lib/library/#TextUserInterfaces.prefresh",
     "page": "Library",
-    "title": "TextUserInterfaces.prev_panel",
-    "category": "method",
-    "text": "function prev_panel([panel::TUI_PANEL])\n\nMake the previous panel of panel be the top panel. If panel is not specified, then it will use the current top panel in the structure tui.\n\n\n\n\n\n"
+    "title": "TextUserInterfaces.prefresh",
+    "category": "function",
+    "text": "function prefresh(win::Ptr{WINDOW}, pminrow::Integer, pmincol::Integer, sminrow::Integer, smincol::Integer, smaxrow::Integer, smaxcol::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1118,14 +1110,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.process_focus",
     "category": "method",
     "text": "function process_focus(menu::TUI_MENU, k::Keystroke)\n\nProcess the actions when the menu menu is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_PANEL,Keystroke}",
-    "page": "Library",
-    "title": "TextUserInterfaces.process_focus",
-    "category": "method",
-    "text": "function process_focus(panel::TUI_PANEL, k::Keystroke)\n\nProcess the actions when the panel panel is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
 },
 
 {
@@ -1165,15 +1149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.refresh_window",
     "category": "method",
-    "text": "function refresh_window(win::Ptr{WINDOW}; update = true)\n\nRefresh the window win and all its parents windows except for the root window. If update is true, then doupdate() is called and the physical screen is updated.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.request_focus_change-Tuple{TextUserInterfaces.TUI_PANEL}",
-    "page": "Library",
-    "title": "TextUserInterfaces.request_focus_change",
-    "category": "method",
-    "text": "function request_focus_change(panel::TUI_PANEL)\n\nRequest to change the focus of the children elements in panel panel. If all the children has already been cycled, then this function returns true to state that the focus should be released from the panel.\n\n\n\n\n\n"
+    "text": "function refresh_window(win::TUI_WINDOW; update = true, backpropagation = true)\n\nRefresh the window win and all its child windows. If the view needs to be updated (see view_needs_update), then the content of the buffer will be copied to the view before updating.\n\nIf update is true, then doupdate() is called and the physical screen is updated.\n\nIf backpropagation is true, then all the parents windows (except from the root window) will also be refreshed.\n\n\n\n\n\n"
 },
 
 {
@@ -1190,6 +1166,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.request_focus_change",
     "category": "method",
     "text": "function request_focus_change()\n\nRequest that the current panel (in focus) changes its child that has the focus. If the panel has cycled all its children elements, than search for the next panel that can accept the focus.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_view_update-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_view_update",
+    "category": "method",
+    "text": "function request_view_update(win::TUI_WINDOW)\n\nRequest to update the view of window win. Notice that this must also request update on all parent windows until the root window.\n\n\n\n\n\n"
 },
 
 {
@@ -1305,11 +1289,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_focus_chain-Tuple{Vararg{TextUserInterfaces.TUI_PANEL,N} where N}",
+    "location": "lib/library/#TextUserInterfaces.set_focus_chain-Tuple{Vararg{TextUserInterfaces.TUI_WINDOW,N} where N}",
     "page": "Library",
     "title": "TextUserInterfaces.set_focus_chain",
     "category": "method",
-    "text": "function set_focus_chain(panels::TUI_PANEL...; new_focus_id::Integer = 1)\n\nSet the focus chain, i.e. the ordered list of panels that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
+    "text": "function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)\n\nSet the focus chain, i.e. the ordered list of windows that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
 },
 
 {
@@ -1433,14 +1417,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.show_panel-Tuple{TextUserInterfaces.TUI_PANEL}",
-    "page": "Library",
-    "title": "TextUserInterfaces.show_panel",
-    "category": "method",
-    "text": "function show_panel(panel::TUI_PANEL)\n\nShow the panel panel.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.start_color",
     "page": "Library",
     "title": "TextUserInterfaces.start_color",
@@ -1502,6 +1478,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.update_panels",
     "category": "function",
     "text": "function update_panels()\n\nReturn type: Nothing\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.update_view-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.update_view",
+    "category": "method",
+    "text": "function update_view(win::TUI_WINDOW; force::Bool = false)\n\nUpdate the view of window win by copying the contents from the buffer. If the view does not need to be updated (see view_needs_update), then nothing is done. If the keyword force is true, then the copy will always happen.\n\nReturn\n\nIt returns true if the view has been updated and false otherwise.\n\n\n\n\n\n"
 },
 
 {
@@ -1681,19 +1665,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_window_cur_pos-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces._get_window_cur_pos-Tuple{Ptr{TextUserInterfaces.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces._get_window_cur_pos",
     "category": "method",
-    "text": "function _get_window_cur_pos(win::TUI_WINDOW)\n\nGet the cursor position of the window win and return it on a tuple (cur_y,cur_x).  If the window is not initialized, then this function returns (-1,-1).\n\n\n\n\n\n"
+    "text": "function _get_window_cur_pos(win::Ptr{WINDOW})\n\nGet the cursor position of the window win and return it on a tuple (cur_y,cur_x).  If the window is not initialized, then this function returns (-1,-1).\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_window_dims-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces._get_window_dims-Tuple{Ptr{TextUserInterfaces.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces._get_window_dims",
     "category": "method",
-    "text": "function _get_window_dims(win::TUI_WINDOW)\n\nGet the dimensions of the window win and return it on a tuple (dim_y,dim_x). If the window is not initialized, then this function returns (-1,-1).\n\n\n\n\n\n"
+    "text": "function _get_window_dims(win::Ptr{WINDOW})\n\nGet the dimensions of the window win and return it on a tuple (dim_y,dim_x). If the window is not initialized, then this function returns (-1,-1).\n\n\n\n\n\n"
 },
 
 {
@@ -1710,14 +1694,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.accept_focus",
     "category": "method",
     "text": "function accept_focus(menu::TUI_MENU)\n\nCommand executed when menu menu must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_PANEL}",
-    "page": "Library",
-    "title": "TextUserInterfaces.accept_focus",
-    "category": "method",
-    "text": "function accept_focus(panel::TUI_PANEL)\n\nCommand executed when panel panel must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
 },
 
 {
@@ -1745,19 +1721,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_PANEL}",
-    "page": "Library",
-    "title": "TextUserInterfaces.release_focus",
-    "category": "method",
-    "text": "function release_focus(panel::TUI_PANEL)\n\nRelease the focus from the panel panel.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_WINDOW}",
     "page": "Library",
     "title": "TextUserInterfaces.release_focus",
     "category": "method",
     "text": "function release_focus(win::TUI_WINDOW)\n\nRelease the focus from the window win.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.update_cursor-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "page": "Library",
+    "title": "TextUserInterfaces.update_cursor",
+    "category": "method",
+    "text": "function update_cursor(win::TUI_WINDOW)\n\nUpdate the cursor position so that the physical cursor matches the cursor of the window win.\n\n\n\n\n\n"
 },
 
 {
