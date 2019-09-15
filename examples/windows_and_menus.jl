@@ -32,19 +32,14 @@ Press F1 to exit.
 unset_color(win_inst,ncurses_color(bold = true))
 
 # Create the windows and panels.
-win1 = create_window(10, 40, 0, 22; border = true, title = " Panel 1 ",
-                     title_color = p2, border_color = p1)
+win1 = create_window(10, 40, 0, 22; has_buffer = true, border = true,
+                     title = " Panel 1 ", title_color = p2, border_color = p1)
 win2 = create_window(10, 40, 3, 32; border = true, title = " Panel 2 ",
                      title_color = p2, border_color = p1)
 win3 = create_window(10, 40, 6, 42; border = true, title = " Panel 3 ",
                      title_color = p2, border_color = p1)
-win4 = create_window(10, 40, 9, 52; border = true, title = " Panel 4 ",
-                     title_color = p2, border_color = p1)
-
-panels = [create_panel(win1),
-          create_panel(win2),
-          create_panel(win3),
-          create_panel(win4)]
+win4 = create_window(10, 40, 9, 52; has_buffer = true, border = true,
+                     title = " Panel 4 ", title_color = p2, border_color = p1)
 
 # Add text to the windows.
 set_color(win1, p4)
@@ -71,15 +66,46 @@ unset_color(win4,p4)
 # Create the menu.
 menu = create_menu(["Panel 1", "Panel 2", "Panel 3", "Panel 4"])
 set_menu_win(menu,win_menu)
-post_menu(menu)
+
+menu.on_return_pressed = (menu)->begin
+    item_name = current_item_name(menu)
+
+    idx = 0
+    if item_name == "Panel 1"
+        idx = 1
+    elseif item_name == "Panel 2"
+        idx = 2
+    elseif item_name == "Panel 3"
+        idx = 3
+    elseif item_name == "Panel 4"
+        idx = 4
+    end
+
+    idx == 0 && return
+
+    if ch == 10
+        !hidden_wins[idx] && move_window_to_top(wins[idx])
+    else
+        if hidden_wins[idx]
+            show_window(wins[idx])
+            hidden_wins[idx] = false
+        else
+            hide_window(wins[idx])
+            hidden_wins[idx] = true
+        end
+    end
+end
+
+# List of windows.
+wins = [win1; win2; win3; win4]
 
 # Refresh all the windows.
-refresh()
 refresh_all_windows()
 update_panels()
+doupdate()
 
-# Store which panels are hidden.
-hidden_panels = [false; false; false; false]
+# Store which windows are hidden.
+hidden_wins = [false; false; false; false]
 
 # Wait for a key and process.
 ch,k = jlgetch()
@@ -88,7 +114,7 @@ while k.ktype != :F1
     global ch,k
 
     if !menu_driver(menu, k)
-        if ch == 10 || k.value == "x"
+        if k.value == "x"
             item_name = current_item_name(menu)
 
             idx = 0
@@ -105,20 +131,14 @@ while k.ktype != :F1
 
             idx == 0 && continue
 
-            if ch == 10
-                !hidden_panels[idx] && move_panel_to_top(panels[idx])
+            if hidden_wins[idx]
+                show_window(wins[idx])
+                hidden_wins[idx] = false
             else
-                if hidden_panels[idx]
-                    show_panel(panels[idx])
-                    hidden_panels[idx] = false
-                else
-                    hide_panel(panels[idx])
-                    hidden_panels[idx] = true
-                end
+                hide_window(wins[idx])
+                hidden_wins[idx] = true
             end
         end
-    else
-        refresh_window(win_menu)
     end
 
     update_panels()

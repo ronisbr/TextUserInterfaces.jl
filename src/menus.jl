@@ -155,9 +155,12 @@ Set the menu `menu` sub-window to `win`.
 
 """
 function set_menu_sub(menu::TUI_MENU, win::TUI_WINDOW)
-    if menu.ptr != C_NULL && win.ptr != C_NULL
+    if (menu.ptr != C_NULL) && (win.ptr != C_NULL)
         set_menu_sub(menu.ptr, win.ptr)
+        win.view_needs_update = true
     end
+
+    return nothing
 end
 
 """
@@ -168,9 +171,17 @@ Set menu `menu` window to `win`.
 """
 function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)
     if (menu.ptr != C_NULL) && (win.ptr != C_NULL)
+        menu.win = win
         set_menu_win(menu.ptr, win.ptr)
         push!(win.children, menu)
+
+        # Show the menu.
+        post_menu(menu)
+        request_view_update(win)
+        refresh_window(win)
     end
+
+    return nothing
 end
 
 # Functions to get the menu information
@@ -437,9 +448,13 @@ function menu_driver(menu::TUI_MENU, k::Keystroke;
 
     if menu_func != nothing
         menu_func(menu)
+        request_view_update(menu.win)
+        update_cursor(menu.win)
         return true
     elseif k.ktype == :enter
         menu.on_return_pressed(menu)
+        request_view_update(menu.win)
+        update_cursor(menu.win)
         return true
     else
         return false
@@ -463,6 +478,8 @@ it returns `false`.
 """
 function accept_focus(menu::TUI_MENU)
     menu.has_focus = true
+    update_cursor(menu.win)
+    request_view_update(menu.win)
     return true
 end
 

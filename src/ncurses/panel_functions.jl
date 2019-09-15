@@ -61,6 +61,7 @@ end
 
 for (f,r,v,j,c) in
     (
+     (:bottom_panel,      Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
      (:del_panel,         Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
      (:hide_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
      (:new_panel,         Ptr{Cvoid}, ["win"],       ["Ptr{WINDOW}"],             ["Ptr{WINDOW}"]),

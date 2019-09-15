@@ -50,16 +50,11 @@ function satellite_simulator()
     # Create the menu.
     menu = create_menu([" Lat. and Lon. ", " Orbit Elements "]; mark = "")
     set_menu_win(menu,win_menu)
-    post_menu(menu)
 
     # Create the panels.
-    panels = [create_panel(win_lat_lon);
-              create_panel(win_orb_elem);]
-
-    move_panel_to_top(panels[1])
+    move_window_to_top(win_lat_lon)
 
     # Initial window update.
-    refresh()
     refresh_all_windows()
     update_panels()
 
@@ -78,26 +73,30 @@ function satellite_simulator()
 
     finished = false
 
+    menu.on_return_pressed = (menu)->begin
+        item = current_item(menu)
+
+        if item == menu.items[1]
+            move_window_to_top(win_lat_lon)
+        else
+            move_window_to_top(win_orb_elem)
+        end
+    end
+
     # Task to handle the keys
     # ==========================================================================
 
     @async begin
+        set_focus_chain(win_menu)
+        init_focus_manager()
         while true
             ch,k = jlgetch(win_menu.ptr)
 
-            if !menu_driver(menu,k)
-                if k.ktype == :F1
-                    finished = true
-                    break
-                elseif ch == 10
-                    item = current_item(menu)
-
-                    if item == menu.items[1]
-                        move_panel_to_top(panels[1])
-                    else
-                        move_panel_to_top(panels[2])
-                    end
-                end
+            if k.ktype == :F1
+                finished = true
+                break
+            else
+                process_focus(k)
             end
 
             yield()
@@ -153,10 +152,11 @@ function satellite_simulator()
         window_print(win_orb_elem, 2, str; pad = 5)
         unset_color(win_orb_elem,p0)
 
+        refresh_all_windows()
         update_panels()
         doupdate()
 
-        sleep(0.05)
+        sleep(0.005)
     end
 
     destroy_tui()

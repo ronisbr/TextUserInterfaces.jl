@@ -32,7 +32,6 @@ include("focus_manager.jl")
 include("forms.jl")
 include("input.jl")
 include("menus.jl")
-include("panels.jl")
 include("windows.jl")
 
 ################################################################################
@@ -180,7 +179,7 @@ function init_tui(dir::String = "")
 
     rootwin  = initscr()
     tui.init = true
-    push!(tui.wins, TUI_WINDOW(id = "rootwin", parent = nothing, ptr = rootwin))
+    push!(tui.wins, TUI_WINDOW(id = "rootwin", parent = nothing, view = rootwin))
     has_colors() == 1 && start_color()
 
     return tui
@@ -195,7 +194,6 @@ Destroy the Text User Interface (TUI).
 """
 function destroy_tui()
     if tui.init
-        destroy_all_panels()
         destroy_all_windows()
         endwin()
 

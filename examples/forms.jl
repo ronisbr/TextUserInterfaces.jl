@@ -104,21 +104,120 @@ function satellite_ground_trace()
     set_field_type(form, "f",    Val{:numeric}, 3, -180, +180)
     set_field_type(form, "prop", Val{:enum},    ["J2", "J4", "Two Body"])
 
-    # Post form.
     set_form_win(form, win_inputs)
-    post_form(form)
 
-    # Create the panels
+    form.on_return_pressed = (form)->begin
+        # Make sure we updated the current input.
+        form_next_field(form)
+        form_prev_field(form)
+
+        clear_window(win_error)
+
+        # Get data.
+        str_date = get_field_data(form, "date")
+        str_a    = get_field_data(form, "a")
+        str_e    = get_field_data(form, "e")
+        str_i    = get_field_data(form, "i")
+        str_Ω    = get_field_data(form, "Ω")
+        str_ω    = get_field_data(form, "ω")
+        str_f    = get_field_data(form, "f")
+        str_prop = rstrip(get_field_data(form, "prop"))
+        str_span = get_field_data(form, "span")
+
+        date = a = e = i = Ω = ω = f = orb_prop = span = nothing
+        data_ok = zeros(Bool, 9)
+
+        # Try to parse the data and mark the errors.
+        try
+            date = datetime2julian(DateTime(strip(str_date)))
+            data_ok[1] = true
+        catch
+        end
+
+        try
+            a = parse(Float64, str_a)
+            data_ok[2] = true
+        catch
+        end
+
+        try
+            e = parse(Float64, str_e)
+            (0 <= e < 1) && (data_ok[3] = true)
+        catch
+        end
+
+        try
+            i = parse(Float64, str_i)
+            data_ok[4] = true
+        catch
+        end
+
+        try
+            Ω = parse(Float64, str_Ω)
+            data_ok[5] = true
+        catch
+        end
+
+        try
+            ω  = parse(Float64, str_ω)
+            data_ok[6] = true
+        catch
+        end
+
+        try
+            f = parse(Float64, str_f)
+            data_ok[7] = true
+        catch
+        end
+
+        if haskey(propagators, str_prop)
+            orb_prop = propagators[str_prop]
+            data_ok[8] = true
+        end
+
+        try
+            span = parse(Int, str_span)
+            (span > 0) && (data_ok[9] = true)
+        catch
+        end
+
+        # Mark the fields with errors.
+        for i = 1:length(data_ok)
+            if !data_ok[i]
+                set_color(win_error, p3)
+                window_print(win_error, 2*(i-1)+1, "ERROR!")
+                unset_color(win_error, p3)
+            end
+        end
+
+        # Only computes the new ground trace if everything is OK.
+        if prod(data_ok)
+            d2r = π/180
+            orbp = init_orbit_propagator(orb_prop, date, a*1000, e,
+                                         i*d2r, Ω*d2r, ω*d2r, f*d2r)
+            gt = ground_trace(orbp; span = span)
+
+            lat = map(x->x[1]/d2r, gt)
+            lon = map(x->x[2]/d2r, gt)
+
+            str = scatterplot(lon, lat;
+                              border = :bold,
+                              xlim = (-180,+180),
+                              ylim = (-90,+90),
+                              xlabel = "Longitude [°]",
+                              ylabel = "Latitude [°]",
+                              width = COLS()-52,
+                              height = 20) |> string
+
+            window_print(win_plot, 1, str; pad = 10)
+        end
+    end
+
+    # Focus manager
     # ==========================================================================
 
-    # Create panels.
-    panels = [create_panel(win);
-              create_panel(win_inputs);
-              create_panel(win_error);
-              create_panel(win_plot);
-              create_panel(win_inst);]
-
-    move_panel_to_top(panels[2])
+    set_focus_chain(win_inputs)
+    init_focus_manager()
 
     # Main loop
     # ==========================================================================
@@ -126,125 +225,13 @@ function satellite_ground_trace()
     # Initial window update.
     refresh()
     refresh_all_windows()
-    refresh_window(win_inputs) # Keep the cursor on the `win_inputs`.
     update_panels()
 
     # Ready an input and process.
     ch, k = jlgetch()
 
     while k.ktype != :F1
-        if !form_driver(form, k)
-            if ch == 10
-                # Make sure we updated the current input.
-                form_next_field(form)
-                form_prev_field(form)
-
-                clear_window(win_error)
-
-                # Get data.
-                str_date = get_field_data(form, "date")
-                str_a    = get_field_data(form, "a")
-                str_e    = get_field_data(form, "e")
-                str_i    = get_field_data(form, "i")
-                str_Ω    = get_field_data(form, "Ω")
-                str_ω    = get_field_data(form, "ω")
-                str_f    = get_field_data(form, "f")
-                str_prop = rstrip(get_field_data(form, "prop"))
-                str_span = get_field_data(form, "span")
-
-                date = a = e = i = Ω = ω = f = orb_prop = span = nothing
-                data_ok = zeros(Bool, 9)
-
-                # Try to parse the data and mark the errors.
-                try
-                    date = datetime2julian(DateTime(strip(str_date)))
-                    data_ok[1] = true
-                catch
-                end
-
-                try
-                    a = parse(Float64, str_a)
-                    data_ok[2] = true
-                catch
-                end
-
-                try
-                    e = parse(Float64, str_e)
-                    (0 <= e < 1) && (data_ok[3] = true)
-                catch
-                end
-
-                try
-                    i = parse(Float64, str_i)
-                    data_ok[4] = true
-                catch
-                end
-
-                try
-                    Ω = parse(Float64, str_Ω)
-                    data_ok[5] = true
-                catch
-                end
-
-                try
-                    ω  = parse(Float64, str_ω)
-                    data_ok[6] = true
-                catch
-                end
-
-                try
-                    f = parse(Float64, str_f)
-                    data_ok[7] = true
-                catch
-                end
-
-                if haskey(propagators, str_prop)
-                    orb_prop = propagators[str_prop]
-                    data_ok[8] = true
-                end
-
-                try
-                    span = parse(Int, str_span)
-                    (span > 0) && (data_ok[9] = true)
-                catch
-                end
-
-                # Mark the fields with errors.
-                for i = 1:length(data_ok)
-                    if !data_ok[i]
-                        set_color(win_error, p3)
-                        window_print(win_error, 2*(i-1)+1, "ERROR!")
-                        unset_color(win_error, p3)
-                    end
-                end
-
-                # Only computes the new ground trace if everything is OK.
-                if prod(data_ok)
-                    d2r = π/180
-                    orbp = init_orbit_propagator(orb_prop, date, a*1000, e,
-                                                 i*d2r, Ω*d2r, ω*d2r, f*d2r)
-                    gt = ground_trace(orbp; span = span)
-
-                    lat = map(x->x[1]/d2r, gt)
-                    lon = map(x->x[2]/d2r, gt)
-
-                    str = scatterplot(lon, lat;
-                                      border = :bold,
-                                      xlim = (-180,+180),
-                                      ylim = (-90,+90),
-                                      xlabel = "Longitude [°]",
-                                      ylabel = "Latitude [°]",
-                                      width = COLS()-52,
-                                      height = 20) |> string
-
-                    window_print(win_plot, 1, str; pad = 10)
-                end
-            end
-        end
-
-        update_panels()
-        doupdate()
-
+        process_focus(k)
         ch, k = jlgetch()
     end
 

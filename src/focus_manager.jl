@@ -16,18 +16,18 @@ chain.
 
 """
 function force_focus_change(new_focus_id::Integer)
-    # With no panels, there is nothing to process.
-    num_panels = length(tui.focus_chain)
-    num_panels == 0 && return nothing
+    # With no windows, there is nothing to process.
+    num_wins = length(tui.focus_chain)
+    num_wins == 0 && return nothing
 
     tui.focus_ptr != nothing && release_focus(tui.focus_ptr)
 
     # Check if the new element ID is valid.
-    if (0 < new_focus_id <= num_panels)
+    if (0 < new_focus_id <= num_wins)
 
         # If the selected `id` cannot accept the focus, search for any other
         # component that can.
-        for i = 1:num_panels
+        for i = 1:num_wins
             if accept_focus(tui.focus_chain[new_focus_id])
                 tui.focus_id  = new_focus_id
                 tui.focus_ptr = tui.focus_chain[new_focus_id]
@@ -35,8 +35,12 @@ function force_focus_change(new_focus_id::Integer)
             end
 
             new_focus_id += 1
-            new_focus_id > num_panels && (new_focus_id = 1)
+            new_focus_id > num_wins && (new_focus_id = 1)
         end
+
+        refresh_window(tui.focus_ptr)
+        update_panels()
+        doupdate()
    end
 end
 
@@ -48,15 +52,16 @@ to find the first one that can accept the focus.
 
 """
 function init_focus_manager()
-    # With no panels, there is nothing to process.
-    num_panels = length(tui.focus_chain)
-    num_panels == 0 && return nothing
+    # With no windows, there is nothing to process.
+    num_wins = length(tui.focus_chain)
+    num_wins == 0 && return nothing
 
-    for i = 1:num_panels
+    for i = 1:num_wins
         if accept_focus(tui.focus_chain[i])
             tui.focus_id  = i
             tui.focus_ptr = tui.focus_chain[i]
 
+            refresh_window(tui.focus_ptr)
             update_panels()
             doupdate()
 
@@ -74,9 +79,9 @@ Process the focus considering the user's keystorke `k`.
 
 """
 function process_focus(k::Keystroke)
-    # With no panels, there is nothing to process.
-    num_panels = length(tui.focus_chain)
-    num_panels == 0 && return nothing
+    # With no windows, there is nothing to process.
+    num_wins = length(tui.focus_chain)
+    num_wins == 0 && return nothing
 
     # Check if the keystroke asks for change focus.
     if k.ktype == :F2
@@ -85,6 +90,7 @@ function process_focus(k::Keystroke)
         process_focus(tui.focus_ptr, k)
     end
 
+    refresh_window(tui.focus_ptr)
     update_panels()
     doupdate()
 
@@ -100,17 +106,17 @@ panel that can accept the focus.
 
 """
 function request_focus_change()
-    # With no panels, there is nothing to process.
-    num_panels = length(tui.focus_chain)
-    num_panels == 0 && return nothing
+    # With no windows, there is nothing to process.
+    num_wins = length(tui.focus_chain)
+    num_wins == 0 && return nothing
 
     if (tui.focus_ptr == nothing) || request_focus_change(tui.focus_ptr)
         # If the window is no longer in focus, we must search for the next
         # one in which the focus is accepted.
         tui.focus_ptr = nothing
-        for i = 1:num_panels
+        for i = 1:num_wins
             tui.focus_id += 1
-            tui.focus_id > num_panels && (tui.focus_id = 1)
+            tui.focus_id > num_wins && (tui.focus_id = 1)
             if accept_focus(tui.focus_chain[tui.focus_id])
                 tui.focus_ptr = tui.focus_chain[tui.focus_id]
                 break
@@ -120,17 +126,17 @@ function request_focus_change()
 end
 
 """
-    function set_focus_chain(panels::TUI_PANEL...; new_focus_id::Integer = 1)
+    function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)
 
-Set the focus chain, *i.e.* the ordered list of panels that can receive the
+Set the focus chain, *i.e.* the ordered list of windows that can receive the
 focus. The keyword `new_focus_id` can be set to specify which element is
 currently focused in the new chain.
 
 """
-function set_focus_chain(panels::TUI_PANEL...; new_focus_id::Integer = 1)
+function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)
     tui.focus_ptr != nothing && release_focus(tui.focus_ptr)
     tui.focus_ptr = nothing
-    tui.focus_chain = [panels...]
+    tui.focus_chain = [wins...]
     force_focus_change(new_focus_id)
     return nothing
 end

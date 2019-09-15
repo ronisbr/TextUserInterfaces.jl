@@ -97,42 +97,64 @@ end
     penum::Vector{Cstring} = Cstring[]
 end
 
-@with_kw mutable struct TUI_FORM
-    fields::Vector{TUI_FIELD}      = Vector{TUI_FIELD}(undef,0)
-    ptr_fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
-    ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
-
-    # Focus manager
-    # ==========================================================================
-    has_focus::Bool = false
-
-    # Signals
-    # ==========================================================================
-    on_return_pressed::Function = (form)->return nothing
-end
-
-@with_kw mutable struct TUI_MENU
-    names::Vector{String}        = String[]
-    descriptions::Vector{String} = String[]
-    items::Vector{Ptr{Cvoid}}    = Vector{Ptr{Cvoid}}(undef,0)
-    ptr::Ptr{Cvoid}              = Ptr{Cvoid}(0)
-
-    # Focus manager
-    # ==========================================================================
-    has_focus::Bool = false
-
-    # Signals
-    # ==========================================================================
-    on_return_pressed::Function = (form)->return nothing
-end
-
 @with_kw mutable struct TUI_WINDOW
     id::String = ""
-    parent::Union{Nothing,TUI_WINDOW} = nothing
-    border::Ptr{WINDOW} = Ptr{WINDOW}(0)
     title::String = ""
+    coord::Tuple{Int,Int} = (0,0)
+
+    # Parent window.
+    parent::Union{Nothing,TUI_WINDOW} = nothing
+
+    # If the user wants a border, then a window will be created to handle this
+    # border and the view will be a child window of it. In this case, this
+    # variable is a pointer to the window that holds the border.
+    border::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
+    # This is a pointer to the window that must handler the child elements. This
+    # can change whether the user wants a buffer or not.
     ptr::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
+    # Foremost element of the window, which can be the border or the view.
+    foremost::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
+    # List of children elements.
     children::Vector{Any} = Any[]
+
+    # Buffer
+    # ==========================================================================
+
+    # Pointer to the window (pad) that handles the buffer.
+    buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
+    # If `true`, then the buffer has changed, which requires a view update.
+    buffer_changed::Bool = true
+
+    # View
+    # ==========================================================================
+
+    # Pointer to the window view, which is the window that is actually draw on
+    # screen.
+    view::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
+    # Origin of the view window with respect to the physical screen. This is
+    # useful for setting the cursor position when required.
+    orig::Tuple{Int,Int} = (0,0)
+
+    # If `true`, then the view has changed and must be updated.
+    view_needs_update::Bool = true
+
+    # Panel
+    # ==========================================================================
+
+    # Panel that holds the foremost visible element of the windows, which can be
+    # the panel that holds the border or the view.
+    panel::Ptr{Cvoid} = Ptr{Cvoid}(0)
+
+    # Panel of the border.
+    panel_border::Ptr{Cvoid} = Ptr{Cvoid}(0)
+
+    # Panel of the view.
+    panel_view::Ptr{Cvoid} = Ptr{Cvoid}(0)
 
     # Focus manager
     # ==========================================================================
@@ -146,12 +168,35 @@ end
     on_focus_released::Function = (win)->return nothing
 end
 
-@with_kw mutable struct TUI_PANEL
-    ptr::Ptr{Cvoid}
-    ptr_border::Ptr{Cvoid} = Ptr{Cvoid}(0)
-    win::TUI_WINDOW
-    next::Union{Nothing,TUI_PANEL} = nothing
-    prev::Union{Nothing,TUI_PANEL} = nothing
+@with_kw mutable struct TUI_FORM
+    fields::Vector{TUI_FIELD}      = Vector{TUI_FIELD}(undef,0)
+    ptr_fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
+    ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
+    win::Union{Nothing,TUI_WINDOW} = nothing
+
+    # Focus manager
+    # ==========================================================================
+    has_focus::Bool = false
+
+    # Signals
+    # ==========================================================================
+    on_return_pressed::Function = (form)->return nothing
+end
+
+@with_kw mutable struct TUI_MENU
+    names::Vector{String}          = String[]
+    descriptions::Vector{String}   = String[]
+    items::Vector{Ptr{Cvoid}}      = Vector{Ptr{Cvoid}}(undef,0)
+    ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
+    win::Union{Nothing,TUI_WINDOW} = nothing
+
+    # Focus manager
+    # ==========================================================================
+    has_focus::Bool = false
+
+    # Signals
+    # ==========================================================================
+    on_return_pressed::Function = (form)->return nothing
 end
 
 @with_kw mutable struct TUI
@@ -160,11 +205,6 @@ end
     # Windows
     # ==========================================================================
     wins::Vector{TUI_WINDOW}  = TUI_WINDOW[]
-
-    # Panels
-    # ==========================================================================
-    panels::Vector{TUI_PANEL} = TUI_PANEL[]
-    top_panel::Union{Nothing,TUI_PANEL} = nothing
 
     # Colors
     # ==========================================================================
@@ -185,9 +225,9 @@ end
 
     # Focus manager
     # ==========================================================================
-    focus_chain::Vector{TUI_PANEL} = Vector{TUI_PANEL}[]
+    focus_chain::Vector{TUI_WINDOW} = Vector{TUI_WINDOW}[]
     focus_id::Int = 1
-    focus_ptr::Union{Nothing,TUI_PANEL} = nothing
+    focus_ptr::Union{Nothing,TUI_WINDOW} = nothing
 end
 
 """

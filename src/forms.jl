@@ -289,8 +289,14 @@ Set the form `form` window to `win`.
 """
 function set_form_win(form::TUI_FORM, win::TUI_WINDOW)
     if (form.ptr != C_NULL) && (win.ptr != C_NULL)
+        form.win = win
         set_form_win(form.ptr, win.ptr)
         push!(win.children, form)
+
+        # Show the form.
+        post_form(form)
+        request_view_update(win)
+        refresh_window(win)
     end
 
     return nothing
@@ -303,7 +309,14 @@ Set the form `form` sub-window to `sub`.
 
 """
 function set_form_sub(form::TUI_FORM, win::TUI_WINDOW)
-    (form.ptr != C_NULL) && (win.ptr != C_NULL) && set_form_sub(form.ptr, win.ptr)
+    if (form.ptr != C_NULL) && (win.ptr != C_NULL)
+        set_form_sub(form.ptr, win.ptr)
+
+        # Update the window to show the form.
+        request_view_update(win)
+        refresh_window(win)
+    end
+
     return nothing
 end
 
@@ -392,13 +405,19 @@ function form_driver(form::TUI_FORM, k::Keystroke;
 
     if form_func != nothing
         form_func(form)
+        request_view_update(form.win)
+        update_cursor(form.win)
         return true
     else
         if k.ktype == :enter
             form.on_return_pressed(form)
+            request_view_update(form.win)
+            update_cursor(form.win)
             return true
         elseif (k.ktype == :char) || (k.ktype == :utf8)
             form_add_char(form, UInt32(k.value[1]))
+            request_view_update(form.win)
+            update_cursor(form.win)
             return true
         end
     end
@@ -423,6 +442,8 @@ it returns `false`.
 """
 function accept_focus(form::TUI_FORM)
     form.has_focus = true
+    update_cursor(form.win)
+    request_view_update(form.win)
     return true
 end
 

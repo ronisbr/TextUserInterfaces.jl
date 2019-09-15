@@ -90,9 +90,6 @@ function plot_ground_trace(win_plot,win_error,form)
             set_color(win_error, error_color)
             window_print(win_error, 2*(i-1)+1, "ERROR!")
             unset_color(win_error, error_color)
-            refresh_window(win_error)
-            update_panels()
-            doupdate()
         end
     end
 
@@ -116,9 +113,6 @@ function plot_ground_trace(win_plot,win_error,form)
                           height = 20) |> string
 
         window_print(win_plot, 1, str)
-        refresh_window(win_plot)
-        update_panels()
-        doupdate()
     end
 end
 
@@ -157,9 +151,6 @@ function get_raan(form,win_output,win_error)
             set_color(win_error, error_color)
             window_print(win_error, 2*(i-1), "ERROR!")
             unset_color(win_error, error_color)
-            refresh_window(win_error)
-            update_panels()
-            doupdate()
         end
     end
 
@@ -173,9 +164,6 @@ function get_raan(form,win_output,win_error)
         window_print(win_output, 1, 14, "$(raan_str)")
         unset_color(win_output, bold)
         window_print(win_output, 1,  21, "º.")
-        refresh_window(win_output)
-        update_panels()
-        doupdate()
     end
 end
 
@@ -201,7 +189,6 @@ function menus_and_forms()
     # --------------------------------------------------------------------------
     win_menu = create_window(LINES()-2, 20, 0, 0; border = true,
                              title = " Menu ", title_color = p0)
-    create_panel(win_menu)
 
     win_menu.on_focus_acquired = (win)->begin
         set_window_title!(win, " Menu "; title_color = p2)
@@ -215,7 +202,6 @@ function menus_and_forms()
     # --------------------------------------------------------------------------
     win_gt = create_window(LINES()-2, COLS()-21, 0, 21; border = true,
                            title = " Ground trace ", title_color = p0)
-    create_panel(win_gt)
 
     win_gt.on_focus_acquired = (win)->begin
         set_window_title!(win, " Ground trace "; title_color = p2)
@@ -250,7 +236,6 @@ function menus_and_forms()
 
     win_raan = create_window(LINES()-2, COLS()-21, 0, 21; border = true,
                              title = " RAAN ", title_color = p0)
-    create_panel(win_raan)
 
     win_raan.on_focus_acquired = (win)->begin
         set_window_title!(win, " RAAN "; title_color = p2)
@@ -278,6 +263,7 @@ function menus_and_forms()
                    Press F1 to exit.
                    Press F2 to change the focus between visible panels.
                    """)
+
     unset_color(win_inst,p0)
 
     # Menus
@@ -286,17 +272,14 @@ function menus_and_forms()
     # Create the side menu.
     menu = create_menu(["Ground trace"; "RAAN"])
     set_menu_win(menu,win_menu)
-    post_menu(menu)
 
     # Action when return is pressed and the menu is in focus.
     menu.on_return_pressed = (menu)->begin
         if current_item_name(menu) == "Ground trace"
-            set_focus_chain(tui.panels[1], tui.panels[2])
-            move_panel_to_top(tui.panels[2])
+            set_focus_chain(win_menu,win_gt)
             force_focus_change(2)
         else
-            set_focus_chain(tui.panels[1], tui.panels[3])
-            move_panel_to_top(tui.panels[3])
+            set_focus_chain(win_menu,win_raan)
             force_focus_change(2)
         end
     end
@@ -349,7 +332,6 @@ function menus_and_forms()
 
     # Post form.
     set_form_win(form, win_gt_inputs)
-    post_form(form)
 
     form.on_return_pressed = (form)->begin
         plot_ground_trace(win_gt_plot,win_gt_error,form)
@@ -372,7 +354,6 @@ function menus_and_forms()
 
     # Post form.
     set_form_win(form, win_raan_input)
-    post_form(form)
 
     form.on_return_pressed = (form)->begin
         get_raan(form, win_raan_output, win_raan_error)
@@ -381,15 +362,11 @@ function menus_and_forms()
     # Manager
     # ==========================================================================
 
-    # Initial focus chain.
-    set_focus_chain(tui.panels[1], tui.panels[2])
-
-    # Refresh all the windows.
-    move_panel_to_top(tui.panels[2])
-    refresh()
     refresh_all_windows()
-    update_panels()
 
+    # Initial focus chain.
+    move_window_to_top(win_gt)
+    set_focus_chain(win_menu,win_gt)
     init_focus_manager()
 
     # Wait for a key and process.
