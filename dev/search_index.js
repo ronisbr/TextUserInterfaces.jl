@@ -589,7 +589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -597,7 +597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
@@ -1361,14 +1361,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_sub-Tuple{TextUserInterfaces.TUI_FORM,TextUserInterfaces.TUI_WINDOW}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_form_sub",
-    "category": "method",
-    "text": "function set_form_sub(form::TUI_FORM, win::TUI_WINDOW)\n\nSet the form form sub-window to sub.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{Ptr{Nothing},Ptr{TextUserInterfaces.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_win",
@@ -1414,14 +1406,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.set_menu_sub",
     "category": "function",
     "text": "function set_menu_sub(menu::Ptr{Cvoid}, win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_sub-Tuple{TextUserInterfaces.TUI_MENU,TextUserInterfaces.TUI_WINDOW}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_menu_sub",
-    "category": "method",
-    "text": "function set_menu_sub(menu::TUI_MENU, win::TUI_WINDOW)\n\nSet the menu menu sub-window to win.\n\n\n\n\n\n"
 },
 
 {
