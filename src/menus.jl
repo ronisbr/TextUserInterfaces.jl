@@ -6,9 +6,9 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export create_menu, destroy_menu, set_menu_win, set_menu_sub, post_menu,
-       unpost_menu, menu_down_item, menu_left_item, menu_right_item,
-       menu_up_item, menu_down_line, menu_up_line, menu_down_page, menu_up_page,
+export create_menu, destroy_menu, set_menu_win, post_menu, unpost_menu,
+       menu_down_item, menu_left_item, menu_right_item, menu_up_item,
+       menu_down_line, menu_up_line, menu_down_page, menu_up_page,
        menu_first_item, menu_last_item, menu_next_item, menu_prev_item,
        menu_toggle_item, current_item, current_item_name, current_item_desc,
        selected_items, selected_items_names, selected_items_desc, menu_driver
@@ -149,21 +149,6 @@ function unpost_menu(menu::TUI_MENU)
 end
 
 """
-    function set_menu_sub(menu::TUI_MENU, win::TUI_WINDOW)
-
-Set the menu `menu` sub-window to `win`.
-
-"""
-function set_menu_sub(menu::TUI_MENU, win::TUI_WINDOW)
-    if (menu.ptr != C_NULL) && (win.ptr != C_NULL)
-        set_menu_sub(menu.ptr, win.ptr)
-        win.view_needs_update = true
-    end
-
-    return nothing
-end
-
-"""
     function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)
 
 Set menu `menu` window to `win`.
@@ -173,6 +158,7 @@ function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)
     if (menu.ptr != C_NULL) && (win.ptr != C_NULL)
         menu.win = win
         set_menu_win(menu.ptr, win.ptr)
+        set_menu_sub(menu.ptr, win.ptr)
         push!(win.children, menu)
 
         # Show the menu.

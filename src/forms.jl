@@ -7,7 +7,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export create_field, create_form, destroy_field, destroy_form, get_field_data,
-       post_form, unpost_form, form_driver, set_field_type
+       post_form, unpost_form, form_driver, set_field_type, set_form_win
 
 """
     function create_field(height::Int, width::Int, y::Int, x::Int, buffer::String = "", id::String = "", offscreen::Int = 0, nbuffers::Int = 0; ...)
@@ -291,28 +291,11 @@ function set_form_win(form::TUI_FORM, win::TUI_WINDOW)
     if (form.ptr != C_NULL) && (win.ptr != C_NULL)
         form.win = win
         set_form_win(form.ptr, win.ptr)
+        set_form_sub(form.ptr, win.ptr)
         push!(win.children, form)
 
         # Show the form.
         post_form(form)
-        request_view_update(win)
-        refresh_window(win)
-    end
-
-    return nothing
-end
-
-"""
-    function set_form_sub(form::TUI_FORM, win::TUI_WINDOW)
-
-Set the form `form` sub-window to `sub`.
-
-"""
-function set_form_sub(form::TUI_FORM, win::TUI_WINDOW)
-    if (form.ptr != C_NULL) && (win.ptr != C_NULL)
-        set_form_sub(form.ptr, win.ptr)
-
-        # Update the window to show the form.
         request_view_update(win)
         refresh_window(win)
     end
