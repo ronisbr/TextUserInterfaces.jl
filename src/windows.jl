@@ -571,8 +571,7 @@ function set_window_title!(win::TUI_WINDOW, title::AbstractString;
         cury, curx = _get_window_cur_pos(win.border)
 
         # Get the dimensions of the border window.
-        win_obj = unsafe_load(win.border)
-        wsx     = win_obj.maxx + 1
+        ~, wsx = _get_window_dims(win.border)
 
         # Escape the string to avoid problems.
         title_esc = escape_string(title)
