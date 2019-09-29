@@ -84,6 +84,13 @@ function init_tui(dir::String = "")
     end
     ncurses.libncurses = l
 
+    # Find if ncurses was compiled with `NCURSES_REENTRANT` option.
+    try
+        cglobal( dlsym(ncurses.libncurses, :stdscr) )
+    catch
+        ncurses.NCURSES_REENTRANT = true
+    end
+
     # libpanel
     # --------------------------------------------------------------------------
 

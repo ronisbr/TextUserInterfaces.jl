@@ -17,6 +17,9 @@ ncurses wrapper.
 
 """
 @with_kw mutable struct NCURSES
+
+    NCURSES_REENTRANT::Bool  = false
+
     libncurses::Ptr{Nothing} = Ptr{Nothing}(0)
     libform::Ptr{Nothing}    = Ptr{Nothing}(0)
     libmenu::Ptr{Nothing}    = Ptr{Nothing}(0)

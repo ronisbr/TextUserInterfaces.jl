@@ -196,7 +196,11 @@ from `ACS_(:HLINE)`.
 """
 function ACS_(s::Symbol)
     if ncurses.acs_map == C_NULL
-        ncurses.acs_map     = cglobal( dlsym(ncurses.libncurses, :acs_map), Cuint)
+        if !ncurses.NCURSES_REENTRANT
+            ncurses.acs_map = cglobal(dlsym(ncurses.libncurses, :acs_map), Cuint)
+        else
+            ncurses.acs_map = ccall(dlsym(ncurses.libncurses, :_nc_acs_map), Cuint, ())
+        end
         ncurses.acs_map_arr = unsafe_wrap(Array, ncurses.acs_map, 128)
     end
 
@@ -218,8 +222,12 @@ For more information, consult `libncurses` documentation.
 
 """
 function COLS()
-    ncurses.COLS == C_NULL && ( ncurses.COLS = cglobal( dlsym(ncurses.libncurses, :COLS), Cint) )
-    return unsafe_load(ncurses.COLS)
+    if !ncurses.NCURSES_REENTRANT
+        ncurses.COLS == C_NULL && ( ncurses.COLS = cglobal( dlsym(ncurses.libncurses, :COLS), Cint) )
+        return unsafe_load(ncurses.COLS)
+    else
+        return ccall(dlsym(ncurses.libncurses, :_nc_COLS), Cint, ())
+    end
 end
 export COLS
 
@@ -233,8 +241,12 @@ For more information, consult `libncurses` documentation.
 
 """
 function LINES()
-    ncurses.LINES == C_NULL && ( ncurses.LINES = cglobal( dlsym(ncurses.libncurses, :LINES), Cint) )
-    return unsafe_load(ncurses.LINES)
+    if !ncurses.NCURSES_REENTRANT
+        ncurses.LINES == C_NULL && ( ncurses.LINES = cglobal( dlsym(ncurses.libncurses, :LINES), Cint) )
+        return unsafe_load(ncurses.LINES)
+    else
+        return ccall(dlsym(ncurses.libncurses, :_nc_LINES), Cint, ())
+    end
 end
 export LINES
 
