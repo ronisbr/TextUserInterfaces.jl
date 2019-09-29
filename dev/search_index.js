@@ -601,11 +601,59 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.getbegx",
+    "page": "Library",
+    "title": "TextUserInterfaces.getbegx",
+    "category": "function",
+    "text": "function getbegx(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.getbegy",
+    "page": "Library",
+    "title": "TextUserInterfaces.getbegy",
+    "category": "function",
+    "text": "function getbegy(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.getch",
     "page": "Library",
     "title": "TextUserInterfaces.getch",
     "category": "function",
     "text": "function getch()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.getcurx",
+    "page": "Library",
+    "title": "TextUserInterfaces.getcurx",
+    "category": "function",
+    "text": "function getcurx(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.getcury",
+    "page": "Library",
+    "title": "TextUserInterfaces.getcury",
+    "category": "function",
+    "text": "function getcury(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.getmaxx",
+    "page": "Library",
+    "title": "TextUserInterfaces.getmaxx",
+    "category": "function",
+    "text": "function getmaxx(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.getmaxy",
+    "page": "Library",
+    "title": "TextUserInterfaces.getmaxy",
+    "category": "function",
+    "text": "function getmaxy(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
