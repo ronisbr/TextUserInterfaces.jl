@@ -193,6 +193,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.change_text-Tuple{WidgetLabel,AbstractString}",
+    "page": "Library",
+    "title": "TextUserInterfaces.change_text",
+    "category": "method",
+    "text": "function change_text(widget::WidgetLabel, new_text::AbstractString; alignment = :l, color::Int = -1)\n\nChange to text of the label widget widget to new_text.\n\nThe text alignment in the widget can be selected by the keyword alignment, which can be:\n\n:l: left alignment (default);\n:c: Center alignment; or\n:r: Right alignment.\n\nThe text color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.change_value-Tuple{WidgetProgressBar,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.change_value",
+    "category": "method",
+    "text": "function change_value(widget::WidgetProgressBar, new_value::Integer; color::Int = -1)\n\nChange the value of the progress bar to new_value.\n\nThe color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.clear",
     "page": "Library",
     "title": "TextUserInterfaces.clear",
@@ -257,11 +273,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_window-Tuple",
+    "location": "lib/library/#TextUserInterfaces.create_widget",
+    "page": "Library",
+    "title": "TextUserInterfaces.create_widget",
+    "category": "function",
+    "text": "function create_widget(T, parent::TUI_WINDOW, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)\n\nCreate the widget of type T in the parent window parent. The widget will be positioned on the coordinate (begin_y, begin_x) of the parent window.\n\nAdditional variables and keywords related to each widget can be passed using vargs and kwargs respectively.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.create_window",
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
-    "category": "method",
-    "text": "function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = \"\"; has_buffer::Bool = true, bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = \"\", title_color::Int = -1)\n\nCreate a window inside the parent window parent. If parent is nothing or if it is omitted, then the root window will be used as the parent window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the parent window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nhas_buffer: If true, then the window will have a buffer.               (Default = false)\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window          (ncols). (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window           (nlines). (Default = 0)\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
+    "category": "function",
+    "text": "function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = \"\"; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = \"\", title_color::Int = -1)\n\nCreate a window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the root window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window          (ncols). (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window           (nlines). (Default = 0)\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -382,6 +406,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.destroy_tui",
     "category": "method",
     "text": "function destroy_tui()\n\nDestroy the Text User Interface (TUI).\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.destroy_widget-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.destroy_widget",
+    "category": "method",
+    "text": "function destroy_widget(widget; refresh::Bool = true)\n\nDestroy the widget widget.\n\nIf refresh is true (default), then a full refresh will be performed on the parent window.\n\n\n\n\n\n"
 },
 
 {
@@ -1169,6 +1201,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.redraw",
+    "page": "Library",
+    "title": "TextUserInterfaces.redraw",
+    "category": "function",
+    "text": "function redraw(widget)\n\nRedraw the widget inside its content window cwin.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.refresh",
     "page": "Library",
     "title": "TextUserInterfaces.refresh",
@@ -1214,6 +1254,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.request_focus_change",
     "category": "method",
     "text": "function request_focus_change()\n\nRequest that the current panel (in focus) changes its child that has the focus. If the panel has cycled all its children elements, than search for the next panel that can accept the focus.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_update-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_update",
+    "category": "method",
+    "text": "function request_update(widget)\n\nRequest update of the widget widget.\n\n\n\n\n\n"
 },
 
 {
@@ -1457,11 +1505,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.subpad",
+    "page": "Library",
+    "title": "TextUserInterfaces.subpad",
+    "category": "function",
+    "text": "function subpad(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.top_panel",
     "page": "Library",
     "title": "TextUserInterfaces.top_panel",
     "category": "function",
     "text": "function top_panel(pan::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.touchwin",
+    "page": "Library",
+    "title": "TextUserInterfaces.touchwin",
+    "category": "function",
+    "text": "function touchwin(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1502,6 +1566,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.unset_color",
     "category": "method",
     "text": "function unset_color([win::TUI_WINDOW,] color::Number)\n\nUnset the color color (see ncurses_color) in the window win. If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.update-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.update",
+    "category": "method",
+    "text": "function update(widget; force_redraw = false)\n\nUpdate the widget by calling the function redraw. This function returns true if the widget needed to be updated of false otherwise.\n\nIf force_redraw is true, then the widget will be updated even if it is not needed.\n\n\n\n\n\n"
 },
 
 {
