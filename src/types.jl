@@ -104,24 +104,10 @@ end
     id::String = ""
     title::String = ""
     coord::Tuple{Int,Int} = (0,0)
+    has_border::Bool = false
 
-    # Parent window.
-    parent::Union{Nothing,TUI_WINDOW} = nothing
-
-    # If the user wants a border, then a window will be created to handle this
-    # border and the view will be a child window of it. In this case, this
-    # variable is a pointer to the window that holds the border.
-    border::Ptr{WINDOW} = Ptr{WINDOW}(0)
-
-    # This is a pointer to the window that must handler the child elements. This
-    # can change whether the user wants a buffer or not.
-    ptr::Ptr{WINDOW} = Ptr{WINDOW}(0)
-
-    # Foremost element of the window, which can be the border or the view.
-    foremost::Ptr{WINDOW} = Ptr{WINDOW}(0)
-
-    # List of children elements.
-    children::Vector{Any} = Any[]
+    # List of widgets.
+    widgets::Vector{Any} = Any[]
 
     # Buffer
     # ==========================================================================
@@ -149,15 +135,8 @@ end
     # Panel
     # ==========================================================================
 
-    # Panel that holds the foremost visible element of the windows, which can be
-    # the panel that holds the border or the view.
+    # Panel of the window.
     panel::Ptr{Cvoid} = Ptr{Cvoid}(0)
-
-    # Panel of the border.
-    panel_border::Ptr{Cvoid} = Ptr{Cvoid}(0)
-
-    # Panel of the view.
-    panel_view::Ptr{Cvoid} = Ptr{Cvoid}(0)
 
     # Focus manager
     # ==========================================================================

@@ -16,18 +16,14 @@ export clear_window, create_window, create_window_layout, destroy_all_windows,
 # ==============================================================================
 
 """
-    function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = ""; has_buffer::Bool = true, bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = "", title_color::Int = -1)
+    function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = ""; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = "", title_color::Int = -1)
 
-Create a window inside the parent window `parent`. If `parent` is `nothing` or
-if it is omitted, then the root window will be used as the parent window. The
-new window size will be `nlines × ncols` and the origin will be placed at
-`(begin_y, begin_x)` coordinate of the parent window. The window ID `id` is used
-to identify the new window in the global window list.
+Create a window. The new window size will be `nlines × ncols` and the origin
+will be placed at `(begin_y, begin_x)` coordinate of the root window. The window
+ID `id` is used to identify the new window in the global window list.
 
 # Keyword
 
-* `has_buffer`: If `true`, then the window will have a buffer.
-                (**Default** = `false`)
 * `bcols`: Number of columns in the window buffer. This will be automatically
            increased to, at least, fit the viewable part of the window
            (`ncols`). (**Default** = 0)
@@ -46,14 +42,11 @@ to identify the new window in the global window list.
                  be changed. (**Default** = -1)
 
 """
-create_window(vargs...; kwargs...) = create_window(nothing, vargs...; kwargs...)
-
-function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer,
-                       ncols::Integer, begin_y::Integer, begin_x::Integer,
-                       id::String = ""; has_buffer::Bool = false,
-                       bcols::Integer = 0, blines::Integer = 0,
-                       border::Bool = true, border_color::Int = -1,
-                       title::String = "", title_color::Int = -1)
+function create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
+                       begin_x::Integer, id::String = "";
+                       bcols::Integer = 0, blines::Integer = 0, border::Bool = true,
+                       border_color::Int = -1, title::String = "",
+                       title_color::Int = -1)
 
     # Check if the TUI has been initialized.
     !tui.init && error("The text user interface was not initialized.")
@@ -62,86 +55,33 @@ function create_window(parent::Union{Nothing,TUI_WINDOW}, nlines::Integer,
     # of available windows.
     length(id) == 0 && ( id = string(length(tui.wins)) )
 
-    # Check what will be the parent window.
-    if parent != nothing
-        win_parent = parent.ptr
-    else
-        win_parent = Ptr{WINDOW}(0)
-    end
+    # Create the window.
+    view = newwin(nlines, ncols, begin_y, begin_x)
 
-    # If the user wants a border, then we create two windows: one to store the
-    # borders and other to store the elements.
+    # Check if the user wants a border.
     if border
-        win_border = (parent == nothing) ? newwin(            nlines, ncols, begin_y, begin_x) :
-                                           derwin(win_parent, nlines, ncols, begin_y, begin_x)
-        border_color >= 0 && wattron(win_border, border_color)
-        wborder(win_border)
-        border_color >= 0 && wattroff(win_border, border_color)
-
-        # In this case, the coordinate of the beginning of the view with respect
-        # to the parent window must be corrected due to the border.
-        begin_y += 1
-        begin_x += 1
-
-        # Get buffer size.
-        if has_buffer
-            blines < nlines-2 && (blines = nlines-2)
-            bcols  < ncols-2  && (bcols  = ncols-2)
-        end
-
-        # Create the window view.
-        view = derwin(win_border, nlines-2, ncols-2, 1, 1)
-
-        # Set the foremost element.
-        foremost = win_border
-
-        # Create the panels.
-        panel_border = new_panel(win_border)
-        panel_view   = new_panel(view)
-        panel        = panel_border
-    else
-        # In this case, we do not have a window to hold a border.
-        win_border = Ptr{WINDOW}(0)
-
-        # Get buffer size.
-        if has_buffer
-            blines < nlines && (blines = nlines)
-            bcols  < ncols  && (bcols  = ncols)
-        end
-
-        # Create the window view.
-        view = (parent == nothing) ? newwin(            nlines, ncols, begin_y, begin_x) :
-                                     derwin(win_parent, nlines, ncols, begin_y, begin_x)
-
-        # Set the foremost element.
-        foremost = view
-
-        # Create the panels.
-        panel_border = Ptr{Cvoid}(0)
-        panel_view   = new_panel(view)
-        panel        = panel_view
+        border_color >= 0 && wattron(view, border_color)
+        wborder(view)
+        border_color >= 0 && wattroff(view, border_color)
     end
 
-    # Create the buffer if necessary.
-    buffer = has_buffer ? newpad(blines, bcols) : Ptr{Cvoid}(0)
+    # Create the buffer.
+    blines <= 0 && (blines = border ? nlines-2 : nlines)
+    bcols  <= 0 && (bcols  = border ? ncols-2  : ncols)
+    buffer = newpad(nlines, ncols)
 
-    # Pointer to the container that must handler the children elements.
-    ptr = has_buffer ? buffer : view
+    # Create the panel.
+    panel = new_panel(view)
 
     # Compute the window coordinate with respect to the screen.
     coord = (begin_y, begin_x)
-    if parent != nothing
-        coord = coord .+ parent.coord
-    end
 
     # Create the window object and add to the global list.
-    win = TUI_WINDOW(id = id, title = title, coord = coord, parent = parent,
-                     border = win_border, ptr = ptr, foremost = foremost,
-                     buffer = buffer, view = view, panel = panel,
-                     panel_border = panel_border, panel_view = panel_view)
+    win = TUI_WINDOW(id = id, title = title, coord = coord,
+                     has_border = border, view = view, buffer = buffer,
+                     panel = panel)
     border && set_window_title!(win, title; title_color = title_color)
     push!(tui.wins, win)
-    parent != nothing && push!(parent.children, win)
 
     # Return the pointer to the window.
     return win
@@ -221,32 +161,26 @@ Destroy the window `win`.
 
 """
 function destroy_window(win::TUI_WINDOW)
+    # Destroy all widgets.
+    for widget in win.widgets
+        # In this case, we do not need to refresh the window.
+        destroy_widget(widget; refresh = false)
+    end
+
     # Delete everything.
-    if win.panel_border != C_NULL
-        del_panel(win.panel_border)
-        win.panel_border = Ptr{Cvoid}(0)
+    if win.panel != C_NULL
+        del_panel(win.panel)
+        win.panel = Ptr{Cvoid}(0)
     end
-
-    if win.panel_view != C_NULL
-        del_panel(win.panel_view)
-        win.panel_view = Ptr{Cvoid}(0)
-    end
-
-    win.panel = Ptr{WINDOW}(0)
 
     if win.buffer != C_NULL
         delwin(win.buffer)
-        win.buffer  = Ptr{WINDOW}(0)
+        win.buffer = Ptr{WINDOW}(0)
     end
 
     if win.view != C_NULL
         delwin(win.view)
         win.view = Ptr{WINDOW}(0)
-    end
-
-    if win.border != C_NULL
-        delwin(win.border)
-        win.border = Ptr{WINDOW}(0)
     end
 
     # Remove the window from the global list.
@@ -302,29 +236,17 @@ If `backpropagation` is `true`, then all the parents windows (except from the
 root window) will also be refreshed.
 
 """
-function refresh_window(win::TUI_WINDOW; update = false, backpropagation = true)
-    # We must first update all children windows, because the content in the
-    # buffer must be updated to the view if required.
-    for child in win.children
-        if typeof(child) == TUI_WINDOW
-            refresh_window(child; update = false, backpropagation = false)
+function refresh_window(win::TUI_WINDOW; full_refresh = false)
+    full_refresh && wclear(win.buffer)
+
+    # Update all the children widgets.
+    for widget in win.widgets
+        if update(widget; force_redraw = full_refresh)
+            win.view_needs_update = true
         end
     end
 
-    while true
-        # Update the view if necessary.
-        update_view(win)
-
-        # If back propagation is required, then go to the parent and refresh.
-        if backpropagation
-            win = win.parent
-            win == nothing && break
-        else
-            break
-        end
-    end
-
-    update && doupdate()
+    update_view(win)
 
     return nothing
 end
@@ -337,7 +259,7 @@ Refresh all the windows, including the root window.
 """
 function refresh_all_windows()
     for win in tui.wins
-        refresh_window(win; update = false)
+        refresh_window(win)
     end
 
     return nothing
@@ -414,19 +336,24 @@ It returns `true` if the view has been updated and `false` otherwise.
 
 """
 function update_view(win::TUI_WINDOW; force::Bool = false)
-    win.buffer == C_NULL && return true
+    @unpack has_border, buffer, view, orig = win
 
     if win.view_needs_update || force
-        # Auxiliary variables to make the code simpler.
-        buffer = win.buffer
-        view   = win.view
-        orig   = win.orig
-
         # Get view dimensions.
         maxy, maxx = _get_window_dims(win.view)
 
         # Copy contents.
-        copywin(buffer, view, orig..., 0, 0, maxy-1, maxx-1, 0)
+        #
+        # Notice that position of the copied rectangle depends on whether or not
+        # the window has a border.
+        dminrow = has_border ? 1      : 0
+        dmincol = has_border ? 1      : 0
+        dmaxrow = has_border ? maxy-2 : maxy-1
+        dmaxcol = has_border ? maxx-2 : maxx-1
+        copywin(buffer, view, orig..., dminrow, dmincol, dmaxrow, dmaxcol, 0)
+
+        # Tell ncurses to update the entire window.
+        # touchwin(win.view)
 
         # Mark that the buffer has been copied.
         win.view_needs_update = false
@@ -484,42 +411,17 @@ end
 # ==============================================================================
 
 function hide_window(win::TUI_WINDOW; update::Bool = false)
-    # Search for the top window.
-    while win.parent != nothing
-        win = win.parent
-    end
-
-    win.panel_border != C_NULL && hide_panel(win.panel_border)
-    hide_panel(win.panel_view)
-
-    update && update_panels()
-
+    hide_panel(win.panel)
     return nothing
 end
 
-function move_window_to_top(win::TUI_WINDOW; update::Bool = false)
-    # Search for the top window.
-    while win.parent != nothing
-        win = win.parent
-    end
-
+function move_window_to_top(win::TUI_WINDOW)
     top_panel(win.panel)
-    update && update_panels()
-
     return nothing
 end
 
 function show_window(win::TUI_WINDOW; update::Bool = false)
-    # Search for the top window.
-    while win.parent != nothing
-        win = win.parent
-    end
-
-    win.panel_border != C_NULL && show_panel(win.panel_border)
-    show_panel(win.panel_view)
-
-    update && update_panels()
-
+    show_panel(win.panel)
     return nothing
 end
 
@@ -566,12 +468,12 @@ function set_window_title!(win::TUI_WINDOW, title::AbstractString;
                           title_color::Int = -1)
     win.title = title
 
-    if win.border != C_NULL
+    if win.has_border
         # Save the current cursor position.
-        cury, curx = _get_window_cur_pos(win.border)
+        cury, curx = _get_window_cur_pos(win.view)
 
         # Get the dimensions of the border window.
-        ~, wsx = _get_window_dims(win.border)
+        ~, wsx = _get_window_dims(win.view)
 
         # Escape the string to avoid problems.
         title_esc = escape_string(title)
@@ -581,13 +483,13 @@ function set_window_title!(win::TUI_WINDOW, title::AbstractString;
 
         if length_title_esc > 0
             col = div(wsx - length(title_esc), 2)
-            title_color > 0 && wattron(win.border, title_color)
-            mvwprintw(win.border, 0, col, title_esc)
-            title_color > 0 && wattroff(win.border, title_color)
+            title_color > 0 && wattron(win.view, title_color)
+            mvwprintw(win.view, 0, col, title_esc)
+            title_color > 0 && wattroff(win.view, title_color)
         end
 
         # Move the cursor to the original position.
-        wmove(win.border, cury, curx)
+        wmove(win.view, cury, curx)
     end
 
     return nothing

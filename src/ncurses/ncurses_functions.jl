@@ -101,6 +101,8 @@ for (f,r,v,j,c) in
      (:refresh,       Cvoid,       [],                                              [],                                                       []),
      (:resizeterm,    Cint,        ["lines","columns"],                             ["Integer","Integer"],                                    ["Cint","Cint"]),
      (:start_color,   Cint,        [],                                              [],                                                       []),
+     (:subpad,        Ptr{WINDOW}, ["win","nlines","ncols","begin_y","begin_x"],    ["Ptr{WINDOW}",["Integer" for _ = 1:4]...],               ["Ptr{WINDOW}",["Cint" for _ = 1:4]...]),
+     (:touchwin,      Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
      (:vline,         Cint,        ["ch","n"],                                      ["jlchtype","Integer"],                                   ["chtype","Cint"]),
      (:waddch,        Cvoid,       ["win","ch"],                                    ["Ptr{WINDOW}","jlchtype"],                               ["Ptr{WINDOW}","chtype"]),
      (:wattroff,      Cint,        ["win","attrs"],                                 ["Ptr{WINDOW}","Integer"],                                ["Ptr{WINDOW}","Cint"]),

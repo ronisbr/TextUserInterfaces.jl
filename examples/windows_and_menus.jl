@@ -141,6 +141,7 @@ while k.ktype != :F1
         end
     end
 
+    refresh_all_windows()
     update_panels()
     doupdate()
 

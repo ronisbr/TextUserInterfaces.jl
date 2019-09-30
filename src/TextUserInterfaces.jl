@@ -34,6 +34,13 @@ include("input.jl")
 include("menus.jl")
 include("windows.jl")
 
+# Widgets
+# ==============================================================================
+
+include("./widgets/widgets.jl")
+include("./widgets/labels.jl")
+include("./widgets/progress_bar.jl")
+
 ################################################################################
 #                        Initialization and destruction
 ################################################################################
@@ -186,7 +193,7 @@ function init_tui(dir::String = "")
 
     rootwin  = initscr()
     tui.init = true
-    push!(tui.wins, TUI_WINDOW(id = "rootwin", parent = nothing, view = rootwin))
+    push!(tui.wins, TUI_WINDOW(id = "rootwin", view = rootwin))
     has_colors() == 1 && start_color()
 
     return tui
