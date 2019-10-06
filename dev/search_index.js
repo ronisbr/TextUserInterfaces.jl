@@ -629,7 +629,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
@@ -637,7 +637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -854,6 +854,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.leaveok",
     "category": "function",
     "text": "function leaveok(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.log_message",
+    "page": "Library",
+    "title": "TextUserInterfaces.log_message",
+    "category": "function",
+    "text": "function log_message(level::Int, msg::AbstractString, id::AbstractString = \"\")\n\nLog the message msg with level level. The ID of the called can be specified by id.\n\n\n\n\n\n"
 },
 
 {
@@ -1229,7 +1237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.previous_widget",
     "category": "method",
-    "text": "function next_widget(window::Window)\n\nMove the focus of window window to the previous widget.\n\n\n\n\n\n"
+    "text": "function previous_widget(window::Window)\n\nMove the focus of window window to the previous widget.\n\n\n\n\n\n"
 },
 
 {
@@ -1934,6 +1942,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.@_ccallp",
     "category": "macro",
     "text": "macro _ccallm(expr)\n\nMake a ccall to a libpanel function. The usage should be:\n\n@_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn\n\nIt uses the global constant structure ncurses to call the function. Hence, it must be initialized.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@log",
+    "category": "macro",
+    "text": "macro log(level, msg, id)\n\nLog the messagem msg with level level of the caller id\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@log",
+    "category": "macro",
+    "text": "macro log(level, msg)\n\nLog the message msg with level level.\n\n\n\n\n\n"
 },
 
 {
