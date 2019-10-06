@@ -70,16 +70,23 @@ function log_message(level::LogLevels, msg::AbstractString, id::AbstractString =
     id_str = length(id) > 0 ? "[$id] " : ""
 
     # Check if the user wants the timestamp.
-    time_str = logger.timestamp ? Dates.format(now(), "Y-mm-dd HH:MM:SS") * " | " : ""
-    time_pad = " "^(length(time_str)-3) * " | "
+    time_str = logger.timestamp ? Dates.format(now(), "Y-mm-dd HH:MM:SS") * " │ " : ""
+    time_pad = " "^(length(time_str)-3) * " │ "
 
     # Split the message by each line.
     lines = split(msg,'\n')
 
+    output = ""
+
     @inbounds for i = 1:length(lines)
-        i == 1 ? print(io, time_str) : print(io, time_pad)
-        println(io, id_str * " "^logger.pad * lines[i])
+        output *= i == 1 ? time_str : time_pad
+        output *= id_str * " "^logger.pad * lines[i] * "\n"
     end
+
+    # Check if the resource is available.
+    Threads.lock(logger.lock)
+    print(io, output)
+    Threads.unlock(logger.lock)
 
     return nothing
 end

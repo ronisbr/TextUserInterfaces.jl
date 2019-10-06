@@ -66,15 +66,22 @@ Move the focus to the next window.
 function next_window()
     @unpack focus_chain, focus_id = tui
 
+    @log verbose "next_window" "Focus: Change the focused window."
+
     num_wins = length(focus_chain)
 
     # If there is no window, then just return.
-    num_wins == 0 && return nothing
+    if num_wins == 0
+        @log verbose "next_window" "Focus: There is no window in the focus chain."
+        return nothing
+    end
 
     # Loop from the current position until the end of the focus chain.
     for i = focus_id+1:num_wins
         if accept_focus(focus_chain[i])
             tui.focus_id = i
+
+            @log verbose "next_window" "Focus: Switched to window $(focus_chain[i].id)."
 
             refresh_all_windows()
             update_panels()
@@ -88,6 +95,8 @@ function next_window()
     for i = 1:tui.focus_id
         if accept_focus(focus_chain[i])
             tui.focus_id = i
+
+            @log verbose "next_window" "Focus: Switched to window $(focus_chain[i].id)."
 
             refresh_all_windows()
             update_panels()
@@ -110,15 +119,22 @@ Move the focus to the previous window.
 function previous_window()
     @unpack focus_chain, focus_id = tui
 
+    @log verbose "previous_window" "Focus: Change the focused window."
+
     num_wins = length(focus_chain)
 
     # If there is no window, then just return.
-    num_wins == 0 && return nothing
+    if num_wins == 0
+        @log verbose "previous_window" "Focus: There is no window in the focus chain."
+        return nothing
+    end
 
     # Loop from the current position until the beginning of the focus chain.
     for i = focus_id-1:-1:1
         if accept_focus(focus_chain[i])
             tui.focus_id = i
+
+            @log verbose "previous_window" "Focus: Switched to window $(focus_chain[i].id)."
 
             refresh_all_windows()
             update_panels()
@@ -132,6 +148,8 @@ function previous_window()
     for i = num_wins:-1:tui.focus_id
         if accept_focus(focus_chain[i])
             tui.focus_id = i
+
+            @log verbose "previous_window" "Focus: Switched to window $(focus_chain[i].id)."
 
             refresh_all_windows()
             update_panels()

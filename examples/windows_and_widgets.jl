@@ -1,7 +1,7 @@
 using TextUserInterfaces
 
 logger.enabled = true
-logger.level = 2
+logger.level = 3
 
 function windows_and_widgets()
 
@@ -30,7 +30,6 @@ function windows_and_widgets()
         bt2  = create_widget(Val{:button}, win,  4, 14, 12, "Button 2", p1, p3)
         bt3  = create_widget(Val{:button}, win,  4, 27, 12, "Button 3", p1, p3)
         bt4  = create_widget(Val{:button}, win,  4, 41, 12, "Button 4", p1, p3)
-        pb   = create_widget(Val{:progress_bar}, win, 10, 10, 10)
 
         bt1.on_return_pressed = (text)->change_text(text,"Button 1")
         bt1.vargs_on_return_pressed = (text,)

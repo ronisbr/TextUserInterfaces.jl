@@ -103,6 +103,8 @@ function change_value(widget::WidgetProgressBar, new_value::Integer;
     # Set the color.
     color >= 0 && (widget.color = color)
 
+    @log verbose "change_value" "Window $(widget.parent.id): Progress bar value changed to $new_value."
+
     request_update(widget)
 
     return nothing

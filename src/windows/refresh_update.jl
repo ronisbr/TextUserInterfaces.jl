@@ -158,6 +158,8 @@ function update_view(win::Window; force::Bool = false)
         # Mark that the buffer has been copied.
         win.view_needs_update = false
 
+        @log verbose "update_view" "Window $(win.id): Buffer was copied to the view."
+
         return true
     else
         return false

@@ -71,6 +71,7 @@ function process_focus(widget::WidgetButton, k::Keystroke)
     if k.ktype == :tab
         return false
     elseif k.ktype == :enter
+        @log verbose "change_value" "Window $(widget.parent.id): Enter pressed on focused button."
         widget.on_return_pressed(widget.vargs_on_return_pressed...)
     end
 

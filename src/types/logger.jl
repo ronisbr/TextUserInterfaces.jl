@@ -25,6 +25,7 @@ end
     # ==========================================================================
     file::Union{Nothing,IOStream} = nothing
     pad::Integer = 0
+    lock::Threads.SpinLock = Threads.SpinLock()
 end
 
 # Global logger instance.

@@ -24,6 +24,7 @@ function accept_focus(window::Window)
         move_window_to_top(window)
         return true
     else
+        @log verbose "accept_focus" "Window $(window.id): Cannot accept focus."
         return false
     end
 end
@@ -51,6 +52,8 @@ Move the focus of window `window` to the next widget.
 function next_widget(window::Window)
     @unpack widgets, focus_id = window
 
+    @log verbose "next_widget" "Window $(window.id): Change the focused widget."
+
     # Release the focus from previous widget.
     focus_id > 0 && release_focus(widgets[focus_id])
 
@@ -59,6 +62,9 @@ function next_widget(window::Window)
         if accept_focus(widgets[i])
             window.focus_id = i
             sync_cursor(window)
+
+            @log verbose "next_widget" "Window $(window.id): Focus was handled to widget #$i of type $(typeof(widgets[i]))."
+
             return true
         end
     end
@@ -66,6 +72,9 @@ function next_widget(window::Window)
     # No more element could accept the focus.
     window.focus_id = 0
     sync_cursor(window)
+
+    @log verbose "next_widget" "Window $(window.id): There are no more widgets to receive the focus."
+
     return false
 end
 
@@ -93,13 +102,15 @@ function process_focus(window::Window, k::Keystroke)
 end
 
 """
-    function next_widget(window::Window)
+    function previous_widget(window::Window)
 
 Move the focus of window `window` to the previous widget.
 
 """
 function previous_widget(window::Window)
     @unpack widgets, focus_id = window
+
+    @log verbose "previous_widget" "Window $(window.id): Change the focused widget."
 
     # Release the focus from previous widget.
     focus_id > 0  && release_focus(widgets[focus_id])
@@ -110,6 +121,9 @@ function previous_widget(window::Window)
         if accept_focus(widgets[i])
             window.focus_id = i
             sync_cursor(window)
+
+            @log verbose "previous_widget" "Window $(window.id): Focus was handled to widget #$i of type $(typeof(widgets[i]))."
+
             return true
         end
     end
@@ -117,6 +131,9 @@ function previous_widget(window::Window)
     # No more element could accept the focus.
     window.focus_id = 0
     sync_cursor(window)
+
+    @log verbose "previous_widget" "Window $(window.id): There are no more widgets to receive the focus."
+
     return false
 end
 

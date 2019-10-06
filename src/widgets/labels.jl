@@ -121,6 +121,8 @@ function change_text(widget::WidgetLabel, new_text::AbstractString;
     # Set the color.
     color >= 0 && (widget.color = color)
 
+    @log verbose "change_text" "Window $(widget.parent.id): Label text changed to \"$new_text\"."
+
     request_update(widget)
 
     return nothing
