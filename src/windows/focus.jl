@@ -22,6 +22,10 @@ function accept_focus(window::Window)
         # Move the window to the top and search for a widget that can hold the
         # focus.
         move_window_to_top(window)
+
+        # Hide the cursor until the a widget request it.
+        curs_set(0)
+
         return true
     else
         @log verbose "accept_focus" "Window $(window.id): Cannot accept focus."
@@ -148,11 +152,15 @@ copied to the view.
 function sync_cursor(window::Window)
     @unpack widgets, focus_id = window
 
-    # If no widget is in focus, then move to the position (0,0).
-    if focus_id <= 0
-        wmove(window.view, 0, 0)
+    # If no widget is in focus or if the widget does not request cursor, then
+    # just hide it.
+    if (focus_id <= 0) || !require_cursor(widgets[focus_id])
+        curs_set(0)
         return nothing
     else
+        # Show the cursor.
+        curs_set(1)
+
         # Get the focused widget.
         widget = widgets[focus_id]
 

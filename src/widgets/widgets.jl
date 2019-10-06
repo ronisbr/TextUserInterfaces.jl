@@ -82,7 +82,6 @@ Redraw the widget inside its content window `cwin`.
 """
 redraw
 
-
 """
     function release_focus(widget)
 
@@ -111,3 +110,13 @@ function update(widget; force_redraw = false)
         return false
     end
 end
+
+"""
+    function require_cursor()
+
+If `true`, then the physical cursor will be shown and the position will be
+updated according to its position in the widget window. Otherwise, the physical
+cursor will be hidden.
+
+"""
+require_cursor(widget) = false
