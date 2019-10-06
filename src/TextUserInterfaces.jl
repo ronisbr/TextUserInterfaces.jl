@@ -11,6 +11,7 @@ using Parameters
 include("types.jl")
 
 const tui = TUI()
+export tui
 
 ################################################################################
 #                                   Includes
@@ -32,12 +33,21 @@ include("focus_manager.jl")
 include("forms.jl")
 include("input.jl")
 include("menus.jl")
-include("windows.jl")
+
+# Windows
+# ==============================================================================
+
+include("./windows/create_destroy.jl")
+include("./windows/focus.jl")
+include("./windows/manage.jl")
+include("./windows/misc.jl")
+include("./windows/refresh_update.jl")
 
 # Widgets
 # ==============================================================================
 
 include("./widgets/widgets.jl")
+include("./widgets/button.jl")
 include("./widgets/labels.jl")
 include("./widgets/progress_bar.jl")
 
@@ -191,9 +201,8 @@ function init_tui(dir::String = "")
     # Initialize ncurses
     # ==========================================================================
 
-    rootwin  = initscr()
-    tui.init = true
-    push!(tui.wins, TUI_WINDOW(id = "rootwin", view = rootwin))
+    tui.stdscr = initscr()
+    tui.init   = true
     has_colors() == 1 && start_color()
 
     return tui
@@ -211,10 +220,8 @@ function destroy_tui()
         destroy_all_windows()
         endwin()
 
-        # After `endwin`, we can remove the root window from the list.
-        pop!(tui.wins)
-
         # Mark the TUI as not initialized.
+        tui.stdscr = Ptr{WINDOW}(0)
         tui.init = false
     end
 end

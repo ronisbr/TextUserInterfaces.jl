@@ -6,12 +6,21 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export create_widget, destroy_widget, request_update, redraw, update
+export accept_focus, create_widget, destroy_widget, request_update, redraw,
+       release_focus, update
 
 abstract type Widget end
 
 """
-    function create_widget(T, parent::TUI_WINDOW, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)
+    function accept_focus(widget)
+
+Return `true` is the widget `widget` accepts focus or `false` otherwise.
+
+"""
+accept_focus(widget) = return true
+
+"""
+    function create_widget(T, parent::Window, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)
 
 Create the widget of type `T` in the parent window `parent`. The widget will be
 positioned on the coordinate `(begin_y, begin_x)` of the parent window.
@@ -46,14 +55,22 @@ function destroy_widget(widget; refresh::Bool = true)
 end
 
 """
+    function process_focus(widget, k::Keystroke)
+
+Process the actions when widget `widget` is in focus and the keystroke `k` is
+pressed. If it returns `false`, then it is means that the widget was not capable
+to process the focus. Otherwise, it must return `true`.
+
+"""
+process_focus(widget,k::Keystroke) = return false
+
+"""
     function request_update(widget)
 
 Request update of the widget `widget`.
 
 """
-function request_update(widget)
-    widget.update_needed = true
-end
+request_update(widget) = widget.update_needed = true
 
 """
     function redraw(widget)
@@ -62,6 +79,16 @@ Redraw the widget inside its content window `cwin`.
 
 """
 redraw
+
+
+"""
+    function release_focus(widget)
+
+Request focus to be released. It should return `true` if the focus can be
+released or `false` otherwise.
+
+"""
+release_focus(widget) = return true
 
 """
     function update(widget; force_redraw = false)

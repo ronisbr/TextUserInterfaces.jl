@@ -282,12 +282,12 @@ set_field_type(field::TUI_FIELD, ::Type{Val{:regexp}}, regex::Regex) =
     set_field_type(field.ptr, TYPE_REGEXP(), regex.pattern)
 
 """
-    function set_form_win(form::TUI_FORM, win::TUI_WINDOW)
+    function set_form_win(form::TUI_FORM, win::Window)
 
 Set the form `form` window to `win`.
 
 """
-function set_form_win(form::TUI_FORM, win::TUI_WINDOW)
+function set_form_win(form::TUI_FORM, win::Window)
     if (form.ptr != C_NULL) && (win.ptr != C_NULL)
         form.win = win
         set_form_win(form.ptr, win.ptr)

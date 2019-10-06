@@ -5,6 +5,8 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+export Window
+
 ################################################################################
 #                                   NCurses
 ################################################################################
@@ -100,7 +102,7 @@ end
     penum::Vector{Cstring} = Cstring[]
 end
 
-@with_kw mutable struct TUI_WINDOW
+@with_kw mutable struct Window
     id::String = ""
     title::String = ""
     coord::Tuple{Int,Int} = (0,0)
@@ -140,9 +142,12 @@ end
 
     # Focus manager
     # ==========================================================================
-    has_focus::Bool = false
-    focus_id::Int = 1
-    focus_ptr::Any = nothing
+
+    # Indicate if the window can have focus.
+    focusable::Bool = true
+
+    # Widget ID that has the focus.
+    focus_id::Int = 0
 
     # Signals
     # ==========================================================================
@@ -154,7 +159,7 @@ end
     fields::Vector{TUI_FIELD}      = Vector{TUI_FIELD}(undef,0)
     ptr_fields::Vector{Ptr{Cvoid}} = Vector{Ptr{Cvoid}}(undef,0)
     ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
-    win::Union{Nothing,TUI_WINDOW} = nothing
+    win::Union{Nothing,Window} = nothing
 
     # Focus manager
     # ==========================================================================
@@ -170,7 +175,7 @@ end
     descriptions::Vector{String}   = String[]
     items::Vector{Ptr{Cvoid}}      = Vector{Ptr{Cvoid}}(undef,0)
     ptr::Ptr{Cvoid}                = Ptr{Cvoid}(0)
-    win::Union{Nothing,TUI_WINDOW} = nothing
+    win::Union{Nothing,Window} = nothing
 
     # Focus manager
     # ==========================================================================
@@ -186,7 +191,8 @@ end
 
     # Windows
     # ==========================================================================
-    wins::Vector{TUI_WINDOW}  = TUI_WINDOW[]
+    stdscr::Ptr{WINDOW} = Ptr{WINDOW}(0)
+    wins::Vector{Window}  = Window[]
 
     # Colors
     # ==========================================================================
@@ -207,9 +213,12 @@ end
 
     # Focus manager
     # ==========================================================================
-    focus_chain::Vector{TUI_WINDOW} = Vector{TUI_WINDOW}[]
-    focus_id::Int = 1
-    focus_ptr::Union{Nothing,TUI_WINDOW} = nothing
+    focus_chain::Vector{Window} = Vector{Window}[]
+    focus_id::Int = 0
+
+    # Functions to check if a keystroke must change the window.
+    wants_next_window::Function     = (k)->return false
+    wants_previous_window::Function = (k)->return false
 end
 
 """
@@ -227,6 +236,7 @@ Structure that defines a keystroke.
 
 """
 @with_kw struct Keystroke
+    raw::Int32 = 0
     value::String
     ktype::Symbol
     alt::Bool   = false

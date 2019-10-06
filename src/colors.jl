@@ -112,7 +112,7 @@ function init_color_pair(foreground::Symbol, background::Symbol)
 end
 
 """
-    function set_color([win::TUI_WINDOW,] color::Int)
+    function set_color([win::Window,] color::Int)
 
 Set the color of the window `win` to `color` (see `ncurses_color`). If `win` is
 omitted, then it defaults to the root window.
@@ -120,13 +120,13 @@ omitted, then it defaults to the root window.
 """
 set_color(color::Int) = set_color(tui.wins[1], color)
 
-function set_color(win::TUI_WINDOW, color::Int)
+function set_color(win::Window, color::Int)
     win.ptr != C_NULL && wattron(win.ptr, color)
     return nothing
 end
 
 """
-    function unset_color([win::TUI_WINDOW,] color::Number)
+    function unset_color([win::Window,] color::Number)
 
 Unset the color `color` (see `ncurses_color`) in the window `win`. If `win` is
 omitted, then it defaults to the root window.
@@ -134,7 +134,7 @@ omitted, then it defaults to the root window.
 """
 unset_color(color::Int) = unset_color(tui.wins[1], color)
 
-function unset_color(win::TUI_WINDOW, color::Int)
+function unset_color(win::Window, color::Int)
     win.ptr != C_NULL && wattroff(win.ptr, color)
     return nothing
 end

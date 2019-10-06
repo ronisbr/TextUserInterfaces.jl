@@ -61,15 +61,16 @@ end
 
 for (f,r,v,j,c) in
     (
-     (:bottom_panel,      Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:del_panel,         Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:hide_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:new_panel,         Ptr{Cvoid}, ["win"],       ["Ptr{WINDOW}"],             ["Ptr{WINDOW}"]),
-     (:panel_userptr,     Ptr{Cvoid}, ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:set_panel_userptr, Cint,       ["pan","ptr"], ["Ptr{Cvoid}","Ptr{Cvoid}"], ["Ptr{Cvoid}","Ptr{Cvoid}"]),
-     (:show_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:top_panel,         Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:update_panels,     Cvoid,      [],            [],                          []),
+     (:bottom_panel,      Cint,       ["pan"],                     ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
+     (:del_panel,         Ptr{Cvoid}, ["panel"],                   ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
+     (:hide_panel,        Ptr{Cvoid}, ["panel"],                   ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
+     (:move_panel,        Cint,       ["panel","starty","startx"], ["Ptr{Cvoid}","Integer","Integer"], ["Ptr{Cvoid}","Cint","Cint"]),
+     (:new_panel,         Ptr{Cvoid}, ["win"],                     ["Ptr{WINDOW}"],                    ["Ptr{WINDOW}"]),
+     (:panel_userptr,     Ptr{Cvoid}, ["pan"],                     ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
+     (:set_panel_userptr, Cint,       ["pan","ptr"],               ["Ptr{Cvoid}","Ptr{Cvoid}"],        ["Ptr{Cvoid}","Ptr{Cvoid}"]),
+     (:show_panel,        Ptr{Cvoid}, ["panel"],                   ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
+     (:top_panel,         Cint,       ["pan"],                     ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
+     (:update_panels,     Cvoid,      [],                          [],                                 []),
     )
 
     fb    = Meta.quot(f)

@@ -16,7 +16,7 @@ export WidgetLabel, change_text
 
     # API
     # ==========================================================================
-    parent::TUI_WINDOW = nothing
+    parent::Window = nothing
     cwin::Ptr{WINDOW}  = Ptr{WINDOW}(0)
     update_needed::Bool = true
 
@@ -30,7 +30,10 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Type{Val{:label}}, parent::TUI_WINDOW,
+# Labels cannot accept focus.
+accept_focus(widget::WidgetLabel) = false
+
+function create_widget(::Type{Val{:label}}, parent::Window,
                        begin_y::Integer, begin_x::Integer, nlines::Integer,
                        ncols::Integer, text::AbstractString; alignment = :l,
                        color::Int = 0)

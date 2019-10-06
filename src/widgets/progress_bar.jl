@@ -16,8 +16,8 @@ export WidgetProgressBar, change_value
 
     # API
     # ==========================================================================
-    parent::TUI_WINDOW = nothing
-    cwin::Ptr{WINDOW}  = Ptr{WINDOW}(0)
+    parent::Window  = nothing
+    cwin::Ptr{WINDOW}   = Ptr{WINDOW}(0)
     update_needed::Bool = true
 
     # Parameters related to the widget
@@ -32,7 +32,10 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Type{Val{:progress_bar}}, parent::TUI_WINDOW,
+# Progress bar cannot accept focus.
+accept_focus(widget::WidgetProgressBar) = false
+
+function create_widget(::Type{Val{:progress_bar}}, parent::Window,
                        begin_y::Integer, begin_x::Integer, ncols::Integer,
                        value::Integer = 0; border::Bool = false, color::Int = 0,
                        style = :simple)

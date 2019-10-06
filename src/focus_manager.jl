@@ -5,44 +5,17 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export force_focus_change, init_focus_manager, process_focus,
-       request_focus_change, set_focus_chain
+export get_focused_window, init_focus_manager, process_focus,
+       request_focus_change, set_focus_chain, set_next_window_func,
+       set_previous_window_func
 
 """
-    function force_focus_change(new_focus_id::Integer)
+    function get_focused_window()
 
-Force the focus to change to the element with ID `new_focus_id` in the focus
-chain.
+Return the focused window.
 
 """
-function force_focus_change(new_focus_id::Integer)
-    # With no windows, there is nothing to process.
-    num_wins = length(tui.focus_chain)
-    num_wins == 0 && return nothing
-
-    tui.focus_ptr != nothing && release_focus(tui.focus_ptr)
-
-    # Check if the new element ID is valid.
-    if (0 < new_focus_id <= num_wins)
-
-        # If the selected `id` cannot accept the focus, search for any other
-        # component that can.
-        for i = 1:num_wins
-            if accept_focus(tui.focus_chain[new_focus_id])
-                tui.focus_id  = new_focus_id
-                tui.focus_ptr = tui.focus_chain[new_focus_id]
-                break
-            end
-
-            new_focus_id += 1
-            new_focus_id > num_wins && (new_focus_id = 1)
-        end
-
-        refresh_window(tui.focus_ptr)
-        update_panels()
-        doupdate()
-   end
-end
+get_focused_window() = tui.focus_chain[tui.focus_id]
 
 """
     function init_focus_manager()
@@ -52,24 +25,7 @@ to find the first one that can accept the focus.
 
 """
 function init_focus_manager()
-    # With no windows, there is nothing to process.
-    num_wins = length(tui.focus_chain)
-    num_wins == 0 && return nothing
-
-    for i = 1:num_wins
-        if accept_focus(tui.focus_chain[i])
-            tui.focus_id  = i
-            tui.focus_ptr = tui.focus_chain[i]
-
-            refresh_window(tui.focus_ptr)
-            update_panels()
-            doupdate()
-
-            return true
-        end
-    end
-
-    return false
+    next_window()
 end
 
 """
@@ -79,18 +35,22 @@ Process the focus considering the user's keystorke `k`.
 
 """
 function process_focus(k::Keystroke)
+    @unpack focus_chain, focus_id = tui
+
     # With no windows, there is nothing to process.
-    num_wins = length(tui.focus_chain)
+    num_wins = length(focus_chain)
     num_wins == 0 && return nothing
 
-    # Check if the keystroke asks for change focus.
-    if k.ktype == :F2
-        request_focus_change()
+    # Check if the user wants the another window.
+    if tui.wants_next_window(k)
+        next_window()
+    elseif tui.wants_previous_window(k)
+        previous_window()
     else
-        process_focus(tui.focus_ptr, k)
+        process_focus(focus_chain[focus_id], k)
     end
 
-    refresh_window(tui.focus_ptr)
+    refresh_all_windows()
     update_panels()
     doupdate()
 
@@ -98,42 +58,102 @@ function process_focus(k::Keystroke)
 end
 
 """
-    function request_focus_change()
+    function next_window()
 
-Request that the current panel (in focus) changes its child that has the focus.
-If the panel has cycled all its children elements, than search for the next
-panel that can accept the focus.
+Move the focus to the next window.
 
 """
-function request_focus_change()
-    # With no windows, there is nothing to process.
-    num_wins = length(tui.focus_chain)
+function next_window()
+    @unpack focus_chain, focus_id = tui
+
+    num_wins = length(focus_chain)
+
+    # If there is no window, then just return.
     num_wins == 0 && return nothing
 
-    if (tui.focus_ptr == nothing) || request_focus_change(tui.focus_ptr)
-        # If the window is no longer in focus, we must search for the next
-        # one in which the focus is accepted.
-        tui.focus_ptr = nothing
-        for i = 1:num_wins
-            tui.focus_id += 1
-            tui.focus_id > num_wins && (tui.focus_id = 1)
-            if accept_focus(tui.focus_chain[tui.focus_id])
-                tui.focus_ptr = tui.focus_chain[tui.focus_id]
-                break
-            end
+    # Loop from the current position until the end of the focus chain.
+    for i = focus_id+1:num_wins
+        if accept_focus(focus_chain[i])
+            tui.focus_id = i
+
+            refresh_all_windows()
+            update_panels()
+            doupdate()
+
+            return nothing
         end
     end
+
+    # Loop from the beginning of the chain until the current position.
+    for i = 1:tui.focus_id
+        if accept_focus(focus_chain[i])
+            tui.focus_id = i
+
+            refresh_all_windows()
+            update_panels()
+            doupdate()
+
+            return nothing
+        end
+    end
+
+    # If no window can accept focus, then just return.
+    return nothing
 end
 
 """
-    function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)
+    function previous_window()
+
+Move the focus to the previous window.
+
+"""
+function previous_window()
+    @unpack focus_chain, focus_id = tui
+
+    num_wins = length(focus_chain)
+
+    # If there is no window, then just return.
+    num_wins == 0 && return nothing
+
+    # Loop from the current position until the beginning of the focus chain.
+    for i = focus_id-1:-1:1
+        if accept_focus(focus_chain[i])
+            tui.focus_id = i
+
+            refresh_all_windows()
+            update_panels()
+            doupdate()
+
+            return nothing
+        end
+    end
+
+    # Loop from the end of the chain until the current position.
+    for i = num_wins:-1:tui.focus_id
+        if accept_focus(focus_chain[i])
+            tui.focus_id = i
+
+            refresh_all_windows()
+            update_panels()
+            doupdate()
+
+            return nothing
+        end
+    end
+
+    # If no window can accept focus, then just return.
+    return nothing
+end
+
+"""
+    function set_focus_chain(wins::Window...; new_focus_id::Integer = 1)
 
 Set the focus chain, *i.e.* the ordered list of windows that can receive the
 focus. The keyword `new_focus_id` can be set to specify which element is
 currently focused in the new chain.
 
 """
-function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)
+function set_focus_chain(wins::Window...; new_focus_id::Integer = 1)
     tui.focus_ptr != nothing && release_focus(tui.focus_ptr)
     tui.focus_ptr = nothing
     tui.focus_chain = [wins...]
@@ -141,3 +161,34 @@ function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)
     return nothing
 end
 
+"""
+    function set_next_window_func(f)
+
+Set the function `f` to be the one that will be called to check whether the user
+wants the next window. The signature must be:
+
+    f(k::Keystroke)::Bool
+
+It must return `true` if the next window is required of `false` otherwise.
+
+"""
+function set_next_window_func(f)
+    tui.wants_next_window = f
+    return nothing
+end
+
+"""
+    function set_previous_window_func(f)
+
+Set the function `f` to be the one that will be called to check whether the user
+wants the previous window. The signature must be:
+
+    f(k::Keystroke)::Bool
+
+It must return `true` if the previous window is required of `false` otherwise.
+
+"""
+function set_previous_window_func(f)
+    tui.wants_previous_window = f
+    return nothing
+end

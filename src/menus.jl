@@ -149,12 +149,12 @@ function unpost_menu(menu::TUI_MENU)
 end
 
 """
-    function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)
+    function set_menu_win(menu::TUI_MENU, win::Window)
 
 Set menu `menu` window to `win`.
 
 """
-function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)
+function set_menu_win(menu::TUI_MENU, win::Window)
     if (menu.ptr != C_NULL) && (win.ptr != C_NULL)
         menu.win = win
         set_menu_win(menu.ptr, win.ptr)
