@@ -30,16 +30,16 @@ function init_tui(dir::String = "")
         l = Libdl.dlopen(dir * "libncursesw")
     catch
         try
-            l = Libdl.dlopen(dir * "libncurses")
+            l = Libdl.dlopen(dir * "libncursesw.so.6")
         catch
             try
-                l = Libdl.dlopen(dir * "libncursesw.so.6")
+                l = Libdl.dlopen(dir * "libncursesw.so.5")
             catch
                 try
-                    l = Libdl.dlopen(dir * "libncurses.so.6")
+                    l = Libdl.dlopen(dir * "libncurses")
                 catch
                     try
-                        l = Libdl.dlopen(dir * "libncursesw.so.5")
+                        l = Libdl.dlopen(dir * "libncurses.so.6")
                     catch
                         try
                             l = Libdl.dlopen(dir * "libncurses.so.5")
