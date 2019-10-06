@@ -23,7 +23,7 @@ export WidgetLabel, change_text
     # Parameters related to the widget
     # ==========================================================================
     color::Int
-    text::String
+    text::AbstractString
 end
 
 ################################################################################
