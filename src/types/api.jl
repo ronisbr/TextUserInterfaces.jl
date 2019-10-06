@@ -5,7 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export Window, tui
+export Window, Widget, tui
 
 struct NCURSES_COLOR
     name::Symbol
@@ -169,6 +169,9 @@ end
 
 # Global instance to store the TUI configurations.
 const tui = TUI()
+
+# Abstract type for all widgets.
+abstract type Widget end
 
 """
     struct Keystorke
