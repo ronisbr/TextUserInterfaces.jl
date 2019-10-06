@@ -153,6 +153,38 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(widget)\n\nReturn true is the widget widget accepts focus or false otherwise.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_FORM}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(form::TUI_FORM)\n\nCommand executed when form form must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_MENU}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(menu::TUI_MENU)\n\nCommand executed when menu menu must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.accept_focus",
+    "category": "method",
+    "text": "function accept_focus(window::Window)\n\nCheck if the window window can accept focus and, if it can, then perform the actions to change the focus.\n\n\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.attroff",
     "page": "Library",
     "title": "TextUserInterfaces.attroff",
@@ -217,14 +249,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.clear_window-Tuple{TextUserInterfaces.TUI_WINDOW}",
-    "page": "Library",
-    "title": "TextUserInterfaces.clear_window",
-    "category": "method",
-    "text": "function clear_window(win::TUI_WINDOW; clear_type = :all)\n\nClear the window win according the to clearing type in clear_type:\n\n:all: Clears the entire window.\n:to_screen_bottom: Clears everything from the cursor position to the bottom                      of the screen.\n:to_eol: Clear everything from the cursor position to the end of line.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.clrtobot",
     "page": "Library",
     "title": "TextUserInterfaces.clrtobot",
@@ -277,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_widget",
     "category": "function",
-    "text": "function create_widget(T, parent::TUI_WINDOW, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)\n\nCreate the widget of type T in the parent window parent. The widget will be positioned on the coordinate (begin_y, begin_x) of the parent window.\n\nAdditional variables and keywords related to each widget can be passed using vargs and kwargs respectively.\n\n\n\n\n\n"
+    "text": "function create_widget(T, parent::Window, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)\n\nCreate the widget of type T in the parent window parent. The widget will be positioned on the coordinate (begin_y, begin_x) of the parent window.\n\nAdditional variables and keywords related to each widget can be passed using vargs and kwargs respectively.\n\n\n\n\n\n"
 },
 
 {
@@ -285,15 +309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
     "category": "function",
-    "text": "function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = \"\"; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = \"\", title_color::Int = -1)\n\nCreate a window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the root window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window          (ncols). (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window           (nlines). (Default = 0)\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.create_window_layout-Union{Tuple{T2}, Tuple{T1}, Tuple{Array{T1,1},Array{T2,1}}} where T2<:Number where T1<:Number",
-    "page": "Library",
-    "title": "TextUserInterfaces.create_window_layout",
-    "category": "method",
-    "text": "function create_window_layout(parent::TUI_WINDOW, vert::Vector{T1}, horz::Vector{T2}) where {T1<:Number, T2<:Number}\n\nCreate a window layout inside the parent window parent. If it is omitted, then the root window will be used as parent.\n\nThe layout dimensions is obtained from the vectors vert and horz. They will be interpreted as a percentage of the total size. For example, if vert = [50,25,25], then the layout will have three lines in each the first will have 50% of the total size, and the second and third 25%. The same applies for the horz vector for the columns size of the layout.\n\nThis function return a matrix with the windows references.\n\n\n\n\n\n"
+    "text": "function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = \"\"; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = \"\", title_color::Int = -1)\n\nCreate a window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the root window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window          (ncols). (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window           (nlines). (Default = 0)\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -417,11 +433,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.destroy_window-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.destroy_window-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.destroy_window",
     "category": "method",
-    "text": "function destroy_window(win::TUI_WINDOW)\n\nDestroy the window win.\n\n\n\n\n\n"
+    "text": "function destroy_window(win::Window)\n\nDestroy the window win.\n\n\n\n\n\n"
 },
 
 {
@@ -454,14 +470,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.field_buffer",
     "category": "method",
     "text": "function field_buffer(field::Ptr{Cvoid}, buffer::Integer)\n\nReturn type: Cstring\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.force_focus_change-Tuple{Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.force_focus_change",
-    "category": "method",
-    "text": "function force_focus_change(new_focus_id::Integer)\n\nForce the focus to change to the element with ID new_focus_id in the focus chain.\n\n\n\n\n\n"
 },
 
 {
@@ -633,6 +641,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_focused_window-Tuple{}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_focused_window",
+    "category": "method",
+    "text": "function get_focused_window()\n\nReturn the focused window.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.getbegx",
     "page": "Library",
     "title": "TextUserInterfaces.getbegx",
@@ -697,11 +713,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.has_focus-Tuple{Window,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.has_focus",
+    "category": "method",
+    "text": "function has_focus(window::Window, widget)\n\nReturn true if the widget widget is in focus on window window, or false otherwise.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.hide_panel",
     "page": "Library",
     "title": "TextUserInterfaces.hide_panel",
     "category": "function",
     "text": "function hide_panel(panel::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.hide_window-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.hide_window",
+    "category": "method",
+    "text": "function hide_window(win::Window)\n\nHide the window win.\n\n\n\n\n\n"
 },
 
 {
@@ -805,7 +837,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.jlgetch",
     "category": "function",
-    "text": "function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)\n\nWait for an keystroke in the window win. If win is nothing, then getch() will be used instead of wgetch(win) to listen for the keystroke.\n\nReturns\n\nThe raw value from the functions getch() or wgetch(win).\nAn instance of the structure Keystroke descrebing the keystroke.\n\n\n\n\n\n"
+    "text": "function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)\n\nWait for an keystroke in the window win and return it (see Keystroke).  If win is nothing, then getch() will be used instead of wgetch(win) to listen for the keystroke.\n\n\n\n\n\n"
 },
 
 {
@@ -945,19 +977,43 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.move_view-Tuple{TextUserInterfaces.TUI_WINDOW,Integer,Integer}",
+    "location": "lib/library/#TextUserInterfaces.move_panel",
     "page": "Library",
-    "title": "TextUserInterfaces.move_view",
-    "category": "method",
-    "text": "function move_view(win::TUI_WINDOW, y::Integer, x::Integer; update::Bool = true)\n\nMove the origin of the view of window win to the position (y,x). This routine makes sure that the view will never reach positions outside the buffer.\n\n\n\n\n\n"
+    "title": "TextUserInterfaces.move_panel",
+    "category": "function",
+    "text": "function move_panel(panel::Ptr{Cvoid}, starty::Integer, startx::Integer)\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.move_view_inc-Tuple{TextUserInterfaces.TUI_WINDOW,Integer,Integer}",
+    "location": "lib/library/#TextUserInterfaces.move_view-Tuple{Window,Integer,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.move_view",
+    "category": "method",
+    "text": "function move_view(win::Window, y::Integer, x::Integer; update::Bool = true)\n\nMove the origin of the view of window win to the position (y,x). This routine makes sure that the view will never reach positions outside the buffer.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.move_view_inc-Tuple{Window,Integer,Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.move_view_inc",
     "category": "method",
-    "text": "function move_view_inc(win::TUI_WINDOW; Δy::Integer, Δx::Integer; kwargs...)\n\nMove the view of the window win to the position (y+Δy, x+Δx). This function has the same set of keywords of the function move_view.\n\n\n\n\n\n"
+    "text": "function move_view_inc(win::Window; Δy::Integer, Δx::Integer; kwargs...)\n\nMove the view of the window win to the position (y+Δy, x+Δx). This function has the same set of keywords of the function move_view.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.move_window-Tuple{Window,Integer,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.move_window",
+    "category": "method",
+    "text": "function move_window(win::Window, starty::Integer, startx::Integer)\n\nMove the window win to the position (starty, startx).\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.move_window_to_top-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.move_window_to_top",
+    "category": "method",
+    "text": "function move_window_to_top(win::Window)\n\nMove window win to the top.\n\n\n\n\n\n"
 },
 
 {
@@ -1065,6 +1121,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.next_widget-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.next_widget",
+    "category": "method",
+    "text": "function next_widget(window::Window)\n\nMove the focus of window window to the next widget.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.nodelay",
     "page": "Library",
     "title": "TextUserInterfaces.nodelay",
@@ -1161,11 +1225,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.previous_widget-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.previous_widget",
+    "category": "method",
+    "text": "function next_widget(window::Window)\n\nMove the focus of window window to the previous widget.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.printw",
     "page": "Library",
     "title": "TextUserInterfaces.printw",
     "category": "function",
     "text": "function printw(str::T) where T<:AbstractString\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{Any,Keystroke}",
+    "page": "Library",
+    "title": "TextUserInterfaces.process_focus",
+    "category": "method",
+    "text": "function process_focus(widget, k::Keystroke)\n\nProcess the actions when widget widget is in focus and the keystroke k is pressed. If it returns false, then it is means that the widget was not capable to process the focus. Otherwise, it must return true.\n\n\n\n\n\n"
 },
 
 {
@@ -1193,11 +1273,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_WINDOW,Keystroke}",
+    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{Window,Keystroke}",
     "page": "Library",
     "title": "TextUserInterfaces.process_focus",
     "category": "method",
-    "text": "function process_focus(win::TUI_WINDOW, k::Keystroke)\n\nProcess the actions when the window win is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
+    "text": "function process_focus(window::Window, k::Keystroke)\n\nProcess the focus on window window due to keystroke k.\n\n\n\n\n\n"
 },
 
 {
@@ -1233,27 +1313,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.refresh_window-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.refresh_window-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.refresh_window",
     "category": "method",
-    "text": "function refresh_window(win::TUI_WINDOW; update = true, backpropagation = true)\n\nRefresh the window win and all its child windows. If the view needs to be updated (see view_needs_update), then the content of the buffer will be copied to the view before updating.\n\nIf update is true, then doupdate() is called and the physical screen is updated.\n\nIf backpropagation is true, then all the parents windows (except from the root window) will also be refreshed.\n\n\n\n\n\n"
+    "text": "function refresh_window(win::Window; update = true, backpropagation = true)\n\nRefresh the window win and all its child windows. If the view needs to be updated (see view_needs_update), then the content of the buffer will be copied to the view before updating.\n\nIf update is true, then doupdate() is called and the physical screen is updated.\n\nIf backpropagation is true, then all the parents windows (except from the root window) will also be refreshed.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.request_focus_change-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{Any}",
     "page": "Library",
-    "title": "TextUserInterfaces.request_focus_change",
+    "title": "TextUserInterfaces.release_focus",
     "category": "method",
-    "text": "function request_focus_change(win::TUI_WINDOW)\n\nRequest to change the focus of the children elements in window win. If all the children has already been cycled, then this function returns true to state that the focus should be released from the window.\n\n\n\n\n\n"
+    "text": "function release_focus(widget)\n\nRequest focus to be released. It should return true if the focus can be released or false otherwise.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.request_focus_change-Tuple{}",
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_FORM}",
     "page": "Library",
-    "title": "TextUserInterfaces.request_focus_change",
+    "title": "TextUserInterfaces.release_focus",
     "category": "method",
-    "text": "function request_focus_change()\n\nRequest that the current panel (in focus) changes its child that has the focus. If the panel has cycled all its children elements, than search for the next panel that can accept the focus.\n\n\n\n\n\n"
+    "text": "function release_focus(form::TUI_FORM)\n\nRelease the focus from the form form.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_MENU}",
+    "page": "Library",
+    "title": "TextUserInterfaces.release_focus",
+    "category": "method",
+    "text": "function release_focus(menu::TUI_MENU)\n\nRelease the focus from the menu menu.\n\n\n\n\n\n"
 },
 
 {
@@ -1262,14 +1350,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.request_update",
     "category": "method",
     "text": "function request_update(widget)\n\nRequest update of the widget widget.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.request_view_update-Tuple{TextUserInterfaces.TUI_WINDOW}",
-    "page": "Library",
-    "title": "TextUserInterfaces.request_view_update",
-    "category": "method",
-    "text": "function request_view_update(win::TUI_WINDOW)\n\nRequest to update the view of window win. Notice that this must also request update on all parent windows until the root window.\n\n\n\n\n\n"
 },
 
 {
@@ -1309,7 +1389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.set_color",
     "category": "method",
-    "text": "function set_color([win::TUI_WINDOW,] color::Int)\n\nSet the color of the window win to color (see ncurses_color). If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
+    "text": "function set_color([win::Window,] color::Int)\n\nSet the color of the window win to color (see ncurses_color). If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
 },
 
 {
@@ -1385,11 +1465,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_focus_chain-Tuple{Vararg{TextUserInterfaces.TUI_WINDOW,N} where N}",
+    "location": "lib/library/#TextUserInterfaces.set_focus_chain-Tuple{Vararg{Window,N} where N}",
     "page": "Library",
     "title": "TextUserInterfaces.set_focus_chain",
     "category": "method",
-    "text": "function set_focus_chain(wins::TUI_WINDOW...; new_focus_id::Integer = 1)\n\nSet the focus chain, i.e. the ordered list of windows that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
+    "text": "function set_focus_chain(wins::Window...; new_focus_id::Integer = 1)\n\nSet the focus chain, i.e. the ordered list of windows that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
 },
 
 {
@@ -1417,11 +1497,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{TextUserInterfaces.TUI_FORM,TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{TextUserInterfaces.TUI_FORM,Window}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_win",
     "category": "method",
-    "text": "function set_form_win(form::TUI_FORM, win::TUI_WINDOW)\n\nSet the form form window to win.\n\n\n\n\n\n"
+    "text": "function set_form_win(form::TUI_FORM, win::Window)\n\nSet the form form window to win.\n\n\n\n\n\n"
 },
 
 {
@@ -1465,11 +1545,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_menu_win-Tuple{TextUserInterfaces.TUI_MENU,TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.set_menu_win-Tuple{TextUserInterfaces.TUI_MENU,Window}",
     "page": "Library",
     "title": "TextUserInterfaces.set_menu_win",
     "category": "method",
-    "text": "function set_menu_win(menu::TUI_MENU, win::TUI_WINDOW)\n\nSet menu menu window to win.\n\n\n\n\n\n"
+    "text": "function set_menu_win(menu::TUI_MENU, win::Window)\n\nSet menu menu window to win.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_next_window_func-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_next_window_func",
+    "category": "method",
+    "text": "function set_next_window_func(f)\n\nSet the function f to be the one that will be called to check whether the user wants the next window. The signature must be:\n\nf(k::Keystroke)::Bool\n\nIt must return true if the next window is required of false otherwise.\n\n\n\n\n\n"
 },
 
 {
@@ -1481,11 +1569,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_window_title!-Tuple{TextUserInterfaces.TUI_WINDOW,AbstractString}",
+    "location": "lib/library/#TextUserInterfaces.set_previous_window_func-Tuple{Any}",
     "page": "Library",
-    "title": "TextUserInterfaces.set_window_title!",
+    "title": "TextUserInterfaces.set_previous_window_func",
     "category": "method",
-    "text": "function set_window_title!(win::TUI_WINDOW, title::AbstractString; ...)\n\nSet the title of the window win to title.\n\nKeywords\n\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
+    "text": "function set_previous_window_func(f)\n\nSet the function f to be the one that will be called to check whether the user wants the previous window. The signature must be:\n\nf(k::Keystroke)::Bool\n\nIt must return true if the previous window is required of false otherwise.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_window_title-Tuple{Window,AbstractString}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_window_title",
+    "category": "method",
+    "text": "function set_window_title(win::Window, title::AbstractString; ...)\n\nSet the title of the window win to title.\n\nKeywords\n\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -1494,6 +1590,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.show_panel",
     "category": "function",
     "text": "function show_panel(panel::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.show_window-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.show_window",
+    "category": "method",
+    "text": "function show_window(win::Window)\n\nShow the window win.\n\n\n\n\n\n"
 },
 
 {
@@ -1510,6 +1614,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.subpad",
     "category": "function",
     "text": "function subpad(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.sync_cursor-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.sync_cursor",
+    "category": "method",
+    "text": "function sync_cursor(window::Window)\n\nSynchronize the cursor to the position of the focused widget in window window. This is necessary because all the operations are done in the buffer and then copied to the view.\n\n\n\n\n\n"
 },
 
 {
@@ -1565,7 +1677,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.unset_color",
     "category": "method",
-    "text": "function unset_color([win::TUI_WINDOW,] color::Number)\n\nUnset the color color (see ncurses_color) in the window win. If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
+    "text": "function unset_color([win::Window,] color::Number)\n\nUnset the color color (see ncurses_color) in the window win. If win is omitted, then it defaults to the root window.\n\n\n\n\n\n"
 },
 
 {
@@ -1585,11 +1697,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.update_view-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.update_view-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.update_view",
     "category": "method",
-    "text": "function update_view(win::TUI_WINDOW; force::Bool = false)\n\nUpdate the view of window win by copying the contents from the buffer. If the view does not need to be updated (see view_needs_update), then nothing is done. If the keyword force is true, then the copy will always happen.\n\nReturn\n\nIt returns true if the view has been updated and false otherwise.\n\n\n\n\n\n"
+    "text": "function update_view(win::Window; force::Bool = false)\n\nUpdate the view of window win by copying the contents from the buffer. If the view does not need to be updated (see view_needs_update), then nothing is done. If the keyword force is true, then the copy will always happen.\n\nReturn\n\nIt returns true if the view has been updated and false otherwise.\n\n\n\n\n\n"
 },
 
 {
@@ -1689,22 +1801,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.window_print-Tuple{TextUserInterfaces.TUI_WINDOW,AbstractString}",
-    "page": "Library",
-    "title": "TextUserInterfaces.window_print",
-    "category": "method",
-    "text": "function window_print(win::TUI_WINDOW, [row::Integer,] str::AbstractString; ...)\n\nPrint the string str at the window win in the row row. If the row is negative or omitted, then the current row will be used.\n\nKeywords\n\nalignment: Text alignemnt: :r for left, :c for center, and:lfor              left. (**Default** =:l`)\npad: Padding to print the text. (Default = 0)\n\nRemarks\n\nIf str has multiple lines, then all the lines will be aligned.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.window_println-Tuple{TextUserInterfaces.TUI_WINDOW,AbstractString}",
-    "page": "Library",
-    "title": "TextUserInterfaces.window_println",
-    "category": "method",
-    "text": "function window_println(win::TUI_WINDOW, [row::Integer,] str::AbstractString; ...)\n\nPrint the string str at the window win in the row row adding a break line character at the end. If the row is negative or omitted, then the current row will be used.\n\nKeywords\n\nalignment: Text alignemnt: :r for left, :c for center, and:lfor              left. (**Default** =:l`)\npad: Padding to print the text. (Default = 0)\n\nRemarks\n\nIf str has multiple lines, then all the lines will be aligned.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.wmove",
     "page": "Library",
     "title": "TextUserInterfaces.wmove",
@@ -1785,59 +1881,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_FORM}",
+    "location": "lib/library/#TextUserInterfaces.next_window-Tuple{}",
     "page": "Library",
-    "title": "TextUserInterfaces.accept_focus",
+    "title": "TextUserInterfaces.next_window",
     "category": "method",
-    "text": "function accept_focus(form::TUI_FORM)\n\nCommand executed when form form must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+    "text": "function next_window()\n\nMove the focus to the next window.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_MENU}",
+    "location": "lib/library/#TextUserInterfaces.previous_window-Tuple{}",
     "page": "Library",
-    "title": "TextUserInterfaces.accept_focus",
+    "title": "TextUserInterfaces.previous_window",
     "category": "method",
-    "text": "function accept_focus(menu::TUI_MENU)\n\nCommand executed when menu menu must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+    "text": "function previous_window()\n\nMove the focus to the previous window.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_WINDOW}",
+    "location": "lib/library/#TextUserInterfaces.request_view_update-Tuple{Window}",
     "page": "Library",
-    "title": "TextUserInterfaces.accept_focus",
+    "title": "TextUserInterfaces.request_view_update",
     "category": "method",
-    "text": "function accept_focus(win::TUI_WINDOW)\n\nCommand executed when window win must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_FORM}",
-    "page": "Library",
-    "title": "TextUserInterfaces.release_focus",
-    "category": "method",
-    "text": "function release_focus(form::TUI_FORM)\n\nRelease the focus from the form form.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "Library",
-    "title": "TextUserInterfaces.release_focus",
-    "category": "method",
-    "text": "function release_focus(menu::TUI_MENU)\n\nRelease the focus from the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_WINDOW}",
-    "page": "Library",
-    "title": "TextUserInterfaces.release_focus",
-    "category": "method",
-    "text": "function release_focus(win::TUI_WINDOW)\n\nRelease the focus from the window win.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.update_cursor-Tuple{TextUserInterfaces.TUI_WINDOW}",
-    "page": "Library",
-    "title": "TextUserInterfaces.update_cursor",
-    "category": "method",
-    "text": "function update_cursor(win::TUI_WINDOW)\n\nUpdate the cursor position so that the physical cursor matches the cursor of the window win.\n\n\n\n\n\n"
+    "text": "function request_view_update(win::Window)\n\nRequest to update the view of window win. Notice that this must also request update on all parent windows until the root window.\n\n\n\n\n\n"
 },
 
 {
