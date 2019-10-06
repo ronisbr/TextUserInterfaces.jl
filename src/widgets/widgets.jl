@@ -6,6 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+export Widget
 export accept_focus, create_widget, destroy_widget, request_update, redraw,
        release_focus, update
 

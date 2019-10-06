@@ -5,7 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export log, log_message
+export @log, @log_ident, @reset_log_ident, log_message
 
 ################################################################################
 #                                    Macros

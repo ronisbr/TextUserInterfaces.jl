@@ -5,7 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export logger
+export logger, critical, warning, info, verbose
 
 @enum LogLevels begin
     critical = 0
@@ -13,7 +13,6 @@ export logger
     info     = 2
     verbose  = 3
 end
-
 
 @with_kw mutable struct Logger
     enabled::Bool = false
