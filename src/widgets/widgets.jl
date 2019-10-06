@@ -37,7 +37,7 @@ create_widget
 Destroy the widget `widget`.
 
 If `refresh` is `true` (**default**), then a full refresh will be performed on
-the parent window.
+the parent window. Otherwise, no refresh will be performed.
 
 """
 function destroy_widget(widget; refresh::Bool = true)
@@ -54,8 +54,10 @@ function destroy_widget(widget; refresh::Bool = true)
 
     @log info "destroy_widget" "Widget $widget_desc destroyed."
 
-    # In this case, we need a full refresh of the parent window.
-    refresh_window(parent; full_refresh = true)
+    # If required, perform a full refresh of the parent window.
+    refresh && refresh_window(parent; full_refresh = true)
+
+    return nothing
 end
 
 """
