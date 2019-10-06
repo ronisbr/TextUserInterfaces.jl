@@ -43,6 +43,8 @@ the parent window.
 function destroy_widget(widget; refresh::Bool = true)
     @unpack parent, cwin = widget
 
+    widget_desc = obj_desc(widget)
+
     delwin(cwin)
     cwin = Ptr{WINDOW}(0)
 
@@ -50,7 +52,7 @@ function destroy_widget(widget; refresh::Bool = true)
     idx = findall(x->x == widget, parent.widgets)
     deleteat!(parent.widgets, idx)
 
-    @log info "destroy_widget" "Widget of type $(typeof(widget)) of window $(parent.id) was destroyed."
+    @log info "destroy_widget" "Widget $widget_desc destroyed."
 
     # In this case, we need a full refresh of the parent window.
     refresh_window(parent; full_refresh = true)

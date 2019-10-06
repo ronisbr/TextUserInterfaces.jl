@@ -67,7 +67,7 @@ function next_widget(window::Window)
             window.focus_id = i
             sync_cursor(window)
 
-            @log verbose "next_widget" "Window $(window.id): Focus was handled to widget #$i of type $(typeof(widgets[i]))."
+            @log verbose "next_widget" "Window $(window.id): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
 
             return true
         end

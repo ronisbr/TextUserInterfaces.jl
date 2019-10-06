@@ -61,7 +61,8 @@ function create_widget(::Type{Val{:button}}, parent::Window,
     A button was created in window $(parent.id).
         Size       = ($nlines, $ncols)
         Coordinate = ($begin_y, $begin_x)
-        Label      = \"$label\""""
+        Label      = \"$label\"
+        Reference  = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
     return widget
