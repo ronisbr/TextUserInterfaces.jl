@@ -1,5 +1,6 @@
 module TextUserInterfaces
 
+using Dates
 using Libdl
 using LinearAlgebra
 using Parameters
@@ -21,6 +22,11 @@ include("./ncurses/ncurses_functions.jl")
 include("./ncurses/form_functions.jl")
 include("./ncurses/menu_functions.jl")
 include("./ncurses/panel_functions.jl")
+
+# Logger
+# ==============================================================================
+
+include("logger.jl")
 
 # Other includes
 # ==============================================================================

@@ -50,6 +50,12 @@ function create_widget(::Type{Val{:label}}, parent::Window,
     # Add to the parent window widget list.
     push!(parent.widgets, widget)
 
+    @log info "create_widget" """
+    A label was created in window $(parent.id).
+        Size       = ($nlines, $ncols)
+        Coordinate = ($begin_y, $begin_x)
+        Text       = \"$text\""""
+
     # Return the created widget.
     return widget
 end

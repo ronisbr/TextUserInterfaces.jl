@@ -54,6 +54,13 @@ function create_widget(::Type{Val{:progress_bar}}, parent::Window,
     # Add to the parent window widget list.
     push!(parent.widgets, widget)
 
+    @log info "create_widget" """
+    A progress bar was created in window $(parent.id).
+        Size       = ($nlines, $ncols)
+        Coordinate = ($begin_y, $begin_x)
+        Border     = $border
+        Style      = \"$(string(style))\""""
+
     # Return the created widget.
     return widget
 end

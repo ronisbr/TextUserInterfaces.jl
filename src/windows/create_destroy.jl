@@ -79,6 +79,13 @@ function create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
     border && set_window_title(win, title; title_color = title_color)
     push!(tui.wins, win)
 
+    @log info "create_window" """
+    Window $id was created.
+       Physical size = ($nlines, $ncols)
+       Buffer size   = ($bcols, $blines)
+       Coordinate    = ($begin_y, $begin_x)
+       Title         = \"$title\""""
+
     # Return the pointer to the window.
     return win
 end
@@ -90,6 +97,9 @@ Destroy the window `win`.
 
 """
 function destroy_window(win::Window)
+    @log info "destroy_window" "Window $(win.id) and its $(length(win.widgets)) widgets will be destroyed."
+    @log_ident 1
+
     win.focus_id = 0
 
     # Destroy all widgets.
@@ -118,6 +128,9 @@ function destroy_window(win::Window)
     idx = findall(x->x == win, tui.wins)
     deleteat!(tui.wins, idx)
 
+    @log_ident 0
+    @log info "destroy_window" "Window $(win.id) was destroyed."
+
     return nothing
 end
 
@@ -128,6 +141,7 @@ Destroy all windows managed by the TUI.
 
 """
 function destroy_all_windows()
+    @log info "destroy_all_windows" "All windows will be destroyed."
     while length(tui.wins) > 0
         destroy_window(tui.wins[end])
     end

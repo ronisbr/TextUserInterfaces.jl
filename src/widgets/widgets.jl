@@ -50,6 +50,8 @@ function destroy_widget(widget; refresh::Bool = true)
     idx = findall(x->x == widget, parent.widgets)
     deleteat!(parent.widgets, idx)
 
+    @log info "destroy_widget" "Widget of type $(typeof(widget)) of window $(parent.id) was destroyed."
+
     # In this case, we need a full refresh of the parent window.
     refresh_window(parent; full_refresh = true)
 end

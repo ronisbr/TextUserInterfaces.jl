@@ -6,6 +6,8 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+export WidgetButton
+
 ################################################################################
 #                                     Type
 ################################################################################
@@ -54,6 +56,12 @@ function create_widget(::Type{Val{:button}}, parent::Window,
 
     # Add to the parent window widget list.
     push!(parent.widgets, widget)
+
+    @log info "create_widget" """
+    A button was created in window $(parent.id).
+        Size       = ($nlines, $ncols)
+        Coordinate = ($begin_y, $begin_x)
+        Label      = \"$label\""""
 
     # Return the created widget.
     return widget
