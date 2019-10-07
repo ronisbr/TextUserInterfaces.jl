@@ -1,7 +1,7 @@
 name = "TextUserInterfaces"
 uuid = "2a09ff82-1be9-11e9-2ab7-19964783a84b"
 authors = ["Ronan Arraes Jardim Chagas <ronisbr@gmail.com>"]
-version = "0.1.0"
+version = "0.0.1"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
