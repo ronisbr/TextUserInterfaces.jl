@@ -71,7 +71,7 @@ function log_message(level::LogLevels, msg::AbstractString, id::AbstractString =
 
     # Check if the user wants the timestamp.
     time_str = logger.timestamp ? Dates.format(now(), "Y-mm-dd HH:MM:SS") * " │ " : ""
-    time_pad = " "^(length(time_str)-3) * " │ "
+    time_pad = logger.timestamp ? " "^(length(time_str)-3) * " │ " : ""
 
     # Split the message by each line.
     lines = split(msg,'\n')
