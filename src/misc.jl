@@ -7,6 +7,8 @@
 
 export obj_desc, obj_to_ptr
 
+const _test_hide_address = [false]
+
 """
     function obj_desc(obj)
 
@@ -33,6 +35,11 @@ Returns the hexadecimal representation of the address of the object `obj`. It
 returned.
 
 """
-obj_to_ptr(obj) = isimmutable(obj) ? "0x0" :
-                                     repr(UInt64(pointer_from_objref(obj)))
+function obj_to_ptr(obj)
+    if _test_hide_address[1]
+        return "0x0"
+    else
+        return isimmutable(obj) ? "0x0" : repr(UInt64(pointer_from_objref(obj)))
+    end
+end
 
