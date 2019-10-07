@@ -44,3 +44,11 @@ end
 
     destroy_tui()
 end
+
+# Log test
+# ==============================================================================
+
+# Check some functionalities using logs.
+cd("./log_test/")
+include("./log_test/log_test.jl")
+cd("../")
