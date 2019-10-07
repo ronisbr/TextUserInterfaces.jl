@@ -653,7 +653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -661,7 +661,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
