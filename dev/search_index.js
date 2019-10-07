@@ -65,6 +65,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.WINDOW",
+    "page": "Library",
+    "title": "TextUserInterfaces.WINDOW",
+    "category": "type",
+    "text": "struct WINDOW\n\nHandles a ncurses window.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.ACS_-Tuple{Symbol}",
     "page": "Library",
     "title": "TextUserInterfaces.ACS_",
@@ -381,7 +389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.derwin",
     "category": "function",
-    "text": "function derwin(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function derwin(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -429,7 +437,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.destroy_widget",
     "category": "method",
-    "text": "function destroy_widget(widget; refresh::Bool = true)\n\nDestroy the widget widget.\n\nIf refresh is true (default), then a full refresh will be performed on the parent window.\n\n\n\n\n\n"
+    "text": "function destroy_widget(widget; refresh::Bool = true)\n\nDestroy the widget widget.\n\nIf refresh is true (default), then a full refresh will be performed on the parent window. Otherwise, no refresh will be performed.\n\n\n\n\n\n"
 },
 
 {
@@ -470,6 +478,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.field_buffer",
     "category": "method",
     "text": "function field_buffer(field::Ptr{Cvoid}, buffer::Integer)\n\nReturn type: Cstring\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.focus_on_widget-Tuple{Widget}",
+    "page": "Library",
+    "title": "TextUserInterfaces.focus_on_widget",
+    "category": "method",
+    "text": "function focus_on_widget(widget::Widget)\n\nMove focus to the widget widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.focus_on_widget-Tuple{Window,Integer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.focus_on_widget",
+    "category": "method",
+    "text": "function focus_on_widget(window::Window, id::Integer)\n\nMove focus to the widget ID id on window window.\n\n\n\n\n\n"
 },
 
 {
@@ -797,7 +821,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.initscr",
     "category": "function",
-    "text": "function initscr()\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function initscr()\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1117,7 +1141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.newpad",
     "category": "function",
-    "text": "function newpad(lines::Integer, cols::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function newpad(lines::Integer, cols::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1125,7 +1149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.newwin",
     "category": "function",
-    "text": "function newwin(lines::Integer, cols::Integer, y::Integer, x::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function newwin(lines::Integer, cols::Integer, y::Integer, x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1158,6 +1182,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.notimeout",
     "category": "function",
     "text": "function notimeout(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.obj_desc-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.obj_desc",
+    "category": "method",
+    "text": "function obj_desc(obj)\n\nReturn a string with the description of the object obj formed by:\n\n<Object type> (<Object address if mutable>)\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.obj_to_ptr-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.obj_to_ptr",
+    "category": "method",
+    "text": " function obj_to_ptr(obj)\n\nReturns the hexadecimal representation of the address of the object obj. It only works with mutable objects.  If obj is immutable, then 0x0 will be returned.\n\n\n\n\n\n"
 },
 
 {
@@ -1489,7 +1529,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_sub-Tuple{Ptr{Nothing},Ptr{TextUserInterfaces.WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces.set_form_sub-Tuple{Ptr{Nothing},Ptr{WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_sub",
     "category": "method",
@@ -1497,7 +1537,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{Ptr{Nothing},Ptr{TextUserInterfaces.WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{Ptr{Nothing},Ptr{WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_win",
     "category": "method",
@@ -1621,7 +1661,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.subpad",
     "category": "function",
-    "text": "function subpad(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{TextUserInterfaces.WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function subpad(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1753,7 +1793,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.wborder-Tuple{Ptr{TextUserInterfaces.WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces.wborder-Tuple{Ptr{WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces.wborder",
     "category": "method",
@@ -1857,6 +1897,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@log",
+    "category": "macro",
+    "text": "macro log(level, msg, id)\n\nLog the messagem msg with level level of the caller id\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@log",
+    "category": "macro",
+    "text": "macro log(level, msg)\n\nLog the message msg with level level.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.NCURSES",
     "page": "Library",
     "title": "TextUserInterfaces.NCURSES",
@@ -1865,15 +1921,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.WINDOW",
-    "page": "Library",
-    "title": "TextUserInterfaces.WINDOW",
-    "category": "type",
-    "text": "struct WINDOW\n\nHandles a ncurses window.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces._get_window_cur_pos-Tuple{Ptr{TextUserInterfaces.WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces._get_window_cur_pos-Tuple{Ptr{WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces._get_window_cur_pos",
     "category": "method",
@@ -1881,7 +1929,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_window_dims-Tuple{Ptr{TextUserInterfaces.WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces._get_window_dims-Tuple{Ptr{WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces._get_window_dims",
     "category": "method",
@@ -1910,6 +1958,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.request_view_update",
     "category": "method",
     "text": "function request_view_update(win::Window)\n\nRequest to update the view of window win. Notice that this must also request update on all parent windows until the root window.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.require_cursor-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.require_cursor",
+    "category": "method",
+    "text": "function require_cursor()\n\nIf true, then the physical cursor will be shown and the position will be updated according to its position in the widget window. Otherwise, the physical cursor will be hidden.\n\n\n\n\n\n"
 },
 
 {
@@ -1942,22 +1998,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.@_ccallp",
     "category": "macro",
     "text": "macro _ccallm(expr)\n\nMake a ccall to a libpanel function. The usage should be:\n\n@_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn\n\nIt uses the global constant structure ncurses to call the function. Hence, it must be initialized.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any,Any}",
-    "page": "Library",
-    "title": "TextUserInterfaces.@log",
-    "category": "macro",
-    "text": "macro log(level, msg, id)\n\nLog the messagem msg with level level of the caller id\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any}",
-    "page": "Library",
-    "title": "TextUserInterfaces.@log",
-    "category": "macro",
-    "text": "macro log(level, msg)\n\nLog the message msg with level level.\n\n\n\n\n\n"
 },
 
 {
