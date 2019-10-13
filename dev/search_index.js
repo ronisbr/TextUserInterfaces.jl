@@ -313,6 +313,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.create_widget_common-Union{Tuple{Tl}, Tuple{Tt}, Tuple{Union{Widget, Window},Tt,Tl,Number,Number,Symbol,Symbol}} where Tl<:Union{Integer, Symbol} where Tt<:Union{Integer, Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces.create_widget_common",
+    "category": "method",
+    "text": "function create_widget_common(parent::WidgetParent, top::Tt, left::Tl, height::Number, width::Number, vsize_policy::Symbol, hsize_policy::Symbol) where {Tt<:Union{Integer,Symbol},Tl<:Union{Integer,Symbol}}\n\nCreate all the variables in the common structure of the widget API.\n\nArgs\n\nparent: Parent widget.\ntop: Top position of the widget. It can be an integer, or a symbol. If it is        a symbol, then the widget vertical alignment will be automatically        computed. In this case, it can be used :top, :center, or :bottom.\nleft: Left position of the widget. It can be an integer, or a symbol. If it         is a symbol, then the widget horizontal alignment will be         automatically computed. In this case, it can be used :left,         :center, or :right.\nheight: If vsize_policy is :absolute, then it must be an integer with           the height of the widget. If vsize_policy is :relative, then it           will be treated as a percentage of the parent height.\nwidth: If hsize_policy is :absolute, then it must be an integer with           the width of the widget. If hsize_policy is :relative, then it           will be treated as a percentage of the parent width.\nvsize_policy: Policy to be used when computing the height of the widget. It                 can be :absolute or :relative.\nhsize_policy: Policy to be used when computing the width of the widget. It                 can be :absolute or :relative.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.create_window",
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
@@ -641,6 +649,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_buffer-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_buffer",
+    "category": "method",
+    "text": "function get_buffer(widget)\n\nReturn the buffer of the widget widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_buffer-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_buffer",
+    "category": "method",
+    "text": "function get_buffer(win::Window)\n\nReturn the buffer of the window win.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_color_pair-Tuple{Symbol,Symbol}",
     "page": "Library",
     "title": "TextUserInterfaces.get_color_pair",
@@ -670,6 +694,30 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.get_focused_window",
     "category": "method",
     "text": "function get_focused_window()\n\nReturn the focused window.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_height-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_height",
+    "category": "method",
+    "text": "function get_height(widget)\n\nReturn the height of widget widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_height-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_height",
+    "category": "method",
+    "text": "function get_height(win::Window)\n\nReturn the height of the buffer of the window win.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_width-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_width",
+    "category": "method",
+    "text": "function get_width(win::Window)\n\nReturn the width of the buffer of the window win.\n\n\n\n\n\n"
 },
 
 {
@@ -1934,6 +1982,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._get_window_dims",
     "category": "method",
     "text": "function _get_window_dims(win::Ptr{WINDOW})\n\nGet the dimensions of the window win and return it on a tuple (dim_y,dim_x). If the window is not initialized, then this function returns (-1,-1).\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_widgth-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_widgth",
+    "category": "method",
+    "text": "function get_width(widget)\n\nReturn the width of widget widget.\n\n\n\n\n\n"
 },
 
 {
