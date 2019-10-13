@@ -27,9 +27,7 @@ logger.enabled = true
 @with_kw mutable struct WidgetField <: Widget
     # API
     # ==========================================================================
-    parent::Window = nothing
-    cwin::Ptr{WINDOW}  = Ptr{WINDOW}(0)
-    update_needed::Bool = true
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -45,27 +43,28 @@ function accept_focus(widget::WidgetField)
 end
 
 # Function to create the widget.
-function create_widget(::Type{Val{:field}}, parent::Window,
-                       begin_y::Integer, begin_x::Integer,
-                       pos::Tuple{Int,Int} = (0,0))
+function create_widget(::Type{Val{:field}}, parent::WidgetParent, top::Integer,
+                       left::Integer, pos::Tuple{Int,Int} = (0,0))
 
-    nlines = 3
-    ncols  = 7
+    height = 3
+    width  = 7
 
-    # Create the window that will hold the contents.
-    cwin = subpad(parent.buffer, nlines, ncols, begin_y, begin_x)
+    # Create the common parameters of the widget.
+    common = create_widget_common(parent, top, left, height, width, :absolute,
+                                  :absolute)
 
     # Create the widget.
-    widget = WidgetField(parent = parent, cwin = cwin, pos = pos)
+    widget = WidgetField(common = common, pos = pos)
 
     # Add to the parent window widget list.
     push!(parent.widgets, widget)
 
     @log info "create_widget" """
     A field was created in window $(parent.id).
-        Size       = ($nlines, $ncols)
-        Coordinate = ($begin_y, $begin_x)
-        Reference  = $(obj_to_ptr(widget))"""
+        Size        = ($(common.height), $(common.width))
+        Coordinate  = ($(common.top), $(common.left))
+        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
+        Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
     return widget
@@ -78,7 +77,7 @@ function process_focus(widget::WidgetField, k::Keystroke)
     # If the user pressed `enter`, then mark the board with the current player
     # tick.
     if k.ktype == :enter
-        @log verbose "change_value" "Window $(widget.parent.id): Enter pressed on focused field."
+        @log verbose "change_value" "$(obj_to_ptr(widget)): Enter pressed on focused field."
 
         # If the field has not been marked yet, then mark using the current
         # player and ask to change the player.
@@ -98,8 +97,10 @@ end
 
 # Redraw event.
 function redraw(widget::WidgetField)
-    @unpack cwin, t, player = widget
-    wclear(cwin)
+    @unpack common, t, player = widget
+    @unpack parent, buffer = common
+
+    wclear(buffer)
 
     # Get the colors.
     if player == 0
@@ -111,13 +112,13 @@ function redraw(widget::WidgetField)
     ch = field_highlight_colors[current_player[1]]
 
     # Get the background color depending on the focus.
-    c = has_focus(widget.parent, widget) ? ch : c
+    c = has_focus(parent, widget) ? ch : c
 
-    wattron(cwin, c)
-    mvwprintw(cwin, 0, 0, "       ")
-    mvwprintw(cwin, 1, 0, "   $t    ")
-    mvwprintw(cwin, 2, 0, "       ")
-    wattroff(cwin, c)
+    wattron(buffer, c)
+    mvwprintw(buffer, 0, 0, "       ")
+    mvwprintw(buffer, 1, 0, "   $t    ")
+    mvwprintw(buffer, 2, 0, "       ")
+    wattroff(buffer, c)
 
     return nothing
 end
@@ -220,11 +221,21 @@ function tictactoe()
            │       │"""
 
     win    = create_window(18,60,2,2; border = true, title = " Tic Tac Toe ")
-    board  = create_widget(Val{:label}, win, 2, 2,  11, 24, board; color = pb)
-    ~      = create_widget(Val{:label}, win, 2, 30,  1, 18, "Player 1: $(ticks[1])"; color = p1)
-    ~      = create_widget(Val{:label}, win, 3, 30,  1, 18, "Player 2: $(ticks[2])"; color = p2)
-    result = create_widget(Val{:label}, win, 5, 30,  2, 27, ""; color = p0)
-    info   = create_widget(Val{:label}, win, 15, 2,  1, 20, "Press F1 to exit."; color = p0)
+    board  = create_widget(Val{:label}, win;
+                           top = 2, left = 2, height = 11, width = 24,
+                           text = board, color = pb)
+    ~      = create_widget(Val{:label}, win;
+                           top = 2, left = 30, height = 1, width = 18,
+                           text = "Player 1: $(ticks[1])", color = p1)
+    ~      = create_widget(Val{:label}, win;
+                           top = 3, left = 30, height = 1, width = 18,
+                           text = "Player 2: $(ticks[2])", color = p2)
+    result = create_widget(Val{:label}, win;
+                           top = 5, left = 30, height = 2, width = 27,
+                           text = "", color = p0)
+    info   = create_widget(Val{:label}, win;
+                           top = 15, left = 2, height = 1, width = 20,
+                           text = "Press F1 to exit.", color = p0)
     fields = [create_widget(Val{:field}, win, 2 + 4(i-1), 2 + 8(j-1), (i,j)) for i = 1:3,j = 1:3]
     focus_on_widget(fields[1,1])
 

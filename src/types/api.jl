@@ -5,7 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export Window, Widget, tui
+export Window, Widget, WidgetCommon, WidgetParent, tui
 
 struct NCURSES_COLOR
     name::Symbol
@@ -172,6 +172,24 @@ const tui = TUI()
 
 # Abstract type for all widgets.
 abstract type Widget end
+
+# Types that can be parent of widgets.
+WidgetParent = Union{Window,Widget}
+
+# Common configurations for all widgets.
+@with_kw mutable struct WidgetCommon
+    parent::WidgetParent
+    buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
+    top::Number
+    left::Number
+    height::Number
+    width::Number
+    hsize_policy::Symbol
+    vsize_policy::Symbol
+
+    update_needed::Bool = true
+end
 
 """
     struct Keystorke

@@ -24,12 +24,21 @@ function windows_and_widgets()
 
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
         win  = create_window(10,56,x,y; border = true, title = title)
-        ~    = create_widget(Val{:label},  win,  1,  1,  1, 40, "The last pressed button was:"; color = p0)
-        text = create_widget(Val{:label},  win,  1, 30,  1, 10, ""; color = p2)
-        bt1  = create_widget(Val{:button}, win,  4,  1, 12, "Button 1", p1, p3)
-        bt2  = create_widget(Val{:button}, win,  4, 14, 12, "Button 2", p1, p3)
-        bt3  = create_widget(Val{:button}, win,  4, 27, 12, "Button 3", p1, p3)
-        bt4  = create_widget(Val{:button}, win,  4, 41, 12, "Button 4", p1, p3)
+        ~    = create_widget(Val{:label}, win;
+                             top = 1, left = 1, height = 1, width = 40,
+                             text = "The last pressed button was:", color = p0)
+        text = create_widget(Val{:label},  win;
+                             top = 1, left = 30, height = 1, width = 10,
+                             text = "", color = p2)
+        bt1  = create_widget(Val{:button}, win;
+                             top = 4, left = :left, width = 12, label = "Button 1",
+                             color = p1, color_highlight = p3)
+        bt2  = create_widget(Val{:button}, win,
+                             top = 4, left = :center, width = 12, label = "Button 2",
+                             color = p1, color_highlight = p3)
+        bt3  = create_widget(Val{:button}, win;
+                             top = 4, left = :right, width = 12, label = "Button 3",
+                             color = p1, color_highlight = p3)
 
         bt1.on_return_pressed = (text)->change_text(text,"Button 1")
         bt1.vargs_on_return_pressed = (text,)
@@ -37,8 +46,6 @@ function windows_and_widgets()
         bt2.vargs_on_return_pressed = (text,)
         bt3.on_return_pressed = (text)->change_text(text,"Button 3")
         bt3.vargs_on_return_pressed = (text,)
-        bt4.on_return_pressed = (text)->change_text(text,"Button 4")
-        bt4.vargs_on_return_pressed = (text,)
 
         push!(wins, win)
 

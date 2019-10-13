@@ -6,7 +6,43 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #==#
 
-export set_window_title
+export get_buffer, get_height, get_width, set_window_title
+
+"""
+    function get_buffer(win::Window)
+
+Return the buffer of the window `win`.
+
+"""
+get_buffer(win::Window) = win.buffer
+
+"""
+    function get_height(win::Window)
+
+Return the height of the buffer of the window `win`.
+
+"""
+function get_height(win::Window)
+    if win.buffer != C_NULL
+        return getmaxy(win.buffer)
+    else
+        return -1
+    end
+end
+
+"""
+    function get_width(win::Window)
+
+Return the width of the buffer of the window `win`.
+
+"""
+function get_width(win::Window)
+    if win.buffer != C_NULL
+        return getmaxx(win.buffer)
+    else
+        return -1
+    end
+end
 
 """
     function set_window_title(win::Window, title::AbstractString; ...)

@@ -16,9 +16,7 @@ export WidgetLabel, change_text
 
     # API
     # ==========================================================================
-    parent::Window = nothing
-    cwin::Ptr{WINDOW}  = Ptr{WINDOW}(0)
-    update_needed::Bool = true
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -33,16 +31,23 @@ end
 # Labels cannot accept focus.
 accept_focus(widget::WidgetLabel) = false
 
-function create_widget(::Type{Val{:label}}, parent::Window,
-                       begin_y::Integer, begin_x::Integer, nlines::Integer,
-                       ncols::Integer, text::AbstractString; alignment = :l,
-                       color::Int = 0)
+function create_widget(::Type{Val{:label}}, parent::WidgetParent;
+                       top::Union{Integer,Symbol} = 0,
+                       left::Union{Integer,Symbol} = 0,
+                       height::Number = 1,
+                       width::Number = 4,
+                       vsize_policy::Symbol = :absolute,
+                       hsize_policy::Symbol = :absolute,
+                       alignment = :l,
+                       color::Int = 0,
+                       text::AbstractString = "Text")
 
-    # Create the window that will hold the contents.
-    cwin = subpad(parent.buffer, nlines, ncols, begin_y, begin_x)
+    # Create the common parameters of the widget.
+    common = create_widget_common(parent, top, left, height, width,
+                                  vsize_policy, hsize_policy)
 
     # Create the widget.
-    widget = WidgetLabel(parent = parent, text = "", cwin = cwin, color = color)
+    widget = WidgetLabel(common = common, text   = "", color  = color)
 
     # Update the text.
     change_text(widget, text; alignment = alignment)
@@ -52,20 +57,24 @@ function create_widget(::Type{Val{:label}}, parent::Window,
 
     @log info "create_widget" """
     A label was created in window $(parent.id).
-        Size       = ($nlines, $ncols)
-        Coordinate = ($begin_y, $begin_x)
-        Text       = \"$text\""""
+        Size        = ($(common.height), $(common.width))
+        Coordinate  = ($(common.top), $(common.left))
+        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
+        Text        = \"$text\"
+        Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
     return widget
 end
 
 function redraw(widget::WidgetLabel)
-    @unpack cwin, color, text = widget
-    wclear(cwin)
-    color > 0 && wattron(cwin, color)
-    mvwprintw(cwin, 0, 0, widget.text)
-    color > 0 && wattroff(cwin, color)
+    @unpack common, color, text = widget
+    @unpack buffer = common
+
+    wclear(buffer)
+    color > 0 && wattron(buffer, color)
+    mvwprintw(buffer, 0, 0, widget.text)
+    color > 0 && wattroff(buffer, color)
     return nothing
 end
 
@@ -92,10 +101,7 @@ The text color can be selected by the keyword `color`. It it is negative
 function change_text(widget::WidgetLabel, new_text::AbstractString;
                      alignment = :l, color::Int = -1)
 
-    @unpack cwin = widget
-
-    # Get the dimensions of the window.
-    _, wsx = _get_window_dims(cwin)
+    @unpack parent, buffer, width = widget.common
 
     # Split the string in each line.
     tokens = split(new_text, "\n")
@@ -106,10 +112,10 @@ function change_text(widget::WidgetLabel, new_text::AbstractString;
     for line in tokens
         # Check the alignment and print accordingly.
         if alignment == :r
-            col   = wsx - length(line) - 1
+            col   = width - length(line) - 1
             text *= " "^col * line * "\n"
         elseif alignment == :c
-            col   = div(wsx - length(line), 2)
+            col   = div(width - length(line), 2)
             text *= " "^col * line * "\n"
         else
             text *= line * "\n"
@@ -121,7 +127,7 @@ function change_text(widget::WidgetLabel, new_text::AbstractString;
     # Set the color.
     color >= 0 && (widget.color = color)
 
-    @log verbose "change_text" "Window $(widget.parent.id): Label text changed to \"$new_text\"."
+    @log verbose "change_text" "$(obj_desc(widget)): Label text changed to \"$new_text\"."
 
     request_update(widget)
 

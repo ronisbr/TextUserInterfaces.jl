@@ -16,9 +16,7 @@ export WidgetProgressBar, change_value
 
     # API
     # ==========================================================================
-    parent::Window  = nothing
-    cwin::Ptr{WINDOW}   = Ptr{WINDOW}(0)
-    update_needed::Bool = true
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -35,39 +33,51 @@ end
 # Progress bar cannot accept focus.
 accept_focus(widget::WidgetProgressBar) = false
 
-function create_widget(::Type{Val{:progress_bar}}, parent::Window,
-                       begin_y::Integer, begin_x::Integer, ncols::Integer,
-                       value::Integer = 0; border::Bool = false, color::Int = 0,
-                       style = :simple)
+function create_widget(::Type{Val{:progress_bar}}, parent::WidgetParent;
+                       top::Union{Integer,Symbol} = 0,
+                       left::Union{Integer,Symbol} = 0,
+                       width::Number = 20,
+                       hsize_policy::Symbol = :absolute,
+                       border::Bool = false,
+                       color::Int = 0,
+                       color_highlight::Int = 0,
+                       style::Symbol = :simple,
+                       value::Integer = 0)
 
-    # The number of lines depends on the style.
-    nlines  = style == :complete ? 2 : 1
-    nlines += border ? 2 : 0
+    # The height depends on the style.
+    height  = style == :complete ? 2 : 1
 
-    # Create the window that will hold the contents.
-    cwin = subpad(parent.buffer, nlines, ncols, begin_y, begin_x)
+    # Create the common parameters of the widget.
+    common = create_widget_common(parent, top, left, height, width, :absolute,
+                                  hsize_policy)
 
     # Create the widget.
-    widget = WidgetProgressBar(parent = parent, cwin = cwin, border = border,
-                               color = color, value = value, style = style)
+    widget = WidgetProgressBar(common = common,
+                               color  = color,
+                               value  = value,
+                               style  = style)
 
     # Add to the parent window widget list.
     push!(parent.widgets, widget)
 
     @log info "create_widget" """
     A progress bar was created in window $(parent.id).
-        Size       = ($nlines, $ncols)
-        Coordinate = ($begin_y, $begin_x)
-        Border     = $border
-        Style      = \"$(string(style))\""""
+        Size        = ($(common.height), $(common.width))
+        Coordinate  = ($(common.top), $(common.left))
+        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
+        Style       = $(string(style)),
+        Value       = $value
+        Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
     return widget
 end
 
 function redraw(widget::WidgetProgressBar)
-    @unpack cwin, color, value, style = widget
-    wclear(cwin)
+    @unpack common, color, value, style = widget
+    @unpack buffer = common
+
+    wclear(buffer)
 
     if style == :complete
         _draw_progress_bar_complete(widget)
@@ -103,7 +113,7 @@ function change_value(widget::WidgetProgressBar, new_value::Integer;
     # Set the color.
     color >= 0 && (widget.color = color)
 
-    @log verbose "change_value" "Window $(widget.parent.id): Progress bar value changed to $new_value."
+    @log verbose "change_value" "$(obj_to_ptr(widget)): Progress bar value changed to $new_value."
 
     request_update(widget)
 
@@ -114,15 +124,16 @@ end
 # ==============================================================================
 
 function _draw_progress_bar_simple(widget::WidgetProgressBar)
-    @unpack cwin, border, color, value = widget
+    @unpack common, border, color, value = widget
+    @unpack buffer = common
 
-    color > 0 && wattron(cwin, color)
+    color > 0 && wattron(buffer, color)
     # Get the current size of the content window.
-    ~, wsx = _get_window_dims(cwin)
+    ~, wsx = _get_window_dims(buffer)
 
     # Check if the user wants a border.
     if border
-        wborder(cwin)
+        wborder(buffer)
         wsx -= 4
         y₀ = 1
         x₀ = 2
@@ -136,22 +147,23 @@ function _draw_progress_bar_simple(widget::WidgetProgressBar)
     num   = round(Int, wsx*value/100)
 
     # Print.
-    mvwprintw(cwin, y₀, x₀, "█"^num)
+    mvwprintw(buffer, y₀, x₀, "█"^num)
 
-    color > 0 && wattroff(cwin, color)
+    color > 0 && wattroff(buffer, color)
 end
 
 function _draw_progress_bar_complete(widget::WidgetProgressBar)
-    @unpack cwin, border, color, value = widget
+    @unpack common, border, color, value = widget
+    @unpack buffer = common
 
-    color > 0 && wattron(cwin, color)
+    color > 0 && wattron(buffer, color)
 
     # Get the current size of the content window.
-    ~, wsx = _get_window_dims(cwin)
+    ~, wsx = _get_window_dims(buffer)
 
     # Check if the user wants a border.
     if border
-        wborder(cwin)
+        wborder(buffer)
         wsx -= 4
         y₀ = 1
         x₀ = 2
@@ -165,10 +177,10 @@ function _draw_progress_bar_complete(widget::WidgetProgressBar)
     num   = round(Int, wsx*value/100)
 
     # Print the text.
-    mvwprintw(cwin, y₀, x₀, "Progress: $value%%")
+    mvwprintw(buffer, y₀, x₀, "Progress: $value%%")
 
     # Print.
-    mvwprintw(cwin, y₀+1, x₀, "█"^num)
+    mvwprintw(buffer, y₀+1, x₀, "█"^num)
 
-    color > 0 && wattroff(cwin, color)
+    color > 0 && wattroff(buffer, color)
 end

@@ -54,7 +54,7 @@ Move focus to the widget `widget`.
 
 """
 function focus_on_widget(widget::Widget)
-    @unpack parent = widget
+    @unpack parent = widget.common
 
     # Find the widget on parent list.
     id = findfirst(x->x == widget, parent.widgets)
