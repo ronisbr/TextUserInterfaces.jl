@@ -23,25 +23,21 @@ function refresh_window(id::String)
 end
 
 """
-    function refresh_window(win::Window; update = true, backpropagation = true)
+    function refresh_window(win::Window; force_redraw = false)
 
-Refresh the window `win` and all its child windows. If the view needs to be
-updated (see `view_needs_update`), then the content of the buffer will be copied
-to the view before updating.
-
-If `update` is `true`, then `doupdate()` is called and the physical screen is
-updated.
-
-If `backpropagation` is `true`, then all the parents windows (except from the
-root window) will also be refreshed.
+Refresh the window `win` and its widget. If the view needs to be updated (see
+`view_needs_update`) or if `force_redraw` is `true`, then the content of the
+buffer will be copied to the view before updating.
 
 """
-function refresh_window(win::Window; full_refresh = false)
-    full_refresh && wclear(win.buffer)
+function refresh_window(win::Window; force_redraw = false)
+    @unpack widget = win
 
-    # Update all the children widgets.
-    for widget in win.widgets
-        if update(widget; force_redraw = full_refresh)
+    force_redraw && wclear(win.buffer)
+
+    # Update the widget.
+    if widget != nothing
+        if update(widget; force_redraw = force_redraw)
             win.view_needs_update = true
         end
     end
@@ -62,6 +58,17 @@ function refresh_all_windows()
         refresh_window(win)
     end
 
+    return nothing
+end
+
+"""
+    function request_update(win::Window)
+
+Request update of the window `win` because its widget was updated.
+
+"""
+function request_update(win::Window)
+    # TODO: This can be used to call refresh on demand!
     return nothing
 end
 

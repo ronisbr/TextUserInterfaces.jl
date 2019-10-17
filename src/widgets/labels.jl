@@ -52,11 +52,11 @@ function create_widget(::Type{Val{:label}}, parent::WidgetParent;
     # Update the text.
     change_text(widget, text; alignment = alignment)
 
-    # Add to the parent window widget list.
-    push!(parent.widgets, widget)
+    # Add the new widget to the parent widget list.
+    add_widget(parent, widget)
 
     @log info "create_widget" """
-    A label was created in window $(parent.id).
+    A label was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
         Size policy = ($(common.vsize_policy), $(common.hsize_policy))

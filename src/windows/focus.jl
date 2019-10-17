@@ -17,6 +17,8 @@ actions to change the focus.
 
  """
 function accept_focus(window::Window)
+    @unpack widget = window
+
     # Check if the window can have focus.
     if window.focusable
         # Move the window to the top and search for a widget that can hold the
@@ -25,6 +27,9 @@ function accept_focus(window::Window)
 
         # Hide the cursor until the a widget request it.
         curs_set(0)
+
+        # Pass the focus to the widget.
+        accept_focus(widget)
 
         return true
     else
@@ -41,10 +46,7 @@ otherwise.
 
 """
 function has_focus(window::Window, widget)
-    @unpack widgets, focus_id = window
-
-    focus_id <= 0 && return false
-    return widgets[focus_id] === widget
+    return window.widget === widget
 end
 
 """
@@ -140,20 +142,18 @@ Process the focus on window `window` due to keystroke `k`.
 
 """
 function process_focus(window::Window, k::Keystroke)
-    @unpack widgets, focus_id = window
+    @unpack widget = window
 
-    # If there is any element in focus, ask to process the keystroke.
-    if focus_id > 0
-        # If `process_focus` returns `false`, it means that the widget wants to
-        # release the focus.
-        if process_focus(widgets[focus_id],k)
+    # If there is any element in the window, then it must be the one with active
+    # focus.
+    if widget != nothing
+        if process_focus(widget,k)
             sync_cursor(window)
             return true
         end
     end
 
-    # Otherwise, we must search another widget that can accept the focus.
-    return next_widget(window)
+    return false
 end
 
 """
@@ -201,23 +201,19 @@ copied to the view.
 
 """
 function sync_cursor(window::Window)
-    @unpack widgets, focus_id = window
+    @unpack widget = window
 
-    # If no widget is in focus or if the widget does not request cursor, then
-    # just hide it.
-    if (focus_id <= 0) || !require_cursor(widgets[focus_id])
+    # If the window has no widget, then just hide the cursor.
+    if widget == nothing
         curs_set(0)
         return nothing
     else
         # Show the cursor.
         curs_set(1)
 
-        # Get the focused widget.
-        widget = widgets[focus_id]
-
-        # Get the cursor position on the `cwin` of the widget.
-        cy,cx = _get_window_cur_pos(widget.cwin)
-        by,bx = _get_window_coord(widget.cwin)
+        # Get the cursor position on the `buffer` of the widget.
+        cy,cx = _get_window_cur_pos(get_buffer(widget))
+        by,bx = _get_window_coord(get_buffer(widget))
 
         # Compute the coordinates of the cursor with respect to the window.
         y = by + cy

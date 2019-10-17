@@ -97,15 +97,14 @@ Destroy the window `win`.
 
 """
 function destroy_window(win::Window)
-    @log info "destroy_window" "Window $(win.id) and its $(length(win.widgets)) widgets will be destroyed."
+    @log info "destroy_window" "$(obj_desc(win)) will be destroyed."
     @log_ident 1
 
-    win.focus_id = 0
-
-    # Destroy all widgets.
-    for widget in win.widgets
+    # Destroy the widget.
+    if win.widget != nothing
         # In this case, we do not need to refresh the window.
-        destroy_widget(widget; refresh = false)
+        destroy_widget(win.widget; refresh = false)
+        win.widget = nothing
     end
 
     # Delete everything.

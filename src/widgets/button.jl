@@ -58,11 +58,11 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
                           color           = color,
                           color_highlight = color_highlight)
 
-    # Add to the parent window widget list.
-    push!(parent.widgets, widget)
+    # Add the new widget to the parent widget list.
+    add_widget(parent, widget)
 
     @log info "create_widget" """
-    A button was created in window $(parent.id).
+    A button was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
         Size policy = ($(common.vsize_policy), $(common.hsize_policy))

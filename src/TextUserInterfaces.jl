@@ -43,6 +43,7 @@ include("misc.jl")
 # ==============================================================================
 
 include("./windows/create_destroy.jl")
+include("./windows/container.jl")
 include("./windows/focus.jl")
 include("./windows/manage.jl")
 include("./windows/misc.jl")
@@ -55,5 +56,8 @@ include("./widgets/widgets.jl")
 include("./widgets/button.jl")
 include("./widgets/labels.jl")
 include("./widgets/progress_bar.jl")
+
+include("./widgets/container/container.jl")
+include("./widgets/container/api.jl")
 
 end # module

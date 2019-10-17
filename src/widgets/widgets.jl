@@ -51,9 +51,8 @@ function destroy_widget(widget; refresh::Bool = true)
     delwin(buffer)
     buffer = Ptr{WINDOW}(0)
 
-    # Remove the widget from the parent window.
-    idx = findall(x->x == widget, parent.widgets)
-    deleteat!(parent.widgets, idx)
+    # Remove the widget from the parent.
+    remove_widget(parent, widget)
 
     @log info "destroy_widget" "Widget $widget_desc destroyed."
 
@@ -85,7 +84,7 @@ get_height(widget) = widget.common.height
 Return the width of widget `widget`.
 
 """
-get_widgth(widget) = widget.common.width
+get_width(widget) = widget.common.width
 
 """
     function process_focus(widget, k::Keystroke)
@@ -103,7 +102,11 @@ process_focus(widget,k::Keystroke) = return false
 Request update of the widget `widget`.
 
 """
-request_update(widget) = widget.common.update_needed = true
+function request_update(widget)
+    widget.common.update_needed = true
+    request_update(widget.common.parent)
+    return nothing
+end
 
 """
     function redraw(widget)

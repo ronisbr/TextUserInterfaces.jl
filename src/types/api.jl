@@ -7,6 +7,9 @@
 
 export Window, Widget, WidgetCommon, WidgetParent, tui
 
+# Abstract type for all widgets.
+abstract type Widget end
+
 struct NCURSES_COLOR
     name::Symbol
     id::Int
@@ -53,9 +56,10 @@ end
     title::String = ""
     coord::Tuple{Int,Int} = (0,0)
     has_border::Bool = false
+    focusable::Bool = true
 
-    # List of widgets.
-    widgets::Vector{Any} = Any[]
+    # Widget of the window.
+    widget::Union{Widget,Nothing} = nothing
 
     # Buffer
     # ==========================================================================
@@ -85,15 +89,6 @@ end
 
     # Panel of the window.
     panel::Ptr{Cvoid} = Ptr{Cvoid}(0)
-
-    # Focus manager
-    # ==========================================================================
-
-    # Indicate if the window can have focus.
-    focusable::Bool = true
-
-    # Widget ID that has the focus.
-    focus_id::Int = 0
 
     # Signals
     # ==========================================================================
@@ -169,9 +164,6 @@ end
 
 # Global instance to store the TUI configurations.
 const tui = TUI()
-
-# Abstract type for all widgets.
-abstract type Widget end
 
 # Types that can be parent of widgets.
 WidgetParent = Union{Window,Widget}
