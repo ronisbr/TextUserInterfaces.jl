@@ -13,13 +13,14 @@ function log_test()
     p1 = ncurses_color(:black, :white)
 
     win  = create_window(10,56,2,2; border = true, title = " WINDOW ")
-    ~    = create_widget(Val{:label}, win;
+    con  = create_widget(Val{:container}, win)
+    ~    = create_widget(Val{:label}, con;
                          top = :top, left = :left, height = 1, width = 40,
                          text = "This is a label", color = p0)
-    bt   = create_widget(Val{:button}, win;
+    bt   = create_widget(Val{:button}, con;
                          top = :center, left = :center, width = 12,
                          label = "Button 1", color = p0, color_highlight = p1)
-    pb   = create_widget(Val{:progress_bar}, win;
+    pb   = create_widget(Val{:progress_bar}, con;
                          top = :bottom, left = :right, width = 40, value = 100)
 
     # Focus manager.

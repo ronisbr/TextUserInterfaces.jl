@@ -3,20 +3,25 @@
 [create_window]    Buffer size   = (54, 8)
 [create_window]    Coordinate    = (2, 2)
 [create_window]    Title         = " WINDOW "
+[create_widget] A container was created in Window (0x0).
+[create_widget]     Size        = (8, 54)
+[create_widget]     Coordinate  = (0, 0)
+[create_widget]     Size policy = (absolute, absolute)
+[create_widget]     Reference   = 0x0
 [change_text] WidgetLabel (0x0): Label text changed to "This is a label".
-[create_widget] A label was created in window 0.
+[create_widget] A label was created in WidgetContainer (0x0).
 [create_widget]     Size        = (1, 40)
 [create_widget]     Coordinate  = (0, 0)
 [create_widget]     Size policy = (absolute, absolute)
 [create_widget]     Text        = "This is a label"
 [create_widget]     Reference   = 0x0
-[create_widget] A button was created in window 0.
+[create_widget] A button was created in WidgetContainer (0x0).
 [create_widget]     Size        = (1, 12)
 [create_widget]     Coordinate  = (3, 21)
 [create_widget]     Size policy = (absolute, absolute)
 [create_widget]     Label       = "Button 1"
 [create_widget]     Reference   = 0x0
-[create_widget] A progress bar was created in window 0.
+[create_widget] A progress bar was created in WidgetContainer (0x0).
 [create_widget]     Size        = (1, 40)
 [create_widget]     Coordinate  = (7, 14)
 [create_widget]     Size policy = (absolute, absolute)
@@ -24,13 +29,14 @@
 [create_widget]     Value       = 100
 [create_widget]     Reference   = 0x0
 [next_window] Focus: Change the focused window.
+[_next_widget] WidgetContainer (0x0): Change the focused widget.
+[_next_widget] WidgetContainer (0x0): Focus was handled to widget #2 -> WidgetButton (0x0).
 [next_window] Focus: Switched to window 0.
 [update_view] Window 0: Buffer was copied to the view.
 [destroy_tui] TUI will be destroyed.
 [destroy_tui] TUI destroying windows.
 [destroy_all_windows] All windows will be destroyed.
-[destroy_window] Window 0 and its 3 widgets will be destroyed.
-[destroy_widget]     Widget WidgetLabel (0x0) destroyed.
-[destroy_widget]     Widget WidgetProgressBar (0x0) destroyed.
+[destroy_window] Window (0x0) will be destroyed.
+[destroy_widget]     Widget WidgetContainer (0x0) destroyed.
 [destroy_window] Window 0 was destroyed.
 [destroy_tui] TUI has been destroyed.
