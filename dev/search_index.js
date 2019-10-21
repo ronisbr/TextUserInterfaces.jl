@@ -677,7 +677,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
@@ -685,7 +685,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -1454,6 +1454,30 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.remove_widget",
     "category": "method",
     "text": "function remove_widget(win::Window, widget::Widget)\n\nRemove the widget widget from the window win. If widget does not belong to win, then nothing is done.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_focus-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus",
+    "category": "method",
+    "text": "function request_focus(widget)\n\nRequest to focus to the widget widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_focus-Tuple{WidgetContainer,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus",
+    "category": "method",
+    "text": "function request_focus(container::WidgetContainer, widget)\n\nRequest the focus to the widget widget of the container container. It returns true if the focus could be changed or false otherwise.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_focus-Tuple{Window,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus",
+    "category": "method",
+    "text": "function request_focus(win::Window, widget)\n\nRequest the focus to the widget widget of the window win. This function is only necessary to make Window comply to the containers API. Since a window can contain only one widget, then a function to change the focus is not meaningful.\n\n\n\n\n\n"
 },
 
 {
