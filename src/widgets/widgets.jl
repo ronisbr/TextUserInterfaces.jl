@@ -10,8 +10,8 @@
 #                                API functions
 ################################################################################
 
-export accept_focus, create_widget, destroy_widget, request_update, redraw,
-       release_focus, update
+export accept_focus, create_widget, destroy_widget, request_update,
+       request_focus, redraw, release_focus, update
 
 """
     function accept_focus(widget)
@@ -95,6 +95,22 @@ to process the focus. Otherwise, it must return `true`.
 
 """
 process_focus(widget,k::Keystroke) = return false
+
+"""
+    function request_focus(widget)
+
+Request to focus to the widget `widget`.
+
+"""
+function request_focus(widget)
+    @unpack common = widget
+    @unpack parent = common
+
+    # Only request focus if the widget can accept the focus.
+    request_focus(parent, widget)
+
+    return nothing
+end
 
 """
     function request_update(widget)

@@ -47,6 +47,42 @@ function has_focus(container::WidgetContainer, widget)
 end
 
 """
+    function request_focus(container::WidgetContainer, widget)
+
+Request the focus to the widget `widget` of the container `container`. It
+returns `true` if the focus could be changed or `false` otherwise.
+
+"""
+function request_focus(container::WidgetContainer, widget)
+    @unpack widgets, focus_id = container
+
+    # Find the widget in the widget list.
+    id = findfirst(x->x == widget, widgets)
+
+    # If `id` is `nothing`, then the `widget` does not belong to the
+    # `container`.
+    if id == nothing
+        @log warning "request_focus" "$(obj_desc(widget)) does not belong to $(obj_desc(container))."
+        return false
+    else
+        # If an element is in focus, then it must release it before moving to
+        # the next one. If the element cannot release the focus, then this
+        # function will not change the focus.
+        if (focus_id > 0) && !release_focus(widgets[focus_id])
+            @log verbose "request_focus" "$(obj_desc(container)): $(obj_desc(widgets[focus_id])) could not handle the focus to $(obj_desc(widget))."
+            return false
+        else
+            container.focus_id = id
+            accept_focus(widgets[container.focus_id])
+            @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$id -> $(obj_desc(widgets[id]))."
+
+            # TODO: What should we do if the widget does not accept the focus?
+            return true
+        end
+    end
+end
+
+"""
     function sync_cursor(widget::WidgetContainer)
 
 Synchronize the cursor to the position of the focused widget in container

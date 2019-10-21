@@ -20,6 +20,23 @@ function add_widget(win::Window, widget::Widget)
 end
 
 """
+    function request_focus(win::Window, widget)
+
+Request the focus to the widget `widget` of the window `win`. This function is
+only necessary to make `Window` comply to the containers API. Since a window can
+contain only one widget, then a function to change the focus is not meaningful.
+
+"""
+function request_focus(win::Window, widget)
+    if win.widget == widget
+        return true
+    else
+        @log warning "request_focus" "The widget $(obj_desc(widget)) does not belong to $(obj_desc(container))."
+        return false
+    end
+end
+
+"""
     function remove_widget(win::Window, widget::Widget)
 
 Remove the widget `widget` from the window `win`. If `widget` does not belong to
