@@ -28,6 +28,8 @@ end
 #                                     API
 ################################################################################
 
+accept_focus(container::WidgetContainer) = return _next_widget(container)
+
 function create_widget(::Type{Val{:container}}, parent::WidgetParent;
                        top::Union{Integer,Symbol} = 0,
                        left::Union{Integer,Symbol} = 0,
