@@ -105,6 +105,12 @@ function redraw(container::WidgetContainer)
     return nothing
 end
 
+function require_cursor(container::WidgetContainer)
+    @unpack widgets, focus_id = container
+    focus_id > 0 && return require_cursor(widgets[focus_id])
+    return false
+end
+
 ################################################################################
 #                              Private functions
 ################################################################################

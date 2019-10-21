@@ -148,7 +148,12 @@ function process_focus(window::Window, k::Keystroke)
     # focus.
     if widget != nothing
         if process_focus(widget,k)
-            sync_cursor(window)
+            if require_cursor(widget)
+                curs_set(1)
+            else
+                curs_set(0)
+            end
+
             return true
         end
     end
@@ -203,14 +208,7 @@ copied to the view.
 function sync_cursor(window::Window)
     @unpack widget = window
 
-    # If the window has no widget, then just hide the cursor.
-    if widget == nothing
-        curs_set(0)
-        return nothing
-    else
-        # Show the cursor.
-        curs_set(1)
-
+    if widget != nothing
         # Get the cursor position on the `buffer` of the widget.
         cy,cx = _get_window_cur_pos(get_buffer(widget))
         by,bx = _get_window_coord(get_buffer(widget))
@@ -230,7 +228,7 @@ function sync_cursor(window::Window)
         wmove(window.view, y, x)
 
         # TODO: Limit the cursor position to the edge of the screen.
-
-        return nothing
     end
+
+    return nothing
 end
