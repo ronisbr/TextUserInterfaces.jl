@@ -6,7 +6,8 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #==#
 
-export create_window, destroy_window, destroy_all_windows
+export create_window, create_window_with_container, destroy_window,
+       destroy_all_windows
 
 """
     function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = ""; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = "", title_color::Int = -1)
@@ -88,6 +89,25 @@ function create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
 
     # Return the pointer to the window.
     return win
+end
+
+"""
+    function create_window_with_container(vargs...; kwargs...)
+
+Create a window with a container as its widget. The arguments and keywords are
+the same ones of the function `create_window`. The container will have the same
+size of the window buffer.
+
+# Return
+
+* The created window.
+* The created container.
+
+"""
+function create_window_with_container(vargs...; kwargs...)
+    win = create_window(vargs...; kwargs...)
+    con = create_widget(Val{:container}, win)
+    return win, con
 end
 
 """
