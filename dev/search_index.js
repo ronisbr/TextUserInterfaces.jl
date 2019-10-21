@@ -193,6 +193,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.add_widget-Tuple{WidgetContainer,Widget}",
+    "page": "Library",
+    "title": "TextUserInterfaces.add_widget",
+    "category": "method",
+    "text": "function add_widget(container::WidgetContainer, widget::Widget)\n\nAdd the widget widget to the container `container.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.add_widget-Tuple{Window,Widget}",
+    "page": "Library",
+    "title": "TextUserInterfaces.add_widget",
+    "category": "method",
+    "text": "function add_widget(win::Window, widget::Widget)\n\nAdd widget widget to the window win. If the win already have a widget, then it will be replaced.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.attroff",
     "page": "Library",
     "title": "TextUserInterfaces.attroff",
@@ -489,22 +505,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.focus_on_widget-Tuple{Widget}",
-    "page": "Library",
-    "title": "TextUserInterfaces.focus_on_widget",
-    "category": "method",
-    "text": "function focus_on_widget(widget::Widget)\n\nMove focus to the widget widget.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.focus_on_widget-Tuple{Window,Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.focus_on_widget",
-    "category": "method",
-    "text": "function focus_on_widget(window::Window, id::Integer)\n\nMove focus to the widget ID id on window window.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.form_add_char-Tuple{TextUserInterfaces.TUI_FORM,UInt32}",
     "page": "Library",
     "title": "TextUserInterfaces.form_add_char",
@@ -713,6 +713,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_width-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_width",
+    "category": "method",
+    "text": "function get_width(widget)\n\nReturn the width of widget widget.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_width-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.get_width",
@@ -782,6 +790,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.has_colors",
     "category": "function",
     "text": "function has_colors()\n\nReturn type: UInt8\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.has_focus-Tuple{WidgetContainer,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.has_focus",
+    "category": "method",
+    "text": "function has_focus(container::WidgetContainer, widget)\n\nReturn true if the widget widget is in focus on container container, or false otherwise.\n\n\n\n\n\n"
 },
 
 {
@@ -1201,14 +1217,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.next_widget-Tuple{Window}",
-    "page": "Library",
-    "title": "TextUserInterfaces.next_widget",
-    "category": "method",
-    "text": "function next_widget(window::Window)\n\nMove the focus of window window to the next widget.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.nodelay",
     "page": "Library",
     "title": "TextUserInterfaces.nodelay",
@@ -1321,14 +1329,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.previous_widget-Tuple{Window}",
-    "page": "Library",
-    "title": "TextUserInterfaces.previous_widget",
-    "category": "method",
-    "text": "function previous_widget(window::Window)\n\nMove the focus of window window to the previous widget.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.printw",
     "page": "Library",
     "title": "TextUserInterfaces.printw",
@@ -1413,7 +1413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.refresh_window",
     "category": "method",
-    "text": "function refresh_window(win::Window; update = true, backpropagation = true)\n\nRefresh the window win and all its child windows. If the view needs to be updated (see view_needs_update), then the content of the buffer will be copied to the view before updating.\n\nIf update is true, then doupdate() is called and the physical screen is updated.\n\nIf backpropagation is true, then all the parents windows (except from the root window) will also be refreshed.\n\n\n\n\n\n"
+    "text": "function refresh_window(win::Window; force_redraw = false)\n\nRefresh the window win and its widget. If the view needs to be updated (see view_needs_update) or if force_redraw is true, then the content of the buffer will be copied to the view before updating.\n\n\n\n\n\n"
 },
 
 {
@@ -1441,11 +1441,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.remove_widget-Tuple{WidgetContainer,Widget}",
+    "page": "Library",
+    "title": "TextUserInterfaces.remove_widget",
+    "category": "method",
+    "text": "function remove_widget(container::WidgetContainer, widget::Widget)\n\nRemove the widget widget from the container container.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.remove_widget-Tuple{Window,Widget}",
+    "page": "Library",
+    "title": "TextUserInterfaces.remove_widget",
+    "category": "method",
+    "text": "function remove_widget(win::Window, widget::Widget)\n\nRemove the widget widget from the window win. If widget does not belong to win, then nothing is done.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.request_update-Tuple{Any}",
     "page": "Library",
     "title": "TextUserInterfaces.request_update",
     "category": "method",
     "text": "function request_update(widget)\n\nRequest update of the widget widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_update-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_update",
+    "category": "method",
+    "text": "function request_update(win::Window)\n\nRequest update of the window win because its widget was updated.\n\n\n\n\n\n"
 },
 
 {
@@ -1710,6 +1734,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.subpad",
     "category": "function",
     "text": "function subpad(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.sync_cursor-Tuple{WidgetContainer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.sync_cursor",
+    "category": "method",
+    "text": "function sync_cursor(widget::WidgetContainer)\n\nSynchronize the cursor to the position of the focused widget in container container. This is necessary because all the operations are done in the buffer and then copied to the view.\n\n\n\n\n\n"
 },
 
 {
@@ -1985,11 +2017,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_widgth-Tuple{Any}",
+    "location": "lib/library/#TextUserInterfaces._next_widget-Tuple{WidgetContainer}",
     "page": "Library",
-    "title": "TextUserInterfaces.get_widgth",
+    "title": "TextUserInterfaces._next_widget",
     "category": "method",
-    "text": "function get_width(widget)\n\nReturn the width of widget widget.\n\n\n\n\n\n"
+    "text": "function _next_widget(container::WidgetContainer)\n\nMove the focus of container container to the next widget.\n\n\n\n\n\n"
 },
 
 {
