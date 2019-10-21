@@ -60,7 +60,7 @@ function create_widget(::Type{Val{:field}}, parent::WidgetParent, top::Integer,
     push!(parent.widgets, widget)
 
     @log info "create_widget" """
-    A field was created in window $(parent.id).
+    A field was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
         Size policy = ($(common.vsize_policy), $(common.hsize_policy))
@@ -221,27 +221,29 @@ function tictactoe()
            │       │"""
 
     win    = create_window(18,60,2,2; border = true, title = " Tic Tac Toe ")
-    board  = create_widget(Val{:label}, win;
+    con    = create_widget(Val{:container}, win)
+    board  = create_widget(Val{:label}, con;
                            top = 2, left = 2, height = 11, width = 24,
                            text = board, color = pb)
-    ~      = create_widget(Val{:label}, win;
+    ~      = create_widget(Val{:label}, con;
                            top = 2, left = 30, height = 1, width = 18,
                            text = "Player 1: $(ticks[1])", color = p1)
-    ~      = create_widget(Val{:label}, win;
+    ~      = create_widget(Val{:label}, con;
                            top = 3, left = 30, height = 1, width = 18,
                            text = "Player 2: $(ticks[2])", color = p2)
-    result = create_widget(Val{:label}, win;
+    result = create_widget(Val{:label}, con;
                            top = 5, left = 30, height = 2, width = 27,
                            text = "", color = p0)
-    info   = create_widget(Val{:label}, win;
+    info   = create_widget(Val{:label}, con;
                            top = 15, left = 2, height = 1, width = 20,
                            text = "Press F1 to exit.", color = p0)
-    fields = [create_widget(Val{:field}, win, 2 + 4(i-1), 2 + 8(j-1), (i,j)) for i = 1:3,j = 1:3]
-    focus_on_widget(fields[1,1])
+    fields = [create_widget(Val{:field}, con, 2 + 4(i-1), 2 + 8(j-1), (i,j)) for i = 1:3,j = 1:3]
+    request_focus(fields[1,1])
 
     # Initialize the focus manager.
     tui.focus_chain = [win]
     init_focus_manager()
+
 
     # Initial painting.
     refresh_all_windows()
@@ -284,7 +286,7 @@ function tictactoe()
 
         # Update if necessary because of focus change.
         if update
-            focus_on_widget(fields[i,j])
+            request_focus(fields[i,j])
             refresh_all_windows()
             update_panels()
             doupdate()
