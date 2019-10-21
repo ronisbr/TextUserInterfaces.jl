@@ -50,92 +50,6 @@ function has_focus(window::Window, widget)
 end
 
 """
-    function focus_on_widget(widget::Widget)
-
-Move focus to the widget `widget`.
-
-"""
-function focus_on_widget(widget::Widget)
-    @unpack parent = widget.common
-
-    # Find the widget on parent list.
-    id = findfirst(x->x == widget, parent.widgets)
-
-    if id == nothing
-        @log error "focus_on_widget" "The widget $(obj_desc(widget)) does not belong to the widgets on window $(parent.id)!"
-        return nothing
-    end
-
-    return focus_on_widget(parent, id)
-end
-
-"""
-    function focus_on_widget(window::Window, id::Integer)
-
-Move focus to the widget ID `id` on window `window`.
-
-"""
-function focus_on_widget(window::Window, id::Integer)
-    @unpack widgets, focus_id = window
-
-    @log verbose "focus_on_widget" "Window $(window.id): Move focus to widget #$id."
-
-    # Release the focus from previous widget.
-    focus_id > 0 && release_focus(widgets[focus_id])
-
-    if (id > 0) && accept_focus(widgets[id])
-        window.focus_id = id
-        sync_cursor(window)
-
-        @log verbose "focus_on_widget" "Window $(window.id): Focus was handled to widget #$id -> $(obj_desc(widgets[id]))."
-
-        return true
-    else
-        window.focus_id = 0
-        sync_cursor(window)
-
-        @log verbose "focus_on_widget" "Window $(window.id): Widget #$id cannot receive focus -> $(obj_desc(widgets[id]))."
-
-        return false
-    end
-end
-
-"""
-    function next_widget(window::Window)
-
-Move the focus of window `window` to the next widget.
-
-"""
-function next_widget(window::Window)
-    @unpack widgets, focus_id = window
-
-    @log verbose "next_widget" "Window $(window.id): Change the focused widget."
-
-    # Release the focus from previous widget.
-    focus_id > 0 && release_focus(widgets[focus_id])
-
-    # Search for the next widget that can handle the focus.
-    for i = focus_id+1:length(widgets)
-        if accept_focus(widgets[i])
-            window.focus_id = i
-            sync_cursor(window)
-
-            @log verbose "next_widget" "Window $(window.id): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
-
-            return true
-        end
-    end
-
-    # No more element could accept the focus.
-    window.focus_id = 0
-    sync_cursor(window)
-
-    @log verbose "next_widget" "Window $(window.id): There are no more widgets to receive the focus."
-
-    return false
-end
-
-"""
     function process_focus(window::Window, k::Keystroke)
 
 Process the focus on window `window` due to keystroke `k`.
@@ -157,42 +71,6 @@ function process_focus(window::Window, k::Keystroke)
             return true
         end
     end
-
-    return false
-end
-
-"""
-    function previous_widget(window::Window)
-
-Move the focus of window `window` to the previous widget.
-
-"""
-function previous_widget(window::Window)
-    @unpack widgets, focus_id = window
-
-    @log verbose "previous_widget" "Window $(window.id): Change the focused widget."
-
-    # Release the focus from previous widget.
-    focus_id > 0  && release_focus(widgets[focus_id])
-    focus_id == 0 && (focus_id = length(widgets))
-
-    # Search for the next widget that can handle the focus.
-    for i = focus_id-1:-1:1
-        if accept_focus(widgets[i])
-            window.focus_id = i
-            sync_cursor(window)
-
-            @log verbose "previous_widget" "Window $(window.id): Focus was handled to widget #$i of type $(typeof(widgets[i]))."
-
-            return true
-        end
-    end
-
-    # No more element could accept the focus.
-    window.focus_id = 0
-    sync_cursor(window)
-
-    @log verbose "previous_widget" "Window $(window.id): There are no more widgets to receive the focus."
 
     return false
 end
