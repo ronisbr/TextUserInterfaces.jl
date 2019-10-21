@@ -28,7 +28,15 @@ end
 #                                     API
 ################################################################################
 
-accept_focus(container::WidgetContainer) = return _next_widget(container)
+function accept_focus(container::WidgetContainer)
+    # If there were a widget with focus, then do not change the focus when
+    # accepting it again.
+    if container.focus_id <= 0
+        return _next_widget(container)
+    else
+        return true
+    end
+end
 
 function create_widget(::Type{Val{:container}}, parent::WidgetParent;
                        top::Union{Integer,Symbol} = 0,
