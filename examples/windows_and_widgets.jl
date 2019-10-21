@@ -24,19 +24,20 @@ function windows_and_widgets()
 
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
         win  = create_window(10,56,x,y; border = true, title = title)
-        ~    = create_widget(Val{:label}, win;
+        con  = create_widget(Val{:container}, win)
+        ~    = create_widget(Val{:label}, con;
                              top = 1, left = 1, height = 1, width = 40,
                              text = "The last pressed button was:", color = p0)
-        text = create_widget(Val{:label},  win;
+        text = create_widget(Val{:label},  con;
                              top = 1, left = 30, height = 1, width = 10,
                              text = "", color = p2)
-        bt1  = create_widget(Val{:button}, win;
+        bt1  = create_widget(Val{:button}, con;
                              top = 4, left = :left, width = 12, label = "Button 1",
                              color = p1, color_highlight = p3)
-        bt2  = create_widget(Val{:button}, win,
+        bt2  = create_widget(Val{:button}, con,
                              top = 4, left = :center, width = 12, label = "Button 2",
                              color = p1, color_highlight = p3)
-        bt3  = create_widget(Val{:button}, win;
+        bt3  = create_widget(Val{:button}, con;
                              top = 4, left = :right, width = 12, label = "Button 3",
                              color = p1, color_highlight = p3)
 
