@@ -345,6 +345,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.create_window_with_container-Tuple",
+    "page": "Library",
+    "title": "TextUserInterfaces.create_window_with_container",
+    "category": "method",
+    "text": "function create_window_with_container(vargs...; kwargs...)\n\nCreate a window with a container as its widget. The arguments and keywords are the same ones of the function create_window. The container will have the same size of the window buffer.\n\nReturn\n\nThe created window.\nThe created container.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.current_item",
     "page": "Library",
     "title": "TextUserInterfaces.current_item",
@@ -677,7 +685,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
+    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
 },
 
 {
@@ -685,7 +693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
     "category": "function",
-    "text": "function get_field_data(field::TUI_FIELD, buffer::Int = 0)\n\nGet the data of the field field at buffer buffer.\n\n\n\n\n\n"
+    "text": "function get_field_data(form::TUI_FORM, field_id::String, buffer::Int = 0)\n\nGet the data of the field with ID field_id at buffer buffer in the form form\n\n\n\n\n\n"
 },
 
 {
