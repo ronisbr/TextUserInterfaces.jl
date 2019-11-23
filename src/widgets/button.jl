@@ -23,6 +23,7 @@ export WidgetButton
     label::String
     color::Int
     color_highlight::Int
+    style::Symbol
 
     # Signals
     # ==========================================================================
@@ -42,21 +43,27 @@ end
 function create_widget(::Type{Val{:button}}, parent::WidgetParent;
                        top::Union{Integer,Symbol} = 0,
                        left::Union{Integer,Symbol} = 0,
-                       width::Number = 10,
                        hsize_policy::Symbol = :absolute,
                        label::AbstractString = "Button",
                        color::Int = 0,
-                       color_highlight::Int = 0)
+                       color_highlight::Int = 0,
+                       style::Symbol = :simple)
+
+    # Compute the height and the width of the button based on the style and
+    # label.
+    height = style == :simple ? 1 : 3
+    width  = length(label) + 4
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, top, left, 1, width, :absolute,
+    common = create_widget_common(parent, top, left, height, width, :absolute,
                                   hsize_policy)
 
     # Create the widget.
     widget = WidgetButton(common          = common,
                           label           = label,
                           color           = color,
-                          color_highlight = color_highlight)
+                          color_highlight = color_highlight,
+                          style           = style)
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
@@ -85,17 +92,10 @@ function process_focus(widget::WidgetButton, k::Keystroke)
 end
 
 function redraw(widget::WidgetButton)
-    @unpack common, label, color, color_highlight = widget
-    @unpack buffer, parent = common
+    wclear(widget.common.buffer)
 
-    wclear(buffer)
-
-    # Get the background color depending on the focus.
-    c = has_focus(parent, widget) ? color_highlight : color
-
-    wattron(buffer, c)
-    mvwprintw(buffer, 0, 0, "[ " * label * " ]")
-    wattroff(buffer, c)
+    # Draw the button.
+    _draw_button(widget)
 
     return nothing
 end
@@ -103,4 +103,35 @@ end
 function release_focus(widget::WidgetButton)
     request_update(widget)
     return true
+end
+
+################################################################################
+#                              Private functions
+################################################################################
+
+function _draw_button(widget::WidgetButton)
+    @unpack common, label, color, color_highlight, style = widget
+    @unpack buffer, parent = common
+
+    # Get the background color depending on the focus.
+    c = has_focus(parent, widget) ? color_highlight : color
+
+    if style == :complete
+        w    = widget.common.width
+        mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
+        mvwprintw(buffer, 1, 0, "│")
+
+        wattron(buffer, c)
+        wprintw(buffer, " " * label * " ")
+        wattroff(buffer, c)
+
+        wprintw(buffer, "│")
+        mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
+    else
+        wattron(buffer, c)
+        mvwprintw(buffer, 0, 0, "[ " * label * " ]")
+        wattroff(buffer, c)
+    end
+
+    return nothing
 end

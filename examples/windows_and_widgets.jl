@@ -10,7 +10,7 @@ function windows_and_widgets()
 
     init_color(:light_blue, 700, 700, 1000)
     p0 = ncurses_color(bold = false)
-    p1 = ncurses_color(bold = true, underline = true)
+    p1 = ncurses_color(bold = true)
     p2 = ncurses_color(:yellow, :black)
     p3 = ncurses_color(:black, :white)
 
@@ -31,14 +31,14 @@ function windows_and_widgets()
                              top = 1, left = 30, height = 1, width = 10,
                              text = "", color = p2)
         bt1  = create_widget(Val{:button}, c;
-                             top = 4, left = :left, width = 12, label = "Button 1",
-                             color = p1, color_highlight = p3)
+                             top = 4, left = :left, label = "Button 1",
+                             color = p1, color_highlight = p3, style = :complete)
         bt2  = create_widget(Val{:button}, c,
-                             top = 4, left = :center, width = 12, label = "Button 2",
-                             color = p1, color_highlight = p3)
+                             top = 4, left = :center, label = "Button 2",
+                             color = p1, color_highlight = p3, style = :complete)
         bt3  = create_widget(Val{:button}, c;
-                             top = 4, left = :right, width = 12, label = "Button 3",
-                             color = p1, color_highlight = p3)
+                             top = 4, left = :right, label = "Button 3",
+                             color = p1, color_highlight = p3, style = :simple)
 
         bt1.on_return_pressed = (text)->change_text(text,"Button 1")
         bt1.vargs_on_return_pressed = (text,)
