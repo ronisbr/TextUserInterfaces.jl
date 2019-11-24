@@ -196,7 +196,9 @@ function create_widget_common(parent::WidgetParent,
     _process_vertical_info!(posconf)
     _process_horizontal_info!(posconf)
 
-    @unpack_WidgetPositioningConfiguration posconf
+    @unpack anchor_bottom, anchor_left, anchor_right, anchor_top, anchor_center,
+            anchor_middle, top, left, height, width, vertical,
+            horizontal = posconf
 
     # Vertical
     # ==========================================================================

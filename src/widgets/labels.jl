@@ -12,11 +12,11 @@ export WidgetLabel, change_text
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetLabel <: Widget
+@with_kw mutable struct WidgetLabel{T<:WidgetParent} <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon
+    common::WidgetCommon{T}
 
     # Parameters related to the widget
     # ==========================================================================

@@ -24,7 +24,7 @@ Return the height of the buffer of the window `win`.
 """
 function get_height(win::Window)
     if win.buffer != C_NULL
-        return getmaxy(win.buffer)
+        return Int(getmaxy(win.buffer))
     else
         return -1
     end
@@ -38,7 +38,7 @@ Return the width of the buffer of the window `win`.
 """
 function get_width(win::Window)
     if win.buffer != C_NULL
-        return getmaxx(win.buffer)
+        return Int(getmaxx(win.buffer))
     else
         return -1
     end

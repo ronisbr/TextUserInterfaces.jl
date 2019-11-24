@@ -171,46 +171,54 @@ WidgetParent = Union{Window,Widget}
 # Objects that can be used as anchors.
 AnchorObject = Union{Window,Widget}
 
-struct Anchor
-    obj::AnchorObject
+struct Anchor{T<:AnchorObject}
+    obj::T
     side::Symbol
-    pad::Integer
+    pad::Int
 end
 
 # Types that can be anchors to widgets.
 WidgetAnchor = Union{Nothing,Anchor}
 
 # Configuration related to the position of the widgets.
-@with_kw mutable struct WidgetPositioningConfiguration
-    anchor_bottom::WidgetAnchor = nothing
-    anchor_left::WidgetAnchor = nothing
-    anchor_right::WidgetAnchor = nothing
-    anchor_top::WidgetAnchor = nothing
-    anchor_center::WidgetAnchor = nothing
-    anchor_middle::WidgetAnchor = nothing
+@with_kw mutable struct WidgetPositioningConfiguration{Tb<:WidgetAnchor,
+                                                       Tl<:WidgetAnchor,
+                                                       Tr<:WidgetAnchor,
+                                                       Tt<:WidgetAnchor,
+                                                       Tc<:WidgetAnchor,
+                                                       Tm<:WidgetAnchor}
+    # Anchors (relative positioning).
+    anchor_bottom::Tb = nothing
+    anchor_left::Tl   = nothing
+    anchor_right::Tr  = nothing
+    anchor_top::Tt    = nothing
+    anchor_center::Tc = nothing
+    anchor_middle::Tm = nothing
 
-    top::Int = -1
-    left::Int = -1
+    # Absolute positioning.
+    top::Int    = -1
+    left::Int   = -1
     height::Int = -1
-    width::Int = -1
+    width::Int  = -1
 
-    vertical::Symbol = :unknown
+    # Type of positioning.
+    vertical::Symbol   = :unknown
     horizontal::Symbol = :unknown
 end
 
 # Common configurations for all widgets.
-@with_kw mutable struct WidgetCommon
-    parent::WidgetParent
+@with_kw mutable struct WidgetCommon{T<:WidgetParent}
+    parent::T
     buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
 
     # Configuration related to the size and position of the widget.
     posconf::WidgetPositioningConfiguration
 
     # Current size and position of the widget.
-    top::Number = -1
-    left::Number = -1
-    height::Number = -1
-    width::Number = -1
+    top::Int    = -1
+    left::Int   = -1
+    height::Int = -1
+    width::Int  = -1
 
     update_needed::Bool = true
 end

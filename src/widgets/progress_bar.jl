@@ -12,11 +12,11 @@ export WidgetProgressBar, change_value
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetProgressBar <: Widget
+@with_kw mutable struct WidgetProgressBar{T<:WidgetParent} <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon
+    common::WidgetCommon{T}
 
     # Parameters related to the widget
     # ==========================================================================

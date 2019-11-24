@@ -12,11 +12,11 @@ export WidgetButton
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetButton <: Widget
+@with_kw mutable struct WidgetButton{T<:WidgetParent} <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon
+    common::WidgetCommon{T}
 
     # Parameters related to the widget
     # ==========================================================================

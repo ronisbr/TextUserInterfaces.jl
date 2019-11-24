@@ -12,11 +12,11 @@ export WidgetContainer
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetContainer <: Widget
+@with_kw mutable struct WidgetContainer{T<:WidgetParent} <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon
+    common::WidgetCommon{T}
 
     # Parameters related to the widget
     # ==========================================================================
@@ -38,8 +38,7 @@ function accept_focus(container::WidgetContainer)
     end
 end
 
-function create_widget(::Type{Val{:container}}, parent::WidgetParent;
-                       kwargs...)
+function create_widget(::Type{Val{:container}}, parent::WidgetParent; kwargs...)
 
     posconf = wpc(; kwargs...)
 
@@ -50,17 +49,14 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent;
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     if posconf.vertical == :unknown
-        posconf.anchor_top = Anchor(parent, :top, 0)
-        posconf.anchor_bottom = Anchor(parent, :bottom, 0)
+        posconf.top    = 0
+        posconf.height = get_height(parent)
     end
 
     if posconf.horizontal == :unknown
-        posconf.anchor_left  = Anchor(parent, :left, 0)
-        posconf.anchor_right = Anchor(parent, :right, 0)
+        posconf.left  = 0
+        posconf.width = get_width(parent)
     end
-
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
 
     # Create the common parameters of the widget.
     common = create_widget_common(parent, posconf)
