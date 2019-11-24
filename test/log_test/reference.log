@@ -23,6 +23,7 @@
 [create_widget]     Coordinate  = (4, 0)
 [create_widget]     Positioning = (amiddle_height,aleft_width)
 [create_widget]     Label       = "Button 1"
+[create_widget]     Style       = simple
 [create_widget]     Reference   = 0x0
 [create_widget] A progress bar was created in WidgetContainer{Window} (0x0).
 [create_widget]     Size        = (1, 40)
