@@ -139,8 +139,9 @@ function _draw_progress_bar_simple(widget::WidgetProgressBar)
     @unpack buffer = common
 
     color > 0 && wattron(buffer, color)
-    # Get the current size of the content window.
-    ~, wsx = _get_window_dims(buffer)
+
+    # Get the width of the progress bar.
+    wsx = common.width
 
     # Check if the user wants a border.
     if border
@@ -169,8 +170,8 @@ function _draw_progress_bar_complete(widget::WidgetProgressBar)
 
     color > 0 && wattron(buffer, color)
 
-    # Get the current size of the content window.
-    ~, wsx = _get_window_dims(buffer)
+    # Get the width of the progress bar.
+    wsx = common.width
 
     # Check if the user wants a border.
     if border
