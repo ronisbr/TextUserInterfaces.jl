@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetButton
+export WidgetButton, change_label
 
 ################################################################################
 #                                     Type
@@ -128,6 +128,28 @@ function release_focus(widget::WidgetButton)
     request_update(widget)
     return true
 end
+
+################################################################################
+#                           Custom widget functions
+################################################################################
+
+"""
+    function change_label(button::WidgetButton, label::AbstractString)
+
+Change the label of button `button` to `label`.
+
+"""
+function change_label(button::WidgetButton, label::AbstractString)
+    button.label = label
+    request_update(button)
+    return nothing
+end
+
+################################################################################
+#                               Derived widgets
+################################################################################
+
+include("./radio_button.jl")
 
 ################################################################################
 #                              Private functions
