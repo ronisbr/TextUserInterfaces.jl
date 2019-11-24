@@ -12,19 +12,18 @@ function log_test()
     p0 = ncurses_color(bold = false)
     p1 = ncurses_color(:black, :white)
 
-    win  = create_window(10,56,2,2; border = true, title = " WINDOW ")
-    con  = create_widget(Val{:container}, win)
-    ~    = create_widget(Val{:label}, con;
-                         anchor_top = (con, :top, 0),   height = 1,
-                         anchor_left = (con, :left, 0), width  = 40,
-                         text = "This is a label", color = p0)
-    bt   = create_widget(Val{:button}, con;
-                         anchor_middle = (con, :middle, 0),
-                         anchor_left = (con, :left, 0), width = 12,
-                         label = "Button 1", color = p0, color_highlight = p1)
-    pb   = create_widget(Val{:progress_bar}, con;
-                         anchor_bottom = (con, :bottom, 0), width = 40,
-                         anchor_left = (con, :left, 0), value = 100)
+    w,c = create_window_with_container(10,56,2,2; border = true, title = " WINDOW ")
+    ~   = create_widget(Val{:label}, c;
+                        anchor_top = (c, :top, 0),   height = 1,
+                        anchor_left = (c, :left, 0), width  = 40,
+                        text = "This is a label", color = p0)
+    bt  = create_widget(Val{:button}, c;
+                        anchor_middle = (c, :middle, 0),
+                        anchor_left = (c, :left, 0), width = 12,
+                        label = "Button 1", color = p0, color_highlight = p1)
+    pb  = create_widget(Val{:progress_bar}, c;
+                         anchor_bottom = (c, :bottom, 0), width = 40,
+                         anchor_left = (c, :left, 0), value = 100)
 
     # Focus manager.
     tui.focus_chain = [w]
