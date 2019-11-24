@@ -50,6 +50,7 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
                        color::Int = 0,
                        color_highlight::Int = 0,
                        style::Symbol = :simple,
+                       _derive::Bool = false,
                        kwargs...)
 
     # Check arguments.
@@ -89,9 +90,9 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
                           style           = style)
 
     # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
+    !_derive && add_widget(parent, widget)
 
-    @log info "create_widget" """
+    !_derive && @log info "create_widget" """
     A button was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
@@ -115,11 +116,13 @@ function process_focus(widget::WidgetButton, k::Keystroke)
     return true
 end
 
-function redraw(widget::WidgetButton)
+redraw(widget::WidgetButton) = redraw(widget, has_focus(widget.common.parent,widget))
+
+function redraw(widget::WidgetButton, focused::Bool)
     wclear(widget.common.buffer)
 
     # Draw the button.
-    _draw_button(widget)
+    _draw_button(widget, focused)
 
     return nothing
 end
@@ -155,12 +158,12 @@ include("./radio_button.jl")
 #                              Private functions
 ################################################################################
 
-function _draw_button(widget::WidgetButton)
+function _draw_button(widget::WidgetButton, focused::Bool = false)
     @unpack common, label, color, color_highlight, style = widget
     @unpack buffer, parent = common
 
     # Get the background color depending on the focus.
-    c = has_focus(parent, widget) ? color_highlight : color
+    c = focused ? color_highlight : color
 
     # Center the label in the button.
     w   = common.width
