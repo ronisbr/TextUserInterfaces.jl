@@ -38,6 +38,8 @@ function load_ncurses(dir::String = "")
 
     l = nothing
 
+    !isempty(dir) && (dir *= "/")
+
     # libncurses
     # --------------------------------------------------------------------------
 

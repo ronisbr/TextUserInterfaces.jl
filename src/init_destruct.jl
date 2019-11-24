@@ -21,7 +21,7 @@ function init_tui(dir::String = "")
     # Load the libraries
     # ==========================================================================
 
-    load_ncurses()
+    load_ncurses(dir)
 
     # Initialize ncurses
     # ==========================================================================
