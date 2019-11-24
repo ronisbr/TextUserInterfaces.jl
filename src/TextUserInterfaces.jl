@@ -53,6 +53,7 @@ include("./windows/refresh_update.jl")
 # ==============================================================================
 
 include("./widgets/widgets.jl")
+include("./widgets/anchors.jl")
 include("./widgets/button.jl")
 include("./widgets/labels.jl")
 include("./widgets/progress_bar.jl")

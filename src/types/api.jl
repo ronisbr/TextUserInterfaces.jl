@@ -168,17 +168,49 @@ const tui = TUI()
 # Types that can be parent of widgets.
 WidgetParent = Union{Window,Widget}
 
+# Objects that can be used as anchors.
+AnchorObject = Union{Window,Widget}
+
+struct Anchor
+    obj::AnchorObject
+    side::Symbol
+    pad::Integer
+end
+
+# Types that can be anchors to widgets.
+WidgetAnchor = Union{Nothing,Anchor}
+
+# Configuration related to the position of the widgets.
+@with_kw mutable struct WidgetPositioningConfiguration
+    anchor_bottom::WidgetAnchor = nothing
+    anchor_left::WidgetAnchor = nothing
+    anchor_right::WidgetAnchor = nothing
+    anchor_top::WidgetAnchor = nothing
+    anchor_center::WidgetAnchor = nothing
+    anchor_middle::WidgetAnchor = nothing
+
+    top::Int = -1
+    left::Int = -1
+    height::Int = -1
+    width::Int = -1
+
+    vertical::Symbol = :unknown
+    horizontal::Symbol = :unknown
+end
+
 # Common configurations for all widgets.
 @with_kw mutable struct WidgetCommon
     parent::WidgetParent
     buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
 
-    top::Number
-    left::Number
-    height::Number
-    width::Number
-    hsize_policy::Symbol
-    vsize_policy::Symbol
+    # Configuration related to the size and position of the widget.
+    posconf::WidgetPositioningConfiguration
+
+    # Current size and position of the widget.
+    top::Number = -1
+    left::Number = -1
+    height::Number = -1
+    width::Number = -1
 
     update_needed::Bool = true
 end

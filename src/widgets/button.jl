@@ -41,22 +41,31 @@ function accept_focus(widget::WidgetButton)
 end
 
 function create_widget(::Type{Val{:button}}, parent::WidgetParent;
-                       top::Union{Integer,Symbol} = 0,
-                       left::Union{Integer,Symbol} = 0,
-                       hsize_policy::Symbol = :absolute,
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,
-                       style::Symbol = :simple)
+                       style::Symbol = :simple,
+                       kwargs...)
 
-    # Compute the height and the width of the button based on the style and
-    # label.
-    height = style == :simple ? 1 : 3
-    width  = length(label) + 4
+    # Positioning configuration.
+    posconf = wpc(;kwargs...)
+
+    # Initial processing of the position.
+    _process_vertical_info!(posconf)
+    _process_horizontal_info!(posconf)
+
+    # Check if all positioning is defined and, if not, try to help by
+    # automatically defining the height and/or width.
+    if posconf.vertical == :unknown
+        posconf.height = style == :simple ? 1 : 3
+    end
+
+    if posconf.horizontal == :unknown
+        posconf.width = length(label) + 4
+    end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, top, left, height, width, :absolute,
-                                  hsize_policy)
+    common = create_widget_common(parent, posconf)
 
     # Create the widget.
     widget = WidgetButton(common          = common,
@@ -72,7 +81,7 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
     A button was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
+        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
         Label       = \"$label\"
         Reference   = $(obj_to_ptr(widget))"""
 
@@ -116,20 +125,25 @@ function _draw_button(widget::WidgetButton)
     # Get the background color depending on the focus.
     c = has_focus(parent, widget) ? color_highlight : color
 
+    # Center the label in the button.
+    w   = common.width
+    Δ   = w - 4 - length(label)
+    pad = div(Δ,2)
+    str = " "^pad * label * " "^(Δ - pad)
+
     if style == :complete
-        w    = widget.common.width
         mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
         mvwprintw(buffer, 1, 0, "│")
 
         wattron(buffer, c)
-        wprintw(buffer, " " * label * " ")
+        wprintw(buffer, " " * str * " ")
         wattroff(buffer, c)
 
         wprintw(buffer, "│")
         mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
     else
         wattron(buffer, c)
-        mvwprintw(buffer, 0, 0, "[ " * label * " ]")
+        mvwprintw(buffer, 0, 0, "[ " * str * " ]")
         wattroff(buffer, c)
     end
 

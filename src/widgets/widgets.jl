@@ -178,118 +178,89 @@ require_cursor(widget) = false
 export create_widget_common
 
 """
-    function create_widget_common(parent::WidgetParent, top::Tt, left::Tl, height::Number, width::Number, vsize_policy::Symbol, hsize_policy::Symbol) where {Tt<:Union{Integer,Symbol},Tl<:Union{Integer,Symbol}}
+    function create_widget_common(parent::WidgetParent, posconf::WidgetPositioningConfiguration)
 
 Create all the variables in the common structure of the widget API.
 
 # Args
 
 * `parent`: Parent widget.
-* `top`: Top position of the widget. It can be an integer, or a symbol. If it is
-         a symbol, then the widget vertical alignment will be automatically
-         computed. In this case, it can be used `:top`, `:center`, or `:bottom`.
-* `left`: Left position of the widget. It can be an integer, or a symbol. If it
-          is a symbol, then the widget horizontal alignment will be
-          automatically computed. In this case, it can be used `:left`,
-          `:center`, or `:right`.
-* `height`: If `vsize_policy` is `:absolute`, then it must be an integer with
-            the height of the widget. If `vsize_policy` is `:relative`, then it
-            will be treated as a percentage of the parent height.
-* `width`: If `hsize_policy` is `:absolute`, then it must be an integer with
-            the width of the widget. If `hsize_policy` is `:relative`, then it
-            will be treated as a percentage of the parent width.
-* `vsize_policy`: Policy to be used when computing the height of the widget. It
-                  can be `:absolute` or `:relative`.
-* `hsize_policy`: Policy to be used when computing the width of the widget. It
-                  can be `:absolute` or `:relative`.
+* `posconf`: Widget positioning configuration
+             (see `WidgetPositioningConfiguration`).
 
 """
-function create_widget_common(parent::WidgetParent, top::Tt, left::Tl,
-                              height::Number, width::Number,
-                              vsize_policy::Symbol, hsize_policy::Symbol) where
-    {Tt<:Union{Integer,Symbol},Tl<:Union{Integer,Symbol}}
+function create_widget_common(parent::WidgetParent,
+                              posconf::WidgetPositioningConfiguration)
 
-    # Get the parent height and size.
-    parent_height = get_height(parent)
-    parent_width  = get_width(parent)
+    # Process the positioning.
+    _process_vertical_info!(posconf)
+    _process_horizontal_info!(posconf)
 
-    # Get the widget height and size.
-    widget_height = _widget_height(parent, height, vsize_policy)
-    widget_width  = _widget_width(parent, width, hsize_policy)
+    @unpack_WidgetPositioningConfiguration posconf
 
-    # Compute the position in the parent.
-    if parent_height < widget_height
-        @log warning "create_widget_common" "Widget is too tall to fit in parent $(obj_desc(parent))."
-        widget_top = 0
-    elseif Tt <: Number
-        widget_top = top
-    else
-        if top == :center
-            widget_top = round(Int, (parent_height - widget_height) ÷ 2)
-        elseif top == :bottom
-            widget_top = parent_height - widget_height
-        else
-            widget_top = 0
-        end
+    # Vertical
+    # ==========================================================================
+
+    if vertical == :abottom_atop
+        bottom = _get_anchor(anchor_bottom, parent)
+        top    = _get_anchor(anchor_top, parent)
+        height = bottom - top
+
+    elseif vertical == :abottom_height
+        bottom = _get_anchor(anchor_bottom, parent)
+        top    = bottom - height
+
+    elseif vertical == :atop_height
+        top = _get_anchor(anchor_top, parent)
+
+    elseif vertical == :amiddle_height
+        middle = _get_anchor(anchor_middle, parent)
+        top    = middle - div(height,2)
+
+    elseif vertical == :unknown
+        error("It was not possible to guess the vertical positioning of the widget.")
     end
 
-    if parent_width < widget_width
-        @log warning "create_widget_common" "Widget is too wide to fit in parent $(obj_desc(parent))."
-        widget_left = 0
-    elseif Tl <: Number
-        widget_left = left
-    else
-        if left == :center
-            widget_left = round(Int, (parent_width - widget_width) ÷ 2)
-        elseif left == :right
-            widget_left = parent_width - widget_width
-        else
-            widget_left = 0
-        end
+    (top < 0)     && error("Wrong vertical size configuration leading to negative top position.")
+    (height <= 0) && error("Wrong vertical size configuration leading to non-positive height position.")
+
+    # Horizontal
+    # ==========================================================================
+
+    if horizontal == :aleft_aright
+        left  = _get_anchor(anchor_left, parent)
+        right = _get_anchor(anchor_right, parent)
+        width = right - left
+
+    elseif horizontal == :aleft_width
+        left = _get_anchor(anchor_left, parent)
+
+    elseif horizontal == :aright_width
+        right = _get_anchor(anchor_right, parent)
+        left  = right - width
+
+    elseif horizontal == :acenter_width
+        center = _get_anchor(anchor_center, parent)
+        left   = center - div(width,2)
+
+    elseif vertical == :unknown
+        error("It was not possible to guess the horizontal positioning of the widget.")
     end
+
+    (left < 0)   && error("Wrong vertical size configuration leading to negative left position.")
+    (width <= 0) && error("Wrong vertical size configuration leading to non-positive width position.")
 
     # Create the buffer that will hold the contents.
-    buffer = subpad(get_buffer(parent), widget_height, widget_width, widget_top,
-                    widget_left)
+    buffer = subpad(get_buffer(parent), height, width, top, left)
 
     # Create the common parameters of the widget.
-    common = WidgetCommon(parent       = parent,
-                          buffer       = buffer,
-                          height       = widget_height,
-                          width        = widget_width,
-                          top          = widget_top,
-                          left         = widget_left,
-                          hsize_policy = hsize_policy,
-                          vsize_policy = vsize_policy)
+    common = WidgetCommon(parent  = parent,
+                          buffer  = buffer,
+                          posconf = posconf,
+                          height  = height,
+                          width   = width,
+                          top     = top,
+                          left    = left)
 
     return common
 end
-
-function _widget_height(parent::WidgetParent, height::Number, policy::Symbol)
-    if policy == :relative
-        # Get the size of the parent widget.
-        parent_height = get_height(parent)
-
-        # Compute the widget size.
-        widget_height = round(Int,parent_height*height)
-
-        return widget_height
-    else
-        return height
-    end
-end
-
-function _widget_width(parent::WidgetParent, width::Number, policy::Symbol)
-    if policy == :relative
-        # Get the size of the parent widget.
-        parent_width = get_width(parent)
-
-        # Compute the widget size.
-        widget_width = round(Int,parent_width*width)
-
-        return widget_width
-    else
-        return width
-    end
-end
-

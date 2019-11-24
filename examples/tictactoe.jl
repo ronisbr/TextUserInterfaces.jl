@@ -49,9 +49,11 @@ function create_widget(::Type{Val{:field}}, parent::WidgetParent, top::Integer,
     height = 3
     width  = 7
 
+    # Create the widget positioning configuration.
+    posconf = wpc(top = top, left = left, height = height, width = width)
+
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, top, left, height, width, :absolute,
-                                  :absolute)
+    common = create_widget_common(parent, posconf)
 
     # Create the widget.
     widget = WidgetField(common = common, pos = pos)
@@ -63,7 +65,6 @@ function create_widget(::Type{Val{:field}}, parent::WidgetParent, top::Integer,
     A field was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
         Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.

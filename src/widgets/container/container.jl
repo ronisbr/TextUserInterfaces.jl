@@ -39,19 +39,31 @@ function accept_focus(container::WidgetContainer)
 end
 
 function create_widget(::Type{Val{:container}}, parent::WidgetParent;
-                       top::Union{Integer,Symbol} = 0,
-                       left::Union{Integer,Symbol} = 0,
-                       height::Number = 0,
-                       width::Number = 0,
-                       hsize_policy::Symbol = :absolute,
-                       vsize_policy::Symbol = :absolute)
+                       kwargs...)
 
-    height <= 0 && (height = get_height(parent))
-    width  <= 0 && (width  = get_width(parent))
+    posconf = wpc(; kwargs...)
+
+    # Initial processing of the position.
+    _process_vertical_info!(posconf)
+    _process_horizontal_info!(posconf)
+
+    # Check if all positioning is defined and, if not, try to help by
+    # automatically defining the height and/or width.
+    if posconf.vertical == :unknown
+        posconf.anchor_top = Anchor(parent, :top, 0)
+        posconf.anchor_bottom = Anchor(parent, :bottom, 0)
+    end
+
+    if posconf.horizontal == :unknown
+        posconf.anchor_left  = Anchor(parent, :left, 0)
+        posconf.anchor_right = Anchor(parent, :right, 0)
+    end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, top, left, height, width,
-                                  vsize_policy, hsize_policy)
+    common = create_widget_common(parent, posconf)
+
+    # Create the common parameters of the widget.
+    common = create_widget_common(parent, posconf)
 
     # Create the widget.
     container = WidgetContainer(common = common)
@@ -63,7 +75,7 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent;
     A container was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
+        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
         Reference   = $(obj_to_ptr(container))"""
 
     # Return the created container.

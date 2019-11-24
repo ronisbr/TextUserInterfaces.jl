@@ -34,22 +34,32 @@ end
 accept_focus(widget::WidgetProgressBar) = false
 
 function create_widget(::Type{Val{:progress_bar}}, parent::WidgetParent;
-                       top::Union{Integer,Symbol} = 0,
-                       left::Union{Integer,Symbol} = 0,
-                       width::Number = 20,
-                       hsize_policy::Symbol = :absolute,
                        border::Bool = false,
                        color::Int = 0,
                        color_highlight::Int = 0,
                        style::Symbol = :simple,
-                       value::Integer = 0)
+                       value::Integer = 0,
+                       kwargs...)
 
-    # The height depends on the style.
-    height = _progress_bar_height(style, border)
+    # Positioning configuration.
+    posconf = wpc(;kwargs...)
+
+    # Initial processing of the position.
+    _process_vertical_info!(posconf)
+    _process_horizontal_info!(posconf)
+
+    # Check if all positioning is defined and, if not, try to help by
+    # automatically defining the height and/or width.
+    if posconf.vertical == :unknown
+        posconf.height = _progress_bar_height(style, border)
+    end
+
+    if posconf.horizontal == :unknown
+        posconf.width = 10
+    end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, top, left, height, width, :absolute,
-                                  hsize_policy)
+    common = create_widget_common(parent, posconf)
 
     # Create the widget.
     widget = WidgetProgressBar(common = common,
@@ -65,8 +75,8 @@ function create_widget(::Type{Val{:progress_bar}}, parent::WidgetParent;
     A progress bar was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
-        Style       = $(string(style)),
+        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Style       = $(string(style))
         Value       = $value
         Reference   = $(obj_to_ptr(widget))"""
 

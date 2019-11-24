@@ -31,14 +31,19 @@ function windows_and_widgets()
                              top = 1, left = 30, height = 1, width = 10,
                              text = "", color = p2)
         bt1  = create_widget(Val{:button}, c;
-                             top = 4, left = :left, label = "Button 1",
-                             color = p1, color_highlight = p3, style = :complete)
+                             top = 4, anchor_left = (c, :left, 0),
+                             label = "Button 1", color = p1,
+                             color_highlight = p3, style = :simple)
         bt2  = create_widget(Val{:button}, c,
-                             top = 4, left = :center, label = "Button 2",
-                             color = p1, color_highlight = p3, style = :complete)
+                             anchor_middle = (bt1, :middle, 0),
+                             anchor_center = (c, :center, 0),
+                             label = "Button 2", color = p1,
+                             color_highlight = p3, style = :complete)
         bt3  = create_widget(Val{:button}, c;
-                             top = 4, left = :right, label = "Button 3",
-                             color = p1, color_highlight = p3, style = :simple)
+                             anchor_middle = (bt2, :middle, 0),
+                             anchor_right = (c, :right, 0),
+                             label = "Button 3", color = p1,
+                             color_highlight = p3, style = :simple)
 
         bt1.on_return_pressed = (text)->change_text(text,"Button 1")
         bt1.vargs_on_return_pressed = (text,)

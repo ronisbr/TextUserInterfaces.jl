@@ -32,19 +32,25 @@ end
 accept_focus(widget::WidgetLabel) = false
 
 function create_widget(::Type{Val{:label}}, parent::WidgetParent;
-                       top::Union{Integer,Symbol} = 0,
-                       left::Union{Integer,Symbol} = 0,
-                       height::Number = 1,
-                       width::Number = 4,
-                       vsize_policy::Symbol = :absolute,
-                       hsize_policy::Symbol = :absolute,
                        alignment = :l,
                        color::Int = 0,
-                       text::AbstractString = "Text")
+                       text::AbstractString = "Text",
+                       kwargs...)
+
+    # Positioning configuration.
+    posconf = wpc(;kwargs...)
+
+    # Initial processing of the position.
+    _process_vertical_info!(posconf)
+    _process_horizontal_info!(posconf)
+
+    # Check if all positioning is defined and, if not, try to help by
+    # automatically defining the height and/or width.
+    posconf.vertical   == :unknown && (posconf.height = 1)
+    posconf.horizontal == :unknown && (posconf.width = length(text))
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, top, left, height, width,
-                                  vsize_policy, hsize_policy)
+    common = create_widget_common(parent, posconf)
 
     # Create the widget.
     widget = WidgetLabel(common = common, text   = "", color  = color)
@@ -59,7 +65,7 @@ function create_widget(::Type{Val{:label}}, parent::WidgetParent;
     A label was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Size policy = ($(common.vsize_policy), $(common.hsize_policy))
+        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
         Text        = \"$text\"
         Reference   = $(obj_to_ptr(widget))"""
 
