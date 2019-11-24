@@ -25,38 +25,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.fieldjust",
-    "page": "Library",
-    "title": "TextUserInterfaces.fieldjust",
-    "category": "constant",
-    "text": "Dictionary defining values of the field justification.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.fieldopts",
-    "page": "Library",
-    "title": "TextUserInterfaces.fieldopts",
-    "category": "constant",
-    "text": "Dictionary defining values of the field options.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.formcmd",
-    "page": "Library",
-    "title": "TextUserInterfaces.formcmd",
-    "category": "constant",
-    "text": "Dictionary defining values of the form commands.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menucmd",
-    "page": "Library",
-    "title": "TextUserInterfaces.menucmd",
-    "category": "constant",
-    "text": "Dictionary defining values of the menu commands.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.Keystroke",
     "page": "Library",
     "title": "TextUserInterfaces.Keystroke",
@@ -65,99 +33,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.WINDOW",
+    "location": "lib/library/#TextUserInterfaces.NCurses.init_color-Tuple{Symbol,Int64,Int64,Int64}",
     "page": "Library",
-    "title": "TextUserInterfaces.WINDOW",
-    "category": "type",
-    "text": "struct WINDOW\n\nHandles a ncurses window.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.ACS_-Tuple{Symbol}",
-    "page": "Library",
-    "title": "TextUserInterfaces.ACS_",
+    "title": "TextUserInterfaces.NCurses.init_color",
     "category": "method",
-    "text": "function ACS_(s::Symbol)\n\nReturn the symbol s of the acs_map. For example, ACS_HLINE can be obtained from ACS_(:HLINE).\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.COLS-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.COLS",
-    "category": "method",
-    "text": "function COLS()\n\nReturn the number of columns in the root window. It must be called after initscr().\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.LINES-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.LINES",
-    "category": "method",
-    "text": "function LINES()\n\nReturn the number of lines in the root window. It must be called after initscr().\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_ALNUM",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_ALNUM",
-    "category": "function",
-    "text": "function TYPE_ALNUM()\n\nReturn a pointer to the global symbol TYPE_ALNUM of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_ALPHA",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_ALPHA",
-    "category": "function",
-    "text": "function TYPE_ALPHA()\n\nReturn a pointer to the global symbol TYPE_ALPHA of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_ENUM",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_ENUM",
-    "category": "function",
-    "text": "function TYPE_ENUM()\n\nReturn a pointer to the global symbol TYPE_ENUM of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_INTEGER",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_INTEGER",
-    "category": "function",
-    "text": "function TYPE_INTEGER()\n\nReturn a pointer to the global symbol TYPE_INTEGER of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_IPV4",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_IPV4",
-    "category": "function",
-    "text": "function TYPE_IPV4()\n\nReturn a pointer to the global symbol TYPE_IPV4 of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_IPV6",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_IPV6",
-    "category": "function",
-    "text": "function TYPE_IPV6()\n\nReturn a pointer to the global symbol TYPE_IPV6 of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_NUMERIC",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_NUMERIC",
-    "category": "function",
-    "text": "function TYPE_NUMERIC()\n\nReturn a pointer to the global symbol TYPE_NUMERIC of libform.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.TYPE_REGEXP",
-    "page": "Library",
-    "title": "TextUserInterfaces.TYPE_REGEXP",
-    "category": "function",
-    "text": "function TYPE_REGEXP()\n\nReturn a pointer to the global symbol TYPE_REGEXP of libform.\n\n\n\n\n\n"
+    "text": "function init_color(name::Symbol, r::Int, g::Int, b::Int)\n\nInitialize the color with name name and RGB color r, g, and b.  Notice that the range for the last three variables is [0,1000].\n\nIf the color is already initialized, then nothing will be changed.\n\nIf the color was initialized, then it returns the color ID. Otherwise, it returns -1.\n\n\n\n\n\n"
 },
 
 {
@@ -209,46 +89,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.attroff",
-    "page": "Library",
-    "title": "TextUserInterfaces.attroff",
-    "category": "function",
-    "text": "function attroff(attrs::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.attron",
-    "page": "Library",
-    "title": "TextUserInterfaces.attron",
-    "category": "function",
-    "text": "function attron(attrs::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.bottom_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.bottom_panel",
-    "category": "function",
-    "text": "function bottom_panel(pan::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.box",
-    "page": "Library",
-    "title": "TextUserInterfaces.box",
-    "category": "function",
-    "text": "function box(win::Ptr{WINDOW}, verch::jlchtype, horch::jlchtype)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.cbreak",
-    "page": "Library",
-    "title": "TextUserInterfaces.cbreak",
-    "category": "function",
-    "text": "function cbreak()\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.change_text-Tuple{WidgetLabel,AbstractString}",
     "page": "Library",
     "title": "TextUserInterfaces.change_text",
@@ -262,38 +102,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.change_value",
     "category": "method",
     "text": "function change_value(widget::WidgetProgressBar, new_value::Integer; color::Int = -1)\n\nChange the value of the progress bar to new_value.\n\nThe color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.clear",
-    "page": "Library",
-    "title": "TextUserInterfaces.clear",
-    "category": "function",
-    "text": "function clear()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.clrtobot",
-    "page": "Library",
-    "title": "TextUserInterfaces.clrtobot",
-    "category": "function",
-    "text": "function clrtobot()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.clrtoeol",
-    "page": "Library",
-    "title": "TextUserInterfaces.clrtoeol",
-    "category": "function",
-    "text": "function clrtoeol()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.copywin",
-    "page": "Library",
-    "title": "TextUserInterfaces.copywin",
-    "category": "function",
-    "text": "function copywin(scr::Ptr{WINDOW}, dest::Ptr{WINDOW}, sminrow::Integer, smincol::Integer, dminrow::Integer, dmincol::Integer, dmaxrow::Integer, dmaxcol::Integer, overlay::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -329,11 +137,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_widget_common-Union{Tuple{Tl}, Tuple{Tt}, Tuple{Union{Widget, Window},Tt,Tl,Number,Number,Symbol,Symbol}} where Tl<:Union{Integer, Symbol} where Tt<:Union{Integer, Symbol}",
+    "location": "lib/library/#TextUserInterfaces.create_widget_common-Tuple{Union{Widget, Window},TextUserInterfaces.WidgetPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces.create_widget_common",
     "category": "method",
-    "text": "function create_widget_common(parent::WidgetParent, top::Tt, left::Tl, height::Number, width::Number, vsize_policy::Symbol, hsize_policy::Symbol) where {Tt<:Union{Integer,Symbol},Tl<:Union{Integer,Symbol}}\n\nCreate all the variables in the common structure of the widget API.\n\nArgs\n\nparent: Parent widget.\ntop: Top position of the widget. It can be an integer, or a symbol. If it is        a symbol, then the widget vertical alignment will be automatically        computed. In this case, it can be used :top, :center, or :bottom.\nleft: Left position of the widget. It can be an integer, or a symbol. If it         is a symbol, then the widget horizontal alignment will be         automatically computed. In this case, it can be used :left,         :center, or :right.\nheight: If vsize_policy is :absolute, then it must be an integer with           the height of the widget. If vsize_policy is :relative, then it           will be treated as a percentage of the parent height.\nwidth: If hsize_policy is :absolute, then it must be an integer with           the width of the widget. If hsize_policy is :relative, then it           will be treated as a percentage of the parent width.\nvsize_policy: Policy to be used when computing the height of the widget. It                 can be :absolute or :relative.\nhsize_policy: Policy to be used when computing the width of the widget. It                 can be :absolute or :relative.\n\n\n\n\n\n"
+    "text": "function create_widget_common(parent::WidgetParent, posconf::WidgetPositioningConfiguration)\n\nCreate all the variables in the common structure of the widget API.\n\nArgs\n\nparent: Parent widget.\nposconf: Widget positioning configuration            (see WidgetPositioningConfiguration).\n\n\n\n\n\n"
 },
 
 {
@@ -350,14 +158,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.create_window_with_container",
     "category": "method",
     "text": "function create_window_with_container(vargs...; kwargs...)\n\nCreate a window with a container as its widget. The arguments and keywords are the same ones of the function create_window. The container will have the same size of the window buffer.\n\nReturn\n\nThe created window.\nThe created container.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.current_item",
-    "page": "Library",
-    "title": "TextUserInterfaces.current_item",
-    "category": "function",
-    "text": "function current_item(menu::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -382,46 +182,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.current_item_name",
     "category": "method",
     "text": "function current_item_name(menu::TUI_MENU)\n\nReturn the item name of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.curs_set",
-    "page": "Library",
-    "title": "TextUserInterfaces.curs_set",
-    "category": "function",
-    "text": "function curs_set(visibility::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.curses_version-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.curses_version",
-    "category": "method",
-    "text": "function curses_version()\n\nReturn the NCurses version in a named tuple with the following fields:\n\nmajor: Major version.\nminor: Minor version.\npatch: Patch version.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.del_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.del_panel",
-    "category": "function",
-    "text": "function del_panel(panel::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.delwin",
-    "page": "Library",
-    "title": "TextUserInterfaces.delwin",
-    "category": "function",
-    "text": "function delwin(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.derwin",
-    "page": "Library",
-    "title": "TextUserInterfaces.derwin",
-    "category": "function",
-    "text": "function derwin(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -481,38 +241,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.doupdate",
-    "page": "Library",
-    "title": "TextUserInterfaces.doupdate",
-    "category": "function",
-    "text": "function doupdate()\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.endwin",
-    "page": "Library",
-    "title": "TextUserInterfaces.endwin",
-    "category": "function",
-    "text": "function endwin()\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.erase",
-    "page": "Library",
-    "title": "TextUserInterfaces.erase",
-    "category": "function",
-    "text": "function erase()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.field_buffer-Tuple{Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.field_buffer",
-    "category": "method",
-    "text": "function field_buffer(field::Ptr{Cvoid}, buffer::Integer)\n\nReturn type: Cstring\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.form_add_char-Tuple{TextUserInterfaces.TUI_FORM,UInt32}",
     "page": "Library",
     "title": "TextUserInterfaces.form_add_char",
@@ -550,14 +278,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.form_down_char",
     "category": "function",
     "text": "function form_down_char(form::TUI_FORM)\n\nMove to the down character of the active field in the form form.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.form_driver-Tuple{Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.form_driver",
-    "category": "method",
-    "text": "function form_driver(form::Ptr{Cvoid}, ch::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -622,38 +342,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.form_up_char",
     "category": "function",
     "text": "function form_up_char(form::TUI_FORM)\n\nMove to the up character of the active field in the form form.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.free_field-Tuple{Ptr{Nothing}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.free_field",
-    "category": "method",
-    "text": "function free_field(field::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.free_form-Tuple{Ptr{Nothing}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.free_form",
-    "category": "method",
-    "text": "function free_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.free_item",
-    "page": "Library",
-    "title": "TextUserInterfaces.free_item",
-    "category": "function",
-    "text": "function free_item(item::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.free_menu",
-    "page": "Library",
-    "title": "TextUserInterfaces.free_menu",
-    "category": "function",
-    "text": "function free_menu(menu::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -737,70 +425,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.getbegx",
-    "page": "Library",
-    "title": "TextUserInterfaces.getbegx",
-    "category": "function",
-    "text": "function getbegx(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.getbegy",
-    "page": "Library",
-    "title": "TextUserInterfaces.getbegy",
-    "category": "function",
-    "text": "function getbegy(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.getch",
-    "page": "Library",
-    "title": "TextUserInterfaces.getch",
-    "category": "function",
-    "text": "function getch()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.getcurx",
-    "page": "Library",
-    "title": "TextUserInterfaces.getcurx",
-    "category": "function",
-    "text": "function getcurx(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.getcury",
-    "page": "Library",
-    "title": "TextUserInterfaces.getcury",
-    "category": "function",
-    "text": "function getcury(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.getmaxx",
-    "page": "Library",
-    "title": "TextUserInterfaces.getmaxx",
-    "category": "function",
-    "text": "function getmaxx(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.getmaxy",
-    "page": "Library",
-    "title": "TextUserInterfaces.getmaxy",
-    "category": "function",
-    "text": "function getmaxy(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.has_colors",
-    "page": "Library",
-    "title": "TextUserInterfaces.has_colors",
-    "category": "function",
-    "text": "function has_colors()\n\nReturn type: UInt8\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.has_focus-Tuple{WidgetContainer,Any}",
     "page": "Library",
     "title": "TextUserInterfaces.has_focus",
@@ -817,43 +441,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.hide_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.hide_panel",
-    "category": "function",
-    "text": "function hide_panel(panel::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.hide_window-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.hide_window",
     "category": "method",
     "text": "function hide_window(win::Window)\n\nHide the window win.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.hline",
-    "page": "Library",
-    "title": "TextUserInterfaces.hline",
-    "category": "function",
-    "text": "function hline(ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.init_color",
-    "page": "Library",
-    "title": "TextUserInterfaces.init_color",
-    "category": "function",
-    "text": "function init_color(color::Integer, r::Integer, g::Integer, b::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.init_color-Tuple{Symbol,Int64,Int64,Int64}",
-    "page": "Library",
-    "title": "TextUserInterfaces.init_color",
-    "category": "method",
-    "text": "function init_color(name::Symbol, r::Int, g::Int, b::Int)\n\nInitialize the color with name name and RGB color r, g, and b.  Notice that the range for the last three variables is [0,1000].\n\nIf the color is already initialized, then nothing will be changed.\n\nIf the color was initialized, then it returns the color ID. Otherwise, it returns -1.\n\n\n\n\n\n"
 },
 
 {
@@ -873,14 +465,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.init_pair",
-    "page": "Library",
-    "title": "TextUserInterfaces.init_pair",
-    "category": "function",
-    "text": "function init_pair(pair::Integer, f::Integer, b::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.init_tui",
     "page": "Library",
     "title": "TextUserInterfaces.init_tui",
@@ -889,67 +473,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.initscr",
-    "page": "Library",
-    "title": "TextUserInterfaces.initscr",
-    "category": "function",
-    "text": "function initscr()\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.item_description",
-    "page": "Library",
-    "title": "TextUserInterfaces.item_description",
-    "category": "function",
-    "text": "function item_description(menu::Ptr{Cvoid})\n\nReturn type: Cstring\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.item_index",
-    "page": "Library",
-    "title": "TextUserInterfaces.item_index",
-    "category": "function",
-    "text": "function item_index(menu::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.item_name",
-    "page": "Library",
-    "title": "TextUserInterfaces.item_name",
-    "category": "function",
-    "text": "function item_name(menu::Ptr{Cvoid})\n\nReturn type: Cstring\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.item_value",
-    "page": "Library",
-    "title": "TextUserInterfaces.item_value",
-    "category": "function",
-    "text": "function item_value(item::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.jlgetch",
     "page": "Library",
     "title": "TextUserInterfaces.jlgetch",
     "category": "function",
     "text": "function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)\n\nWait for an keystroke in the window win and return it (see Keystroke).  If win is nothing, then getch() will be used instead of wgetch(win) to listen for the keystroke.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.keypad",
-    "page": "Library",
-    "title": "TextUserInterfaces.keypad",
-    "category": "function",
-    "text": "function keypad(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.leaveok",
-    "page": "Library",
-    "title": "TextUserInterfaces.leaveok",
-    "category": "function",
-    "text": "function leaveok(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -982,14 +510,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.menu_down_page",
     "category": "method",
     "text": "function menu_down_page(menu::TUI_MENU)\n\nScroll down a page of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_driver",
-    "page": "Library",
-    "title": "TextUserInterfaces.menu_driver",
-    "category": "function",
-    "text": "function menu_driver(menu::Ptr{Cvoid}, c::Integer)\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1073,22 +593,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.mouseinterval",
-    "page": "Library",
-    "title": "TextUserInterfaces.mouseinterval",
-    "category": "function",
-    "text": "function mouseinterval(n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.move_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.move_panel",
-    "category": "function",
-    "text": "function move_panel(panel::Ptr{Cvoid}, starty::Integer, startx::Integer)\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.move_view-Tuple{Window,Integer,Integer}",
     "page": "Library",
     "title": "TextUserInterfaces.move_view",
@@ -1121,131 +625,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.mvhline",
-    "page": "Library",
-    "title": "TextUserInterfaces.mvhline",
-    "category": "function",
-    "text": "function mvhline(y::Integer, x::Integer, ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.mvprintw",
-    "page": "Library",
-    "title": "TextUserInterfaces.mvprintw",
-    "category": "function",
-    "text": "function mvprintw(y::Integer, x::Integer, str::T) where T<:AbstractString\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.mvvline",
-    "page": "Library",
-    "title": "TextUserInterfaces.mvvline",
-    "category": "function",
-    "text": "function mvvline(y::Integer, x::Integer, ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.mvwhline",
-    "page": "Library",
-    "title": "TextUserInterfaces.mvwhline",
-    "category": "function",
-    "text": "function mvwhline(win::Ptr{WINDOW}, y::Integer, x::Integer, ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.mvwprintw",
-    "page": "Library",
-    "title": "TextUserInterfaces.mvwprintw",
-    "category": "function",
-    "text": "function mvwprintw(win::Ptr{WINDOW}, y::Integer, x::Integer, str::T) where T<:AbstractString\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.mvwvline",
-    "page": "Library",
-    "title": "TextUserInterfaces.mvwvline",
-    "category": "function",
-    "text": "function mvwvline(win::Ptr{WINDOW}, y::Integer, x::Integer, ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.ncurses_color",
     "page": "Library",
     "title": "TextUserInterfaces.ncurses_color",
     "category": "function",
     "text": "function ncurses_color([foreground::Symbol, background::Symbol,] attrs::Int = 0; kwargs...)\n\nReturn a mask to apply a color format with the foreground color foreground, background color background, and the attributes attrs.\n\nIf the pair (foreground, background) is omitted, then the foreground and background color will not be changed.\n\nKeywords\n\nbold: If true, then apply bold format mask to attrs.         (Default = false)\nunderline: If true, then apply underline format mask to attrs.              (Default = false)\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.new_form-Tuple{Array{Ptr{Nothing},1}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.new_form",
-    "category": "method",
-    "text": "function new_form(fields::Vector{Ptr{Cvoid}})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.new_item",
-    "page": "Library",
-    "title": "TextUserInterfaces.new_item",
-    "category": "function",
-    "text": "function new_item(name::T, description::T) where T<:AbstractString\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.new_menu",
-    "page": "Library",
-    "title": "TextUserInterfaces.new_menu",
-    "category": "function",
-    "text": "function new_menu(items::Vector{Ptr{Cvoid}})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.new_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.new_panel",
-    "category": "function",
-    "text": "function new_panel(win::Ptr{WINDOW})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.newpad",
-    "page": "Library",
-    "title": "TextUserInterfaces.newpad",
-    "category": "function",
-    "text": "function newpad(lines::Integer, cols::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.newwin",
-    "page": "Library",
-    "title": "TextUserInterfaces.newwin",
-    "category": "function",
-    "text": "function newwin(lines::Integer, cols::Integer, y::Integer, x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.nodelay",
-    "page": "Library",
-    "title": "TextUserInterfaces.nodelay",
-    "category": "function",
-    "text": "function nodelay(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.noecho",
-    "page": "Library",
-    "title": "TextUserInterfaces.noecho",
-    "category": "function",
-    "text": "function noecho()\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.notimeout",
-    "page": "Library",
-    "title": "TextUserInterfaces.notimeout",
-    "category": "function",
-    "text": "function notimeout(win::Ptr{WINDOW}, bf::Bool)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1265,46 +649,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.panel_userptr",
-    "page": "Library",
-    "title": "TextUserInterfaces.panel_userptr",
-    "category": "function",
-    "text": "function panel_userptr(pan::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.pnoutrefresh",
-    "page": "Library",
-    "title": "TextUserInterfaces.pnoutrefresh",
-    "category": "function",
-    "text": "function pnoutrefresh(win::Ptr{WINDOW}, pminrow::Integer, pmincol::Integer, sminrow::Integer, smincol::Integer, smaxrow::Integer, smaxcol::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.pos_form_cursor-Tuple{Ptr{Nothing}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.pos_form_cursor",
-    "category": "method",
-    "text": "function pos_form_cursor(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.pos_menu_cursor",
-    "page": "Library",
-    "title": "TextUserInterfaces.pos_menu_cursor",
-    "category": "function",
-    "text": "function pos_menu_cursor(menu::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.post_form-Tuple{Ptr{Nothing}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.post_form",
-    "category": "method",
-    "text": "function post_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.post_form-Tuple{TextUserInterfaces.TUI_FORM}",
     "page": "Library",
     "title": "TextUserInterfaces.post_form",
@@ -1313,35 +657,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.post_menu",
-    "page": "Library",
-    "title": "TextUserInterfaces.post_menu",
-    "category": "function",
-    "text": "function post_menu(menu::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.post_menu-Tuple{TextUserInterfaces.TUI_MENU}",
     "page": "Library",
     "title": "TextUserInterfaces.post_menu",
     "category": "method",
     "text": "function post_menu(menu::TUI_MENU)\n\nPost the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.prefresh",
-    "page": "Library",
-    "title": "TextUserInterfaces.prefresh",
-    "category": "function",
-    "text": "function prefresh(win::Ptr{WINDOW}, pminrow::Integer, pmincol::Integer, sminrow::Integer, smincol::Integer, smaxrow::Integer, smaxcol::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.printw",
-    "page": "Library",
-    "title": "TextUserInterfaces.printw",
-    "category": "function",
-    "text": "function printw(str::T) where T<:AbstractString\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1390,14 +710,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.redraw",
     "category": "function",
     "text": "function redraw(widget)\n\nRedraw the widget inside its content window cwin.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.refresh",
-    "page": "Library",
-    "title": "TextUserInterfaces.refresh",
-    "category": "function",
-    "text": "function refresh()\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1505,14 +817,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.resizeterm",
-    "page": "Library",
-    "title": "TextUserInterfaces.resizeterm",
-    "category": "function",
-    "text": "function resizeterm(lines::Integer, columns::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.selected_items-Tuple{TextUserInterfaces.TUI_MENU}",
     "page": "Library",
     "title": "TextUserInterfaces.selected_items",
@@ -1545,78 +849,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_field_back-Tuple{Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_back",
-    "category": "method",
-    "text": "function set_field_back(field::Ptr{Cvoid}, value::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_buffer",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_buffer",
-    "category": "function",
-    "text": "function set_field_buffer(field::Ptr{Cvoid}, buf::Int, c::T) where T<:AbstractString\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_just-Tuple{Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_just",
-    "category": "method",
-    "text": "function set_field_just(field::Ptr{Cvoid}, justification::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_opts-Tuple{Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_opts",
-    "category": "method",
-    "text": "function set_field_opts(field::Ptr{Cvoid}, field_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Array{T,1} where T,Integer,Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_type",
-    "category": "method",
-    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, valuelist::Vector, checkcase::Integer, checkunique::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Integer,Float64,Float64}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_type",
-    "category": "method",
-    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, padding::Integer, vmin::Float64, vmax::Float64)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Integer,Integer,Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_type",
-    "category": "method",
-    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, padding::Integer, vmin::Integer, vmax::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_type",
-    "category": "method",
-    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, arg::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_field_type-Tuple{Ptr{Nothing},Ptr{Nothing},String}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_field_type",
-    "category": "method",
-    "text": "function set_field_type(field::Ptr{Cvoid}, type::Ptr{Cvoid}, regex::String)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.set_focus_chain-Tuple{Vararg{Window,N} where N}",
     "page": "Library",
     "title": "TextUserInterfaces.set_focus_chain",
@@ -1625,75 +857,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_form_opts-Tuple{Ptr{Nothing},Integer}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_form_opts",
-    "category": "method",
-    "text": "function set_form_opts(form::Ptr{Cvoid}, form_options::Integer)\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_form_sub-Tuple{Ptr{Nothing},Ptr{WINDOW}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_form_sub",
-    "category": "method",
-    "text": "function set_form_sub(form::Ptr{Cvoid}, win_form::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{Ptr{Nothing},Ptr{WINDOW}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_form_win",
-    "category": "method",
-    "text": "function set_form_win(form::Ptr{Cvoid}, win_form::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.set_form_win-Tuple{TextUserInterfaces.TUI_FORM,Window}",
     "page": "Library",
     "title": "TextUserInterfaces.set_form_win",
     "category": "method",
     "text": "function set_form_win(form::TUI_FORM, win::Window)\n\nSet the form form window to win.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_format",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_menu_format",
-    "category": "function",
-    "text": "function set_menu_format(menu::Ptr{Cvoid}, rows::Integer, cols::Integer)\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_mark",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_menu_mark",
-    "category": "function",
-    "text": "function set_menu_mark(menu::Ptr{Cvoid}, mark::T) where T<:AbstractString\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_opts",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_menu_opts",
-    "category": "function",
-    "text": "function set_menu_opts(menu::Ptr{Cvoid}, opts::Integer)\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_sub",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_menu_sub",
-    "category": "function",
-    "text": "function set_menu_sub(menu::Ptr{Cvoid}, win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_win",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_menu_win",
-    "category": "function",
-    "text": "function set_menu_win(menu::Ptr{Cvoid}, win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1713,14 +881,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.set_panel_userptr",
-    "page": "Library",
-    "title": "TextUserInterfaces.set_panel_userptr",
-    "category": "function",
-    "text": "function set_panel_userptr(pan::Ptr{Cvoid}, ptr::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.set_previous_window_func-Tuple{Any}",
     "page": "Library",
     "title": "TextUserInterfaces.set_previous_window_func",
@@ -1737,35 +897,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.show_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.show_panel",
-    "category": "function",
-    "text": "function show_panel(panel::Ptr{Cvoid})\n\nReturn type: Ptr{Nothing}\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.show_window-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.show_window",
     "category": "method",
     "text": "function show_window(win::Window)\n\nShow the window win.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.start_color",
-    "page": "Library",
-    "title": "TextUserInterfaces.start_color",
-    "category": "function",
-    "text": "function start_color()\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.subpad",
-    "page": "Library",
-    "title": "TextUserInterfaces.subpad",
-    "category": "function",
-    "text": "function subpad(win::Ptr{WINDOW}, nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer)\n\nReturn type: Ptr{WINDOW}\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1785,43 +921,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.top_panel",
-    "page": "Library",
-    "title": "TextUserInterfaces.top_panel",
-    "category": "function",
-    "text": "function top_panel(pan::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.touchwin",
-    "page": "Library",
-    "title": "TextUserInterfaces.touchwin",
-    "category": "function",
-    "text": "function touchwin(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.unpost_form-Tuple{Ptr{Nothing}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.unpost_form",
-    "category": "method",
-    "text": "function unpost_form(form::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libform documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.unpost_form-Tuple{TextUserInterfaces.TUI_FORM}",
     "page": "Library",
     "title": "TextUserInterfaces.unpost_form",
     "category": "method",
     "text": "function unpost_form(form::TUI_FORM)\n\nUnpost the form form.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.unpost_menu",
-    "page": "Library",
-    "title": "TextUserInterfaces.unpost_menu",
-    "category": "function",
-    "text": "function unpost_menu(menu::Ptr{Cvoid})\n\nReturn type: Int32\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
 },
 
 {
@@ -1849,14 +953,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.update_panels",
-    "page": "Library",
-    "title": "TextUserInterfaces.update_panels",
-    "category": "function",
-    "text": "function update_panels()\n\nReturn type: Nothing\n\nFor more information, consult libmenu documentation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.update_view-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.update_view",
@@ -1865,147 +961,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.vline",
+    "location": "lib/library/#TextUserInterfaces.wpc-Tuple{}",
     "page": "Library",
-    "title": "TextUserInterfaces.vline",
-    "category": "function",
-    "text": "function vline(ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.waddch",
-    "page": "Library",
-    "title": "TextUserInterfaces.waddch",
-    "category": "function",
-    "text": "function waddch(win::Ptr{WINDOW}, ch::jlchtype)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wattroff",
-    "page": "Library",
-    "title": "TextUserInterfaces.wattroff",
-    "category": "function",
-    "text": "function wattroff(win::Ptr{WINDOW}, attrs::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wattron",
-    "page": "Library",
-    "title": "TextUserInterfaces.wattron",
-    "category": "function",
-    "text": "function wattron(win::Ptr{WINDOW}, attrs::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wborder",
-    "page": "Library",
-    "title": "TextUserInterfaces.wborder",
-    "category": "function",
-    "text": "function wborder(win::Ptr{WINDOW}, ls::jlchtype, rs::jlchtype, ts::jlchtype, bs::jlchtype, tl::jlchtype, tr::jlchtype, bl::jlchtype, br::jlchtype)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wborder-Tuple{Ptr{WINDOW}}",
-    "page": "Library",
-    "title": "TextUserInterfaces.wborder",
+    "title": "TextUserInterfaces.wpc",
     "category": "method",
-    "text": "function wborder(win::Ptr{WINDOW})\n\nCall the function wborder(win, 0, 0, 0, 0, 0, 0, 0, 0).\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wclear",
-    "page": "Library",
-    "title": "TextUserInterfaces.wclear",
-    "category": "function",
-    "text": "function wclear(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wclrtobot",
-    "page": "Library",
-    "title": "TextUserInterfaces.wclrtobot",
-    "category": "function",
-    "text": "function wclrtobot(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wclrtoeol",
-    "page": "Library",
-    "title": "TextUserInterfaces.wclrtoeol",
-    "category": "function",
-    "text": "function wclrtoeol(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.werase",
-    "page": "Library",
-    "title": "TextUserInterfaces.werase",
-    "category": "function",
-    "text": "function werase(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wgetch",
-    "page": "Library",
-    "title": "TextUserInterfaces.wgetch",
-    "category": "function",
-    "text": "function wgetch(win::Ptr{WINDOW})\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.whline",
-    "page": "Library",
-    "title": "TextUserInterfaces.whline",
-    "category": "function",
-    "text": "function whline(win::Ptr{WINDOW}, ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wmove",
-    "page": "Library",
-    "title": "TextUserInterfaces.wmove",
-    "category": "function",
-    "text": "function wmove(win::Ptr{WINDOW}, y::Integer, x::Integer)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wnoutrefresh",
-    "page": "Library",
-    "title": "TextUserInterfaces.wnoutrefresh",
-    "category": "function",
-    "text": "function wnoutrefresh(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wprintw",
-    "page": "Library",
-    "title": "TextUserInterfaces.wprintw",
-    "category": "function",
-    "text": "function wprintw(win::Ptr{WINDOW}, str::T) where T<:AbstractString\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wrefresh",
-    "page": "Library",
-    "title": "TextUserInterfaces.wrefresh",
-    "category": "function",
-    "text": "function wrefresh(win::Ptr{WINDOW})\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wtimeout",
-    "page": "Library",
-    "title": "TextUserInterfaces.wtimeout",
-    "category": "function",
-    "text": "function wtimeout(win::Ptr{WINDOW}, delay::Integer)\n\nReturn type: Nothing\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.wvline",
-    "page": "Library",
-    "title": "TextUserInterfaces.wvline",
-    "category": "function",
-    "text": "function wvline(win::Ptr{WINDOW}, ch::jlchtype, n::Integer)\n\nReturn type: Int32\n\nFor more information, consult libncurses documentation.\n\n\n\n\n\n"
+    "text": "function wpc(...)\n\nHelper function to create anchors. In this case, the anchor can be passed by keywords and a tuple containing the object and its anchor.\n\n\n\n\n\n"
 },
 
 {
@@ -2025,15 +985,31 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.NCURSES",
+    "location": "lib/library/#TextUserInterfaces._check_horizontal_anchor-Tuple{TextUserInterfaces.Anchor}",
     "page": "Library",
-    "title": "TextUserInterfaces.NCURSES",
-    "category": "type",
-    "text": "struct NCURSES\n\nThis private structure handles some global variables that are used in the ncurses wrapper.\n\n\n\n\n\n"
+    "title": "TextUserInterfaces._check_horizontal_anchor",
+    "category": "method",
+    "text": "function _check_horizontal_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for horizontal positioning.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_window_cur_pos-Tuple{Ptr{WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces._check_vertical_anchor-Tuple{TextUserInterfaces.Anchor}",
+    "page": "Library",
+    "title": "TextUserInterfaces._check_vertical_anchor",
+    "category": "method",
+    "text": "function _check_vertical_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for vertical positioning.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._get_anchor-Tuple{TextUserInterfaces.Anchor,Union{Widget, Window}}",
+    "page": "Library",
+    "title": "TextUserInterfaces._get_anchor",
+    "category": "method",
+    "text": "function _get_anchor(anchor::Anchor)\n\nReturn the line or column related to the anchor anchor.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._get_window_cur_pos-Tuple{Ptr{TextUserInterfaces.NCurses.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces._get_window_cur_pos",
     "category": "method",
@@ -2041,7 +1017,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_window_dims-Tuple{Ptr{WINDOW}}",
+    "location": "lib/library/#TextUserInterfaces._get_window_dims-Tuple{Ptr{TextUserInterfaces.NCurses.WINDOW}}",
     "page": "Library",
     "title": "TextUserInterfaces._get_window_dims",
     "category": "method",
@@ -2054,6 +1030,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._next_widget",
     "category": "method",
     "text": "function _next_widget(container::WidgetContainer)\n\nMove the focus of container container to the next widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._process_horizontal_info!-Tuple{TextUserInterfaces.WidgetPositioningConfiguration}",
+    "page": "Library",
+    "title": "TextUserInterfaces._process_horizontal_info!",
+    "category": "method",
+    "text": "function _process_horizontal_info!(posconf::WidgetPositioningConfiguration)\n\nProcess the horizontal positioning information in posconf and write the variable horizontal of the same structure. The possible horizontal positioning information are:\n\n:aleft_aright: Left and right anchors were specified.\n:aleft_height: Left anchor and height were specified.\n:aright_height: Right anchor and height were specified.\n:acenter_height: Center anchor and height were specified.\n:right_height: Right and height were specified.\n:unknown: Insufficient information to compute the horizontal positioning.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._process_vertical_info!-Tuple{TextUserInterfaces.WidgetPositioningConfiguration}",
+    "page": "Library",
+    "title": "TextUserInterfaces._process_vertical_info!",
+    "category": "method",
+    "text": "function _process_vertical_info!(posconf::WidgetPositioningConfiguration)\n\nProcess the vertical positioning information in posconf and write the variable vertical of the same structure. The possible vertical positioning information are:\n\n:abottom_atop: Bottom and top anchors were specified.\n:abottom_height: Bottom anchor and height were specified.\n:atop_height: Top anchor and height were specified.\n:amiddle_height: Middle anchor and height were specified.\n:top_height: Top and height were specified.\n:unknown: Insufficient information to compute the vertical positioning.\n\n\n\n\n\n"
 },
 
 {
@@ -2086,38 +1078,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.require_cursor",
     "category": "method",
     "text": "function require_cursor()\n\nIf true, then the physical cursor will be shown and the position will be updated according to its position in the widget window. Otherwise, the physical cursor will be hidden.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.@_ccallf-Tuple{Any}",
-    "page": "Library",
-    "title": "TextUserInterfaces.@_ccallf",
-    "category": "macro",
-    "text": "macro _ccallf(expr)\n\nMake a ccall to a libform function. The usage should be:\n\n@_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn\n\nIt uses the global constant structure ncurses to call the function. Hence, it must be initialized.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.@_ccallm-Tuple{Any}",
-    "page": "Library",
-    "title": "TextUserInterfaces.@_ccallm",
-    "category": "macro",
-    "text": "macro _ccallm(expr)\n\nMake a ccall to a libmenu function. The usage should be:\n\n@_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn\n\nIt uses the global constant structure ncurses to call the function. Hence, it must be initialized.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.@_ccalln-Tuple{Any}",
-    "page": "Library",
-    "title": "TextUserInterfaces.@_ccalln",
-    "category": "macro",
-    "text": "macro _ccalln(expr)\n\nMake a ccall to a libncurses function. The usage should be:\n\n@_ccalln function(arg1::Type1, arg2::Type2, ...)::TypeReturn\n\nIt uses the global constant structure ncurses to call the function. Hence, it must be initialized.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.@_ccallp-Tuple{Any}",
-    "page": "Library",
-    "title": "TextUserInterfaces.@_ccallp",
-    "category": "macro",
-    "text": "macro _ccallm(expr)\n\nMake a ccall to a libpanel function. The usage should be:\n\n@_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn\n\nIt uses the global constant structure ncurses to call the function. Hence, it must be initialized.\n\n\n\n\n\n"
 },
 
 {
