@@ -53,6 +53,8 @@ macro reset_log_ident() return :( logger.pad = 0 )   end
 Log the message `msg` with level `level`. The ID of the called can be specified
 by `id`.
 
+If a line is `@log_pad X`, then the following lines will have a padding of X.
+
 """
 function log_message(level::LogLevels, msg::AbstractString, id::AbstractString = "")
     # Check if logging is enabled.
@@ -78,9 +80,19 @@ function log_message(level::LogLevels, msg::AbstractString, id::AbstractString =
 
     output = ""
 
+    Δ_pad = 0
+
     @inbounds for i = 1:length(lines)
-        output *= i == 1 ? time_str : time_pad
-        output *= id_str * " "^logger.pad * lines[i] * "\n"
+        # Check if the line is a command to change the logging pad.
+        aux = match(r"^@log_pad [0-9]+", lines[i])
+        if aux != nothing
+            Δ_pad = parse(Int64, aux.match[10:end])
+        else
+            i_output  = ""
+            i_output *= i == 1 ? time_str : time_pad
+            i_output *= id_str * " "^(logger.pad+Δ_pad) * lines[i]
+            output   *= rstrip(i_output) * "\n"
+        end
     end
 
     # Check if the resource is available.
