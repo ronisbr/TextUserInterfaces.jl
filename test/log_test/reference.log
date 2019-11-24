@@ -1,6 +1,6 @@
 [init_tui] TUI initialized.
 [init_tui] Terminal have colors.
-[init_tui] 
+[init_tui]
 [create_window] Window 0 was created.
 [create_window]    Physical size = (10, 56)
 [create_window]    Buffer size   = (54, 8)
