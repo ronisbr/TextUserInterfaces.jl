@@ -1,5 +1,6 @@
 using Test
 using TextUserInterfaces
+using TextUserInterfaces.NCurses
 
 # Check if the libraries were loaded
 # ==============================================================================

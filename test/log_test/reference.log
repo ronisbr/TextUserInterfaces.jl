@@ -1,3 +1,6 @@
+[init_tui] TUI initialized.
+[init_tui] Terminal have colors.
+[init_tui] 
 [create_window] Window 0 was created.
 [create_window]    Physical size = (10, 56)
 [create_window]    Buffer size   = (54, 8)
@@ -6,37 +9,37 @@
 [create_widget] A container was created in Window (0x0).
 [create_widget]     Size        = (8, 54)
 [create_widget]     Coordinate  = (0, 0)
-[create_widget]     Size policy = (absolute, absolute)
+[create_widget]     Positioning = (top_height,left_width)
 [create_widget]     Reference   = 0x0
-[change_text] WidgetLabel (0x0): Label text changed to "This is a label".
-[create_widget] A label was created in WidgetContainer (0x0).
+[change_text] WidgetLabel{WidgetContainer{Window}} (0x0): Label text changed to "This is a label".
+[create_widget] A label was created in WidgetContainer{Window} (0x0).
 [create_widget]     Size        = (1, 40)
 [create_widget]     Coordinate  = (0, 0)
-[create_widget]     Size policy = (absolute, absolute)
+[create_widget]     Positioning = (atop_height,aleft_width)
 [create_widget]     Text        = "This is a label"
 [create_widget]     Reference   = 0x0
-[create_widget] A button was created in WidgetContainer (0x0).
+[create_widget] A button was created in WidgetContainer{Window} (0x0).
 [create_widget]     Size        = (1, 12)
-[create_widget]     Coordinate  = (3, 21)
-[create_widget]     Size policy = (absolute, absolute)
+[create_widget]     Coordinate  = (4, 0)
+[create_widget]     Positioning = (amiddle_height,aleft_width)
 [create_widget]     Label       = "Button 1"
 [create_widget]     Reference   = 0x0
-[create_widget] A progress bar was created in WidgetContainer (0x0).
+[create_widget] A progress bar was created in WidgetContainer{Window} (0x0).
 [create_widget]     Size        = (1, 40)
-[create_widget]     Coordinate  = (7, 14)
-[create_widget]     Size policy = (absolute, absolute)
-[create_widget]     Style       = simple,
+[create_widget]     Coordinate  = (7, 0)
+[create_widget]     Positioning = (abottom_height,aleft_width)
+[create_widget]     Style       = simple
 [create_widget]     Value       = 100
 [create_widget]     Reference   = 0x0
 [next_window] Focus: Change the focused window.
-[_next_widget] WidgetContainer (0x0): Change the focused widget.
-[_next_widget] WidgetContainer (0x0): Focus was handled to widget #2 -> WidgetButton (0x0).
+[_next_widget] WidgetContainer{Window} (0x0): Change the focused widget.
+[_next_widget] WidgetContainer{Window} (0x0): Focus was handled to widget #2 -> WidgetButton{WidgetContainer{Window}} (0x0).
 [next_window] Focus: Switched to window 0.
 [update_view] Window 0: Buffer was copied to the view.
 [destroy_tui] TUI will be destroyed.
 [destroy_tui] TUI destroying windows.
 [destroy_all_windows] All windows will be destroyed.
 [destroy_window] Window (0x0) will be destroyed.
-[destroy_widget]     Widget WidgetContainer (0x0) destroyed.
+[destroy_widget]     Widget WidgetContainer{Window} (0x0) destroyed.
 [destroy_window] Window 0 was destroyed.
 [destroy_tui] TUI has been destroyed.
