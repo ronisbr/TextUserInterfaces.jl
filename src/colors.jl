@@ -5,6 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+import .NCurses: init_color
 export ncurses_color, get_color_pair, init_color, init_color_pair, set_color,
        unset_color
 
