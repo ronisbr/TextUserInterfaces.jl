@@ -89,6 +89,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.change_label-Tuple{WidgetButton,AbstractString}",
+    "page": "Library",
+    "title": "TextUserInterfaces.change_label",
+    "category": "method",
+    "text": "function change_label(button::WidgetButton, label::AbstractString)\n\nChange the label of button button to label.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.change_text-Tuple{WidgetLabel,AbstractString}",
     "page": "Library",
     "title": "TextUserInterfaces.change_text",
@@ -409,6 +417,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_selected-Tuple{AbstractString}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_selected",
+    "category": "method",
+    "text": "function get_selected(group_name::AbstractString)\n\nReturn the WidgetRadioButton that is selected in group with name group_name. If the group_name does not exists or if no button is selected, then nothing is returned.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_width-Tuple{Any}",
     "page": "Library",
     "title": "TextUserInterfaces.get_width",
@@ -485,7 +501,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.log_message",
     "category": "function",
-    "text": "function log_message(level::Int, msg::AbstractString, id::AbstractString = \"\")\n\nLog the message msg with level level. The ID of the called can be specified by id.\n\n\n\n\n\n"
+    "text": "function log_message(level::Int, msg::AbstractString, id::AbstractString = \"\")\n\nLog the message msg with level level. The ID of the called can be specified by id.\n\nIf a line is @log_pad X, then the following lines will have a padding of X.\n\n\n\n\n\n"
 },
 
 {
@@ -985,19 +1001,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._check_horizontal_anchor-Tuple{TextUserInterfaces.Anchor}",
+    "location": "lib/library/#TextUserInterfaces._check_horizontal_anchor-Tuple{Nothing}",
     "page": "Library",
     "title": "TextUserInterfaces._check_horizontal_anchor",
     "category": "method",
-    "text": "function _check_horizontal_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for horizontal positioning.\n\n\n\n\n\n"
+    "text": "function _check_horizontal_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for horizontal positioning. If anchor is nothing, then true is always returned.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._check_vertical_anchor-Tuple{TextUserInterfaces.Anchor}",
+    "location": "lib/library/#TextUserInterfaces._check_vertical_anchor-Tuple{Nothing}",
     "page": "Library",
     "title": "TextUserInterfaces._check_vertical_anchor",
     "category": "method",
-    "text": "function _check_vertical_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for vertical positioning.\n\n\n\n\n\n"
+    "text": "_check_vertical_anchor(anchor::Nothing)\nfunction _check_vertical_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for vertical positioning. If anchor is nothing, then true is always returned.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._deselect_radio_button-Tuple{WidgetRadioButton}",
+    "page": "Library",
+    "title": "TextUserInterfaces._deselect_radio_button",
+    "category": "method",
+    "text": "function _select_radio_button(rb::WidgetRadioButton)\n\nDeselect the radio button rb in its group name.\n\n\n\n\n\n"
 },
 
 {
@@ -1046,6 +1070,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._process_vertical_info!",
     "category": "method",
     "text": "function _process_vertical_info!(posconf::WidgetPositioningConfiguration)\n\nProcess the vertical positioning information in posconf and write the variable vertical of the same structure. The possible vertical positioning information are:\n\n:abottom_atop: Bottom and top anchors were specified.\n:abottom_height: Bottom anchor and height were specified.\n:atop_height: Top anchor and height were specified.\n:amiddle_height: Middle anchor and height were specified.\n:top_height: Top and height were specified.\n:unknown: Insufficient information to compute the vertical positioning.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._select_radio_button-Tuple{WidgetRadioButton}",
+    "page": "Library",
+    "title": "TextUserInterfaces._select_radio_button",
+    "category": "method",
+    "text": "function _select_radio_button(rb::WidgetRadioButton)\n\nSelect the radio button rb in its group name.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._str-Tuple{TextUserInterfaces.WidgetPositioningConfiguration}",
+    "page": "Library",
+    "title": "TextUserInterfaces._str",
+    "category": "method",
+    "text": "function _str(wpc::WidgetPositioningConfiguration)\n\nConvert the information in wpc to a string for debugging purposes.\n\n\n\n\n\n"
 },
 
 {
