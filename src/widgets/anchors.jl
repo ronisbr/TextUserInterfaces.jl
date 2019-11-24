@@ -8,6 +8,53 @@
 
 export wpc
 
+################################################################################
+#                              Public functions
+################################################################################
+
+"""
+    function wpc(...)
+
+Helper function to create anchors. In this case, the anchor can be passed by
+keywords and a tuple containing the object and its anchor.
+
+"""
+function wpc(;
+    anchor_bottom::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}} = nothing,
+    anchor_left::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}}   = nothing,
+    anchor_right::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}}  = nothing,
+    anchor_top::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}}    = nothing,
+    anchor_center::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}} = nothing,
+    anchor_middle::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}} = nothing,
+    top::Int    = -1,
+    left::Int   = -1,
+    height::Int = -1,
+    width::Int  = -1)
+
+    ab = anchor_bottom != nothing ? Anchor(anchor_bottom...) : nothing
+    al = anchor_left   != nothing ? Anchor(anchor_left...)   : nothing
+    ar = anchor_right  != nothing ? Anchor(anchor_right...)  : nothing
+    at = anchor_top    != nothing ? Anchor(anchor_top...)    : nothing
+    ac = anchor_center != nothing ? Anchor(anchor_center...) : nothing
+    am = anchor_middle != nothing ? Anchor(anchor_middle...) : nothing
+
+    return WidgetPositioningConfiguration(
+        anchor_bottom = ab,
+        anchor_left   = al,
+        anchor_right  = ar,
+        anchor_top    = at,
+        anchor_center = ac,
+        anchor_middle = am,
+        top           = top,
+        left          = left,
+        height        = height,
+        width         = width)
+end
+
+################################################################################
+#                              Private functions
+################################################################################
+
 """
     function _check_vertical_anchor(anchor::Anchor)
 
@@ -23,6 +70,41 @@ Check if the `side` parameter of `anchor` is valid for horizontal positioning.
 
 """
 _check_horizontal_anchor(anchor::Anchor) = !(anchor.side ∉ [:left,:center,:right])
+
+"""
+    function _get_anchor(anchor::Anchor)
+
+Return the line or column related to the anchor `anchor`.
+
+"""
+function _get_anchor(anchor::Anchor, parent::WidgetParent)
+    obj = anchor.obj
+    pad = anchor.pad
+
+    if obj == parent
+        top  = 0
+        left = 0
+    else
+        top  = obj.common.top
+        left = obj.common.left
+    end
+
+    if anchor.side == :bottom
+        return top + get_height(obj) + pad
+    elseif anchor.side == :top
+        return top + pad
+    elseif anchor.side == :left
+        return left + pad
+    elseif anchor.side == :right
+        return left + get_width(obj) + pad
+    elseif anchor.side == :center
+        return left + div(get_width(obj), 2) + pad
+    elseif anchor.side == :middle
+        return top + div(get_height(obj), 2) + pad
+    else
+        error("Unknown side in anchor.")
+    end
+end
 
 """
     function _process_vertical_info!(posconf::WidgetPositioningConfiguration)
@@ -134,76 +216,3 @@ function _process_horizontal_info!(posconf::WidgetPositioningConfiguration)
     return nothing
 end
 
-"""
-    function _get_anchor(anchor::Anchor)
-
-Return the line or column related to the anchor `anchor`.
-
-"""
-function _get_anchor(anchor::Anchor, parent::WidgetParent)
-    obj = anchor.obj
-    pad = anchor.pad
-
-    if obj == parent
-        top  = 0
-        left = 0
-    else
-        top  = obj.common.top
-        left = obj.common.left
-    end
-
-    if anchor.side == :bottom
-        return top + get_height(obj) + pad
-    elseif anchor.side == :top
-        return top + pad
-    elseif anchor.side == :left
-        return left + pad
-    elseif anchor.side == :right
-        return left + get_width(obj) + pad
-    elseif anchor.side == :center
-        return left + div(get_width(obj), 2) + pad
-    elseif anchor.side == :middle
-        return top + div(get_height(obj), 2) + pad
-    else
-        error("Unknown side in anchor.")
-    end
-end
-
-"""
-    function wpc(...)
-
-Helper function to create anchors. In this case, the anchor can be passed by
-keywords and a tuple containing the object and its anchor.
-
-"""
-function wpc(;
-    anchor_bottom::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}} = nothing,
-    anchor_left::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}}   = nothing,
-    anchor_right::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}}  = nothing,
-    anchor_top::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}}    = nothing,
-    anchor_center::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}} = nothing,
-    anchor_middle::Union{Nothing,Tuple{AnchorObject,Symbol,Integer}} = nothing,
-    top::Int    = -1,
-    left::Int   = -1,
-    height::Int = -1,
-    width::Int  = -1)
-
-    ab = anchor_bottom != nothing ? Anchor(anchor_bottom...) : nothing
-    al = anchor_left   != nothing ? Anchor(anchor_left...)   : nothing
-    ar = anchor_right  != nothing ? Anchor(anchor_right...)  : nothing
-    at = anchor_top    != nothing ? Anchor(anchor_top...)    : nothing
-    ac = anchor_center != nothing ? Anchor(anchor_center...) : nothing
-    am = anchor_middle != nothing ? Anchor(anchor_middle...) : nothing
-
-    return WidgetPositioningConfiguration(
-        anchor_bottom = ab,
-        anchor_left   = al,
-        anchor_right  = ar,
-        anchor_top    = at,
-        anchor_center = ac,
-        anchor_middle = am,
-        top           = top,
-        left          = left,
-        height        = height,
-        width         = width)
-end
