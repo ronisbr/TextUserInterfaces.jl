@@ -1,5 +1,6 @@
 using Parameters
 using TextUserInterfaces
+using TextUserInterfaces.NCurses
 import TextUserInterfaces: accept_focus, create_widget, process_focus, redraw,
                            release_focus
 

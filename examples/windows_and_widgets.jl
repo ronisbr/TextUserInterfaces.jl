@@ -6,7 +6,7 @@ logger.level = 3
 function windows_and_widgets()
 
     init_tui()
-    noecho()
+    NCurses.noecho()
 
     init_color(:light_blue, 700, 700, 1000)
     p0 = ncurses_color(bold = false)
@@ -68,8 +68,8 @@ function windows_and_widgets()
 
     # Initial painting.
     refresh_all_windows()
-    update_panels()
-    doupdate()
+    NCurses.update_panels()
+    NCurses.doupdate()
 
     k = jlgetch()
 
