@@ -46,14 +46,14 @@ function create_widget(::Type{Val{:label}}, parent::WidgetParent;
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    posconf.vertical   == :unknown && (posconf.height = 1)
-    posconf.horizontal == :unknown && (posconf.width = length(text))
+    posconf.vertical   == :unknown && (posconf.height = length(split(text, '\n')))
+    posconf.horizontal == :unknown && (posconf.width  = maximum(length.(split(text, '\n'))))
 
     # Create the common parameters of the widget.
     common = create_widget_common(parent, posconf)
 
     # Create the widget.
-    widget = WidgetLabel(common = common, text   = "", color  = color)
+    widget = WidgetLabel(common = common, text = "", color  = color)
 
     # Update the text.
     change_text(widget, text; alignment = alignment)
