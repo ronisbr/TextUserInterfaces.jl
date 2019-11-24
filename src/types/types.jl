@@ -6,5 +6,4 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 include("./logger.jl")
-include("./ncurses.jl")
 include("./api.jl")

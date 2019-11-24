@@ -1,9 +1,16 @@
 module TextUserInterfaces
 
 using Dates
-using Libdl
 using LinearAlgebra
 using Parameters
+
+################################################################################
+#                                  Submodules
+################################################################################
+
+include("submodules/NCurses/NCurses.jl")
+using .NCurses
+export NCurses
 
 ################################################################################
 #                                    Types
@@ -14,14 +21,6 @@ include("./types/types.jl")
 ################################################################################
 #                                   Includes
 ################################################################################
-
-# Ncurses bindings
-# ==============================================================================
-
-include("./ncurses/ncurses_functions.jl")
-include("./ncurses/form_functions.jl")
-include("./ncurses/menu_functions.jl")
-include("./ncurses/panel_functions.jl")
 
 # Logger
 # ==============================================================================

@@ -5,6 +5,8 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+export ncurses
+
 """
     struct NCURSES
 
@@ -45,8 +47,8 @@ end
 
 const ncurses = NCURSES()
 
-include("../ncurses/ncurses_types.jl")
-include("../ncurses/ncurses_attributes.jl")
-include("../ncurses/form_types.jl")
-include("../ncurses/menu_types.jl")
-include("../ncurses/panel_types.jl")
+include("ncurses_types.jl")
+include("ncurses_attributes.jl")
+include("./form/form_types.jl")
+include("./menu/menu_types.jl")
+include("./panel/panel_types.jl")
