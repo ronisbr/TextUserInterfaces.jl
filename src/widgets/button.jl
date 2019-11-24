@@ -31,6 +31,11 @@ export WidgetButton
     vargs_on_return_pressed::Tuple = ()
 end
 
+# Conversion dictionary between style and height.
+_button_style_height = Dict(:boxed  => 3,
+                            :simple => 1,
+                            :none   => 1)
+
 ################################################################################
 #                                     API
 ################################################################################
@@ -47,6 +52,15 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
                        style::Symbol = :simple,
                        kwargs...)
 
+    # Check arguments.
+    if !haskey(_button_style_height, style)
+        @log warning "create_widget" """
+        The button style :$style is not known.
+        The style :simple will be used."""
+
+        style = :simple
+    end
+
     # Positioning configuration.
     posconf = wpc(;kwargs...)
 
@@ -57,7 +71,7 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     if posconf.vertical == :unknown
-        posconf.height = style == :simple ? 1 : 3
+        posconf.height = _button_style_height[style]
     end
 
     if posconf.horizontal == :unknown
@@ -83,6 +97,7 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
         Coordinate  = ($(common.top), $(common.left))
         Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
         Label       = \"$label\"
+        Style       = $style
         Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
@@ -131,7 +146,7 @@ function _draw_button(widget::WidgetButton)
     pad = div(Δ,2)
     str = " "^pad * label * " "^(Δ - pad)
 
-    if style == :complete
+    if style == :boxed
         mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
         mvwprintw(buffer, 1, 0, "│")
 
@@ -141,9 +156,13 @@ function _draw_button(widget::WidgetButton)
 
         wprintw(buffer, "│")
         mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
-    else
+    elseif style == :simple
         wattron(buffer, c)
         mvwprintw(buffer, 0, 0, "[ " * str * " ]")
+        wattroff(buffer, c)
+    else
+        wattron(buffer, c)
+        mvwprintw(buffer, 0, 0, str)
         wattroff(buffer, c)
     end
 

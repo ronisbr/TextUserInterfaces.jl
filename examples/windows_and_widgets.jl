@@ -38,12 +38,12 @@ function windows_and_widgets()
                              anchor_middle = (bt1, :middle, 0),
                              anchor_center = (c, :center, 0),
                              label = "Button 2", color = p1,
-                             color_highlight = p3, style = :complete)
+                             color_highlight = p3, style = :boxed)
         bt3  = create_widget(Val{:button}, c;
                              anchor_middle = (bt2, :middle, 0),
                              anchor_right = (c, :right, 0),
                              label = "Button 3", color = p1,
-                             color_highlight = p3, style = :simple)
+                             color_highlight = p3, style = :none)
 
         bt1.on_return_pressed = (text)->change_text(text,"Button 1")
         bt1.vargs_on_return_pressed = (text,)
