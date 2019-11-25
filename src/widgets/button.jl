@@ -165,30 +165,32 @@ function _draw_button(widget::WidgetButton, focused::Bool = false)
     # Get the background color depending on the focus.
     c = focused ? color_highlight : color
 
-    # Center the label in the button.
-    w   = common.width
-    Δ   = w - 4 - length(label)
-    pad = div(Δ,2)
-    str = " "^pad * label * " "^(Δ - pad)
-
-    if style == :boxed
-        mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
-        mvwprintw(buffer, 1, 0, "│")
-
+    if style == :none
         wattron(buffer, c)
-        wprintw(buffer, " " * str * " ")
-        wattroff(buffer, c)
-
-        wprintw(buffer, "│")
-        mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
-    elseif style == :simple
-        wattron(buffer, c)
-        mvwprintw(buffer, 0, 0, "[ " * str * " ]")
+        mvwprintw(buffer, 0, 0, label)
         wattroff(buffer, c)
     else
-        wattron(buffer, c)
-        mvwprintw(buffer, 0, 0, str)
-        wattroff(buffer, c)
+        # Center the label in the button.
+        w   = common.width
+        Δ   = w - 4 - length(label)
+        pad = div(Δ,2)
+        str = " "^pad * label * " "^(Δ - pad)
+
+        if style == :boxed
+            mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
+            mvwprintw(buffer, 1, 0, "│")
+
+            wattron(buffer, c)
+            wprintw(buffer, " " * str * " ")
+            wattroff(buffer, c)
+
+            wprintw(buffer, "│")
+            mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
+        else
+            wattron(buffer, c)
+            mvwprintw(buffer, 0, 0, "[ " * str * " ]")
+            wattroff(buffer, c)
+        end
     end
 
     return nothing
