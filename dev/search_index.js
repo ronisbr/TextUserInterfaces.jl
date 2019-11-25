@@ -745,6 +745,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.refresh_window-Tuple{WidgetContainer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.refresh_window",
+    "category": "method",
+    "text": "function refresh_window(container::WidgetContainer; force_redraw::Bool = false)\n\nAsk the parent widget to refresh the window. If force_redraw is true, then all widgets in the window will be updated.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.refresh_window-Tuple{Window}",
     "page": "Library",
     "title": "TextUserInterfaces.refresh_window",
@@ -1022,6 +1030,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._deselect_radio_button",
     "category": "method",
     "text": "function _select_radio_button(rb::WidgetRadioButton)\n\nDeselect the radio button rb in its group name.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._destroy_widget-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces._destroy_widget",
+    "category": "method",
+    "text": "function _destroy_widget(widget; refresh::Bool = true)\n\nPrivate function that destroys a widget. This can be used if a new widget needs to reimplement the destroy function.\n\n\n\n\n\n"
 },
 
 {
