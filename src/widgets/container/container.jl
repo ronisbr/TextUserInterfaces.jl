@@ -78,6 +78,16 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent; kwargs...)
     return container
 end
 
+function destroy_widget(container::WidgetContainer; refresh::Bool = true)
+    # First, we need to delete all children widgets.
+    while length(container.widgets) > 0
+        w = pop!(container.widgets)
+        destroy_widget(w, refresh = false)
+    end
+
+    _destroy_widget(container, refresh = refresh)
+end
+
 function process_focus(container::WidgetContainer, k::Keystroke)
     @unpack common, widgets, focus_id = container
     @unpack parent = common

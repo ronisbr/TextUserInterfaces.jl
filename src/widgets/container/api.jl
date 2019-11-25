@@ -27,8 +27,25 @@ Remove the widget `widget` from the container `container`.
 
 """
 function remove_widget(container::WidgetContainer, widget::Widget)
-    idx = findall(x->x == widget, parent.widgets)
-    deleteat!(parent.widgets, idx)
+    idx = findfirst(x->x == widget, container.widgets)
+
+    if idx == nothing
+        # TODO: Write to the log.
+        return nothing
+    end
+
+    # If the widget that will be deleted has the focus, then we must pass the
+    # focus.
+    if (container.focus_id == idx) && (length(container.widgets) > 1)
+        _next_widget(container)
+    end
+
+    # Adjust the `focus_id` since the widget vector will be changed.
+    container.focus_id > idx && (container.focus_id -= 1)
+
+    # Delete the widget from the list.
+    deleteat!(container.widgets, idx)
+
     return nothing
 end
 
@@ -81,6 +98,16 @@ function request_focus(container::WidgetContainer, widget)
         end
     end
 end
+
+"""
+    function refresh_window(container::WidgetContainer; force_redraw::Bool = false)
+
+Ask the parent widget to refresh the window. If `force_redraw` is `true`, then
+all widgets in the window will be updated.
+
+"""
+refresh_window(container::WidgetContainer; force_redraw::Bool = false) =
+    refresh_window(container.common.parent; force_redraw = force_redraw)
 
 """
     function sync_cursor(widget::WidgetContainer)

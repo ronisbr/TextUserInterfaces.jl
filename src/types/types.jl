@@ -53,7 +53,6 @@ end
 # Global instance to store the TUI configurations.
 const tui = TUI()
 
-
 """
     struct Keystorke
 

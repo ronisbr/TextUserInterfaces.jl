@@ -82,18 +82,50 @@ function create_widget(::Type{Val{:radio_button}}, parent::WidgetParent;
         _select_radio_button(widget)
 
         @log info "create_widget" """
-        The radio button group \"$group_name\" was created with the radio button \"$label\" in it.
+        The radio button group \"$group_name\" was created with $(obj_desc(widget)) in it.
         """
     else
         push!(_radio_buttons_groups[group_name], widget)
 
         @log info "create_widget" """
-        The radio button \"$label\" was added to the group \"$group_name\".
+        $(obj_desc(widget)) was added to the group \"$group_name\".
         """
     end
 
     # Return the created widget.
     return widget
+end
+
+# We must override the function `destroy_widget` function because we need to
+# remove the radio button from the global list.
+function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
+    @unpack common = rb
+    @unpack parent, buffer = common
+
+    if haskey(_radio_buttons_groups, rb.group_name)
+        v  = _radio_buttons_groups[rb.group_name]
+        id = findfirst(x->x === rb, v)
+
+        if id != nothing
+            deleteat!(v,id)
+
+            @log info "destroy_widget" """
+            $(obj_desc(rb)) has been removed from group \"$(rb.group_name)\"."""
+
+            if isempty(v)
+                pop!(_radio_buttons_groups, rb.group_name)
+
+                @log info "destroy_widget" """
+                Radio group name \"$(rb.group_name)\" has been deleted."""
+            else
+                # If the deleted button was selected, then we must select
+                # another one.
+                rb.selected && _select_radio_button(v[1])
+            end
+        end
+    end
+
+    _destroy_widget(rb; refresh = refresh)
 end
 
 process_focus(widget::WidgetRadioButton, k::Keystroke) = process_focus(widget.button, k)

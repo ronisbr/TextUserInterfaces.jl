@@ -42,25 +42,8 @@ If `refresh` is `true` (**default**), then a full refresh will be performed on
 the parent window. Otherwise, no refresh will be performed.
 
 """
-function destroy_widget(widget; refresh::Bool = true)
-    @unpack common = widget
-    @unpack parent, buffer = common
-
-    widget_desc = obj_desc(widget)
-
-    delwin(buffer)
-    buffer = Ptr{WINDOW}(0)
-
-    # Remove the widget from the parent.
-    remove_widget(parent, widget)
-
-    @log info "destroy_widget" "Widget $widget_desc destroyed."
-
-    # If required, perform a full refresh of the parent window.
-    refresh && refresh_window(parent; full_refresh = true)
-
-    return nothing
-end
+destroy_widget(widget; refresh::Bool = true) =
+    _destroy_widget(widget; refresh = refresh)
 
 """
     function get_buffer(widget)
@@ -339,4 +322,35 @@ function create_widget_common(parent::WidgetParent,
                           left    = left)
 
     return common
+end
+
+################################################################################
+#                              Private functions
+################################################################################
+
+"""
+    function _destroy_widget(widget; refresh::Bool = true)
+
+Private function that destroys a widget. This can be used if a new widget needs
+to reimplement the destroy function.
+
+"""
+function _destroy_widget(widget; refresh::Bool = true)
+    @unpack common = widget
+    @unpack parent, buffer = common
+
+    widget_desc = obj_desc(widget)
+
+    delwin(buffer)
+    buffer = Ptr{WINDOW}(0)
+
+    # Remove the widget from the parent.
+    remove_widget(parent, widget)
+
+    @log info "destroy_widget" "Widget $widget_desc destroyed."
+
+    # If required, perform a full refresh of the parent window.
+    refresh && refresh_window(parent; force_redraw = true)
+
+    return nothing
 end
