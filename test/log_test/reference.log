@@ -41,6 +41,9 @@
 [destroy_tui] TUI destroying windows.
 [destroy_all_windows] All windows will be destroyed.
 [destroy_window] Window (0x0) will be destroyed.
+[destroy_widget]     Widget WidgetProgressBar{WidgetContainer{Window}} (0x0) destroyed.
+[destroy_widget]     Widget WidgetButton{WidgetContainer{Window}} (0x0) destroyed.
+[destroy_widget]     Widget WidgetLabel{WidgetContainer{Window}} (0x0) destroyed.
 [destroy_widget]     Widget WidgetContainer{Window} (0x0) destroyed.
 [destroy_window] Window 0 was destroyed.
 [destroy_tui] TUI has been destroyed.
