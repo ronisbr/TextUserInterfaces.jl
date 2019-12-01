@@ -55,6 +55,7 @@ include("./widgets/widgets.jl")
 include("./widgets/anchors.jl")
 include("./widgets/button.jl")
 include("./widgets/labels.jl")
+include("./widgets/input_field.jl")
 include("./widgets/progress_bar.jl")
 
 include("./widgets/container/container.jl")
