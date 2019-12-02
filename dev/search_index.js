@@ -377,6 +377,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_data-Union{Tuple{WidgetInputField{T,P}}, Tuple{P}, Tuple{T}} where P<:String where T",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_data",
+    "category": "method",
+    "text": "function get_data(widget::WidgetInputField)\n\nGet the data of widget. If a validator of type DataType is provided, then it will return the parsed data. Otherwise, it will return a string.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_field_data",
     "page": "Library",
     "title": "TextUserInterfaces.get_field_data",
@@ -982,6 +990,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.update_view",
     "category": "method",
     "text": "function update_view(win::Window; force::Bool = false)\n\nUpdate the view of window win by copying the contents from the buffer. If the view does not need to be updated (see view_needs_update), then nothing is done. If the keyword force is true, then the copy will always happen.\n\nReturn\n\nIt returns true if the view has been updated and false otherwise.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.validate_str-Union{Tuple{T}, Tuple{AbstractString,T}} where T",
+    "page": "Library",
+    "title": "TextUserInterfaces.validate_str",
+    "category": "method",
+    "text": "function validate_str(str::AbstractString, v)\n\nValidate the string str using the validator v. v is an element of the type that will be used to validate or a regex.\n\n\n\n\n\n"
 },
 
 {
