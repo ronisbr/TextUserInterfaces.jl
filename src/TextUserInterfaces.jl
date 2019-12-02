@@ -37,6 +37,7 @@ include("input.jl")
 include("init_destruct.jl")
 include("menus.jl")
 include("misc.jl")
+include("validators.jl")
 
 # Windows
 # ==============================================================================
