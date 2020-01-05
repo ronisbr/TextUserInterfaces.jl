@@ -99,7 +99,6 @@ function process_focus(container::WidgetContainer, k::Keystroke)
         # release the focus.
         if process_focus(widgets[focus_id],k)
             sync_cursor(container)
-            sync_cursor(parent)
             return true
         end
     end
@@ -164,7 +163,6 @@ function _next_widget(container::WidgetContainer)
         if accept_focus(widgets[i])
             container.focus_id = i
             sync_cursor(container)
-            sync_cursor(parent)
 
             @log verbose "_next_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
 
@@ -175,7 +173,6 @@ function _next_widget(container::WidgetContainer)
     # No more element could accept the focus.
     container.focus_id = 0
     sync_cursor(container)
-    sync_cursor(parent)
 
     @log verbose "_next_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
 

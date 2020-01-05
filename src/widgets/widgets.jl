@@ -62,6 +62,14 @@ Return the height of widget `widget`.
 get_height(widget) = widget.common.height
 
 """
+    function get_parent(widget)
+
+Return the parent of the widget `widget`.
+
+"""
+get_parent(widget) = widget.common.parent
+
+"""
     function get_width(widget)
 
 Return the width of widget `widget`.

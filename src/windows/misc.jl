@@ -17,6 +17,14 @@ Return the buffer of the window `win`.
 get_buffer(win::Window) = win.buffer
 
 """
+    function get_parent(win::Window)
+
+Return `nothing` since the window has no parent.
+
+"""
+get_parent(win::Window) = nothing
+
+"""
     function get_height(win::Window)
 
 Return the height of the buffer of the window `win`.

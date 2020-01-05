@@ -122,16 +122,30 @@ function sync_cursor(container::WidgetContainer)
 
     # If the window has no widget, then just hide the cursor.
     if focus_id > 0
+        widget = widgets[focus_id]
+
         # Get the cursor position on the `buffer` of the widget.
-        cy,cx = _get_window_cur_pos(get_buffer(widgets[focus_id]))
-        by,bx = _get_window_coord(get_buffer(widgets[focus_id]))
+        cy,cx = _get_window_cur_pos(get_buffer(widget))
+        by,bx = _get_window_coord(get_buffer(widget))
+
+        # Get the position of the container window.
+        #
+        # This algorithm assumes that the cursor position after `wmove` is
+        # relative to the beginning of the container window. However, since
+        # everything is a `subpad`, the window coordinate (by,bx) is relative to
+        # the pad. Thus, we must subtract the `subpad` position so that the
+        # algorithm is consistent.
+        wy,wx = _get_window_coord(get_buffer(container))
 
         # Compute the coordinates of the cursor with respect to the window.
-        y = by + cy
-        x = bx + cx
+        y = by + cy - wy
+        x = bx + cx - wx
 
         # Move the cursor.
         wmove(get_buffer(container), y, x)
+
+        # We must sync the cursor in the parent as well.
+        sync_cursor(get_parent(container))
     end
 
     return nothing
