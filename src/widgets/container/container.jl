@@ -39,24 +39,26 @@ function accept_focus(container::WidgetContainer)
 end
 
 function create_widget(::Type{Val{:container}}, parent::WidgetParent;
-                       _composed::Bool = false, kwargs...)
+                       posconf = nothing, _composed::Bool = false, kwargs...)
 
-    posconf = wpc(; kwargs...)
+    if posconf == nothing
+        posconf = wpc(; kwargs...)
 
-    # Initial processing of the position.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
+        # Initial processing of the position.
+        _process_vertical_info!(posconf)
+        _process_horizontal_info!(posconf)
 
-    # Check if all positioning is defined and, if not, try to help by
-    # automatically defining the height and/or width.
-    if posconf.vertical == :unknown
-        posconf.top    = 0
-        posconf.height = get_height(parent)
-    end
+        # Check if all positioning is defined and, if not, try to help by
+        # automatically defining the height and/or width.
+        if posconf.vertical == :unknown
+            posconf.top    = 0
+            posconf.height = get_height(parent)
+        end
 
-    if posconf.horizontal == :unknown
-        posconf.left  = 0
-        posconf.width = get_width(parent)
+        if posconf.horizontal == :unknown
+            posconf.left  = 0
+            posconf.width = get_width(parent)
+        end
     end
 
     # Create the common parameters of the widget.
