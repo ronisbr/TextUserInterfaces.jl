@@ -29,7 +29,10 @@ function accept_focus(window::Window)
         curs_set(0)
 
         # Pass the focus to the widget.
-        accept_focus(widget)
+        if accept_focus(widget)
+            # Check if the widget wants the cursor.
+            require_cursor(widget) && curs_set(1)
+        end
 
         return true
     else
@@ -70,6 +73,8 @@ function process_focus(window::Window, k::Keystroke)
 
             return true
         end
+
+        curs_set(0)
     end
 
     return false
