@@ -39,7 +39,7 @@ function accept_focus(container::WidgetContainer)
 end
 
 function create_widget(::Type{Val{:container}}, parent::WidgetParent;
-                       posconf = nothing, _composed::Bool = false, kwargs...)
+                       posconf = nothing, composed::Bool = false, kwargs...)
 
     if posconf == nothing
         posconf = wpc(; kwargs...)
@@ -68,9 +68,9 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent;
     container = WidgetContainer(common = common)
 
     # Add the new widget to the parent widget list.
-    !_composed && add_widget(parent, container)
+    !composed && add_widget(parent, container)
 
-    !_composed && @log info "create_widget" """
+    !composed && @log info "create_widget" """
     A container was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
