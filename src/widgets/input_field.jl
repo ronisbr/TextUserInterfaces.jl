@@ -66,6 +66,10 @@ end
 ################################################################################
 
 function accept_focus(widget::WidgetInputField)
+    # When accepting focus we must update the cursor position so that it can be
+    # positioned in the position it was when the focus was released.
+    _update_cursor(widget)
+
     request_update(widget)
     return true
 end
@@ -165,14 +169,8 @@ function process_focus(widget::WidgetInputField, k::Keystroke)
 
     # Handle the input.
     if _handle_input(widget, k)
-        # Move the physical cursor to the correct position considering the
-        # border if present.
-        #
-        # NOTE: The initial position here starts at 1, but in NCurses it starts
-        # in 0.
-        py = border ? widget.cury : widget.cury-1
-        px = border ? widget.curx : widget.curx-1
-        wmove(widget.common.buffer, py, px)
+        # Update the cursor position.
+        _update_cursor(widget)
 
         # Validate the input.
         _validator(widget)
@@ -368,6 +366,19 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     @pack! widget = cury, curx, vcury, vcurx, view
 
     return true
+end
+
+function _update_cursor(widget::WidgetInputField)
+    # Move the physical cursor to the correct position considering the border if
+    # present.
+    #
+    # NOTE: The initial position here starts at 1, but in NCurses it starts in
+    # 0.
+    py = widget.border ? widget.cury : widget.cury-1
+    px = widget.border ? widget.curx : widget.curx-1
+    wmove(widget.common.buffer, py, px)
+
+    return nothing
 end
 
 function _validator(widget::WidgetInputField)
