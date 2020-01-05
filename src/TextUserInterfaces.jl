@@ -32,7 +32,6 @@ include("logger.jl")
 
 include("colors.jl")
 include("focus_manager.jl")
-include("forms.jl")
 include("input.jl")
 include("init_destruct.jl")
 include("menus.jl")
