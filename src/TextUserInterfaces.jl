@@ -63,4 +63,6 @@ include("./widgets/progress_bar.jl")
 include("./widgets/container/container.jl")
 include("./widgets/container/api.jl")
 
+include("./widgets/composed/form.jl")
+
 end # module
