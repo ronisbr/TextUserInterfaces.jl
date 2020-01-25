@@ -39,30 +39,26 @@ function accept_focus(container::WidgetContainer)
 end
 
 function create_widget(::Type{Val{:container}}, parent::WidgetParent;
-                       posconf = nothing, composed::Bool = false, kwargs...)
+                       opc = nothing, composed::Bool = false, kwargs...)
 
-    if posconf == nothing
-        posconf = wpc(; kwargs...)
-
-        # Initial processing of the position.
-        _process_vertical_info!(posconf)
-        _process_horizontal_info!(posconf)
+    if opc == nothing
+        opc = object_positioning_conf(; kwargs...)
 
         # Check if all positioning is defined and, if not, try to help by
         # automatically defining the height and/or width.
-        if posconf.vertical == :unknown
-            posconf.top    = 0
-            posconf.height = get_height(parent)
+        if opc.vertical == :unknown
+            opc.top    = 0
+            opc.height = get_height(parent)
         end
 
-        if posconf.horizontal == :unknown
-            posconf.left  = 0
-            posconf.width = get_width(parent)
+        if opc.horizontal == :unknown
+            opc.left  = 0
+            opc.width = get_width(parent)
         end
     end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
+    common = create_widget_common(parent, opc)
 
     # Create the widget.
     container = WidgetContainer(common = common)
@@ -74,7 +70,7 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent;
     A container was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
         Reference   = $(obj_to_ptr(container))"""
 
     # Return the created container.

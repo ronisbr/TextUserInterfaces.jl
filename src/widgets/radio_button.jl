@@ -71,7 +71,7 @@ function create_widget(::Type{Val{:radio_button}}, parent::WidgetParent;
     A radio button was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
         Label       = \"$label\"
         Group name  = $group_name
         Reference   = $(obj_to_ptr(widget))"""

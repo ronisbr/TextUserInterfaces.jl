@@ -38,19 +38,15 @@ function create_widget(::Type{Val{:label}}, parent::WidgetParent;
                        kwargs...)
 
     # Positioning configuration.
-    posconf = wpc(;kwargs...)
-
-    # Initial processing of the position.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
+    opc = object_positioning_conf(;kwargs...)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    posconf.vertical   == :unknown && (posconf.height = length(split(text, '\n')))
-    posconf.horizontal == :unknown && (posconf.width  = maximum(length.(split(text, '\n'))))
+    opc.vertical   == :unknown && (opc.height = length(split(text, '\n')))
+    opc.horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n'))))
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
+    common = create_widget_common(parent, opc)
 
     # Create the widget.
     widget = WidgetLabel(common = common, text = "", color  = color)
@@ -65,7 +61,7 @@ function create_widget(::Type{Val{:label}}, parent::WidgetParent;
     A label was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
         Text        = \"$text\"
         Reference   = $(obj_to_ptr(widget))"""
 

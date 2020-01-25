@@ -84,24 +84,20 @@ function create_widget(::Type{Val{:input_field}}, parent::WidgetParent;
                        kwargs...)
 
     # Positioning configuration.
-    posconf = wpc(;kwargs...)
-
-    # Initial processing of the position.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
+    opc = object_positioning_conf(; kwargs...)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    if posconf.vertical == :unknown
-        posconf.height = !border ? 1 : 3
+    if opc.vertical == :unknown
+        opc.height = !border ? 1 : 3
     end
 
-    if posconf.horizontal == :unknown
-        posconf.width = 30
+    if opc.horizontal == :unknown
+        opc.width = 30
     end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
+    common = create_widget_common(parent, opc)
 
     # Validator.
     enable_validator = (validator != nothing)
@@ -154,7 +150,7 @@ function create_widget(::Type{Val{:input_field}}, parent::WidgetParent;
     A input field was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
         Border      = $border
         Max. size   = $max_data_size
         Validator?  = $enable_validator

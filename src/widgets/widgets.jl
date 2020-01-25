@@ -53,13 +53,6 @@ Return the buffer of the widget `widget`.
 """
 get_buffer(widget) = widget.common.buffer
 
-"""
-    function get_height(widget)
-
-Return the height of widget `widget`.
-
-"""
-get_height(widget) = widget.common.height
 
 """
     function get_parent(widget)
@@ -68,14 +61,6 @@ Return the parent of the widget `widget`.
 
 """
 get_parent(widget) = widget.common.parent
-
-"""
-    function get_width(widget)
-
-Return the width of widget `widget`.
-
-"""
-get_width(widget) = widget.common.width
 
 """
     function process_focus(widget, k::Keystroke)
@@ -169,165 +154,34 @@ require_cursor(widget) = false
 export create_widget_common
 
 """
-    function create_widget_common(parent::WidgetParent, posconf::WidgetPositioningConfiguration)
+    function create_widget_common(parent::WidgetParent, opc::ObjectPositioningConfiguration)
 
 Create all the variables in the common structure of the widget API.
 
 # Args
 
 * `parent`: Parent widget.
-* `posconf`: Widget positioning configuration
-             (see `WidgetPositioningConfiguration`).
+* `opc`: Object positioning configuration (see `ObjectPositioningConfiguration`).
 
 """
 function create_widget_common(parent::WidgetParent,
-                              posconf::WidgetPositioningConfiguration)
+                              opc::ObjectPositioningConfiguration)
 
-    # Process the positioning.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
 
-    @unpack_WidgetPositioningConfiguration posconf
-
-    # Vertical
-    # ==========================================================================
-
-    if vertical == :abottom_atop
-        bottom = _get_anchor(anchor_bottom, parent)
-        top    = _get_anchor(anchor_top, parent)
-        height = bottom - top
-
-    elseif vertical == :abottom_height
-        bottom = _get_anchor(anchor_bottom, parent)
-        top    = bottom - height
-
-    elseif vertical == :atop_height
-        top = _get_anchor(anchor_top, parent)
-
-    elseif vertical == :amiddle_height
-        middle = _get_anchor(anchor_middle, parent)
-        top    = middle - div(height,2)
-
-    elseif vertical == :unknown
-        @log critical "create_widget_common" """
-        It was not possible to guess the vertical positioning of the widget.
-
-        parent:
-        @log_pad 4
-        $parent
-        @log_pad 0
-        posconf:
-        @log_pad 4
-        $(_str(posconf))"""
-
-        error("It was not possible to guess the vertical positioning of the widget.")
-    end
-
-    if top < 0
-        @log critical "create_widget_common" """
-        Wrong vertical size configuration leading to negative top position.
-
-        parent:
-        @log_pad 4
-        $parent
-        @log_pad 0
-        posconf:
-        @log_pad 4
-        $(_str(posconf))"""
-
-        error("Wrong vertical size configuration leading to negative top position.")
-    end
-
-    if height <= 0
-        @log critical "create_widget_common" """
-        Wrong vertical size configuration leading to negative top position.
-
-        parent:
-        @log_pad 4
-        $parent
-        @log_pad 0
-        posconf:
-        @log_pad 4
-        $(_str(posconf))"""
-
-        error("Wrong vertical size configuration leading to negative top position.")
-    end
-
-    # Horizontal
-    # ==========================================================================
-
-    if horizontal == :aleft_aright
-        left  = _get_anchor(anchor_left, parent)
-        right = _get_anchor(anchor_right, parent)
-        width = right - left
-
-    elseif horizontal == :aleft_width
-        left = _get_anchor(anchor_left, parent)
-
-    elseif horizontal == :aright_width
-        right = _get_anchor(anchor_right, parent)
-        left  = right - width
-
-    elseif horizontal == :acenter_width
-        center = _get_anchor(anchor_center, parent)
-        left   = center - div(width,2)
-
-    elseif horizontal == :unknown
-        @log critical "create_widget_common" """
-        It was not possible to guess the horizontal positioning of the widget.
-
-        parent:
-        @log_pad 4
-        $parent
-        @log_pad 0
-        posconf:
-        @log_pad 4
-        $(_str(posconf))"""
-
-        error("It was not possible to guess the horizontal positioning of the widget.")
-    end
-
-    if left < 0
-        @log critical "create_widget_common" """
-        Wrong vertical size configuration leading to negative left position.
-
-        parent:
-        @log_pad 4
-        $parent
-        @log_pad 0
-        posconf:
-        @log_pad 4
-        $(_str(posconf))"""
-
-        error("Wrong vertical size configuration leading to negative left position.")
-    end
-
-    if width <= 0
-        @log critical "create_widget_common" """
-        Wrong vertical size configuration leading to non-positive width position.
-
-        parent:
-        @log_pad 4
-        $parent
-        @log_pad 0
-        posconf:
-        @log_pad 4
-        $(_str(posconf))"""
-
-        error("Wrong vertical size configuration leading to non-positive width position.")
-    end
+    # Compute the widget true position based on the configuration.
+    height, width, top, left = compute_object_positioning(opc, parent)
 
     # Create the buffer that will hold the contents.
     buffer = subpad(get_buffer(parent), height, width, top, left)
 
     # Create the common parameters of the widget.
-    common = WidgetCommon(parent  = parent,
-                          buffer  = buffer,
-                          posconf = posconf,
-                          height  = height,
-                          width   = width,
-                          top     = top,
-                          left    = left)
+    common = WidgetCommon(parent = parent,
+                          buffer = buffer,
+                          opc    = opc,
+                          height = height,
+                          width  = width,
+                          top    = top,
+                          left   = left)
 
     return common
 end

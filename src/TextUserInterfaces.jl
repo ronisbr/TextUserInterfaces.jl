@@ -38,6 +38,12 @@ include("menus.jl")
 include("misc.jl")
 include("validators.jl")
 
+# Objects
+# ==============================================================================
+
+include("./objects/api.jl")
+include("./objects/anchors.jl")
+
 # Windows
 # ==============================================================================
 
@@ -46,17 +52,18 @@ include("./windows/container.jl")
 include("./windows/focus.jl")
 include("./windows/manage.jl")
 include("./windows/misc.jl")
+include("./windows/object_api.jl")
 include("./windows/refresh_update.jl")
 
 # Widgets
 # ==============================================================================
 
 include("./widgets/widgets.jl")
-include("./widgets/anchors.jl")
 include("./widgets/button.jl")
 include("./widgets/composed_widgets.jl")
 include("./widgets/labels.jl")
 include("./widgets/input_field.jl")
+include("./widgets/object_api.jl")
 include("./widgets/progress_bar.jl")
 
 include("./widgets/container/container.jl")

@@ -63,24 +63,20 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
     end
 
     # Positioning configuration.
-    posconf = wpc(;kwargs...)
-
-    # Initial processing of the position.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
+    opc = object_positioning_conf(; kwargs...)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    if posconf.vertical == :unknown
-        posconf.height = _button_style_height[style]
+    if opc.vertical == :unknown
+        opc.height = _button_style_height[style]
     end
 
-    if posconf.horizontal == :unknown
-        posconf.width = length(label) + 4
+    if opc.horizontal == :unknown
+        opc.width = length(label) + 4
     end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
+    common = create_widget_common(parent, opc)
 
     # Create the widget.
     widget = WidgetButton(common          = common,
@@ -96,7 +92,7 @@ function create_widget(::Type{Val{:button}}, parent::WidgetParent;
     A button was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
         Label       = \"$label\"
         Style       = $style
         Reference   = $(obj_to_ptr(widget))"""

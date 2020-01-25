@@ -10,22 +10,23 @@ export create_window, create_window_with_container, destroy_window,
        destroy_all_windows
 
 """
-    function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = ""; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = "", title_color::Int = -1)
+function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, focusable::Bool = true, title::String = "", title_color::Int = -1, kwargs...)
 
-Create a window. The new window size will be `nlines × ncols` and the origin
-will be placed at `(begin_y, begin_x)` coordinate of the root window. The window
-ID `id` is used to identify the new window in the global window list.
+Create a window. The window ID `id` is used to identify the new window in the
+global window list. The size and location of the window can be configured by
+passing to `kwargs...` the arguments used in the function
+`object_positioning_conf`.
 
 # Keyword
 
 * `bcols`: Number of columns in the window buffer. This will be automatically
-           increased to, at least, fit the viewable part of the window
-           (`ncols`). (**Default** = 0)
+           increased to, at least, fit the viewable part of the window.
+           (**Default** = 0)
 * `blines`: Number of lines in the window buffer. This will be automatically
-            increased to, at least, fit the viewable part of the window
-            (`nlines`). (**Default** = 0)
-* `border`: If `true`, then the window will have a border. (**Default** =
-            `true`)
+            increased to, at least, fit the viewable part of the window.
+            (**Default** = 0)
+* `border`: If `true`, then the window will have a border.
+            (**Default** = `true`)
 * `border_color`: Color mask that will be used to print the border. See function
                   `ncurses_color`. If negative, then the color will not be
                   changed. (**Default** = -1)
@@ -38,12 +39,10 @@ ID `id` is used to identify the new window in the global window list.
                  be changed. (**Default** = -1)
 
 """
-function create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
-                       begin_x::Integer, id::String = "";
-                       bcols::Integer = 0, blines::Integer = 0,
+function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
                        border::Bool = true, border_color::Int = -1,
                        focusable::Bool = true, title::String = "",
-                       title_color::Int = -1)
+                       title_color::Int = -1, kwargs...)
 
     # Check if the TUI has been initialized.
     !tui.init && error("The text user interface was not initialized.")
@@ -51,6 +50,35 @@ function create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
     # If the user does not specify an `id`, then we choose based on the number
     # of available windows.
     length(id) == 0 && ( id = string(length(tui.wins)) )
+
+    # Compute the window positioning.
+    opc = object_positioning_conf(;kwargs...)
+
+    @log info "DEBUG" """
+    $title
+    $opc
+    """
+
+    # Check if all positioning is defined and, if not, try to help by
+    # automatically defining the height and/or width.
+    if opc.vertical == :unknown
+        opc.top    = 0
+        opc.height = LINES()
+    end
+
+    if opc.horizontal == :unknown
+        opc.left  = 0
+        opc.width = COLS()
+    end
+
+    # Get the positioning information of the window.
+    height, width, top, left = compute_object_positioning(opc, nothing)
+
+    # Assign to the variables that will be used to create the window.
+    begin_y = top
+    begin_x = left
+    nlines  = height
+    ncols   = width
 
     # Create the window.
     view = newwin(nlines, ncols, begin_y, begin_x)
@@ -74,16 +102,16 @@ function create_window(nlines::Integer, ncols::Integer, begin_y::Integer,
     coord = (begin_y, begin_x)
 
     # Create the window object and add to the global list.
-    win = Window(id = id, title = title, coord = coord,
-                     has_border = border, view = view, buffer = buffer,
-                     panel = panel, focusable = focusable)
+    win = Window(id = id, title = title, coord = coord, has_border = border,
+                 opc = opc, view = view, buffer = buffer, panel = panel,
+                 focusable = focusable)
     border && set_window_title(win, title; title_color = title_color)
     push!(tui.wins, win)
 
     @log info "create_window" """
     Window $id was created.
        Physical size = ($nlines, $ncols)
-       Buffer size   = ($bcols, $blines)
+       Buffer size   = ($blines, $bcols)
        Coordinate    = ($begin_y, $begin_x)
        Title         = \"$title\""""
 

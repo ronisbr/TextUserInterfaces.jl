@@ -8,12 +8,15 @@
 
 export Window
 
-@with_kw mutable struct Window
+@with_kw mutable struct Window <: Object
     id::String = ""
     title::String = ""
     coord::Tuple{Int,Int} = (0,0)
     has_border::Bool = false
     focusable::Bool = true
+
+    # Positioning configuration.
+    opc::ObjectPositioningConfiguration
 
     # Widget of the window.
     widget::Union{Widget,Nothing} = nothing

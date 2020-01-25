@@ -42,24 +42,20 @@ function create_widget(::Type{Val{:progress_bar}}, parent::WidgetParent;
                        kwargs...)
 
     # Positioning configuration.
-    posconf = wpc(;kwargs...)
-
-    # Initial processing of the position.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
+    opc = object_positioning_conf(; kwargs...)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    if posconf.vertical == :unknown
-        posconf.height = _progress_bar_height(style, border)
+    if opc.vertical == :unknown
+        opc.height = _progress_bar_height(style, border)
     end
 
-    if posconf.horizontal == :unknown
-        posconf.width = 10
+    if opc.horizontal == :unknown
+        opc.width = 10
     end
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
+    common = create_widget_common(parent, opc)
 
     # Create the widget.
     widget = WidgetProgressBar(common = common,
@@ -75,7 +71,7 @@ function create_widget(::Type{Val{:progress_bar}}, parent::WidgetParent;
     A progress bar was created in $(obj_desc(parent)).
         Size        = ($(common.height), $(common.width))
         Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.posconf.vertical),$(common.posconf.horizontal))
+        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
         Style       = $(string(style))
         Value       = $value
         Reference   = $(obj_to_ptr(widget))"""

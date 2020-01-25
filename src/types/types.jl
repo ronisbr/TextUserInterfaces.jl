@@ -11,6 +11,7 @@ export tui
 include("./abstract.jl")
 include("./colors.jl")
 include("./logger.jl")
+include("./objects.jl")
 include("./windows.jl")
 include("./widgets.jl")
 include("./temp.jl")
