@@ -62,6 +62,8 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
             return Keystroke(raw = c, value = "\n", ktype = :enter)
         elseif c == 127
             return Keystroke(raw = c, value = string(Char(c)), ktype = :backspace)
+        elseif c == 410
+            return Keystroke(raw = c, value = string(Char(c)), ktype = :resize)
         else
             return Keystroke(raw = c, value = string(Char(c)), ktype = :char)
         end
