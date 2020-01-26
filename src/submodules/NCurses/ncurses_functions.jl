@@ -93,6 +93,7 @@ for (f,r,v,j,c) in
      (:mvvline,       Cint,        ["y","x","ch","n"],                              ["Integer","Integer","jlchtype","Integer"],               ["Cint","Cint","chtype","Cint"]),
      (:mvwhline,      Cint,        ["win","y","x","ch","n"],                        ["Ptr{WINDOW}","Integer","Integer","jlchtype","Integer"], ["Ptr{WINDOW}","Cint","Cint","chtype","Cint"]),
      (:mvwvline,      Cint,        ["win","y","x","ch","n"],                        ["Ptr{WINDOW}","Integer","Integer","jlchtype","Integer"], ["Ptr{WINDOW}","Cint","Cint","chtype","Cint"]),
+     (:mvwin,         Cvoid,       ["win","y","x"],                                 ["Ptr{WINDOW}","Integer","Integer"],                      ["Ptr{WINDOW}","Cint","Cint"]),
      (:newpad,        Ptr{WINDOW}, ["lines","cols"],                                ["Integer","Integer"],                                    ["Cint","Cint"]),
      (:newwin,        Ptr{WINDOW}, ["lines","cols","y","x"],                        ["Integer" for _ = 1:4],                                  ["Cint" for _ = 1:4]),
      (:nodelay,       Cvoid,       ["win","bf"],                                    ["Ptr{WINDOW}","Bool"],                                   ["Ptr{WINDOW}","Cuchar"]),
@@ -117,6 +118,7 @@ for (f,r,v,j,c) in
      (:wmove,         Cvoid,       ["win","y","x"],                                 ["Ptr{WINDOW}","Integer","Integer"],                      ["Ptr{WINDOW}","Cint","Cint"]),
      (:wnoutrefresh,  Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
      (:wrefresh,      Cvoid,       ["win",],                                        ["Ptr{WINDOW}",],                                         ["Ptr{WINDOW}",]),
+     (:wresize,       Cvoid,       ["win","lines","cols"],                          ["Ptr{WINDOW}","Integer","Integer"],                      ["Ptr{WINDOW}","Cint","Cint"]),
      (:wtimeout,      Cvoid,       ["win","delay"],                                 ["Ptr{WINDOW}","Integer"],                                ["Ptr{WINDOW}","Cint"]),
      (:wvline,        Cint,        ["win","ch","n"],                                ["Ptr{WINDOW}","jlchtype","Integer"],                     ["Ptr{WINDOW}","chtype","Cint"]),
      # Functions with very long arguments.
