@@ -51,10 +51,11 @@ function create_widget(::Type{Val{:field}}, parent::WidgetParent, top::Integer,
     width  = 7
 
     # Create the widget positioning configuration.
-    posconf = wpc(top = top, left = left, height = height, width = width)
+    opc = object_positioning_conf(top = top, left = left, height = height,
+                                  width = width)
 
     # Create the common parameters of the widget.
-    common = create_widget_common(parent, posconf)
+    common = create_widget_common(parent, opc)
 
     # Create the widget.
     widget = WidgetField(common = common, pos = pos)
@@ -176,7 +177,7 @@ function check_victory()
 
     if board_marks[1,3] == board_marks[2,2] == board_marks[3,1] == 1
         return 1
-    elseif board_marks[1,3] == board_marks[2,2] == board_marks[3,1] == 6
+    elseif board_marks[1,3] == board_marks[2,2] == board_marks[3,1] == 2
         return 2
     end
 
@@ -222,7 +223,10 @@ function tictactoe()
            │       │
            │       │"""
 
-    win, con = create_window_with_container(18,60,2,2; border = true, title = " Tic Tac Toe ")
+    win, con = create_window_with_container(border = true,
+                                            title = " Tic Tac Toe ",
+                                            height = 18, width = 60,
+                                            top = 2, left = 2)
     board    = create_widget(Val{:label}, con;
                              top = 2, left = 2, height = 11, width = 24,
                              text = board, color = pb)
