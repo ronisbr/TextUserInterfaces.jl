@@ -54,11 +54,6 @@ function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
     # Compute the window positioning.
     opc = object_positioning_conf(;kwargs...)
 
-    @log info "DEBUG" """
-    $title
-    $opc
-    """
-
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     if opc.vertical == :unknown
