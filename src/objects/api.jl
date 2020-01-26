@@ -6,6 +6,9 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+export get_left, get_height, get_width, get_top, get_visible_height,
+       get_visible_width, reposition!
+
 """
     function get_bottom(object)
 
@@ -53,3 +56,11 @@ Return the visible width of object `object`.
 
 """
 get_visible_width
+
+"""
+    function reposition!(object)
+
+Reposition the object baesd on the stored configuration.
+
+"""
+reposition!

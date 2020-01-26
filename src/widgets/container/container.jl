@@ -45,15 +45,35 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent;
         opc = object_positioning_conf(; kwargs...)
 
         # Check if all positioning is defined and, if not, try to help by
-        # automatically defining the height and/or width.
+        # automatically defining some anchors.
         if opc.vertical == :unknown
-            opc.top    = 0
-            opc.height = get_height(parent)
+            opc = ObjectPositioningConfiguration(
+                    anchor_bottom = Anchor(parent, :bottom, 0),
+                    anchor_left   = opc.anchor_left,
+                    anchor_right  = opc.anchor_right,
+                    anchor_top    = Anchor(parent, :top,    0),
+                    anchor_center = opc.anchor_center,
+                    anchor_middle = opc.anchor_middle,
+                    top           = opc.top,
+                    left          = opc.left,
+                    height        = opc.height,
+                    width         = opc.width
+                   )
         end
 
         if opc.horizontal == :unknown
-            opc.left  = 0
-            opc.width = get_width(parent)
+            opc = ObjectPositioningConfiguration(
+                    anchor_bottom = opc.anchor_bottom,
+                    anchor_left   = Anchor(parent, :left,  0),
+                    anchor_right  = Anchor(parent, :right, 0),
+                    anchor_top    = opc.anchor_top,
+                    anchor_center = opc.anchor_center,
+                    anchor_middle = opc.anchor_middle,
+                    top           = opc.top,
+                    left          = opc.left,
+                    height        = opc.height,
+                    width         = opc.width
+                   )
         end
     end
 
@@ -111,15 +131,24 @@ function redraw(container::WidgetContainer)
 
     wclear(buffer)
 
-    # Check if any widget must be redrawn.
-    update_needed = false
+    if common.update_needed
+        update_needed = true
+    else
+        # Check if any widget must be redrawn.
+        update_needed = false
 
-    for widget in widgets
-        if widget.common.update_needed
-            update_needed = true
-            break
+        for widget in widgets
+            if widget.common.update_needed
+                update_needed = true
+                break
+            end
         end
     end
+
+    @log info "DEBUG" """
+    REDRAW $update_needed
+    """
+
 
     # Redraw all the widgets in the container if necessary.
     if update_needed
@@ -135,6 +164,18 @@ function require_cursor(container::WidgetContainer)
     @unpack widgets, focus_id = container
     focus_id > 0 && return require_cursor(widgets[focus_id])
     return false
+end
+
+function reposition!(container::WidgetContainer)
+    # Reposition the container as if it is a widget.
+    invoke(reposition!, Tuple{Widget}, container)
+
+    # Then, reposition all the widgets.
+    for widget in container.widgets
+        reposition!(widget)
+    end
+
+    return nothing
 end
 
 ################################################################################

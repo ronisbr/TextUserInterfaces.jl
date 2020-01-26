@@ -86,6 +86,8 @@ function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
     end
 
     # Create the buffer.
+    buffer_view_locked = false
+    blines <= 0 && bcols <= 0 && (buffer_view_locked = true)
     blines <= 0 && (blines = border ? nlines-2 : nlines)
     bcols  <= 0 && (bcols  = border ? ncols-2  : ncols)
     buffer = newpad(blines, bcols)
@@ -97,9 +99,11 @@ function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
     coord = (begin_y, begin_x)
 
     # Create the window object and add to the global list.
-    win = Window(id = id, title = title, coord = coord, has_border = border,
-                 opc = opc, view = view, buffer = buffer, panel = panel,
-                 focusable = focusable)
+    win = Window(id = id, title = title, title_color = title_color,
+                 coord = coord, has_border = border,
+                 border_color = border_color, opc = opc, view = view,
+                 buffer = buffer, panel = panel, focusable = focusable,
+                 buffer_view_locked = buffer_view_locked)
     border && set_window_title(win, title; title_color = title_color)
     push!(tui.wins, win)
 

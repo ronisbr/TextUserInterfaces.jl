@@ -11,9 +11,15 @@ export Window
 @with_kw mutable struct Window <: Object
     id::String = ""
     title::String = ""
+    title_color::Int = 0
     coord::Tuple{Int,Int} = (0,0)
     has_border::Bool = false
+    border_color::Int = 0
     focusable::Bool = true
+
+    # This variable stores if the user wants the buffer and view size to be
+    # locked. This is useful when resizing the window.
+    buffer_view_locked::Bool = true
 
     # Positioning configuration.
     opc::ObjectPositioningConfiguration
