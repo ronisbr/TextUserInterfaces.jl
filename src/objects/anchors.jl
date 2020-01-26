@@ -247,7 +247,19 @@ function _get_anchor(anchor::Anchor, parent)
     obj = anchor.obj
     pad = anchor.pad
 
-    if (obj == parent) || (obj == nothing)
+    # If the object has no parent, then it **must** be a window. In this case,
+    # we must use the visible height and width to compute the anchors.
+    # Otherwise, it **must** be an object inside a window. Thus, in this case,
+    # we must use the available size and width.
+    if parent == nothing
+        height = get_visible_height(obj)
+        width  = get_visible_width(obj)
+    else
+        height = get_height(obj)
+        width  = get_width(obj)
+    end
+
+    if (obj == parent) || (parent == nothing)
         top  = 0
         left = 0
     else
@@ -256,17 +268,17 @@ function _get_anchor(anchor::Anchor, parent)
     end
 
     if anchor.side == :bottom
-        return top + get_visible_height(obj) + pad
+        return top + height + pad
     elseif anchor.side == :top
         return top + pad
     elseif anchor.side == :left
         return left + pad
     elseif anchor.side == :right
-        return left + get_visible_width(obj) + pad
+        return left + width + pad
     elseif anchor.side == :center
-        return left + div(get_visible_width(obj), 2) + pad
+        return left + div(width, 2) + pad
     elseif anchor.side == :middle
-        return top + div(get_visible_height(obj), 2) + pad
+        return top + div(height, 2) + pad
     else
         error("Unknown side in anchor.")
     end
