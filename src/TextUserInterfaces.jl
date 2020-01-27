@@ -54,6 +54,7 @@ include("./windows/manage.jl")
 include("./windows/misc.jl")
 include("./windows/object_api.jl")
 include("./windows/refresh_update.jl")
+include("./windows/rootwin.jl")
 
 # Widgets
 # ==============================================================================

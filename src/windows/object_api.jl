@@ -15,24 +15,51 @@ get_top(win::T)    where T<:Window = win.view   != C_NULL ? Int(getbegy(win.view
 get_visible_height(win::T) where T<:Window = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
 get_visible_width(win::T)  where T<:Window = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
 
-function reposition!(win::Window; kwargs...)
-    # Compute the window positioning.
-    opc = object_positioning_conf(;kwargs...)
+function reposition!(win::Window; force::Bool = false, kwargs...)
+    if !isempty(kwargs)
+        # Compute the window positioning.
+        opc = object_positioning_conf(;kwargs...)
+    else
+        opc = win.opc
+    end
 
-    return reposition!(win, opc)
+    return reposition!(win, opc, force = force)
 end
 
-function reposition!(win::Window, opc::ObjectPositioningConfiguration)
+function reposition!(win::Window, opc::ObjectPositioningConfiguration;
+                     force::Bool = false)
+
     # Check if all positioning is defined and, if not, try to help by
-    # automatically defining the height and/or width.
+    # automatically defining the anchors.
     if opc.vertical == :unknown
-        opc.top    = 0
-        opc.height = LINES()
+        # TODO: Make this recreation easier.
+        opc = ObjectPositioningConfiguration(
+                anchor_bottom = Anchor(rootwin, :bottom, 0),
+                anchor_left   = opc.anchor_left,
+                anchor_right  = opc.anchor_right,
+                anchor_top    = Anchor(rootwin, :top,    0),
+                anchor_center = opc.anchor_center,
+                anchor_middle = opc.anchor_middle,
+                top           = opc.top,
+                left          = opc.left,
+                height        = opc.height,
+                width         = opc.width
+               )
     end
 
     if opc.horizontal == :unknown
-        opc.left  = 0
-        opc.width = COLS()
+        opc = ObjectPositioningConfiguration(
+                anchor_bottom = opc.anchor_bottom,
+                anchor_left   = Anchor(rootwin, :left,  0),
+                anchor_right  = Anchor(rootwin, :right, 0),
+                anchor_top    = opc.anchor_top,
+                anchor_center = opc.anchor_center,
+                anchor_middle = opc.anchor_middle,
+                top           = opc.top,
+                left          = opc.left,
+                height        = opc.height,
+                width         = opc.width
+               )
     end
 
     # Get the positioning information of the window.
@@ -48,11 +75,11 @@ function reposition!(win::Window, opc::ObjectPositioningConfiguration)
     win_resize = false
     win_move   = false
 
-    if (nlines != get_visible_height(win)) || (ncols != get_visible_width(win))
+    if (nlines != get_visible_height(win)) || (ncols != get_visible_width(win)) || force
         win_resize = true
     end
 
-    if (begin_y != get_top(win)) || (begin_x != get_left(win))
+    if (begin_y != get_top(win)) || (begin_x != get_left(win)) || force
         win_move = true
     end
 
@@ -103,9 +130,9 @@ function reposition!(win::Window, opc::ObjectPositioningConfiguration)
 
     # If the window size has changes, then we must reposition the widget as
     # well.
-    win_resize && reposition!(win.widget)
+    (win_resize || force) && reposition!(win.widget)
 
-    if win_resize || win_move
+    if win_resize || win_move || force
         refresh_window(win, force_redraw = true)
         return true
     else

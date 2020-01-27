@@ -318,6 +318,7 @@ function _process_vertical_info!(opc::ObjectPositioningConfiguration)
         error("Wrong vertical anchor type.")
     end
 
+    # TODO: What about defining `top` and `anchor_bottom`?
     if (anchor_bottom != nothing) && (anchor_top != nothing)
         vertical = :abottom_atop
     elseif (anchor_bottom != nothing) && (height > 0)
@@ -371,7 +372,7 @@ function _process_horizontal_info!(opc::ObjectPositioningConfiguration)
         error("Wrong vertical anchor type.")
     end
 
-
+    # TODO: What about defining `left` and `anchor_right`?
     if (anchor_left != nothing) && (anchor_right != nothing)
         horizontal = :aleft_aright
     elseif (anchor_left != nothing) && (width > 0)

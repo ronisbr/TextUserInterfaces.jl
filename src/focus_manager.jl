@@ -37,20 +37,38 @@ Process the focus considering the user's keystorke `k`.
 function process_focus(k::Keystroke)
     @unpack focus_chain, focus_id = tui
 
-    # With no windows, there is nothing to process.
-    num_wins = length(focus_chain)
-    num_wins == 0 && return nothing
+    # If we receive a resize event, we must repositioning all the windows.
+    if k.ktype == :resize
+        for win in tui.wins
+            # Here, we need to force the repositioning. For some reason, if a
+            # window occupies the entire screen, then NCurses automatically
+            # change the value returned by `getmaxx` and `getmaxy`. Thus, the
+            # repositioning algorithm thinks we do not need to resize the window
+            # and then the buffers are not resized. This is not the fastest
+            # algorithm, but since resize events tends to be sparse, there will
+            # not be noticeable impact.
+            reposition!(win; force = true)
+        end
 
-    # Check if the user wants the another window.
-    if tui.wants_next_window(k)
-        next_window()
-    elseif tui.wants_previous_window(k)
-        previous_window()
+        update_panels()
+        doupdate()
     else
-        process_focus(focus_chain[focus_id], k)
+        # With no windows, there is nothing to process.
+        num_wins = length(focus_chain)
+        num_wins == 0 && return nothing
+
+        # Check if the user wants the another window.
+        if tui.wants_next_window(k)
+            next_window()
+        elseif tui.wants_previous_window(k)
+            previous_window()
+        else
+            process_focus(focus_chain[focus_id], k)
+        end
+
+        refresh_all_windows()
     end
 
-    refresh_all_windows()
     update_panels()
     doupdate()
 

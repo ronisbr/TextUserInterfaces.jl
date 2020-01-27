@@ -55,15 +55,36 @@ function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
     opc = object_positioning_conf(;kwargs...)
 
     # Check if all positioning is defined and, if not, try to help by
-    # automatically defining the height and/or width.
+    # automatically defining the anchors.
     if opc.vertical == :unknown
-        opc.top    = 0
-        opc.height = LINES()
+        # TODO: Make this recreation easier.
+        opc = ObjectPositioningConfiguration(
+                anchor_bottom = Anchor(rootwin, :bottom, 0),
+                anchor_left   = opc.anchor_left,
+                anchor_right  = opc.anchor_right,
+                anchor_top    = Anchor(rootwin, :top,    0),
+                anchor_center = opc.anchor_center,
+                anchor_middle = opc.anchor_middle,
+                top           = opc.top,
+                left          = opc.left,
+                height        = opc.height,
+                width         = opc.width
+               )
     end
 
     if opc.horizontal == :unknown
-        opc.left  = 0
-        opc.width = COLS()
+        opc = ObjectPositioningConfiguration(
+                anchor_bottom = opc.anchor_bottom,
+                anchor_left   = Anchor(rootwin, :left,  0),
+                anchor_right  = Anchor(rootwin, :right, 0),
+                anchor_top    = opc.anchor_top,
+                anchor_center = opc.anchor_center,
+                anchor_middle = opc.anchor_middle,
+                top           = opc.top,
+                left          = opc.left,
+                height        = opc.height,
+                width         = opc.width
+               )
     end
 
     # Get the positioning information of the window.
@@ -87,7 +108,8 @@ function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
 
     # Create the buffer.
     buffer_view_locked = false
-    blines <= 0 && bcols <= 0 && (buffer_view_locked = true)
+    (blines <= 0 && bcols <= 0) && (buffer_view_locked = true)
+
     blines <= 0 && (blines = border ? nlines-2 : nlines)
     bcols  <= 0 && (bcols  = border ? ncols-2  : ncols)
     buffer = newpad(blines, bcols)
