@@ -145,11 +145,6 @@ function redraw(container::WidgetContainer)
         end
     end
 
-    @log info "DEBUG" """
-    REDRAW $update_needed
-    """
-
-
     # Redraw all the widgets in the container if necessary.
     if update_needed
         for widget in widgets
