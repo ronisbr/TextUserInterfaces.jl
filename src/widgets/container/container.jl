@@ -166,16 +166,20 @@ function require_cursor(container::WidgetContainer)
     return false
 end
 
-function reposition!(container::WidgetContainer)
+function reposition!(container::WidgetContainer; force::Bool = false)
     # Reposition the container as if it is a widget.
-    invoke(reposition!, Tuple{Widget}, container)
+    if invoke(reposition!, Tuple{Widget}, container; force = force)
+        # Then, reposition all the widgets.
+        for widget in container.widgets
+            # In this case, we must **force** a resize because the buffer on the
+            # container has been recreated.
+            reposition!(widget, force = true)
+        end
 
-    # Then, reposition all the widgets.
-    for widget in container.widgets
-        reposition!(widget)
+        return true
+    else
+        return false
     end
-
-    return nothing
 end
 
 ################################################################################

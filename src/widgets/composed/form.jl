@@ -51,25 +51,21 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
     end
 
     # Compute the positioning configuration.
-    posconf = wpc(; kwargs...)
-
-    # Initial processing of the position.
-    _process_vertical_info!(posconf)
-    _process_horizontal_info!(posconf)
+    opc = object_positioning_conf(; kwargs...)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    if posconf.vertical == :unknown
-        posconf.height = borders ? 3nfields : nfields
+    if opc.vertical == :unknown
+        opc.height = borders ? 3nfields : nfields
     end
 
-    if posconf.horizontal == :unknown
-        posconf.width = lmax + 1 + field_size
+    if opc.horizontal == :unknown
+        opc.width = lmax + 1 + field_size
     end
 
     # Create the container.
-    container = create_widget(Val{:container}, parent; posconf = posconf,
-                        composed = true)
+    container = create_widget(Val{:container}, parent; opc = opc,
+                              composed = true)
 
     widget_labels = Vector{WidgetLabel}(undef, nfields)
     widget_inputs = Vector{WidgetInputField}(undef, nfields)
@@ -109,7 +105,7 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
     A form widget was created in $(obj_desc(parent)).
         Size        = ($(container.common.height), $(container.common.width))
         Coordinate  = ($(container.common.top), $(container.common.left))
-        Positioning = ($(container.common.posconf.vertical),$(container.common.posconf.horizontal))
+        Positioning = ($(container.common.opc.vertical),$(container.common.opc.horizontal))
         Fields      = $labels
         Reference   = $(obj_to_ptr(widget))"""
 

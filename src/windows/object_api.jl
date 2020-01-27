@@ -105,8 +105,10 @@ function reposition!(win::Window, opc::ObjectPositioningConfiguration)
     # well.
     win_resize && reposition!(win.widget)
 
-    # Refresh the window.
-    refresh_window(win, force_redraw = true)
-
-    return nothing
+    if win_resize || win_move
+        refresh_window(win, force_redraw = true)
+        return true
+    else
+        return false
+    end
 end

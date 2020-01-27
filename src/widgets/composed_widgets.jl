@@ -47,3 +47,4 @@ process_focus(widget::ComposedWidget, k::Keystroke) = process_focus(widget.conta
 redraw(widget::ComposedWidget) = redraw(widget.container)
 release_focus(widget::ComposedWidget) = release_focus(widget.container)
 require_cursor(widget::ComposedWidget) = require_cursor(widget.container)
+reposition!(widget::ComposedWidget; force::Bool = false) = reposition!(widget.container; force = force)
