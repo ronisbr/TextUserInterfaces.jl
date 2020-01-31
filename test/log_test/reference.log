@@ -3,13 +3,13 @@
 [init_tui]
 [create_window] Window 0 was created.
 [create_window]    Physical size = (10, 56)
-[create_window]    Buffer size   = (54, 8)
+[create_window]    Buffer size   = (8, 54)
 [create_window]    Coordinate    = (2, 2)
 [create_window]    Title         = " WINDOW "
 [create_widget] A container was created in Window (0x0).
 [create_widget]     Size        = (8, 54)
 [create_widget]     Coordinate  = (0, 0)
-[create_widget]     Positioning = (top_height,left_width)
+[create_widget]     Positioning = (abottom_atop,aleft_aright)
 [create_widget]     Reference   = 0x0
 [change_text] WidgetLabel{WidgetContainer{Window}} (0x0): Label text changed to "This is a label".
 [create_widget] A label was created in WidgetContainer{Window} (0x0).

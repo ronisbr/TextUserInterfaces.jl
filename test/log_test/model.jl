@@ -12,7 +12,8 @@ function log_test()
     p0 = ncurses_color(bold = false)
     p1 = ncurses_color(:black, :white)
 
-    w,c = create_window_with_container(10,56,2,2; border = true, title = " WINDOW ")
+    w,c = create_window_with_container(border = true, title = " WINDOW ",
+                                       top = 2, left = 2, width = 56, height = 10)
     ~   = create_widget(Val{:label}, c;
                         anchor_top = (c, :top, 0),   height = 1,
                         anchor_left = (c, :left, 0), width  = 40,
