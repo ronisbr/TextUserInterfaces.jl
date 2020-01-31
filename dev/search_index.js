@@ -105,6 +105,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.compute_object_positioning-Tuple{TextUserInterfaces.ObjectPositioningConfiguration,Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.compute_object_positioning",
+    "category": "method",
+    "text": "function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)\n\nCompute the object position based on the configuration opc and on its parent object parent.\n\nReturn\n\nThe object height.\nThe object width.\nThe top position w.r.t. the parent object.\nThe left position w.r.t. the parent object.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.create_menu-Union{Tuple{Array{T1,1}}, Tuple{T2}, Tuple{T1}, Tuple{Array{T1,1},Union{Nothing, Array{T2,1}}}} where T2<:AbstractString where T1<:AbstractString",
     "page": "Library",
     "title": "TextUserInterfaces.create_menu",
@@ -121,11 +129,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_widget_common-Tuple{Union{Widget, Window},TextUserInterfaces.WidgetPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces.create_widget_common-Tuple{Union{Widget, Window},TextUserInterfaces.ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces.create_widget_common",
     "category": "method",
-    "text": "function create_widget_common(parent::WidgetParent, posconf::WidgetPositioningConfiguration)\n\nCreate all the variables in the common structure of the widget API.\n\nArgs\n\nparent: Parent widget.\nposconf: Widget positioning configuration            (see WidgetPositioningConfiguration).\n\n\n\n\n\n"
+    "text": "function create_widget_common(parent::WidgetParent, opc::ObjectPositioningConfiguration)\n\nCreate all the variables in the common structure of the widget API.\n\nArgs\n\nparent: Parent widget.\nopc: Object positioning configuration (see ObjectPositioningConfiguration).\n\n\n\n\n\n"
 },
 
 {
@@ -133,7 +141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
     "category": "function",
-    "text": "function create_window(nlines::Integer, ncols::Integer, begin_y::Integer, begin_x::Integer, id::String = \"\"; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, title::String = \"\", title_color::Int = -1)\n\nCreate a window. The new window size will be nlines × ncols and the origin will be placed at (begin_y, begin_x) coordinate of the root window. The window ID id is used to identify the new window in the global window list.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window          (ncols). (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window           (nlines). (Default = 0)\nborder: If true, then the window will have a border. (Default =           true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
+    "text": "function createwindow(id::String = \"\"; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, bordercolor::Int = -1, focusable::Bool = true, title::String = \"\", title_color::Int = -1, kwargs...)\n\nCreate a window. The window ID id is used to identify the new window in the global window list. The size and location of the window can be configured by passing to kwargs... the arguments used in the function object_positioning_conf.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window.          (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window.           (Default = 0)\nborder: If true, then the window will have a border.           (Default = true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -257,19 +265,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_height-Tuple{Any}",
+    "location": "lib/library/#TextUserInterfaces.get_height",
     "page": "Library",
     "title": "TextUserInterfaces.get_height",
-    "category": "method",
-    "text": "function get_height(widget)\n\nReturn the height of widget widget.\n\n\n\n\n\n"
+    "category": "function",
+    "text": "function get_height(object)\n\nReturn the usable height of object object.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_height-Tuple{Window}",
+    "location": "lib/library/#TextUserInterfaces.get_left",
     "page": "Library",
-    "title": "TextUserInterfaces.get_height",
-    "category": "method",
-    "text": "function get_height(win::Window)\n\nReturn the height of the buffer of the window win.\n\n\n\n\n\n"
+    "title": "TextUserInterfaces.get_left",
+    "category": "function",
+    "text": "function get_bottom(object)\n\nReturn the left of the object w.r.t. its parent.\n\n\n\n\n\n"
 },
 
 {
@@ -281,19 +289,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_width-Tuple{Any}",
+    "location": "lib/library/#TextUserInterfaces.get_top",
     "page": "Library",
-    "title": "TextUserInterfaces.get_width",
-    "category": "method",
-    "text": "function get_width(widget)\n\nReturn the width of widget widget.\n\n\n\n\n\n"
+    "title": "TextUserInterfaces.get_top",
+    "category": "function",
+    "text": "function get_top(object)\n\nReturn the top of the object w.r.t. its parent.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_width-Tuple{Window}",
+    "location": "lib/library/#TextUserInterfaces.get_visible_height",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_visible_height",
+    "category": "function",
+    "text": "function get_visible_height(object)\n\nReturn the visible height of object object.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_visible_width",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_visible_width",
+    "category": "function",
+    "text": "function get_visible_width(object)\n\nReturn the visible width of object object.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_width",
     "page": "Library",
     "title": "TextUserInterfaces.get_width",
-    "category": "method",
-    "text": "function get_width(win::Window)\n\nReturn the width of the buffer of the window win.\n\n\n\n\n\n"
+    "category": "function",
+    "text": "function get_width(object)\n\nReturn the usable width of object object.\n\n\n\n\n\n"
 },
 
 {
@@ -521,6 +545,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.object_positioning_conf-Tuple{}",
+    "page": "Library",
+    "title": "TextUserInterfaces.object_positioning_conf",
+    "category": "method",
+    "text": "function object_positioning_conf(...)\n\nHelper function to create the object positioning configuration. In this case, the anchor can be passed by keywords and a tuple containing the object and its anchor.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.post_menu-Tuple{TextUserInterfaces.TUI_MENU}",
     "page": "Library",
     "title": "TextUserInterfaces.post_menu",
@@ -630,6 +662,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.remove_widget",
     "category": "method",
     "text": "function remove_widget(win::Window, widget::Widget)\n\nRemove the widget widget from the window win. If widget does not belong to win, then nothing is done.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.reposition!",
+    "page": "Library",
+    "title": "TextUserInterfaces.reposition!",
+    "category": "function",
+    "text": "function reposition!(object)\n\nReposition the object baesd on the stored configuration.\n\n\n\n\n\n"
 },
 
 {
@@ -809,14 +849,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.wpc-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.wpc",
-    "category": "method",
-    "text": "function wpc(...)\n\nHelper function to create anchors. In this case, the anchor can be passed by keywords and a tuple containing the object and its anchor.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any,Any}",
     "page": "Library",
     "title": "TextUserInterfaces.@log",
@@ -865,11 +897,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_anchor-Tuple{TextUserInterfaces.Anchor,Union{Widget, Window}}",
+    "location": "lib/library/#TextUserInterfaces._get_anchor-Tuple{TextUserInterfaces.Anchor,Any}",
     "page": "Library",
     "title": "TextUserInterfaces._get_anchor",
     "category": "method",
-    "text": "function _get_anchor(anchor::Anchor)\n\nReturn the line or column related to the anchor anchor.\n\n\n\n\n\n"
+    "text": "function _get_anchor(anchor::Anchor, parent)\n\nReturn the line or column related to the anchor anchor. If the object in anchor is the parent, then the positioning will be computed relative to the parent.\n\n\n\n\n\n"
 },
 
 {
@@ -897,19 +929,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._process_horizontal_info!-Tuple{TextUserInterfaces.WidgetPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces._process_horizontal_info!-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._process_horizontal_info!",
     "category": "method",
-    "text": "function _process_horizontal_info!(posconf::WidgetPositioningConfiguration)\n\nProcess the horizontal positioning information in posconf and write the variable horizontal of the same structure. The possible horizontal positioning information are:\n\n:aleft_aright: Left and right anchors were specified.\n:aleft_height: Left anchor and height were specified.\n:aright_height: Right anchor and height were specified.\n:acenter_height: Center anchor and height were specified.\n:right_height: Right and height were specified.\n:unknown: Insufficient information to compute the horizontal positioning.\n\n\n\n\n\n"
+    "text": "function _process_horizontal_info!(opc::ObjectPositioningConfiguration)\n\nProcess the horizontal positioning information in opc and write the variable horizontal of the same structure. The possible horizontal positioning information are:\n\n:aleft_aright: Left and right anchors were specified.\n:aleft_height: Left anchor and height were specified.\n:aright_height: Right anchor and height were specified.\n:acenter_height: Center anchor and height were specified.\n:right_height: Right and height were specified.\n:unknown: Insufficient information to compute the horizontal positioning.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._process_vertical_info!-Tuple{TextUserInterfaces.WidgetPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces._process_vertical_info!-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._process_vertical_info!",
     "category": "method",
-    "text": "function _process_vertical_info!(posconf::WidgetPositioningConfiguration)\n\nProcess the vertical positioning information in posconf and write the variable vertical of the same structure. The possible vertical positioning information are:\n\n:abottom_atop: Bottom and top anchors were specified.\n:abottom_height: Bottom anchor and height were specified.\n:atop_height: Top anchor and height were specified.\n:amiddle_height: Middle anchor and height were specified.\n:top_height: Top and height were specified.\n:unknown: Insufficient information to compute the vertical positioning.\n\n\n\n\n\n"
+    "text": "function _process_vertical_info!(opc::ObjectPositioningConfiguration)\n\nProcess the vertical positioning information in opc and write the variable vertical of the same structure. The possible vertical positioning information are:\n\n:abottom_atop: Bottom and top anchors were specified.\n:abottom_height: Bottom anchor and height were specified.\n:atop_height: Top anchor and height were specified.\n:amiddle_height: Middle anchor and height were specified.\n:top_height: Top and height were specified.\n:unknown: Insufficient information to compute the vertical positioning.\n\n\n\n\n\n"
 },
 
 {
@@ -921,11 +953,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._str-Tuple{TextUserInterfaces.WidgetPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces._str-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._str",
     "category": "method",
-    "text": "function _str(wpc::WidgetPositioningConfiguration)\n\nConvert the information in wpc to a string for debugging purposes.\n\n\n\n\n\n"
+    "text": "function _str(wpc::ObjectPositioningConfiguration)\n\nConvert the information in wpc to a string for debugging purposes.\n\n\n\n\n\n"
 },
 
 {
