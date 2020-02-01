@@ -38,8 +38,9 @@ function accept_focus(container::WidgetContainer)
     end
 end
 
-function create_widget(::Type{Val{:container}}, parent::WidgetParent;
-                       opc = nothing, composed::Bool = false, kwargs...)
+function create_widget(::Type{Val{:container}}, parent::T;
+                       opc = nothing, composed::Bool = false, kwargs...) where
+    T<:WidgetParent
 
     if opc == nothing
         opc = object_positioning_conf(; kwargs...)
@@ -81,7 +82,7 @@ function create_widget(::Type{Val{:container}}, parent::WidgetParent;
     common = create_widget_common(parent, opc)
 
     # Create the widget.
-    container = WidgetContainer(common = common)
+    container = WidgetContainer{T}(common = common)
 
     # Add the new widget to the parent widget list.
     !composed && add_widget(parent, container)
