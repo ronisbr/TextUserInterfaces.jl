@@ -1,6 +1,7 @@
 module NCurses
 
 using Libdl
+using Ncurses_jll
 using Parameters
 
 ################################################################################
@@ -22,23 +23,41 @@ include("./panel/panel_functions.jl")
 #                                Initialization
 ################################################################################
 
-export load_ncurses
+export load_ncurses, init_ncurses
 
 """
-    function load_ncurses(dir::String = "")
+    function load_ncurses([dir::String])
 
-Load ncurses libraries. The full-path of the ncurses directory can be specified
-by `dir`. If it is empty or omitted, then it will look on the default library
-directories.
+Load ncurses libraries at directory `dir`. If it is omitted or if it is empty,
+then the bundled Ncurses version in the package `Ncurses_jll` will be used.
 
 """
-function load_ncurses(dir::String = "")
+function load_ncurses()
+    ncurses.libncurses        = Ncurses_jll.libncurses_handle
+    ncurses.libmenu           = Ncurses_jll.libmenu_handle
+    ncurses.libpanel          = Ncurses_jll.libpanel_handle
+    ncurses.libform           = Ncurses_jll.libform_handle
+    ncurses.NCURSES_REENTRANT = false
+
+    ENV["TERMINFO_DIRS"] = joinpath(Ncurses_jll.artifact_dir,
+                                    "share", "terminfo")
+
+    return nothing
+end
+
+function load_ncurses(dir::String)
     # Load the libraries
     # ==========================================================================
 
     l = nothing
 
-    !isempty(dir) && (dir *= "/")
+    if !isempty(dir)
+        dir *= "/"
+    else
+        return load_ncurses()
+    end
+
+    ncurses.Ncurses_jll = false
 
     # libncurses
     # --------------------------------------------------------------------------
@@ -166,6 +185,8 @@ function load_ncurses(dir::String = "")
         end
     end
     ncurses.libmenu = l
+
+    return nothing
 end
 
 end # module
