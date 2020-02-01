@@ -65,8 +65,6 @@ function load_ncurses(dir::String)
         return load_ncurses()
     end
 
-    ncurses.Ncurses_jll = false
-
     # libncurses
     # --------------------------------------------------------------------------
 
