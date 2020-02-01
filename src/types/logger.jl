@@ -23,7 +23,7 @@ end
     # Internals
     # ==========================================================================
     file::Union{Nothing,IOStream} = nothing
-    pad::Integer = 0
+    pad::Int = 0
     lock::Threads.SpinLock = Threads.SpinLock()
 end
 

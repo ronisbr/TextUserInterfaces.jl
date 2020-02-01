@@ -182,14 +182,14 @@ function previous_window()
 end
 
 """
-    function set_focus_chain(wins::Window...; new_focus_id::Integer = 1)
+    function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
 
 Set the focus chain, *i.e.* the ordered list of windows that can receive the
 focus. The keyword `new_focus_id` can be set to specify which element is
 currently focused in the new chain.
 
 """
-function set_focus_chain(wins::Window...; new_focus_id::Integer = 1)
+function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
     tui.focus_ptr != nothing && release_focus(tui.focus_ptr)
     tui.focus_ptr = nothing
     tui.focus_chain = [wins...]

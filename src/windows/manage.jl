@@ -17,12 +17,12 @@ Hide the window `win`.
 hide_window(win::Window) = hide_panel(win.panel)
 
 """
-    function move_window(win::Window, starty::Integer, startx::Integer)
+    function move_window(win::Window, starty::Int, startx::Int)
 
 Move the window `win` to the position `(starty, startx`).
 
 """
-move_window(win::Window, starty::Integer, startx::Integer) =
+move_window(win::Window, starty::Int, startx::Int) =
     move_panel(win.panel, starty, startx)
 
 """

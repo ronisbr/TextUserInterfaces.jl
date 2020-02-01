@@ -61,16 +61,15 @@ end
 
 for (f,r,v,j,c) in
     (
-     (:bottom_panel,      Cint,       ["pan"],                     ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
-     (:del_panel,         Ptr{Cvoid}, ["panel"],                   ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
-     (:hide_panel,        Ptr{Cvoid}, ["panel"],                   ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
-     (:move_panel,        Cint,       ["panel","starty","startx"], ["Ptr{Cvoid}","Integer","Integer"], ["Ptr{Cvoid}","Cint","Cint"]),
-     (:new_panel,         Ptr{Cvoid}, ["win"],                     ["Ptr{WINDOW}"],                    ["Ptr{WINDOW}"]),
-     (:panel_userptr,     Ptr{Cvoid}, ["pan"],                     ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
-     (:set_panel_userptr, Cint,       ["pan","ptr"],               ["Ptr{Cvoid}","Ptr{Cvoid}"],        ["Ptr{Cvoid}","Ptr{Cvoid}"]),
-     (:show_panel,        Ptr{Cvoid}, ["panel"],                   ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
-     (:top_panel,         Cint,       ["pan"],                     ["Ptr{Cvoid}"],                     ["Ptr{Cvoid}"]),
-     (:update_panels,     Cvoid,      [],                          [],                                 []),
+     (:bottom_panel,      Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
+     (:del_panel,         Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
+     (:hide_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
+     (:new_panel,         Ptr{Cvoid}, ["win"],       ["Ptr{WINDOW}"],             ["Ptr{WINDOW}"]),
+     (:panel_userptr,     Ptr{Cvoid}, ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
+     (:set_panel_userptr, Cint,       ["pan","ptr"], ["Ptr{Cvoid}","Ptr{Cvoid}"], ["Ptr{Cvoid}","Ptr{Cvoid}"]),
+     (:show_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
+     (:top_panel,         Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
+     (:update_panels,     Cvoid,      [],            [],                          []),
     )
 
     fb    = Meta.quot(f)
@@ -101,3 +100,38 @@ for (f,r,v,j,c) in
     end
 end
 
+# Functions that depends on arguments that must be `Integer`
+# ==============================================================================
+
+for (f,r,v,j,c) in
+    (
+     (:move_panel, Cint, ["panel","starty","startx"], ["Ptr{Cvoid}","T","T"], ["Ptr{Cvoid}","Cint","Cint"]),
+    )
+
+    fb    = Meta.quot(f)
+    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
+    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+
+    @eval $f($(argsj...)) where T<:Integer = @_ccallp $f($(argsc...))::$r
+    @eval export $f
+
+    # Assemble the argument string to build the function documentation.
+    args_str = ""
+    for i = 1:length(v)
+        args_str *= v[i] * "::" * j[i]
+
+        if i != length(v)
+            args_str *= ", "
+        end
+    end
+
+    @eval begin
+        @doc """
+            function $($fb)($($args_str)) where T<:Integer
+
+        **Return type**: `$($r)`
+
+        For more information, consult `libmenu` documentation.
+        """ $f
+    end
+end

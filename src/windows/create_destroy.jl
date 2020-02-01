@@ -10,7 +10,7 @@ export create_window, create_window_with_container, destroy_window,
        destroy_all_windows
 
 """
-function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, border_color::Int = -1, focusable::Bool = true, title::String = "", title_color::Int = -1, kwargs...)
+function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0, border::Bool = true, border_color::Int = -1, focusable::Bool = true, title::String = "", title_color::Int = -1, kwargs...)
 
 Create a window. The window ID `id` is used to identify the new window in the
 global window list. The size and location of the window can be configured by
@@ -39,7 +39,7 @@ passing to `kwargs...` the arguments used in the function
                  be changed. (**Default** = -1)
 
 """
-function create_window(id::String = ""; bcols::Integer = 0, blines::Integer = 0,
+function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
                        border::Bool = true, border_color::Int = -1,
                        focusable::Bool = true, title::String = "",
                        title_color::Int = -1, kwargs...)

@@ -67,25 +67,15 @@ export new_field
 
 for (f,r,v,j,c) in
      (
-     (:field_buffer,     Cstring,    ["field","buffer"],                                     ["Ptr{Cvoid}","Integer"],                                  ["Ptr{Cvoid}","Cint"]),
-     (:form_driver,      Cint,       ["form","ch"],                                          ["Ptr{Cvoid}","Integer"],                                  ["Ptr{Cvoid}","Cint"]),
-     (:free_field,       Cint,       ["field"],                                              ["Ptr{Cvoid}"],                                            ["Ptr{Cvoid}"]),
-     (:free_form,        Cint,       ["form"],                                               ["Ptr{Cvoid}"],                                            ["Ptr{Cvoid}"]),
-     (:new_form,         Ptr{Cvoid}, ["fields"],                                             ["Vector{Ptr{Cvoid}}"],                                    ["Ptr{Ptr{Cvoid}}"]),
-     (:pos_form_cursor,  Cint,       ["form"],                                               ["Ptr{Cvoid}"],                                            ["Ptr{Cvoid}"]),
-     (:post_form,        Cint,       ["form"],                                               ["Ptr{Cvoid}"],                                            ["Ptr{Cvoid}"]),
-     (:set_field_back,   Cint,       ["field","value"],                                      ["Ptr{Cvoid}","Integer"],                                  ["Ptr{Cvoid}","Cuint"]),
-     (:set_field_opts,   Cint,       ["field","field_options"],                              ["Ptr{Cvoid}","Integer"],                                  ["Ptr{Cvoid}","Cuint"]),
-     (:set_field_just,   Cint,       ["field","justification"],                              ["Ptr{Cvoid}","Integer"],                                  ["Ptr{Cvoid}","Cint"]),
-     (:set_field_type,   Cint,       ["field","type","arg"],                                 ["Ptr{Cvoid}","Ptr{Cvoid}","Integer"],                     ["Ptr{Cvoid}","Ptr{Cvoid}","Cint"]),
-     (:set_field_type,   Cint,       ["field","type","padding","vmin","vmax"],               ["Ptr{Cvoid}","Ptr{Cvoid}","Integer","Integer","Integer"], ["Ptr{Cvoid}","Ptr{Cvoid}","Cint","Cint","Cint"]),
-     (:set_field_type,   Cint,       ["field","type","padding","vmin","vmax"],               ["Ptr{Cvoid}","Ptr{Cvoid}","Integer","Float64","Float64"], ["Ptr{Cvoid}","Ptr{Cvoid}","Cint","Cdouble","Cdouble"]),
-     (:set_field_type,   Cint,       ["field","type","regex"],                               ["Ptr{Cvoid}","Ptr{Cvoid}","String"],                      ["Ptr{Cvoid}","Ptr{Cvoid}","Cstring"]),
-     (:set_field_type,   Cint,       ["field","type","valuelist","checkcase","checkunique"], ["Ptr{Cvoid}","Ptr{Cvoid}","Vector","Integer","Integer"],  ["Ptr{Cvoid}","Ptr{Cvoid}","Ptr{Cstring}","Cint","Cint"]),
-     (:set_form_opts,    Cint,       ["form","form_options"],                                ["Ptr{Cvoid}","Integer"],                                  ["Ptr{Cvoid}","Cuint"]),
-     (:set_form_win,     Cint,       ["form","win_form"],                                    ["Ptr{Cvoid}","Ptr{WINDOW}"],                              ["Ptr{Cvoid}","Ptr{WINDOW}"]),
-     (:set_form_sub,     Cint,       ["form","win_form"],                                    ["Ptr{Cvoid}","Ptr{WINDOW}"],                              ["Ptr{Cvoid}","Ptr{WINDOW}"]),
-     (:unpost_form,      Cint,       ["form"],                                               ["Ptr{Cvoid}"],                                            ["Ptr{Cvoid}"]),
+     (:free_field,      Cint,       ["field"],                ["Ptr{Cvoid}"],                       ["Ptr{Cvoid}"]),
+     (:free_form,       Cint,       ["form"],                 ["Ptr{Cvoid}"],                       ["Ptr{Cvoid}"]),
+     (:new_form,        Ptr{Cvoid}, ["fields"],               ["Vector{Ptr{Cvoid}}"],               ["Ptr{Ptr{Cvoid}}"]),
+     (:pos_form_cursor, Cint,       ["form"],                 ["Ptr{Cvoid}"],                       ["Ptr{Cvoid}"]),
+     (:post_form,       Cint,       ["form"],                 ["Ptr{Cvoid}"],                       ["Ptr{Cvoid}"]),
+     (:set_field_type,  Cint,       ["field","type","regex"], ["Ptr{Cvoid}","Ptr{Cvoid}","String"], ["Ptr{Cvoid}","Ptr{Cvoid}","Cstring"]),
+     (:set_form_win,    Cint,       ["form","win_form"],      ["Ptr{Cvoid}","Ptr{WINDOW}"],         ["Ptr{Cvoid}","Ptr{WINDOW}"]),
+     (:set_form_sub,    Cint,       ["form","win_form"],      ["Ptr{Cvoid}","Ptr{WINDOW}"],         ["Ptr{Cvoid}","Ptr{WINDOW}"]),
+     (:unpost_form,     Cint,       ["form"],                 ["Ptr{Cvoid}"],                       ["Ptr{Cvoid}"]),
     )
 
     fb    = Meta.quot(f)
@@ -110,25 +100,66 @@ for (f,r,v,j,c) in
 
         For more information, consult `libform` documentation.
         """
-        $f($(argsj...)) = @_ccallf $f($(argsc...))::$r
+        $f($(argsj...)) where T<:Integer = @_ccallf $f($(argsc...))::$r
     end
     @eval export $f
 end
 
-# Functions that depends on arguments that must be `AbstractString`
+# Functions that depends on arguments that must be `Integer`
 # ==============================================================================
 
 for (f,r,v,j,c) in
-    (
-     (:set_field_buffer, Cint, ["field","buf","c"], ["Ptr{Cvoid}","Int","T"], ["Ptr{Cvoid}","Cint","Cstring"]),
+     (
+     (:field_buffer,   Cstring, ["field","buffer"],                                     ["Ptr{Cvoid}","T"],                                  ["Ptr{Cvoid}","Cint"]),
+     (:form_driver,    Cint,    ["form","ch"],                                          ["Ptr{Cvoid}","T"],                                  ["Ptr{Cvoid}","Cint"]),
+     (:set_field_back, Cint,    ["field","value"],                                      ["Ptr{Cvoid}","T"],                                  ["Ptr{Cvoid}","Cuint"]),
+     (:set_field_opts, Cint,    ["field","field_options"],                              ["Ptr{Cvoid}","T"],                                  ["Ptr{Cvoid}","Cuint"]),
+     (:set_field_just, Cint,    ["field","justification"],                              ["Ptr{Cvoid}","T"],                                  ["Ptr{Cvoid}","Cint"]),
+     (:set_field_type, Cint,    ["field","type","arg"],                                 ["Ptr{Cvoid}","Ptr{Cvoid}","T"],                     ["Ptr{Cvoid}","Ptr{Cvoid}","Cint"]),
+     (:set_field_type, Cint,    ["field","type","padding","vmin","vmax"],               ["Ptr{Cvoid}","Ptr{Cvoid}","T","T","T"],             ["Ptr{Cvoid}","Ptr{Cvoid}","Cint","Cint","Cint"]),
+     (:set_field_type, Cint,    ["field","type","padding","vmin","vmax"],               ["Ptr{Cvoid}","Ptr{Cvoid}","T","Float64","Float64"], ["Ptr{Cvoid}","Ptr{Cvoid}","Cint","Cdouble","Cdouble"]),
+     (:set_field_type, Cint,    ["field","type","valuelist","checkcase","checkunique"], ["Ptr{Cvoid}","Ptr{Cvoid}","Vector","T","T"],        ["Ptr{Cvoid}","Ptr{Cvoid}","Ptr{Cstring}","Cint","Cint"]),
+     (:set_form_opts,  Cint,    ["form","form_options"],                                ["Ptr{Cvoid}","T"],                                  ["Ptr{Cvoid}","Cuint"]),
     )
 
     fb    = Meta.quot(f)
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where T<:AbstractString = @_ccallf $f($(argsc...))::$r
+    # Assemble the argument string to build the function documentation.
+    args_str = ""
+    for i = 1:length(v)
+        args_str *= v[i] * "::" * j[i]
+
+        if i != length(v)
+            args_str *= ", "
+        end
+    end
+
+    @eval begin
+        """
+            function $($fb)($($args_str)) where T<:Integer
+
+        **Return type**: `$($r)`
+
+        For more information, consult `libform` documentation.
+        """
+        $f($(argsj...)) where T<:Integer = @_ccallf $f($(argsc...))::$r
+    end
     @eval export $f
+end
+
+# Functions that arguments must be `AbstractString` and `Integer`
+# ==============================================================================
+
+for (f,r,v,j,c) in
+    (
+     (:set_field_buffer, Cint, ["field","buf","c"], ["Ptr{Cvoid}","Ti","Ts"], ["Ptr{Cvoid}","Cint","Cstring"]),
+    )
+
+    fb    = Meta.quot(f)
+    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
+    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -142,13 +173,15 @@ for (f,r,v,j,c) in
 
     @eval begin
         @doc """
-            function $($fb)($($args_str)) where T<:AbstractString
+            function $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
 
         **Return type**: `$($r)`
 
         For more information, consult `libform` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccallf $f($(argsc...))::$r
     end
+    @eval export $f
 end
 
 # Global symbols

@@ -22,7 +22,7 @@ Return `true` is the widget `widget` accepts focus or `false` otherwise.
 accept_focus(widget) = return true
 
 """
-    function create_widget(T, parent::Window, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)
+    function create_widget(T, parent::Window, begin_y::Int, begin_x::Int, vargs...; kwargs...)
 
 Create the widget of type `T` in the parent window `parent`. The widget will be
 positioned on the coordinate `(begin_y, begin_x)` of the parent window.

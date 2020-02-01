@@ -90,13 +90,13 @@ end
 # ==============================================================================
 
 """
-    function move_view(win::Window, y::Integer, x::Integer; update::Bool = true)
+    function move_view(win::Window, y::Int, x::Int; update::Bool = true)
 
 Move the origin of the view of window `win` to the position `(y,x)`. This
 routine makes sure that the view will never reach positions outside the buffer.
 
 """
-function move_view(win::Window, y::Integer, x::Integer; update::Bool = true)
+function move_view(win::Window, y::Int, x::Int; update::Bool = true)
     # This function only makes sense if the window has a buffer.
     win.buffer == C_NULL && return nothing
 
@@ -121,13 +121,13 @@ function move_view(win::Window, y::Integer, x::Integer; update::Bool = true)
 end
 
 """
-    function move_view_inc(win::Window; Δy::Integer, Δx::Integer; kwargs...)
+    function move_view_inc(win::Window; Δy::Int, Δx::Int; kwargs...)
 
 Move the view of the window `win` to the position `(y+Δy, x+Δx)`. This function
 has the same set of keywords of the function `move_view`.
 
 """
-move_view_inc(win::Window, Δy::Integer, Δx::Integer; kwargs...) =
+move_view_inc(win::Window, Δy::Int, Δx::Int; kwargs...) =
     move_view(win, win.orig[1]+Δy, win.orig[2]+Δx; kwargs...)
 
 """
