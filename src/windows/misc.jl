@@ -80,8 +80,8 @@ If the window is not initialized, then this function returns `(-1,-1)`.
 """
 function _get_window_dims(win::Ptr{WINDOW})
     if win != C_NULL
-        wsy = getmaxy(win)
-        wsx = getmaxx(win)
+        wsy = Int(getmaxy(win))
+        wsx = Int(getmaxx(win))
 
         return wsy, wsx
     else
@@ -99,8 +99,8 @@ Get the cursor position of the window `win` and return it on a tuple
 """
 function _get_window_cur_pos(win::Ptr{WINDOW})
     if win != C_NULL
-        cury = getcury(win)
-        curx = getcurx(win)
+        cury = Int(getcury(win))
+        curx = Int(getcurx(win))
 
         return cury, curx
     else
@@ -110,8 +110,8 @@ end
 
 function _get_window_coord(win::Ptr{WINDOW})
     if win != C_NULL
-        begy = getbegy(win)
-        begx = getbegx(win)
+        begy = Int(getbegy(win))
+        begx = Int(getbegx(win))
 
         return begy, begx
     else
