@@ -26,20 +26,7 @@ include("./temp.jl")
 
     # Colors
     # ==========================================================================
-    initialized_colors::Vector{NCURSES_COLOR} =
-        NCURSES_COLOR[
-            NCURSES_COLOR(:black,   COLOR_BLACK),
-            NCURSES_COLOR(:red,     COLOR_RED),
-            NCURSES_COLOR(:green,   COLOR_GREEN),
-            NCURSES_COLOR(:yellow,  COLOR_YELLOW),
-            NCURSES_COLOR(:blue,    COLOR_BLUE),
-            NCURSES_COLOR(:magenta, COLOR_MAGENTA),
-            NCURSES_COLOR(:cyan,    COLOR_CYAN),
-            NCURSES_COLOR(:white,   COLOR_WHITE)
-           ]
-
-    initialized_color_pairs::Vector{NCURSES_COLOR_PAIR} =
-        NCURSES_COLOR_PAIR[]
+    initialized_color_pairs::Vector{Tuple{Int,Int}} = Tuple{Int,Int}[]
 
     # Focus manager
     # ==========================================================================

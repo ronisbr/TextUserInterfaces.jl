@@ -56,6 +56,17 @@ function destroy_tui()
     end
     @log info "destroy_tui" "TUI has been destroyed."
 
+    # Reset all colors definitions.
+    empty!(_ncurses_colors)
+    push!(_ncurses_colors, :black   => COLOR_BLACK,
+                           :red     => COLOR_RED,
+                           :green   => COLOR_GREEN,
+                           :yellow  => COLOR_YELLOW,
+                           :blue    => COLOR_BLUE,
+                           :magenta => COLOR_MAGENTA,
+                           :cyan    => COLOR_CYAN,
+                           :white   => COLOR_WHITE)
+
     # Close log.
     if logger.file != nothing
         close(logger.file)

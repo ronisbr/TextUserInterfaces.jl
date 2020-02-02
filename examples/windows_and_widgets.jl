@@ -8,7 +8,6 @@ function windows_and_widgets()
     init_tui()
     NCurses.noecho()
 
-    init_color(:light_blue, 700, 700, 1000)
     p0 = ncurses_color(bold = false)
     p1 = ncurses_color(bold = true)
     p2 = ncurses_color(:yellow, :black)

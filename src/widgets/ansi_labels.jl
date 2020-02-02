@@ -160,8 +160,7 @@ function change_text(widget::WidgetANSILabel, new_text::AbstractString;
     colors = Vector{Int}(undef,0)
 
     for d in v_d
-        c = ncurses_color(_dict_ansi_color[d.color],
-                          _dict_ansi_color[d.background],
+        c = ncurses_color(d.color, d.background,
                           bold      = d.bold,
                           underline = d.underline)
         push!(colors,c)
