@@ -12,6 +12,10 @@ include("submodules/NCurses/NCurses.jl")
 using .NCurses
 export NCurses
 
+include("./submodules/ParseANSIColors/ParseANSIColors.jl")
+using .ParseANSIColors
+export ParseANSIColors
+
 ################################################################################
 #                                    Types
 ################################################################################
