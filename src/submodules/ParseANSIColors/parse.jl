@@ -89,7 +89,8 @@ end
 function _parse_ansi_code(decoration::Decoration, code::String)
     tokens = split(code, ';')
 
-    for i = 1:length(tokens)
+    i = 1
+    while i ≤ length(tokens)
         code_i = tryparse(Int, tokens[i], base = 10)
 
         if code_i == 0
@@ -101,7 +102,7 @@ function _parse_ansi_code(decoration::Decoration, code::String)
         elseif code_i == 7
             decoration = Decoration(decoration; reversed = true)
         elseif 30 <= code_i <= 37
-            decoration = Decoration(decoration; color = code_i - 30)
+            decoration = Decoration(decoration; foreground = code_i - 30)
         # 256-color support for foreground.
         elseif code_i == 38
             # In this case, we can have an extended color code. To check this,
@@ -111,9 +112,13 @@ function _parse_ansi_code(decoration::Decoration, code::String)
                 code_i_2 = tryparse(Int, tokens[i+2], base = 10)
 
                 if code_i_1 == 5
-                    decoration = Decoration(decoration; color = code_i_2)
+                    decoration = Decoration(decoration; foreground = code_i_2)
                 end
+
+                i += 2
             end
+        elseif code_i == 39
+            decoration = Decoration(decoration; foreground = 7)
         elseif 40 <= code_i <= 47
             decoration = Decoration(decoration; background = code_i - 40)
         # 256-color support for background.
@@ -125,16 +130,22 @@ function _parse_ansi_code(decoration::Decoration, code::String)
                 code_i_2 = tryparse(Int, tokens[i+2], base = 10)
 
                 if code_i_1 == 5
-                    decoration = Decoration(decoration; color = code_i_2)
+                    decoration = Decoration(decoration; background = code_i_2)
                 end
+
+                i += 2
             end
+        elseif code_i == 49
+            decoration = Decoration(decoration; background = 0)
         # Bright foreground colors defined by Aixterm.
         elseif 90 <= code_i <= 97
-            decoration = Decoration(decoration; color = code_i - 82)
+            decoration = Decoration(decoration; foreground = code_i - 82)
         # Bright background colors defined by Aixterm.
         elseif 100 <= code_i <= 107
-            decoration = Decoration(decoration; color = code_i - 92)
+            decoration = Decoration(decoration; background = code_i - 92)
         end
+
+        i += 1
     end
 
     return decoration

@@ -24,16 +24,6 @@ export WidgetANSILabel, change_text
     colors::Vector{Int} = Int[]
 end
 
-# Dictionary to convert ANSI color number to the symbol name.
-const _dict_ansi_color = Dict(0 => :black,
-                              1 => :red,
-                              2 => :green,
-                              3 => :yellow,
-                              4 => :blue,
-                              5 => :magenta,
-                              6 => :cyan,
-                              7 => :white)
-
 ################################################################################
 #                                     API
 ################################################################################
@@ -160,7 +150,7 @@ function change_text(widget::WidgetANSILabel, new_text::AbstractString;
     colors = Vector{Int}(undef,0)
 
     for d in v_d
-        c = ncurses_color(d.color, d.background,
+        c = ncurses_color(d.foreground, d.background,
                           bold      = d.bold,
                           underline = d.underline)
         push!(colors,c)
