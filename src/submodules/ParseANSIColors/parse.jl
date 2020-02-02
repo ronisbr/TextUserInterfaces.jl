@@ -89,8 +89,8 @@ end
 function _parse_ansi_code(decoration::Decoration, code::String)
     tokens = split(code, ';')
 
-    for token in tokens
-        code_i = tryparse(Int, token, base = 10)
+    for i = 1:length(tokens)
+        code_i = tryparse(Int, tokens[i], base = 10)
 
         if code_i == 0
             decoration = Decoration()
@@ -102,8 +102,38 @@ function _parse_ansi_code(decoration::Decoration, code::String)
             decoration = Decoration(decoration; reversed = true)
         elseif 30 <= code_i <= 37
             decoration = Decoration(decoration; color = code_i - 30)
+        # 256-color support for foreground.
+        elseif code_i == 38
+            # In this case, we can have an extended color code. To check this,
+            # we must have at least two more codes.
+            if i+2 ≤ length(tokens)
+                code_i_1 = tryparse(Int, tokens[i+1], base = 10)
+                code_i_2 = tryparse(Int, tokens[i+2], base = 10)
+
+                if code_i_1 == 5
+                    decoration = Decoration(decoration; color = code_i_2)
+                end
+            end
         elseif 40 <= code_i <= 47
             decoration = Decoration(decoration; background = code_i - 40)
+        # 256-color support for background.
+        elseif code_i == 48
+            # In this case, we can have an extended color code. To check this,
+            # we must have at least two more codes.
+            if i+2 ≤ length(tokens)
+                code_i_1 = tryparse(Int, tokens[i+1], base = 10)
+                code_i_2 = tryparse(Int, tokens[i+2], base = 10)
+
+                if code_i_1 == 5
+                    decoration = Decoration(decoration; color = code_i_2)
+                end
+            end
+        # Bright foreground colors defined by Aixterm.
+        elseif 90 <= code_i <= 97
+            decoration = Decoration(decoration; color = code_i - 82)
+        # Bright background colors defined by Aixterm.
+        elseif 100 <= code_i <= 107
+            decoration = Decoration(decoration; color = code_i - 92)
         end
     end
 
