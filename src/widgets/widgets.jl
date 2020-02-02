@@ -148,6 +148,15 @@ cursor will be hidden.
 require_cursor(widget) = false
 
 ################################################################################
+#                                Containers API
+################################################################################
+
+# If a widget is not a container, then the functions related to the request of a
+# another widget must be treated by the `accept_focus`.
+request_next_widget(widget) = accept_focus(widget)
+request_prev_widget(widget) = accept_focus(widget)
+
+################################################################################
 #                              Helpers functions
 ################################################################################
 

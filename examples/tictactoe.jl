@@ -243,11 +243,12 @@ function tictactoe()
                              top = 15, left = 2, height = 1, width = 20,
                              text = "Press F1 to exit.", color = p0)
     fields   = [create_widget(Val{:field}, con, 2 + 4(i-1), 2 + 8(j-1), (i,j)) for i = 1:3,j = 1:3]
-    request_focus(fields[1,1])
 
     # Initialize the focus manager.
     tui.focus_chain = [win]
     init_focus_manager()
+
+    request_focus(fields[1,1])
 
 
     # Initial painting.

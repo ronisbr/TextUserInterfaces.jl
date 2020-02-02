@@ -15,8 +15,6 @@
 #                                     API
 ################################################################################
 
-accept_focus(widget::ComposedWidget) = accept_focus(widget.container)
-
 function destroy_widget(widget::ComposedWidget; refresh::Bool = true)
     @unpack common, container = widget
     @unpack parent, buffer = common
@@ -46,5 +44,7 @@ end
 process_focus(widget::ComposedWidget, k::Keystroke) = process_focus(widget.container, k)
 redraw(widget::ComposedWidget) = redraw(widget.container)
 release_focus(widget::ComposedWidget) = release_focus(widget.container)
+request_next_widget(widget::ComposedWidget) = request_next_widget(widget.container)
+request_prev_widget(widget::ComposedWidget) = request_prev_widget(widget.container)
 require_cursor(widget::ComposedWidget) = require_cursor(widget.container)
 reposition!(widget::ComposedWidget; force::Bool = false) = reposition!(widget.container; force = force)

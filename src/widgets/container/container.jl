@@ -28,16 +28,6 @@ end
 #                                     API
 ################################################################################
 
-function accept_focus(container::WidgetContainer)
-    # If there were a widget with focus, then do not change the focus when
-    # accepting it again.
-    if container.focus_id <= 0
-        return _next_widget(container)
-    else
-        return true
-    end
-end
-
 function create_widget(::Type{Val{:container}}, parent::T;
                        opc = nothing, composed::Bool = false, kwargs...) where
     T<:WidgetParent
@@ -123,7 +113,13 @@ function process_focus(container::WidgetContainer, k::Keystroke)
     end
 
     # Otherwise, we must search another widget that can accept the focus.
-    return _next_widget(container)
+    # In this case, if the keystorke was SHIFT-TAB, we will move the focus to
+    # the previous widget.
+    if k.ktype == :tab && k.shift == true
+         return _previous_widget(container)
+    else
+        return _next_widget(container)
+    end
 end
 
 function redraw(container::WidgetContainer)
@@ -156,10 +152,33 @@ function redraw(container::WidgetContainer)
     return nothing
 end
 
+"""
+    function request_next_widget(container::WidgetContainer)
+
+Request the next widget in `container`. It returns `true` if a widget has get
+the focus or `false` otherwise.
+
+"""
+request_next_widget(container::WidgetContainer) = _next_widget(container)
+
+"""
+    function request_prev_widget(container::WidgetContainer)
+
+Request the previous widget in `container`. It returns `true` if a widget has
+get the focus or `false` otherwise.
+
+"""
+request_prev_widget(container::WidgetContainer) = _previous_widget(container)
+
 function require_cursor(container::WidgetContainer)
     @unpack widgets, focus_id = container
     focus_id > 0 && return require_cursor(widgets[focus_id])
     return false
+end
+
+function release_focus(container::WidgetContainer)
+    container.focus_id = 0
+    return true
 end
 
 function reposition!(container::WidgetContainer; force::Bool = false)
@@ -199,7 +218,7 @@ function _next_widget(container::WidgetContainer)
 
     # Search for the next widget that can handle the focus.
     for i = focus_id+1:length(widgets)
-        if accept_focus(widgets[i])
+        if request_next_widget(widgets[i])
             container.focus_id = i
             sync_cursor(container)
 
@@ -214,6 +233,46 @@ function _next_widget(container::WidgetContainer)
     sync_cursor(container)
 
     @log verbose "_next_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
+
+    return false
+end
+
+"""
+    function _previous_widget(container::WidgetContainer)
+
+Move the focus of container `container` to the previous widget.
+
+"""
+function _previous_widget(container::WidgetContainer)
+    @unpack common, widgets, focus_id = container
+    @unpack parent = common
+
+    @log verbose "_previous_widget" "$(obj_desc(container)): Change the focused widget."
+
+    # Release the focus from previous widget.
+    if focus_id > 0
+        release_focus(widgets[focus_id])
+    else
+        focus_id = length(widgets)+1
+    end
+
+    # Search for the next widget that can handle the focus.
+    for i = focus_id-1:-1:1
+        if request_prev_widget(widgets[i])
+            container.focus_id = i
+            sync_cursor(container)
+
+            @log verbose "_previous_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
+
+            return true
+        end
+    end
+
+    # No more element could accept the focus.
+    container.focus_id = 0
+    sync_cursor(container)
+
+    @log verbose "_previous_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
 
     return false
 end

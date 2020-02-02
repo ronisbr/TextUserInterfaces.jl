@@ -90,7 +90,7 @@ function request_focus(container::WidgetContainer, widget)
             return false
         else
             container.focus_id = id
-            accept_focus(widgets[container.focus_id])
+            request_next_widget(widgets[container.focus_id])
             @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$id -> $(obj_desc(widgets[id]))."
 
             # TODO: What should we do if the widget does not accept the focus?
