@@ -35,7 +35,7 @@ function ncurses_color(foreground::Symbol, background::Symbol, attrs::Int = 0;
     # Get the index related to the selected colors.
     foreground_id = _get_color_index(foreground)
     background_id = _get_color_index(background)
-    return ncurses_color(foreground_id, background_id)
+    return ncurses_color(foreground_id, background_id, attrs; kwargs...)
 end
 
 function ncurses_color(foreground::Symbol, background::Int, attrs::Int = 0;
@@ -43,7 +43,7 @@ function ncurses_color(foreground::Symbol, background::Int, attrs::Int = 0;
 
     # Get the index related to the selected colors.
     foreground_id = _get_color_index(foreground)
-    return ncurses_color(foreground_id, background)
+    return ncurses_color(foreground_id, background, attrs; kwargs...)
 end
 
 function ncurses_color(foreground::Int, background::Symbol, attrs::Int = 0;
@@ -51,7 +51,7 @@ function ncurses_color(foreground::Int, background::Symbol, attrs::Int = 0;
 
     # Get the index related to the selected colors.
     background_id = _get_color_index(background)
-    return ncurses_color(foreground, background_id)
+    return ncurses_color(foreground, background_id, attrs; kwargs...)
 end
 
 function ncurses_color(foreground::Int, background::Int, attrs::Int = 0;
