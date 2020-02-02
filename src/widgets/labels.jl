@@ -21,6 +21,7 @@ export WidgetLabel, change_text
     # Parameters related to the widget
     # ==========================================================================
     color::Int
+    fill_color::Bool
     text::AbstractString
 end
 
@@ -34,6 +35,7 @@ accept_focus(widget::WidgetLabel) = false
 function create_widget(::Type{Val{:label}}, parent::WidgetParent;
                        alignment = :l,
                        color::Int = 0,
+                       fill_color::Bool = false,
                        text::AbstractString = "Text",
                        kwargs...)
 
@@ -49,7 +51,10 @@ function create_widget(::Type{Val{:label}}, parent::WidgetParent;
     common = create_widget_common(parent, opc)
 
     # Create the widget.
-    widget = WidgetLabel(common = common, text = "", color  = color)
+    widget = WidgetLabel(common     = common,
+                         text       = "",
+                         color      = color,
+                         fill_color = fill_color)
 
     # Update the text.
     change_text(widget, text; alignment = alignment)
@@ -103,6 +108,7 @@ The text color can be selected by the keyword `color`. It it is negative
 function change_text(widget::WidgetLabel, new_text::AbstractString;
                      alignment = :l, color::Int = -1)
 
+    @unpack fill_color = widget
     @unpack parent, buffer, width = widget.common
 
     # Split the string in each line.
@@ -112,16 +118,27 @@ function change_text(widget::WidgetLabel, new_text::AbstractString;
     text = ""
 
     for line in tokens
+        text_i = ""
+
         # Check the alignment and print accordingly.
         if alignment == :r
-            col   = width - length(line) - 1
-            text *= " "^col * line * "\n"
+            col     = width - length(line) - 1
+            text_i *= " "^col * line
         elseif alignment == :c
-            col   = div(width - length(line), 2)
-            text *= " "^col * line * "\n"
+            col     = div(width - length(line), 2)
+            text_i *= " "^col * line
         else
-            text *= line * "\n"
+            text_i *= line
         end
+
+        # If `fill_color` is `true`, then fill the remaning spaces up to the
+        # widget width.
+        if fill_color
+            rem     = clamp(width - length(text_i), 0, width)
+            text_i *= " "^rem
+        end
+
+        text *= text_i * "\n"
     end
 
     widget.text = text
