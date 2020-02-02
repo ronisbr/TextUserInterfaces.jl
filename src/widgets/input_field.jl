@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetInputField, get_data
+export WidgetInputField, clear_data!, get_data
 
 ################################################################################
 #                                     Type
@@ -222,6 +222,26 @@ require_cursor(widget::WidgetInputField) = true
 ################################################################################
 #                           Custom widget functions
 ################################################################################
+
+"""
+    function clear_data!(widget::WidgetInputField)
+
+Clear the data in the input field `widget`.
+
+"""
+function clear_data!(widget::WidgetInputField)
+    empty!(widget.data)
+
+    widget.cury  = 1
+    widget.curx  = 1
+    widget.vcury = 1
+    widget.vcurx = 1
+    widget.view  = 1
+
+    request_update(widget)
+
+    return nothing
+end
 
 """
     function get_data(widget::WidgetInputField)

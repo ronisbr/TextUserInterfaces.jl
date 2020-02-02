@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetForm, get_data
+export WidgetForm, clear_daat!, get_data
 
 ################################################################################
 #                                     Type
@@ -77,11 +77,11 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
         wii = create_widget(Val{:input_field}, container,
                             anchor_top    = (at, ats, 0),
                             anchor_left   = (container, :left, lmax+1),
+                            anchor_right  = (container, :right, 0),
                             color_valid   = color_valid,
                             color_invalid = color_invalid,
                             border        = borders,
-                            validator     = validator[i],
-                            width         = field_size)
+                            validator     = validator[i])
 
         wli = create_widget(Val{:label}, container,
                             anchor_middle = (wii, :middle, 0),
@@ -116,6 +116,17 @@ end
 ################################################################################
 #                           Custom widget functions
 ################################################################################
+
+"""
+    function clear_data!(widget::WidgetForm)
+
+Clear the data in all the input fields in the form `widget`.
+
+"""
+function clear_data!(widget::WidgetForm)
+    clear_data!.(widget.inputs)
+    request_update(widget)
+end
 
 """
     function get_data(widget::WidgetInputField)
