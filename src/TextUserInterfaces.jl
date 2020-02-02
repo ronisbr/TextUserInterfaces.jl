@@ -64,6 +64,7 @@ include("./windows/rootwin.jl")
 # ==============================================================================
 
 include("./widgets/widgets.jl")
+include("./widgets/ansi_labels.jl")
 include("./widgets/button.jl")
 include("./widgets/composed_widgets.jl")
 include("./widgets/labels.jl")
