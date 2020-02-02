@@ -33,14 +33,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.NCurses.init_color-Tuple{Symbol,Int64,Int64,Int64}",
-    "page": "Library",
-    "title": "TextUserInterfaces.NCurses.init_color",
-    "category": "method",
-    "text": "function init_color(name::Symbol, r::Int, g::Int, b::Int)\n\nInitialize the color with name name and RGB color r, g, and b.  Notice that the range for the last three variables is [0,1000].\n\nIf the color is already initialized, then nothing will be changed.\n\nIf the color was initialized, then it returns the color ID. Otherwise, it returns -1.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{Any}",
     "page": "Library",
     "title": "TextUserInterfaces.accept_focus",
@@ -110,6 +102,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.change_value",
     "category": "method",
     "text": "function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)\n\nChange the value of the progress bar to new_value.\n\nThe color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.clear_data!-Tuple{WidgetForm}",
+    "page": "Library",
+    "title": "TextUserInterfaces.clear_data!",
+    "category": "method",
+    "text": "function clear_data!(widget::WidgetForm)\n\nClear the data in all the input fields in the form widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.clear_data!-Tuple{WidgetInputField}",
+    "page": "Library",
+    "title": "TextUserInterfaces.clear_data!",
+    "category": "method",
+    "text": "function clear_data!(widget::WidgetInputField)\n\nClear the data in the input field widget.\n\n\n\n\n\n"
 },
 
 {
@@ -241,11 +249,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_color_pair-Tuple{Symbol,Symbol}",
+    "location": "lib/library/#TextUserInterfaces.get_color_pair-Tuple{Int64,Int64}",
     "page": "Library",
     "title": "TextUserInterfaces.get_color_pair",
     "category": "method",
-    "text": "function get_color_pair(foreground::Symbol, background::Symbol)\n\nReturn the ID of the color pair (foreground, background), or nothing if the color pair is not initialized.\n\n\n\n\n\n"
+    "text": "function get_color_pair(foreground::Int, background::Int)\n\nReturn the ID of the color pair (foreground, background), or nothing if the color pair is not initialized.\n\n\n\n\n\n"
 },
 
 {
@@ -497,6 +505,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.modify_color-Tuple{Symbol,Int64,Int64,Int64,Int64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.modify_color",
+    "category": "method",
+    "text": "function modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int)\n\nModify the color ID id to the RGB value (r,g,b). If the symbol name is available, then the user can select this color ID by using name instead of the id.\n\nIf the color name name already exists, then nothing will be changed.\n\nNotice that the range for the RGB color components is [0,1000].\n\nIf the color was initialized, then it returns the color ID. Otherwise, it returns -1.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.move_view-Tuple{Window,Int64,Int64}",
     "page": "Library",
     "title": "TextUserInterfaces.move_view",
@@ -533,7 +549,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.ncurses_color",
     "category": "function",
-    "text": "function ncurses_color([foreground::Symbol, background::Symbol,] attrs::Int = 0; kwargs...)\n\nReturn a mask to apply a color format with the foreground color foreground, background color background, and the attributes attrs.\n\nIf the pair (foreground, background) is omitted, then the foreground and background color will not be changed.\n\nKeywords\n\nbold: If true, then apply bold format mask to attrs.         (Default = false)\nunderline: If true, then apply underline format mask to attrs.              (Default = false)\n\n\n\n\n\n"
+    "text": "function ncurses_color([foreground, background,] attrs::Int = 0; kwargs...)\n\nReturn a mask to apply a color format with the foreground color foreground, background color background, and the attributes attrs.\n\nIf the pair (foreground, background) is omitted, then the foreground and background color will not be changed.\n\nThe colors can be specified by their names using Symbol or by their indices using Int.\n\nKeywords\n\nbold: If true, then apply bold format mask to attrs.         (Default = false)\nunderline: If true, then apply underline format mask to attrs.              (Default = false)\n\n\n\n\n\n"
 },
 
 {
@@ -910,6 +926,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._get_anchor",
     "category": "method",
     "text": "function _get_anchor(anchor::Anchor, parent)\n\nReturn the line or column related to the anchor anchor. If the object in anchor is the parent, then the positioning will be computed relative to the parent.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._get_color_index-Tuple{Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces._get_color_index",
+    "category": "method",
+    "text": "function _get_color_index(color::Symbol)\n\nReturn the index related to the color color.\n\n\n\n\n\n"
 },
 
 {
