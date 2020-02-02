@@ -89,6 +89,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.change_text-Tuple{WidgetANSILabel,AbstractString}",
+    "page": "Library",
+    "title": "TextUserInterfaces.change_text",
+    "category": "method",
+    "text": "function change_text(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l, color::Int = -1)\n\nChange to text of the label widget widget to new_text.\n\nThe text alignment in the widget can be selected by the keyword alignment, which can be:\n\n:l: left alignment (default);\n:c: Center alignment; or\n:r: Right alignment.\n\nThe text color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.change_text-Tuple{WidgetLabel,AbstractString}",
     "page": "Library",
     "title": "TextUserInterfaces.change_text",
@@ -97,11 +105,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.change_value-Tuple{WidgetProgressBar,Integer}",
+    "location": "lib/library/#TextUserInterfaces.change_value-Tuple{WidgetProgressBar,Int64}",
     "page": "Library",
     "title": "TextUserInterfaces.change_value",
     "category": "method",
-    "text": "function change_value(widget::WidgetProgressBar, new_value::Integer; color::Int = -1)\n\nChange the value of the progress bar to new_value.\n\nThe color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
+    "text": "function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)\n\nChange the value of the progress bar to new_value.\n\nThe color can be selected by the keyword color. It it is negative (default), then the current color will not be changed.\n\n\n\n\n\n"
 },
 
 {
@@ -125,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_widget",
     "category": "function",
-    "text": "function create_widget(T, parent::Window, begin_y::Integer, begin_x::Integer, vargs...; kwargs...)\n\nCreate the widget of type T in the parent window parent. The widget will be positioned on the coordinate (begin_y, begin_x) of the parent window.\n\nAdditional variables and keywords related to each widget can be passed using vargs and kwargs respectively.\n\n\n\n\n\n"
+    "text": "function create_widget(T, parent::Window, begin_y::Int, begin_x::Int, vargs...; kwargs...)\n\nCreate the widget of type T in the parent window parent. The widget will be positioned on the coordinate (begin_y, begin_x) of the parent window.\n\nAdditional variables and keywords related to each widget can be passed using vargs and kwargs respectively.\n\n\n\n\n\n"
 },
 
 {
@@ -141,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
     "category": "function",
-    "text": "function createwindow(id::String = \"\"; bcols::Integer = 0, blines::Integer = 0, border::Bool = true, bordercolor::Int = -1, focusable::Bool = true, title::String = \"\", title_color::Int = -1, kwargs...)\n\nCreate a window. The window ID id is used to identify the new window in the global window list. The size and location of the window can be configured by passing to kwargs... the arguments used in the function object_positioning_conf.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window.          (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window.           (Default = 0)\nborder: If true, then the window will have a border.           (Default = true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
+    "text": "function createwindow(id::String = \"\"; bcols::Int = 0, blines::Int = 0, border::Bool = true, bordercolor::Int = -1, focusable::Bool = true, title::String = \"\", title_color::Int = -1, kwargs...)\n\nCreate a window. The window ID id is used to identify the new window in the global window list. The size and location of the window can be configured by passing to kwargs... the arguments used in the function object_positioning_conf.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window.          (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window.           (Default = 0)\nborder: If true, then the window will have a border.           (Default = true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -489,27 +497,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.move_view-Tuple{Window,Integer,Integer}",
+    "location": "lib/library/#TextUserInterfaces.move_view-Tuple{Window,Int64,Int64}",
     "page": "Library",
     "title": "TextUserInterfaces.move_view",
     "category": "method",
-    "text": "function move_view(win::Window, y::Integer, x::Integer; update::Bool = true)\n\nMove the origin of the view of window win to the position (y,x). This routine makes sure that the view will never reach positions outside the buffer.\n\n\n\n\n\n"
+    "text": "function move_view(win::Window, y::Int, x::Int; update::Bool = true)\n\nMove the origin of the view of window win to the position (y,x). This routine makes sure that the view will never reach positions outside the buffer.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.move_view_inc-Tuple{Window,Integer,Integer}",
+    "location": "lib/library/#TextUserInterfaces.move_view_inc-Tuple{Window,Int64,Int64}",
     "page": "Library",
     "title": "TextUserInterfaces.move_view_inc",
     "category": "method",
-    "text": "function move_view_inc(win::Window; Δy::Integer, Δx::Integer; kwargs...)\n\nMove the view of the window win to the position (y+Δy, x+Δx). This function has the same set of keywords of the function move_view.\n\n\n\n\n\n"
+    "text": "function move_view_inc(win::Window; Δy::Int, Δx::Int; kwargs...)\n\nMove the view of the window win to the position (y+Δy, x+Δx). This function has the same set of keywords of the function move_view.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.move_window-Tuple{Window,Integer,Integer}",
+    "location": "lib/library/#TextUserInterfaces.move_window-Tuple{Window,Int64,Int64}",
     "page": "Library",
     "title": "TextUserInterfaces.move_window",
     "category": "method",
-    "text": "function move_window(win::Window, starty::Integer, startx::Integer)\n\nMove the window win to the position (starty, startx).\n\n\n\n\n\n"
+    "text": "function move_window(win::Window, starty::Int, startx::Int)\n\nMove the window win to the position (starty, startx).\n\n\n\n\n\n"
 },
 
 {
@@ -749,7 +757,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.set_focus_chain",
     "category": "method",
-    "text": "function set_focus_chain(wins::Window...; new_focus_id::Integer = 1)\n\nSet the focus chain, i.e. the ordered list of windows that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
+    "text": "function set_focus_chain(wins::Window...; new_focus_id::Int = 1)\n\nSet the focus chain, i.e. the ordered list of windows that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
 },
 
 {
