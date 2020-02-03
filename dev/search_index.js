@@ -961,6 +961,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces._previous_widget-Tuple{WidgetContainer}",
+    "page": "Library",
+    "title": "TextUserInterfaces._previous_widget",
+    "category": "method",
+    "text": "function _previous_widget(container::WidgetContainer)\n\nMove the focus of container container to the previous widget.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces._process_horizontal_info!-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._process_horizontal_info!",
@@ -1022,6 +1030,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.previous_window",
     "category": "method",
     "text": "function previous_window()\n\nMove the focus to the previous window.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_next_widget-Tuple{WidgetContainer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_next_widget",
+    "category": "method",
+    "text": "function request_next_widget(container::WidgetContainer)\n\nRequest the next widget in container. It returns true if a widget has get the focus or false otherwise.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.request_prev_widget-Tuple{WidgetContainer}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_prev_widget",
+    "category": "method",
+    "text": "function request_prev_widget(container::WidgetContainer)\n\nRequest the previous widget in container. It returns true if a widget has get the focus or false otherwise.\n\n\n\n\n\n"
 },
 
 {
