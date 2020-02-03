@@ -222,8 +222,8 @@ end
 function get_limits(tlim,ylim)
     # Without this, we will have an bad type instability leading to a huge
     # performance hit when ploting data.
-    vt::Vector{Union{Nothing,Float64}} = get_data(tlim)
-    vy::Vector{Union{Nothing,Float64}} = get_data(ylim)
+    vt = get_data(tlim)
+    vy = get_data(ylim)
 
     eltype(vt) == Nothing && (vt = [0.,1.])
     eltype(vy) == Nothing && (vy = [0.,1.])

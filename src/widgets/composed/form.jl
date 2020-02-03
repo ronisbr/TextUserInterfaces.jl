@@ -12,7 +12,7 @@ export WidgetForm, clear_daat!, get_data
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetForm{T<:WidgetParent} <: ComposedWidget
+@with_kw mutable struct WidgetForm{T<:WidgetParent,I<:Tuple} <: ComposedWidget
 
     # API
     # ==========================================================================
@@ -21,7 +21,7 @@ export WidgetForm, clear_daat!, get_data
 
     # Derived widgets
     # ==========================================================================
-    inputs::Vector{WidgetInputField}
+    inputs::I
 end
 
 ################################################################################
@@ -96,7 +96,7 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
     # Create the widget.
     widget = WidgetForm(common    = container.common,
                         container = container,
-                        inputs    = widget_inputs)
+                        inputs    = tuple(widget_inputs...))
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
@@ -134,4 +134,4 @@ end
 Return a vector with the data of all fields.
 
 """
-get_data(widget::WidgetForm) = get_data.(widget.inputs)
+get_data(widget::WidgetForm) = map(get_data,widget.inputs)

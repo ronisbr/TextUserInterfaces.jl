@@ -217,8 +217,8 @@ end
 function get_limits(xlim,ylim)
     # Without this, we will have an bad type instability leading to a huge
     # performance hit when ploting data.
-    vx::Vector{Union{Nothing,Float64}} = get_data(xlim)
-    vy::Vector{Union{Nothing,Float64}} = get_data(ylim)
+    vx = get_data(xlim)
+    vy = get_data(ylim)
 
     eltype(vx) == Nothing && (vx = [0.,1.])
     eltype(vy) == Nothing && (vy = [0.,1.])
