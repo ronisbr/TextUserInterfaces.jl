@@ -313,22 +313,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_visible_height",
-    "page": "Library",
-    "title": "TextUserInterfaces.get_visible_height",
-    "category": "function",
-    "text": "function get_visible_height(object)\n\nReturn the visible height of object object.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.get_visible_width",
-    "page": "Library",
-    "title": "TextUserInterfaces.get_visible_width",
-    "category": "function",
-    "text": "function get_visible_width(object)\n\nReturn the visible width of object object.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.get_width",
     "page": "Library",
     "title": "TextUserInterfaces.get_width",
@@ -921,6 +905,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces._draw_title-Tuple{WidgetContainer}",
+    "page": "Library",
+    "title": "TextUserInterfaces._draw_title",
+    "category": "method",
+    "text": "function _draw_title(container::WidgetContainer)\n\nDraw the title in the container container.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces._get_anchor-Tuple{TextUserInterfaces.Anchor,Any}",
     "page": "Library",
     "title": "TextUserInterfaces._get_anchor",
@@ -1001,6 +993,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_height_for_child",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_height_for_child",
+    "category": "function",
+    "text": "get_height_for_child\n\nReturn the usable height of the object for a child object.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_left_for_child",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_left_for_child",
+    "category": "function",
+    "text": "get_left_for_child\n\nReturn the left of the object for a child object.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_parent-Tuple{Any}",
     "page": "Library",
     "title": "TextUserInterfaces.get_parent",
@@ -1014,6 +1022,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.get_parent",
     "category": "method",
     "text": "function get_parent(win::Window)\n\nReturn nothing since the window has no parent.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_top_for_child",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_top_for_child",
+    "category": "function",
+    "text": "get_top_for_child\n\nReturn the top of the object for a child object.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_width_for_child",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_width_for_child",
+    "category": "function",
+    "text": "get_width_for_child\n\nReturn the usable width of object object for a child object.\n\n\n\n\n\n"
 },
 
 {
