@@ -20,8 +20,13 @@ export WidgetContainer
 
     # Parameters related to the widget
     # ==========================================================================
-    widgets::Vector{Any} = Any[]
+    border::Bool = false
+    border_color::Int = 0
     focus_id::Int = 0
+    title::String = ""
+    title_alignment::Symbol = :l
+    title_color::Int = 0
+    widgets::Vector{Any} = Any[]
 end
 
 ################################################################################
@@ -29,7 +34,10 @@ end
 ################################################################################
 
 function create_widget(::Type{Val{:container}}, parent::T;
-                       opc = nothing, composed::Bool = false, kwargs...) where
+                       opc = nothing, border::Bool = false,
+                       border_color::Int = -1, composed::Bool = false,
+                       title::AbstractString = "", title_alignment::Symbol = :l,
+                       title_color::Int = -1, kwargs...) where
     T<:WidgetParent
 
     if opc == nothing
@@ -72,7 +80,12 @@ function create_widget(::Type{Val{:container}}, parent::T;
     common = create_widget_common(parent, opc)
 
     # Create the widget.
-    container = WidgetContainer{T}(common = common)
+    container = WidgetContainer{T}(common          = common,
+                                   border          = border,
+                                   border_color    = border_color,
+                                   title           = title,
+                                   title_alignment = title_alignment,
+                                   title_color     = title_color)
 
     # Add the new widget to the parent widget list.
     !composed && add_widget(parent, container)
@@ -123,10 +136,20 @@ function process_focus(container::WidgetContainer, k::Keystroke)
 end
 
 function redraw(container::WidgetContainer)
-    @unpack common, widgets = container
+    @unpack border, border_color, common, widgets, title_color = container
     @unpack buffer, parent = common
 
     wclear(buffer)
+
+    if border
+        border_color > 0 && wattron(buffer, border_color)
+        wborder(buffer)
+        border_color > 0 && wattroff(buffer, border_color)
+
+        title_color  > 0 && wattron(buffer, title_color)
+        _draw_title(container)
+        title_color  > 0 && wattroff(buffer, title_color)
+    end
 
     if common.update_needed
         update_needed = true
@@ -200,6 +223,40 @@ end
 ################################################################################
 #                              Private functions
 ################################################################################
+
+"""
+    function _draw_title(container::WidgetContainer)
+
+Draw the title in the container `container`.
+
+"""
+function _draw_title(container::WidgetContainer)
+    @unpack common, title, title_alignment = container
+    @unpack buffer = common
+
+    # Get the width of the container.
+    width = get_width(container)
+
+    # If the width is too small, then do nothing.
+    width ≤ 4 && return nothing
+
+    # Check if the entire title cannot be written. In this case, the title will
+    # be shrinked.
+    length(title) ≥ width - 4 && (title = title[1:width-4])
+
+    # Compute the padding to print the title based on the alignemnt.
+    if title_alignment == :r
+        pad = width - 2 - length(title)
+    elseif title_alignment == :c
+        pad = div(width - length(title), 2)
+    else
+        pad = 2
+    end
+
+    mvwprintw(buffer, 0, pad, title)
+
+    return nothing
+end
 
 """
     function _next_widget(container::WidgetContainer)
