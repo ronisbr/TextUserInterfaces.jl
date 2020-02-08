@@ -247,24 +247,18 @@ function _get_anchor(anchor::Anchor, parent)
     obj = anchor.obj
     pad = anchor.pad
 
-    # If the object has no parent, then it **must** be a window. In this case,
-    # we must use the visible height and width to compute the anchors.
-    # Otherwise, it **must** be an object inside a window. Thus, in this case,
-    # we must use the available size and width.
-    if parent == nothing
-        height = get_visible_height(obj)
-        width  = get_visible_width(obj)
+    # If `obj` is the parent of the object we want to anchor, then the
+    # computation of the position must be performed differently.
+    if obj == parent
+        height = get_height_for_child(obj)
+        width  = get_width_for_child(obj)
+        top    = get_top_for_child(obj)
+        left   = get_left_for_child(obj)
     else
+        top    = get_top(obj)
+        left   = get_left(obj)
         height = get_height(obj)
         width  = get_width(obj)
-    end
-
-    if (obj == parent) || (parent == nothing)
-        top  = 0
-        left = 0
-    else
-        top  = get_top(obj)
-        left = get_left(obj)
     end
 
     if anchor.side == :bottom

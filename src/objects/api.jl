@@ -18,12 +18,28 @@ Return the left of the object w.r.t. its parent.
 get_left
 
 """
+    get_left_for_child
+
+Return the left of the object for a child object.
+
+"""
+get_left_for_child
+
+"""
     function get_height(object)
 
 Return the usable height of object `object`.
 
 """
 get_height
+
+"""
+    get_height_for_child
+
+Return the usable height of the object for a child object.
+
+"""
+get_height_for_child
 
 """
     function get_width(object)
@@ -34,6 +50,14 @@ Return the usable width of object `object`.
 get_width
 
 """
+    get_width_for_child
+
+Return the usable width of object `object` for a child object.
+
+"""
+get_width_for_child
+
+"""
     function get_top(object)
 
 Return the top of the object w.r.t. its parent.
@@ -42,20 +66,12 @@ Return the top of the object w.r.t. its parent.
 get_top
 
 """
-    function get_visible_height(object)
+    get_top_for_child
 
-Return the visible height of object `object`.
-
-"""
-get_visible_height
+Return the top of the object for a child object.
 
 """
-    function get_visible_width(object)
-
-Return the visible width of object `object`.
-
-"""
-get_visible_width
+get_top_for_child
 
 """
     function reposition!(object)

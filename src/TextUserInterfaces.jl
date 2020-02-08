@@ -73,6 +73,7 @@ include("./widgets/object_api.jl")
 include("./widgets/progress_bar.jl")
 
 include("./widgets/container/container.jl")
+include("./widgets/container/object_api.jl")
 include("./widgets/container/api.jl")
 
 include("./widgets/composed/form.jl")

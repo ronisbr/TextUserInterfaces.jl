@@ -7,13 +7,15 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-get_left(win::T)   where T<:Window = win.view   != C_NULL ? Int(getbegx(win.view)) : -1
-get_height(win::T) where T<:Window = win.buffer != C_NULL ? Int(getmaxy(win.buffer)) : -1
-get_width(win::T)  where T<:Window = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
-get_top(win::T)    where T<:Window = win.view   != C_NULL ? Int(getbegy(win.view)) : -1
+get_left(win::T)   where T<:Window = win.view != C_NULL ? Int(getbegx(win.view)) : -1
+get_height(win::T) where T<:Window = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
+get_width(win::T)  where T<:Window = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
+get_top(win::T)    where T<:Window = win.view != C_NULL ? Int(getbegy(win.view)) : -1
 
-get_visible_height(win::T) where T<:Window = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
-get_visible_width(win::T)  where T<:Window = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
+get_left_for_child(win::T) where T<:Window   = win.buffer != C_NULL ? Int(getbegx(win.buffer)) : -1
+get_height_for_child(win::T) where T<:Window = win.buffer != C_NULL ? Int(getmaxy(win.buffer)) : -1
+get_width_for_child(win::T) where T<:Window  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
+get_top_for_child(win::T) where T<:Window    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
 
 function reposition!(win::Window; force::Bool = false, kwargs...)
     if !isempty(kwargs)
@@ -75,7 +77,7 @@ function reposition!(win::Window, opc::ObjectPositioningConfiguration;
     win_resize = false
     win_move   = false
 
-    if (nlines != get_visible_height(win)) || (ncols != get_visible_width(win)) || force
+    if (nlines != get_height(win)) || (ncols != get_width(win)) || force
         win_resize = true
     end
 
