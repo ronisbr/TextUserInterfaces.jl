@@ -101,8 +101,8 @@ for (f,r,v,j,c) in
         For more information, consult `libform` documentation.
         """
         $f($(argsj...)) where T<:Integer = @_ccallf $f($(argsc...))::$r
+        export $f
     end
-    @eval export $f
 end
 
 # Functions that depends on arguments that must be `Integer`
@@ -145,8 +145,8 @@ for (f,r,v,j,c) in
         For more information, consult `libform` documentation.
         """
         $f($(argsj...)) where T<:Integer = @_ccallf $f($(argsc...))::$r
+        export $f
     end
-    @eval export $f
 end
 
 # Functions that arguments must be `AbstractString` and `Integer`
@@ -172,7 +172,7 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
+        """
             $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
 
         **Return type**: `$($r)`
@@ -180,8 +180,8 @@ for (f,r,v,j,c) in
         For more information, consult `libform` documentation.
         """
         $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccallf $f($(argsc...))::$r
+        export $f
     end
-    @eval export $f
 end
 
 # Global symbols
@@ -193,6 +193,12 @@ for s in (:TYPE_ALNUM, :TYPE_ALPHA, :TYPE_ENUM, :TYPE_INTEGER, :TYPE_NUMERIC,
     sq = Meta.quot(s)
 
     @eval begin
+        """
+            $($sq)()
+
+        Return a pointer to the global symbol `$($sq)` of `libform`.
+
+        """
         function $s()
             ptr = getfield(ncurses, $sq)
             if ptr == C_NULL
@@ -204,14 +210,5 @@ for s in (:TYPE_ALNUM, :TYPE_ALPHA, :TYPE_ENUM, :TYPE_INTEGER, :TYPE_NUMERIC,
             return ptr
         end
         export $s
-    end
-
-    @eval begin
-        @doc """
-            function $($sq)()
-
-        Return a pointer to the global symbol `$($sq)` of `libform`.
-
-        """ $s
     end
 end
