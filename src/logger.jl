@@ -48,7 +48,7 @@ macro reset_log_ident() return :( logger.pad = 0 )   end
 ################################################################################
 
 """
-    function log_message(level::Int, msg::AbstractString, id::AbstractString = "")
+    log_message(level::Int, msg::AbstractString, id::AbstractString = "")
 
 Log the message `msg` with level `level`. The ID of the called can be specified
 by `id`.

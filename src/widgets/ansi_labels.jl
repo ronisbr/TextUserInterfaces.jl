@@ -95,7 +95,7 @@ end
 ################################################################################
 
 """
-    function change_text(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l, color::Int = -1)
+    change_text(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l, color::Int = -1)
 
 Change to text of the label widget `widget` to `new_text`.
 

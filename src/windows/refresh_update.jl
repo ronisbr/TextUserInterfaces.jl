@@ -10,7 +10,7 @@ export refresh_window, refresh_all_windows, move_view, move_view_inc,
        update_view
 
 """
-    function refresh_window(id::String)
+    refresh_window(id::String)
 
 Refresh the window with id `id` and all its parents windows except for the root
 window.
@@ -23,7 +23,7 @@ function refresh_window(id::String)
 end
 
 """
-    function refresh_window(win::Window; force_redraw = false)
+    refresh_window(win::Window; force_redraw = false)
 
 Refresh the window `win` and its widget. If the view needs to be updated (see
 `view_needs_update`) or if `force_redraw` is `true`, then the content of the
@@ -48,7 +48,7 @@ function refresh_window(win::Window; force_redraw = false)
 end
 
 """
-    function refresh_all_windows()
+    refresh_all_windows()
 
 Refresh all the windows, including the root window.
 
@@ -62,7 +62,7 @@ function refresh_all_windows()
 end
 
 """
-    function request_update(win::Window)
+    request_update(win::Window)
 
 Request update of the window `win` because its widget was updated.
 
@@ -73,7 +73,7 @@ function request_update(win::Window)
 end
 
 """
-    function request_view_update(win::Window)
+    request_view_update(win::Window)
 
 Request to update the view of window `win`. Notice that this must also request
 update on all parent windows until the root window.
@@ -90,7 +90,7 @@ end
 # ==============================================================================
 
 """
-    function move_view(win::Window, y::Int, x::Int; update::Bool = true)
+    move_view(win::Window, y::Int, x::Int; update::Bool = true)
 
 Move the origin of the view of window `win` to the position `(y,x)`. This
 routine makes sure that the view will never reach positions outside the buffer.
@@ -121,7 +121,7 @@ function move_view(win::Window, y::Int, x::Int; update::Bool = true)
 end
 
 """
-    function move_view_inc(win::Window; Δy::Int, Δx::Int; kwargs...)
+    move_view_inc(win::Window; Δy::Int, Δx::Int; kwargs...)
 
 Move the view of the window `win` to the position `(y+Δy, x+Δx)`. This function
 has the same set of keywords of the function `move_view`.
@@ -131,7 +131,7 @@ move_view_inc(win::Window, Δy::Int, Δx::Int; kwargs...) =
     move_view(win, win.orig[1]+Δy, win.orig[2]+Δx; kwargs...)
 
 """
-    function update_view(win::Window; force::Bool = false)
+    update_view(win::Window; force::Bool = false)
 
 Update the view of window `win` by copying the contents from the buffer. If the
 view does not need to be updated (see `view_needs_update`), then nothing is

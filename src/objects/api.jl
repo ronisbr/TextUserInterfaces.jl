@@ -10,7 +10,7 @@ export get_left, get_height, get_width, get_top, get_visible_height,
        get_visible_width, reposition!
 
 """
-    function get_bottom(object)
+    get_bottom(object)
 
 Return the left of the object w.r.t. its parent.
 
@@ -26,7 +26,7 @@ Return the left of the object for a child object.
 get_left_for_child
 
 """
-    function get_height(object)
+    get_height(object)
 
 Return the usable height of object `object`.
 
@@ -42,7 +42,7 @@ Return the usable height of the object for a child object.
 get_height_for_child
 
 """
-    function get_width(object)
+    get_width(object)
 
 Return the usable width of object `object`.
 
@@ -58,7 +58,7 @@ Return the usable width of object `object` for a child object.
 get_width_for_child
 
 """
-    function get_top(object)
+    get_top(object)
 
 Return the top of the object w.r.t. its parent.
 
@@ -74,7 +74,7 @@ Return the top of the object for a child object.
 get_top_for_child
 
 """
-    function reposition!(object)
+    reposition!(object)
 
 Reposition the object baesd on the stored configuration.
 

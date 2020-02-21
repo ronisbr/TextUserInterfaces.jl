@@ -10,7 +10,7 @@ export get_focused_window, init_focus_manager, process_focus,
        set_previous_window_func
 
 """
-    function get_focused_window()
+    get_focused_window()
 
 Return the focused window.
 
@@ -18,7 +18,7 @@ Return the focused window.
 get_focused_window() = tui.focus_chain[tui.focus_id]
 
 """
-    function init_focus_manager()
+    init_focus_manager()
 
 Initialization of the focus manager. The elements in `focus_chain` are iterated
 to find the first one that can accept the focus.
@@ -29,7 +29,7 @@ function init_focus_manager()
 end
 
 """
-    function process_focus(k::Keystroke)
+    process_focus(k::Keystroke)
 
 Process the focus considering the user's keystorke `k`.
 
@@ -76,7 +76,7 @@ function process_focus(k::Keystroke)
 end
 
 """
-    function next_window()
+    next_window()
 
 Move the focus to the next window.
 
@@ -129,7 +129,7 @@ function next_window()
 end
 
 """
-    function previous_window()
+    previous_window()
 
 Move the focus to the previous window.
 
@@ -182,7 +182,7 @@ function previous_window()
 end
 
 """
-    function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
+    set_focus_chain(wins::Window...; new_focus_id::Int = 1)
 
 Set the focus chain, *i.e.* the ordered list of windows that can receive the
 focus. The keyword `new_focus_id` can be set to specify which element is
@@ -198,7 +198,7 @@ function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
 end
 
 """
-    function set_next_window_func(f)
+    set_next_window_func(f)
 
 Set the function `f` to be the one that will be called to check whether the user
 wants the next window. The signature must be:
@@ -214,7 +214,7 @@ function set_next_window_func(f)
 end
 
 """
-    function set_previous_window_func(f)
+    set_previous_window_func(f)
 
 Set the function `f` to be the one that will be called to check whether the user
 wants the previous window. The signature must be:

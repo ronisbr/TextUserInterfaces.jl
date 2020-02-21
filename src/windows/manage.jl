@@ -9,7 +9,7 @@
 export hide_window, move_window, move_window_to_top, show_window
 
 """
-    function hide_window(win::Window)
+    hide_window(win::Window)
 
 Hide the window `win`.
 
@@ -17,7 +17,7 @@ Hide the window `win`.
 hide_window(win::Window) = hide_panel(win.panel)
 
 """
-    function move_window(win::Window, starty::Int, startx::Int)
+    move_window(win::Window, starty::Int, startx::Int)
 
 Move the window `win` to the position `(starty, startx`).
 
@@ -26,7 +26,7 @@ move_window(win::Window, starty::Int, startx::Int) =
     move_panel(win.panel, starty, startx)
 
 """
-    function move_window_to_top(win::Window)
+    move_window_to_top(win::Window)
 
 Move window `win` to the top.
 
@@ -34,7 +34,7 @@ Move window `win` to the top.
 move_window_to_top(win::Window) = top_panel(win.panel)
 
 """
-    function show_window(win::Window)
+    show_window(win::Window)
 
 Show the window `win`.
 

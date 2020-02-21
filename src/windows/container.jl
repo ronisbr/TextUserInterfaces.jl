@@ -8,7 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #==#
 
 """
-    function add_widget(win::Window, widget::Widget)
+    add_widget(win::Window, widget::Widget)
 
 Add widget `widget` to the window `win`. If the `win` already have a widget,
 then it will be replaced.
@@ -20,7 +20,7 @@ function add_widget(win::Window, widget::Widget)
 end
 
 """
-    function request_focus(win::Window, widget)
+    request_focus(win::Window, widget)
 
 Request the focus to the widget `widget` of the window `win`. This function is
 only necessary to make `Window` comply to the containers API. Since a window can
@@ -37,7 +37,7 @@ function request_focus(win::Window, widget)
 end
 
 """
-    function remove_widget(win::Window, widget::Widget)
+    remove_widget(win::Window, widget::Widget)
 
 Remove the widget `widget` from the window `win`. If `widget` does not belong to
 `win`, then nothing is done.

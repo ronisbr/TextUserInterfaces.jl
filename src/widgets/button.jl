@@ -133,7 +133,7 @@ end
 ################################################################################
 
 """
-    function change_label(button::WidgetButton, label::AbstractString)
+    change_label(button::WidgetButton, label::AbstractString)
 
 Change the label of button `button` to `label`.
 

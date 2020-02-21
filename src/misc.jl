@@ -10,7 +10,7 @@ export obj_desc, obj_to_ptr
 const _test_hide_address = [false]
 
 """
-    function obj_desc(obj)
+    obj_desc(obj)
 
 Return a string with the description of the object `obj` formed by:
 

@@ -224,7 +224,7 @@ require_cursor(widget::WidgetInputField) = true
 ################################################################################
 
 """
-    function clear_data!(widget::WidgetInputField)
+    clear_data!(widget::WidgetInputField)
 
 Clear the data in the input field `widget`.
 
@@ -244,7 +244,7 @@ function clear_data!(widget::WidgetInputField)
 end
 
 """
-    function get_data(widget::WidgetInputField)
+    get_data(widget::WidgetInputField)
 
 Get the data of `widget`. If a validator of type `DataType` is provided, then it
 will return the parsed data. Otherwise, it will return a string.

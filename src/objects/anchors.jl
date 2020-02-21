@@ -13,7 +13,7 @@ export object_positioning_conf, compute_object_positioning
 ################################################################################
 
 """
-    function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
+    compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
 
 Compute the object position based on the configuration `opc` and on its
 parent object `parent`.
@@ -166,7 +166,7 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
 end
 
 """
-    function object_positioning_conf(...)
+    object_positioning_conf(...)
 
 Helper function to create the object positioning configuration. In this case,
 the anchor can be passed by keywords and a tuple containing the object and its
@@ -216,7 +216,7 @@ end
 
 """
     _check_vertical_anchor(anchor::Nothing)
-    function _check_vertical_anchor(anchor::Anchor)
+    _check_vertical_anchor(anchor::Anchor)
 
 Check if the `side` parameter of `anchor` is valid for vertical positioning. If
 `anchor` is `nothing`, then `true` is always returned.
@@ -226,7 +226,7 @@ _check_vertical_anchor(anchor::Nothing) = true
 _check_vertical_anchor(anchor::Anchor)  = anchor.side ∈ [:bottom,:middle,:top]
 
 """
-    function _check_horizontal_anchor(anchor::Anchor)
+    _check_horizontal_anchor(anchor::Anchor)
 
 Check if the `side` parameter of `anchor` is valid for horizontal positioning.
 If `anchor` is `nothing`, then `true` is always returned.
@@ -236,7 +236,7 @@ _check_horizontal_anchor(anchor::Nothing) = true
 _check_horizontal_anchor(anchor::Anchor)  = anchor.side ∈ [:left,:center,:right]
 
 """
-    function _get_anchor(anchor::Anchor, parent)
+    _get_anchor(anchor::Anchor, parent)
 
 Return the line or column related to the anchor `anchor`. If the object in
 `anchor` is the `parent`, then the positioning will be computed relative to the
@@ -279,7 +279,7 @@ function _get_anchor(anchor::Anchor, parent)
 end
 
 """
-    function _process_vertical_info!(opc::ObjectPositioningConfiguration)
+    _process_vertical_info!(opc::ObjectPositioningConfiguration)
 
 Process the vertical positioning information in `opc` and write the variable
 `vertical` of the same structure. The possible vertical positioning information
@@ -333,7 +333,7 @@ function _process_vertical_info!(opc::ObjectPositioningConfiguration)
 end
 
 """
-    function _process_horizontal_info!(opc::ObjectPositioningConfiguration)
+    _process_horizontal_info!(opc::ObjectPositioningConfiguration)
 
 Process the horizontal positioning information in `opc` and write the variable
 `horizontal` of the same structure. The possible horizontal positioning information
@@ -387,7 +387,7 @@ function _process_horizontal_info!(opc::ObjectPositioningConfiguration)
 end
 
 """
-    function _str(wpc::ObjectPositioningConfiguration)
+    _str(wpc::ObjectPositioningConfiguration)
 
 Convert the information in `wpc` to a string for debugging purposes.
 

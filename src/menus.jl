@@ -112,7 +112,7 @@ function create_menu(names::Vector{T1},
 end
 
 """
-    function destroy_menu(menu::TUI_MENU)
+    destroy_menu(menu::TUI_MENU)
 
 Destroy the menu `menu`.
 
@@ -127,7 +127,7 @@ function destroy_menu(menu::TUI_MENU)
 end
 
 """
-    function post_menu(menu::TUI_MENU)
+    post_menu(menu::TUI_MENU)
 
 Post the menu `menu`.
 
@@ -138,7 +138,7 @@ function post_menu(menu::TUI_MENU)
 end
 
 """
-    function unpost_menu(menu::TUI_MENU)
+    unpost_menu(menu::TUI_MENU)
 
 Unpost the menu `menu`.
 
@@ -149,7 +149,7 @@ function unpost_menu(menu::TUI_MENU)
 end
 
 """
-    function set_menu_win(menu::TUI_MENU, win::Window)
+    set_menu_win(menu::TUI_MENU, win::Window)
 
 Set menu `menu` window to `win`.
 
@@ -182,7 +182,7 @@ Return the current item of the menu `menu`.
 current_item(menu::TUI_MENU) = current_item(menu.ptr)
 
 """
-    function current_item_name(menu::TUI_MENU)
+    current_item_name(menu::TUI_MENU)
 
 Return the item name of the menu `menu`.
 
@@ -195,7 +195,7 @@ function current_item_name(menu::TUI_MENU)
 end
 
 """
-    function current_item_desc(menu::TUI_MENU)
+    current_item_desc(menu::TUI_MENU)
 
 Return the item description of the menu `menu`.
 
@@ -208,7 +208,7 @@ function current_item_desc(menu::TUI_MENU)
 end
 
 """
-    function selected_items(menu::TUI_MENU)
+    selected_items(menu::TUI_MENU)
 
 Return a `Vector` with the selected items in the menu `menu`.
 
@@ -224,7 +224,7 @@ function selected_items(menu::TUI_MENU)
 end
 
 """
-    function selected_items_names(menu::TUI_MENU)
+    selected_items_names(menu::TUI_MENU)
 
 Return a `Vector` with the selected items names in the menu `menu`.
 
@@ -240,7 +240,7 @@ function selected_items_names(menu::TUI_MENU)
 end
 
 """
-    function selected_items_desc(menu::TUI_MENU)
+    selected_items_desc(menu::TUI_MENU)
 
 Return a `Vector` with the selected items descriptions in the menu `menu`.
 
@@ -259,7 +259,7 @@ end
 # ==============================================================================
 
 """
-    function menu_down_item(menu::TUI_MENU)
+    menu_down_item(menu::TUI_MENU)
 
 Move down to an item of the menu `menu`.
 
@@ -270,7 +270,7 @@ function menu_down_item(menu::TUI_MENU)
 end
 
 """
-    function menu_left_item(menu::TUI_MENU)
+    menu_left_item(menu::TUI_MENU)
 
 Move left to an item of the menu `menu`.
 
@@ -281,7 +281,7 @@ function menu_left_item(menu::TUI_MENU)
 end
 
 """
-    function menu_right_item(menu::TUI_MENU)
+    menu_right_item(menu::TUI_MENU)
 
 Move right to an item of the menu `menu`.
 
@@ -292,7 +292,7 @@ function menu_right_item(menu::TUI_MENU)
 end
 
 """
-    function menu_up_item(menu::TUI_MENU)
+    menu_up_item(menu::TUI_MENU)
 
 Move up to an item of the menu `menu`.
 
@@ -303,7 +303,7 @@ function menu_up_item(menu::TUI_MENU)
 end
 
 """
-    function menu_down_line(menu::TUI_MENU)
+    menu_down_line(menu::TUI_MENU)
 
 Scroll down a line of the menu `menu`.
 
@@ -314,7 +314,7 @@ function menu_down_line(menu::TUI_MENU)
 end
 
 """
-    function menu_up_line(menu::TUI_MENU)
+    menu_up_line(menu::TUI_MENU)
 
 Scroll up a line of the menu `menu`.
 
@@ -325,7 +325,7 @@ function menu_up_line(menu::TUI_MENU)
 end
 
 """
-    function menu_down_page(menu::TUI_MENU)
+    menu_down_page(menu::TUI_MENU)
 
 Scroll down a page of the menu `menu`.
 
@@ -336,7 +336,7 @@ function menu_down_page(menu::TUI_MENU)
 end
 
 """
-    function menu_up_page(menu::TUI_MENU)
+    menu_up_page(menu::TUI_MENU)
 
 Scroll up a page of the menu `menu`.
 
@@ -347,7 +347,7 @@ function menu_up_page(menu::TUI_MENU)
 end
 
 """
-    function menu_first_item(menu::TUI_MENU)
+    menu_first_item(menu::TUI_MENU)
 
 Move to the first item of the menu `menu`.
 
@@ -358,7 +358,7 @@ function menu_first_item(menu::TUI_MENU)
 end
 
 """
-    function menu_last_item(menu::TUI_MENU)
+    menu_last_item(menu::TUI_MENU)
 
 Move to the last item of the menu `menu`.
 
@@ -369,7 +369,7 @@ function menu_last_item(menu::TUI_MENU)
 end
 
 """
-    function menu_next_item(menu::TUI_MENU)
+    menu_next_item(menu::TUI_MENU)
 
 Move to the next item of the menu `menu`.
 
@@ -380,7 +380,7 @@ function menu_next_item(menu::TUI_MENU)
 end
 
 """
-    function menu_prev_item(menu::TUI_MENU)
+    menu_prev_item(menu::TUI_MENU)
 
 Move to the previous menu item of the `menu`.
 
@@ -391,7 +391,7 @@ function menu_prev_item(menu::TUI_MENU)
 end
 
 """
-    function menu_toggle_item(menu::TUI_MENU)
+    menu_toggle_item(menu::TUI_MENU)
 
 Toggle the current item of the menu `menu`.
 
@@ -455,7 +455,7 @@ end
 # ==============================================================================
 
 """
-    function accept_focus(menu::TUI_MENU)
+    accept_focus(menu::TUI_MENU)
 
 Command executed when menu `menu` must state whether or not it accepts the
 focus. If the focus is accepted, then this function returns `true`. Otherwise,
@@ -470,7 +470,7 @@ function accept_focus(menu::TUI_MENU)
 end
 
 """
-    function process_focus(menu::TUI_MENU, k::Keystroke)
+    process_focus(menu::TUI_MENU, k::Keystroke)
 
 Process the actions when the menu `menu` is in focus and the keystroke `k` was
 issued by the user.
@@ -481,7 +481,7 @@ function process_focus(menu::TUI_MENU, k::Keystroke)
 end
 
 """
-    function release_focus(menu::TUI_MENU)
+    release_focus(menu::TUI_MENU)
 
 Release the focus from the menu `menu`.
 

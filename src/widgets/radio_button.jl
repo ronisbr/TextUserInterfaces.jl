@@ -137,7 +137,7 @@ release_focus(widget::WidgetRadioButton) = release_focus(widget.button)
 ################################################################################
 
 """
-    function get_selected(group_name::AbstractString)
+    get_selected(group_name::AbstractString)
 
 Return the `WidgetRadioButton` that is selected in group with name `group_name`.
 If the `group_name` does not exists or if no button is selected, then `nothing`
@@ -164,7 +164,7 @@ end
 ################################################################################
 
 """
-    function _select_radio_button(rb::WidgetRadioButton)
+    _select_radio_button(rb::WidgetRadioButton)
 
 Select the radio button `rb` in its group name.
 
@@ -187,7 +187,7 @@ function _select_radio_button(rb::WidgetRadioButton)
 end
 
 """
-    function _select_radio_button(rb::WidgetRadioButton)
+    _select_radio_button(rb::WidgetRadioButton)
 
 Deselect the radio button `rb` in its group name.
 
