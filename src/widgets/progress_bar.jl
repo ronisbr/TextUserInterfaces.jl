@@ -33,7 +33,7 @@ end
 # Progress bar cannot accept focus.
 accept_focus(widget::WidgetProgressBar) = false
 
-function create_widget(::Type{Val{:progress_bar}}, parent::WidgetParent;
+function create_widget(::Val{:progress_bar}, parent::WidgetParent;
                        border::Bool = false,
                        color::Int = 0,
                        color_highlight::Int = 0,

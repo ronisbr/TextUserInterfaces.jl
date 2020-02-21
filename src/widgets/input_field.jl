@@ -74,7 +74,7 @@ function accept_focus(widget::WidgetInputField)
     return true
 end
 
-function create_widget(::Type{Val{:input_field}}, parent::WidgetParent;
+function create_widget(::Val{:input_field}, parent::WidgetParent;
                        border::Bool = false,
                        color_valid::Int = 0,
                        color_invalid::Int = 0,

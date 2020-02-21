@@ -36,7 +36,7 @@ _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
 
 accept_focus(widget::WidgetRadioButton) = accept_focus(widget.button)
 
-function create_widget(::Type{Val{:radio_button}}, parent::WidgetParent;
+function create_widget(::Val{:radio_button}, parent::WidgetParent;
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,
@@ -46,7 +46,7 @@ function create_widget(::Type{Val{:radio_button}}, parent::WidgetParent;
                        kwargs...)
 
     # Create the button widget.
-    button = create_widget(Val{:button}, parent;
+    button = create_widget(Val(:button), parent;
                            label = glyph_deselected * " " * label,
                            color = color, color_highlight = color_highlight,
                            style = :none, _derive = true, kwargs...)

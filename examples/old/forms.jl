@@ -3,9 +3,9 @@ using SatelliteToolbox
 using TextUserInterfaces
 using UnicodePlots
 
-const propagators = Dict("J2"       => Val{:J2},
-                         "J4"       => Val{:J4},
-                         "Two Body" => Val{:twobody})
+const propagators = Dict("J2"       => Val(:J2),
+                         "J4"       => Val(:J4),
+                         "Two Body" => Val(:twobody))
 
 function satellite_ground_trace()
 
@@ -96,13 +96,13 @@ function satellite_ground_trace()
     form = create_form(fields)
 
     # Set field types.
-    set_field_type(form, "a",    Val{:numeric}, 2, 6400, typemax(Int))
-    set_field_type(form, "e",    Val{:numeric}, 6,    0, 1-eps())
-    set_field_type(form, "i",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "Ω",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "ω",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "f",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "prop", Val{:enum},    ["J2", "J4", "Two Body"])
+    set_field_type(form, "a",    Val(:numeric), 2, 6400, typemax(Int))
+    set_field_type(form, "e",    Val(:numeric), 6,    0, 1-eps())
+    set_field_type(form, "i",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "Ω",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "ω",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "f",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "prop", Val(:enum),    ["J2", "J4", "Two Body"])
 
     set_form_win(form, win_inputs)
 

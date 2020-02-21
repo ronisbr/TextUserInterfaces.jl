@@ -45,7 +45,7 @@ function accept_focus(widget::WidgetButton)
     return true
 end
 
-function create_widget(::Type{Val{:button}}, parent::WidgetParent;
+function create_widget(::Val{:button}, parent::WidgetParent;
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,

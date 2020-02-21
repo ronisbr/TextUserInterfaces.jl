@@ -155,7 +155,7 @@ size of the window buffer.
 """
 function create_window_with_container(vargs...; kwargs...)
     win = create_window(vargs...; kwargs...)
-    con = create_widget(Val{:container}, win)
+    con = create_widget(Val(:container), win)
     return win, con
 end
 

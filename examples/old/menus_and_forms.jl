@@ -4,9 +4,9 @@ using SatelliteToolbox
 using UnicodePlots
 using TextUserInterfaces
 
-const propagators = Dict("J2"       => Val{:J2},
-                         "J4"       => Val{:J4},
-                         "Two Body" => Val{:twobody})
+const propagators = Dict("J2"       => Val(:J2),
+                         "J4"       => Val(:J4),
+                         "Two Body" => Val(:twobody))
 
 function plot_ground_trace(win_plot,win_error,form)
     # Make sure we updated the current input.
@@ -321,14 +321,14 @@ function menus_and_forms()
     form = create_form(fields)
 
     # Set field types.
-    set_field_type(form, "a",    Val{:numeric}, 2, 6400, typemax(Int))
-    set_field_type(form, "e",    Val{:numeric}, 6,    0, 1-eps())
-    set_field_type(form, "i",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "Ω",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "ω",    Val{:numeric}, 3, -180, +180)
-    set_field_type(form, "f",    Val{:numeric}, 3, -180, +180)
+    set_field_type(form, "a",    Val(:numeric), 2, 6400, typemax(Int))
+    set_field_type(form, "e",    Val(:numeric), 6,    0, 1-eps())
+    set_field_type(form, "i",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "Ω",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "ω",    Val(:numeric), 3, -180, +180)
+    set_field_type(form, "f",    Val(:numeric), 3, -180, +180)
     enums = ["J2", "J4", "Two Body"]
-    set_field_type(form, "prop", Val{:enum}, enums)
+    set_field_type(form, "prop", Val(:enum), enums)
 
     # Post form.
     set_form_win(form, win_gt_inputs)
@@ -350,7 +350,7 @@ function menus_and_forms()
     form = create_form(fields)
 
     # Set field types.
-    set_field_type(form, "lt", Val{:numeric}, 2, 0, 24)
+    set_field_type(form, "lt", Val(:numeric), 2, 0, 24)
 
     # Post form.
     set_form_win(form, win_raan_input)

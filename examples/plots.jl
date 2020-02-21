@@ -25,20 +25,20 @@ function plots()
                         anchor_top = (rootwin, :top, 0),
                         anchor_right = (rootwin, :right, 0),
                         anchor_bottom = (rootwin, :bottom, 0))
-    con = create_widget(Val{:container}, win)
+    con = create_widget(Val(:container), win)
 
-    func = create_widget(Val{:form}, con, ["Function y ="], borders = true,
+    func = create_widget(Val(:form), con, ["Function y ="], borders = true,
                          anchor_left = (win, :left, 1),
                          anchor_top  = (win, :top,  0))
 
-    label = create_widget(Val{:label}, con,
+    label = create_widget(Val(:label), con,
                           anchor_left  = (func, :left,   0),
                           anchor_right = (func, :right,  0),
                           anchor_top   = (func, :bottom, 0),
                           alignment    = :c,
                           text = "Use `t` as the time variable for the plots.")
 
-    label = create_widget(Val{:label}, con,
+    label = create_widget(Val(:label), con,
                           anchor_left  = (func,  :left,   0),
                           anchor_right = (func,  :right,  0),
                           anchor_top   = (label, :bottom, 2),
@@ -47,7 +47,7 @@ function plots()
                           fill_color   = true,
                           text = "Setup limits")
 
-    tlim = create_widget(Val{:form}, con, ["t min.", "t max."],
+    tlim = create_widget(Val(:form), con, ["t min.", "t max."],
                          anchor_left   = (func,  :left,    0),
                          anchor_top    = (label, :bottom,  0),
                          anchor_right  = (func,  :center, -1),
@@ -55,7 +55,7 @@ function plots()
                          color_invalid = c3,
                          validator     = Float64)
 
-    ylim = create_widget(Val{:form}, con, ["y min.", "y max."],
+    ylim = create_widget(Val(:form), con, ["y min.", "y max."],
                          anchor_left   = (func,  :center, +1),
                          anchor_top    = (label, :bottom,  0),
                          anchor_right  = (func,  :right,   0),
@@ -63,7 +63,7 @@ function plots()
                          color_invalid = c3,
                          validator     = Float64)
 
-    label = create_widget(Val{:label}, con,
+    label = create_widget(Val(:label), con,
                           anchor_left  = (func, :left,   0),
                           anchor_right = (func, :right,  0),
                           anchor_top   = (ylim, :bottom, 2),
@@ -91,7 +91,7 @@ function plots()
     rb = nothing
 
     for i = 1:length(color_keys)
-        rb = create_widget(Val{:radio_button}, con,
+        rb = create_widget(Val(:radio_button), con,
                            group_name      = "Color",
                            label           = color_keys[i],
                            anchor_left     = (lanchor_w, lanchor_a, 0),
@@ -113,7 +113,7 @@ function plots()
         end
     end
 
-    bplot = create_widget(Val{:button}, con,
+    bplot = create_widget(Val(:button), con,
                           label           = "Plot",
                           anchor_left     = (func, :left,   0),
                           anchor_top      = (rb  , :bottom, 3),
@@ -121,7 +121,7 @@ function plots()
                           width           = 14,
                           color_highlight = c2)
 
-    bcplt = create_widget(Val{:button}, con,
+    bcplt = create_widget(Val(:button), con,
                           label             = "Clear plot",
                           anchor_center     = (func, :center, 0),
                           anchor_top        = (rb  , :bottom, 3),
@@ -129,7 +129,7 @@ function plots()
                           width             = 14,
                           color_highlight   = c2)
 
-    bcfor = create_widget(Val{:button}, con,
+    bcfor = create_widget(Val(:button), con,
                           label           = "Clear form",
                           anchor_right    = (func, :right,  0),
                           anchor_top      = (rb  , :bottom, 3),
@@ -137,7 +137,7 @@ function plots()
                           width           = 14,
                           color_highlight = c2)
 
-    tplot  = create_widget(Val{:label}, con,
+    tplot  = create_widget(Val(:label), con,
                            anchor_left    = (con, :center, 0),
                            anchor_right   = (con, :right,  0),
                            anchor_top     = (con, :top,    1),
@@ -147,7 +147,7 @@ function plots()
                            alignment      = :c)
 
     str    = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
-    canvas = create_widget(Val{:ansi_label}, con, text = str,
+    canvas = create_widget(Val(:ansi_label), con, text = str,
                            anchor_left    = (tplot, :left,   0),
                            anchor_right   = (tplot, :right,  0),
                            anchor_top     = (tplot, :bottom, 1),

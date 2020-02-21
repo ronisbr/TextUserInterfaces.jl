@@ -65,7 +65,7 @@ function satellite_simulator()
     2 22490  24.9683 170.6788 0043029 357.3326 117.9323 14.44539175364603
     """[1];
 
-    orbp = init_orbit_propagator(Val{:sgp4}, tle_scd1);
+    orbp = init_orbit_propagator(Val(:sgp4), tle_scd1);
 
     # Vectors to store the latitude and longitude.
     lat = Float64[]
