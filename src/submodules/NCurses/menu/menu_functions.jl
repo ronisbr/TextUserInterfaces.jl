@@ -80,9 +80,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) = @_ccallm $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -94,13 +91,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
+        """
             function $($fb)($($args_str))
 
         **Return type**: `$($r)`
 
         For more information, consult `libmenu` documentation.
-        """ $f
+        """
+        $f($(argsj...)) = @_ccallm $f($(argsc...))::$r
+        export $f
     end
 end
 
@@ -118,9 +117,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where T<:Integer = @_ccallm $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -132,13 +128,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
+        """
             function $($fb)($($args_str)) where T<:Integer
 
         **Return type**: `$($r)`
 
         For more information, consult `libmenu` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where T<:Integer = @_ccallm $f($(argsc...))::$r
+        export $f
     end
 end
 
@@ -155,9 +153,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where T<:AbstractString = @_ccallm $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -169,12 +164,14 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
+        """
             function $($fb)($($args_str)) where T<:AbstractString
 
         **Return type**: `$($r)`
 
         For more information, consult `libmenu` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where T<:AbstractString = @_ccallm $f($(argsc...))::$r
+        export $f
     end
 end

@@ -12,7 +12,7 @@
 ################################################################################
 
 """
-    macro _ccalln(expr)
+    @_ccalln expr
 
 Make a `ccall` to a `libncurses` function. The usage should be:
 
@@ -100,9 +100,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -114,13 +111,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
-            function $($fb)($($args_str))
+        """
+            $($fb)($($args_str))
 
         **Return type**: `$($r)`
 
         For more information, consult `libncurses` documentation.
-        """ $f
+        """
+        $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
+        export $f
     end
 end
 
@@ -156,9 +155,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where T<:Integer = @_ccalln $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -170,13 +166,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
-            function $($fb)($($args_str)) where T<:Integer
+        """
+            $($fb)($($args_str)) where T<:Integer
 
         **Return type**: `$($r)`
 
         For more information, consult `libncurses` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where T<:Integer = @_ccalln $f($(argsc...))::$r
+        export $f
     end
 end
 
@@ -194,9 +192,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where T<:jlchtype = @_ccalln $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -208,13 +203,17 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
-            function $($fb)($($args_str)) where T<:jlchtype
+        """
+            $($fb)($($args_str)) where T<:jlchtype
 
         **Return type**: `$($r)`
 
         For more information, consult `libncurses` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where T<:jlchtype = @_ccalln $f($(argsc...))::$r
+        export $f
+
+
     end
 end
 
@@ -237,9 +236,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where {Tc<:jlchtype,Ti<:Integer} = @_ccalln $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -251,13 +247,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
-            function $($fb)($($args_str)) where {Tc<:jlchtype,Ti<:Integer}
+        """
+            $($fb)($($args_str)) where {Tc<:jlchtype,Ti<:Integer}
 
         **Return type**: `$($r)`
 
         For more information, consult `libncurses` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where {Tc<:jlchtype,Ti<:Integer} = @_ccalln $f($(argsc...))::$r
+        export $f
     end
 end
 
@@ -274,9 +272,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where T<:AbstractString = @_ccalln $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -288,13 +283,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
-            function $($fb)($($args_str)) where T<:AbstractString
+        """
+            $($fb)($($args_str)) where T<:AbstractString
 
         **Return type**: `$($r)`
 
         For more information, consult `libncurses` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where T<:AbstractString = @_ccalln $f($(argsc...))::$r
+        export $f
     end
 end
 
@@ -311,9 +308,6 @@ for (f,r,v,j,c) in
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
-    @eval $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccalln $f($(argsc...))::$r
-    @eval export $f
-
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i = 1:length(v)
@@ -325,13 +319,15 @@ for (f,r,v,j,c) in
     end
 
     @eval begin
-        @doc """
-            function $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
+        """
+            $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
 
         **Return type**: `$($r)`
 
         For more information, consult `libncurses` documentation.
-        """ $f
+        """
+        $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccalln $f($(argsc...))::$r
+        export $f
     end
 end
 
