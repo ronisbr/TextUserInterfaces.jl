@@ -10,7 +10,7 @@
 export add_widget, remove_widget
 
 """
-    function add_widget(container::WidgetContainer, widget::Widget)
+    add_widget(container::WidgetContainer, widget::Widget)
 
 Add the widget `widget` to the container `container.
 
@@ -21,7 +21,7 @@ function add_widget(container::WidgetContainer, widget::Widget)
 end
 
 """
-    function remove_widget(container::WidgetContainer, widget::Widget)
+    remove_widget(container::WidgetContainer, widget::Widget)
 
 Remove the widget `widget` from the container `container`.
 
@@ -50,7 +50,7 @@ function remove_widget(container::WidgetContainer, widget::Widget)
 end
 
 """
-    function has_focus(container::WidgetContainer, widget)
+    has_focus(container::WidgetContainer, widget)
 
 Return `true` if the widget `widget` is in focus on container `container`, or
 `false` otherwise.
@@ -64,7 +64,7 @@ function has_focus(container::WidgetContainer, widget)
 end
 
 """
-    function request_focus(container::WidgetContainer, widget)
+    request_focus(container::WidgetContainer, widget)
 
 Request the focus to the widget `widget` of the container `container`. It
 returns `true` if the focus could be changed or `false` otherwise.
@@ -100,7 +100,7 @@ function request_focus(container::WidgetContainer, widget)
 end
 
 """
-    function refresh_window(container::WidgetContainer; force_redraw::Bool = false)
+    refresh_window(container::WidgetContainer; force_redraw::Bool = false)
 
 Ask the parent widget to refresh the window. If `force_redraw` is `true`, then
 all widgets in the window will be updated.
@@ -110,7 +110,7 @@ refresh_window(container::WidgetContainer; force_redraw::Bool = false) =
     refresh_window(container.common.parent; force_redraw = force_redraw)
 
 """
-    function sync_cursor(widget::WidgetContainer)
+    sync_cursor(widget::WidgetContainer)
 
 Synchronize the cursor to the position of the focused widget in container
 `container`. This is necessary because all the operations are done in the

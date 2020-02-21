@@ -176,7 +176,7 @@ function redraw(container::WidgetContainer)
 end
 
 """
-    function request_next_widget(container::WidgetContainer)
+    request_next_widget(container::WidgetContainer)
 
 Request the next widget in `container`. It returns `true` if a widget has get
 the focus or `false` otherwise.
@@ -185,7 +185,7 @@ the focus or `false` otherwise.
 request_next_widget(container::WidgetContainer) = _next_widget(container)
 
 """
-    function request_prev_widget(container::WidgetContainer)
+    request_prev_widget(container::WidgetContainer)
 
 Request the previous widget in `container`. It returns `true` if a widget has
 get the focus or `false` otherwise.
@@ -225,7 +225,7 @@ end
 ################################################################################
 
 """
-    function _draw_title(container::WidgetContainer)
+    _draw_title(container::WidgetContainer)
 
 Draw the title in the container `container`.
 
@@ -259,7 +259,7 @@ function _draw_title(container::WidgetContainer)
 end
 
 """
-    function _next_widget(container::WidgetContainer)
+    _next_widget(container::WidgetContainer)
 
 Move the focus of container `container` to the next widget.
 
@@ -295,7 +295,7 @@ function _next_widget(container::WidgetContainer)
 end
 
 """
-    function _previous_widget(container::WidgetContainer)
+    _previous_widget(container::WidgetContainer)
 
 Move the focus of container `container` to the previous widget.
 

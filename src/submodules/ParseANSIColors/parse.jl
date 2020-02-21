@@ -9,7 +9,7 @@
 export parse_ansi_string
 
 """
-    function parse_ansi_string(str::AbstractString)
+    parse_ansi_string(str::AbstractString)
 
 Parse the string `str` that can contain ANSI color escape sequences. This
 function returns two vectors:

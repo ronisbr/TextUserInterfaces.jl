@@ -10,7 +10,7 @@ export ncurses_color, get_color_pair, modify_color, init_color_pair, set_color,
        unset_color
 
 """
-    function ncurses_color([foreground, background,] attrs::Int = 0; kwargs...)
+    ncurses_color([foreground, background,] attrs::Int = 0; kwargs...)
 
 Return a mask to apply a color format with the foreground color `foreground`,
 background color `background`, and the attributes `attrs`.
@@ -72,7 +72,7 @@ function ncurses_color(attrs::Int = 0;
 end
 
 """
-    function get_color_pair(foreground::Int, background::Int)
+    get_color_pair(foreground::Int, background::Int)
 
 Return the ID of the color pair (`foreground`, `background`), or `nothing` if
 the color pair is not initialized.
@@ -82,7 +82,7 @@ get_color_pair(foreground::Int, background::Int) =
     findfirst(x->x == (foreground, background), tui.initialized_color_pairs)
 
 """
-    function init_color_pair(foreground::Symbol, background::Symbol)
+    init_color_pair(foreground::Symbol, background::Symbol)
 
 Initialize the color pair (`foreground`, `background`) and return its ID. If the
 pair already exists, then just the function just returns its ID.
@@ -121,7 +121,7 @@ function init_color_pair(foreground::Int, background::Int)
 end
 
 """
-    function modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int)
+    modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int)
 
 Modify the color ID `id` to the RGB value (`r`,`g`,`b`). If the symbol `name` is
 available, then the user can select this color ID by using `name` instead of the
@@ -156,7 +156,7 @@ function modify_color(id::Int, r::Int, g::Int, b::Int)
 end
 
 """
-    function set_color([win::Window,] color::Int)
+    set_color([win::Window,] color::Int)
 
 Set the color of the window `win` to `color` (see `ncurses_color`). If `win` is
 omitted, then it defaults to the root window.
@@ -170,7 +170,7 @@ function set_color(win::Window, color::Int)
 end
 
 """
-    function unset_color([win::Window,] color::Number)
+    unset_color([win::Window,] color::Number)
 
 Unset the color `color` (see `ncurses_color`) in the window `win`. If `win` is
 omitted, then it defaults to the root window.
@@ -188,7 +188,7 @@ end
 ################################################################################
 
 """
-    function _get_color_index(color::Symbol)
+    _get_color_index(color::Symbol)
 
 Return the index related to the color `color`.
 

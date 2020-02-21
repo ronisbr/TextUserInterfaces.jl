@@ -12,11 +12,11 @@
 ################################################################################
 
 """
-    macro _ccallm(expr)
+    @_ccallm expr
 
 Make a `ccall` to a `libpanel` function. The usage should be:
 
-    @_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn
+    @_ccallm function(arg1::Type1, arg2::Type2, ...)::TypeReturn
 
 It uses the global constant structure `ncurses` to call the function. Hence, it
 must be initialized.

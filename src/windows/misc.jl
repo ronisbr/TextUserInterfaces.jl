@@ -9,7 +9,7 @@
 export get_buffer, set_window_title
 
 """
-    function get_buffer(win::Window)
+    get_buffer(win::Window)
 
 Return the buffer of the window `win`.
 
@@ -17,7 +17,7 @@ Return the buffer of the window `win`.
 get_buffer(win::Window) = win.buffer
 
 """
-    function get_parent(win::Window)
+    get_parent(win::Window)
 
 Return `nothing` since the window has no parent.
 
@@ -25,7 +25,7 @@ Return `nothing` since the window has no parent.
 get_parent(win::Window) = nothing
 
 """
-    function set_window_title(win::Window, title::AbstractString; ...)
+    set_window_title(win::Window, title::AbstractString; ...)
 
 Set the title of the window `win` to `title`.
 
@@ -72,7 +72,7 @@ end
 ################################################################################
 
 """
-    function _get_window_dims(win::Ptr{WINDOW})
+    _get_window_dims(win::Ptr{WINDOW})
 
 Get the dimensions of the window `win` and return it on a tuple `(dim_y,dim_x)`.
 If the window is not initialized, then this function returns `(-1,-1)`.
@@ -90,7 +90,7 @@ function _get_window_dims(win::Ptr{WINDOW})
 end
 
 """
-    function _get_window_cur_pos(win::Ptr{WINDOW})
+    _get_window_cur_pos(win::Ptr{WINDOW})
 
 Get the cursor position of the window `win` and return it on a tuple
 `(cur_y,cur_x)`.  If the window is not initialized, then this function returns

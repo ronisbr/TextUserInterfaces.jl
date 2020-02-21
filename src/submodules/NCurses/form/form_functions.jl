@@ -12,7 +12,7 @@
 ################################################################################
 
 """
-    macro _ccallf(expr)
+    @_ccallf expr
 
 Make a `ccall` to a `libform` function. The usage should be:
 
@@ -94,7 +94,7 @@ for (f,r,v,j,c) in
 
     @eval begin
         """
-            function $($fb)($($args_str))
+            $($fb)($($args_str))
 
         **Return type**: `$($r)`
 
@@ -138,7 +138,7 @@ for (f,r,v,j,c) in
 
     @eval begin
         """
-            function $($fb)($($args_str)) where T<:Integer
+            $($fb)($($args_str)) where T<:Integer
 
         **Return type**: `$($r)`
 
@@ -173,7 +173,7 @@ for (f,r,v,j,c) in
 
     @eval begin
         @doc """
-            function $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
+            $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
 
         **Return type**: `$($r)`
 

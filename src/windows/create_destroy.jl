@@ -141,7 +141,7 @@ function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
 end
 
 """
-    function create_window_with_container(vargs...; kwargs...)
+    create_window_with_container(vargs...; kwargs...)
 
 Create a window with a container as its widget. The arguments and keywords are
 the same ones of the function `create_window`. The container will have the same
@@ -160,7 +160,7 @@ function create_window_with_container(vargs...; kwargs...)
 end
 
 """
-    function destroy_window(win::Window)
+    destroy_window(win::Window)
 
 Destroy the window `win`.
 
@@ -203,7 +203,7 @@ function destroy_window(win::Window)
 end
 
 """
-    function destroy_all_windows()
+    destroy_all_windows()
 
 Destroy all windows managed by the TUI.
 

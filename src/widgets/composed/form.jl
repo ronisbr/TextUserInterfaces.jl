@@ -118,7 +118,7 @@ end
 ################################################################################
 
 """
-    function clear_data!(widget::WidgetForm)
+    clear_data!(widget::WidgetForm)
 
 Clear the data in all the input fields in the form `widget`.
 
@@ -129,7 +129,7 @@ function clear_data!(widget::WidgetForm)
 end
 
 """
-    function get_data(widget::WidgetInputField)
+    get_data(widget::WidgetInputField)
 
 Return a vector with the data of all fields.
 

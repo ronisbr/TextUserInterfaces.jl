@@ -339,7 +339,7 @@ end
 # ==============================================================================
 
 """
-    function ACS_(s::Symbol)
+    ACS_(s::Symbol)
 
 Return the symbol `s` of the `acs_map`. For example, `ACS_HLINE` can be obtained
 from `ACS_(:HLINE)`.
@@ -364,7 +364,7 @@ end
 export ACS_
 
 """
-    function COLS()
+    COLS()
 
 Return the number of columns in the root window. It must be called after
 `initscr()`.
@@ -383,7 +383,7 @@ end
 export COLS
 
 """
-    function LINES()
+    LINES()
 
 Return the number of lines in the root window. It must be called after
 `initscr()`.
@@ -405,7 +405,7 @@ export LINES
 # ==============================================================================
 
 """
-    function wborder(win::Ptr{WINDOW})
+    wborder(win::Ptr{WINDOW})
 
 Call the function `wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)`.
 
@@ -416,7 +416,7 @@ wborder(win::Ptr{WINDOW}) = wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)
 # ==============================================================================
 
 """
-    function curses_version()
+    curses_version()
 
 Return the NCurses version in a named tuple with the following fields:
 

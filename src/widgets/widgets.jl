@@ -14,7 +14,7 @@ export accept_focus, create_widget, destroy_widget, request_update,
        request_focus, redraw, release_focus, update
 
 """
-    function accept_focus(widget)
+    accept_focus(widget)
 
 Return `true` is the widget `widget` accepts focus or `false` otherwise.
 
@@ -22,7 +22,7 @@ Return `true` is the widget `widget` accepts focus or `false` otherwise.
 accept_focus(widget) = return true
 
 """
-    function create_widget(T, parent::Window, begin_y::Int, begin_x::Int, vargs...; kwargs...)
+    create_widget(T, parent::Window, begin_y::Int, begin_x::Int, vargs...; kwargs...)
 
 Create the widget of type `T` in the parent window `parent`. The widget will be
 positioned on the coordinate `(begin_y, begin_x)` of the parent window.
@@ -34,7 +34,7 @@ Additional variables and keywords related to each widget can be passed using
 create_widget
 
 """
-    function destroy_widget(widget; refresh::Bool = true)
+    destroy_widget(widget; refresh::Bool = true)
 
 Destroy the widget `widget`.
 
@@ -46,7 +46,7 @@ destroy_widget(widget; refresh::Bool = true) =
     _destroy_widget(widget; refresh = refresh)
 
 """
-    function get_buffer(widget)
+    get_buffer(widget)
 
 Return the buffer of the widget `widget`.
 
@@ -55,7 +55,7 @@ get_buffer(widget) = widget.common.buffer
 
 
 """
-    function get_parent(widget)
+    get_parent(widget)
 
 Return the parent of the widget `widget`.
 
@@ -63,7 +63,7 @@ Return the parent of the widget `widget`.
 get_parent(widget) = widget.common.parent
 
 """
-    function process_focus(widget, k::Keystroke)
+    process_focus(widget, k::Keystroke)
 
 Process the actions when widget `widget` is in focus and the keystroke `k` is
 pressed. If it returns `false`, then it is means that the widget was not capable
@@ -73,7 +73,7 @@ to process the focus. Otherwise, it must return `true`.
 process_focus(widget,k::Keystroke) = return false
 
 """
-    function request_focus(widget)
+    request_focus(widget)
 
 Request to focus to the widget `widget`.
 
@@ -89,7 +89,7 @@ function request_focus(widget)
 end
 
 """
-    function request_update(widget)
+    request_update(widget)
 
 Request update of the widget `widget`.
 
@@ -101,7 +101,7 @@ function request_update(widget)
 end
 
 """
-    function redraw(widget)
+    redraw(widget)
 
 Redraw the widget inside its content window `cwin`.
 
@@ -109,7 +109,7 @@ Redraw the widget inside its content window `cwin`.
 redraw
 
 """
-    function release_focus(widget)
+    release_focus(widget)
 
 Request focus to be released. It should return `true` if the focus can be
 released or `false` otherwise.
@@ -118,7 +118,7 @@ released or `false` otherwise.
 release_focus(widget) = return true
 
 """
-    function update(widget; force_redraw = false)
+    update(widget; force_redraw = false)
 
 Update the widget by calling the function `redraw`. This function returns `true`
 if the widget needed to be updated of `false` otherwise.
@@ -138,7 +138,7 @@ function update(widget; force_redraw = false)
 end
 
 """
-    function require_cursor()
+    require_cursor()
 
 If `true`, then the physical cursor will be shown and the position will be
 updated according to its position in the widget window. Otherwise, the physical
@@ -163,7 +163,7 @@ request_prev_widget(widget) = accept_focus(widget)
 export create_widget_common
 
 """
-    function create_widget_common(parent::WidgetParent, opc::ObjectPositioningConfiguration)
+    create_widget_common(parent::WidgetParent, opc::ObjectPositioningConfiguration)
 
 Create all the variables in the common structure of the widget API.
 
@@ -200,7 +200,7 @@ end
 ################################################################################
 
 """
-    function _destroy_widget(widget; refresh::Bool = true)
+    _destroy_widget(widget; refresh::Bool = true)
 
 Private function that destroys a widget. This can be used if a new widget needs
 to reimplement the destroy function.

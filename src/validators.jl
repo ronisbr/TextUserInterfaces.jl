@@ -9,7 +9,7 @@
 export validate_str
 
 """
-    function validate_str(str::AbstractString, v)
+    validate_str(str::AbstractString, v)
 
 Validate the string `str` using the validator `v`. `v` is an element of the type
 that will be used to validate or a regex.

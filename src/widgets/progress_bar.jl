@@ -103,7 +103,7 @@ end
 # ==============================================================================
 
 """
-    function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
+    change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
 
 Change the value of the progress bar to `new_value`.
 

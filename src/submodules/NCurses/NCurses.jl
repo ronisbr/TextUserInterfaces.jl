@@ -26,7 +26,7 @@ include("./panel/panel_functions.jl")
 export load_ncurses, init_ncurses
 
 """
-    function load_ncurses([dir::String])
+    load_ncurses([dir::String])
 
 Load ncurses libraries at directory `dir`. If it is omitted or if it is empty,
 then the bundled Ncurses version in the package `Ncurses_jll` will be used.

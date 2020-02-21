@@ -8,7 +8,7 @@
 export init_tui, destroy_tui
 
 """
-    function init_tui(dir::String = "")
+    init_tui(dir::String = "")
 
 Initialize the Text User Interface (TUI). The full-path of the ncurses directory
 can be specified by `dir`. If it is empty or omitted, then it will look on the
@@ -38,7 +38,7 @@ function init_tui(dir::String = "")
 end
 
 """
-    function destroy_tui()
+    destroy_tui()
 
 Destroy the Text User Interface (TUI).
 
