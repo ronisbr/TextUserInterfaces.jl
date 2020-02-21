@@ -53,47 +53,32 @@ function load_ncurses()
     return nothing
 end
 
+function load_ncurses_library(dir::AbstractString, key::Symbol, candidates)
+    for lib in candidates
+        l = dlopen(joinpath(dir, lib); throw_error=false)
+        if l !== nothing
+            setfield!(ncurses, key, l)
+            return
+        end
+    end
+    error("Could not load $key. Check your installation.")
+end
+
 function load_ncurses(dir::String)
     # Load the libraries
     # ==========================================================================
 
-    l = nothing
-
-    if !isempty(dir)
-        dir *= "/"
-    else
+    if isempty(dir)
         return load_ncurses()
     end
 
     # libncurses
     # --------------------------------------------------------------------------
-
-    try
-        l = Libdl.dlopen(dir * "libncursesw")
-    catch
-        try
-            l = Libdl.dlopen(dir * "libncursesw.so.6")
-        catch
-            try
-                l = Libdl.dlopen(dir * "libncursesw.so.5")
-            catch
-                try
-                    l = Libdl.dlopen(dir * "libncurses")
-                catch
-                    try
-                        l = Libdl.dlopen(dir * "libncurses.so.6")
-                    catch
-                        try
-                            l = Libdl.dlopen(dir * "libncurses.so.5")
-                        catch
-                            error("Could not load libncurses. Check your installation.")
-                        end
-                    end
-                end
-            end
-        end
-    end
-    ncurses.libncurses = l
+    candidates = (
+        "libncursesw", "libncursesw.so.6", "libncursesw.so.5", "libncurses",
+        "libncursesw", "libncurses.so.6", "libncurses.so.5",
+    )
+    load_ncurses_library(dir, :libncurses, candidates)
 
     # Find if ncurses was compiled with `NCURSES_REENTRANT` option.
     try
@@ -104,93 +89,18 @@ function load_ncurses(dir::String)
 
     # libpanel
     # --------------------------------------------------------------------------
-
-    try
-        l = Libdl.dlopen(dir * "libpanelw")
-    catch
-        try
-            l = Libdl.dlopen(dir * "libpanel")
-        catch
-            try
-                l = Libdl.dlopen(dir * "libpanelw.so.6")
-            catch
-                try
-                    l = Libdl.dlopen(dir * "libpanel.so.6")
-                catch
-                    try
-                        l = Libdl.dlopen(dir * "libpanelw.so.5")
-                    catch
-                        try
-                            l = Libdl.dlopen(dir * "libpanel.so.5")
-                        catch
-                            error("Could not load libpanel. Check your installation.")
-                        end
-                    end
-                end
-            end
-        end
-    end
-    ncurses.libpanel = l
+    candidates = ("libpanelw", "libpanel", "libpanelw.so.6", "libpanel.so.6", "libpanelw.so.5", "libpanel.so.5")
+    load_ncurses_library(dir, :libpanel, candidates)
 
     # libform
     # --------------------------------------------------------------------------
-
-    try
-        l = Libdl.dlopen(dir * "libformw")
-    catch
-        try
-            l = Libdl.dlopen(dir * "libform")
-        catch
-            try
-                l = Libdl.dlopen(dir * "libformw.so.6")
-            catch
-                try
-                    l = Libdl.dlopen(dir * "libform.so.6")
-                catch
-                    try
-                        l = Libdl.dlopen(dir * "libformw.so.5")
-                    catch
-                        try
-                            l = Libdl.dlopen(dir * "libform.so.5")
-                        catch
-                            error("Could not load libform. Check your installation.")
-                        end
-                    end
-                end
-            end
-        end
-    end
-    ncurses.libform = l
+    candidates = ("libformw", "libform", "libformw.so.6", "libform.so.6", "libformw.so.5", "libform.so.5")
+    load_ncurses_library(dir, :libform, candidates)
 
     # libmenu
     # --------------------------------------------------------------------------
-
-    try
-        l = Libdl.dlopen(dir * "libmenuw")
-    catch
-        try
-            l = Libdl.dlopen(dir * "libmenu")
-        catch
-            try
-                l = Libdl.dlopen(dir * "libmenuw.so.6")
-            catch
-                try
-                    l = Libdl.dlopen(dir * "libmenu.so.6")
-                catch
-                    try
-                        l = Libdl.dlopen(dir * "libmenuw.so.5")
-                    catch
-                        try
-                            l = Libdl.dlopen(dir * "libmenu.so.5")
-                        catch
-                            error("Could not load libmenu. Check your installation.")
-                        end
-                    end
-                end
-            end
-        end
-    end
-    ncurses.libmenu = l
+    candidates = ("libmenuw", "libmenu", "libmenuw.so.6", "libmenu.so.6", "libmenuw.so.5", "libmenu.so.5")
+    load_ncurses_library(dir, :libmenu, candidates)
 
     return nothing
 end
