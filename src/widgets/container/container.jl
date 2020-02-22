@@ -33,7 +33,7 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Type{Val{:container}}, parent::T;
+function create_widget(::Val{:container}, parent::T;
                        opc = nothing, border::Bool = false,
                        border_color::Int = -1, composed::Bool = false,
                        title::AbstractString = "", title_alignment::Symbol = :l,

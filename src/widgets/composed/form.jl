@@ -28,7 +28,7 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Type{Val{:form}}, parent::WidgetParent,
+function create_widget(::Val{:form}, parent::WidgetParent,
                        labels::Vector{String}; borders::Bool = false,
                        color_valid::Int = 0,
                        color_invalid::Int = 0,
@@ -64,7 +64,7 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
     end
 
     # Create the container.
-    container = create_widget(Val{:container}, parent; opc = opc,
+    container = create_widget(Val(:container), parent; opc = opc,
                               composed = true)
 
     widget_labels = Vector{WidgetLabel}(undef, nfields)
@@ -74,7 +74,7 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
         at  = i == 1 ? container : widget_inputs[i-1]
         ats = i == 1 ? :top : :bottom
 
-        wii = create_widget(Val{:input_field}, container,
+        wii = create_widget(Val(:input_field), container,
                             anchor_top    = (at, ats, 0),
                             anchor_left   = (container, :left, lmax+1),
                             anchor_right  = (container, :right, 0),
@@ -83,7 +83,7 @@ function create_widget(::Type{Val{:form}}, parent::WidgetParent,
                             border        = borders,
                             validator     = validator[i])
 
-        wli = create_widget(Val{:label}, container,
+        wli = create_widget(Val(:label), container,
                             anchor_middle = (wii, :middle, 0),
                             anchor_left   = (container, :left, 0),
                             width         = lmax,

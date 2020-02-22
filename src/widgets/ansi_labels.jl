@@ -31,7 +31,7 @@ end
 # Labels cannot accept focus.
 accept_focus(widget::WidgetANSILabel) = false
 
-function create_widget(::Type{Val{:ansi_label}}, parent::WidgetParent;
+function create_widget(::Val{:ansi_label}, parent::WidgetParent;
                        alignment = :l,
                        color::Int = 0,
                        text::AbstractString = "Text",

@@ -32,7 +32,7 @@ end
 # Labels cannot accept focus.
 accept_focus(widget::WidgetLabel) = false
 
-function create_widget(::Type{Val{:label}}, parent::WidgetParent;
+function create_widget(::Val{:label}, parent::WidgetParent;
                        alignment = :l,
                        color::Int = 0,
                        fill_color::Bool = false,
