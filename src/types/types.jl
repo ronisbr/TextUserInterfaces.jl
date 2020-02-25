@@ -31,6 +31,7 @@ include("./temp.jl")
     # Focus manager
     # ==========================================================================
     focus_chain::Vector{Window} = Vector{Window}[]
+    focus_win::Union{Nothing,Window} = nothing
     focus_id::Int = 0
 
     # Functions to check if a keystroke must change the window.
