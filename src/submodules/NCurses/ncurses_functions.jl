@@ -130,6 +130,7 @@ for (f,r,v,j,c) in
     (
      (:attroff,       Cint,        ["attrs"],                                    ["T"],                                  ["Cint"]),
      (:attron,        Cint,        ["attrs"],                                    ["T"],                                  ["Cint"]),
+     (:bkgd,          Cint,        ["ch"],                                       ["T"],                                  ["Cint"]),
      (:curs_set,      Cint,        ["visibility"],                               ["T"],                                  ["Cint"]),
      (:derwin,        Ptr{WINDOW}, ["win","nlines","ncols","begin_y","begin_x"], ["Ptr{WINDOW}",["T" for _ = 1:4]...],   ["Ptr{WINDOW}",["Cint" for _ = 1:4]...]),
      (:init_color,    Cint,        ["color","r","g","b"],                        ["T","T","T","T"],                      ["Cshort","Cshort","Cshort","Cshort"]),
@@ -142,6 +143,7 @@ for (f,r,v,j,c) in
      (:subpad,        Ptr{WINDOW}, ["win","nlines","ncols","begin_y","begin_x"], ["Ptr{WINDOW}",["T" for _ = 1:4]...],   ["Ptr{WINDOW}",["Cint" for _ = 1:4]...]),
      (:wattroff,      Cint,        ["win","attrs"],                              ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
      (:wattron,       Cint,        ["win","attrs"],                              ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
+     (:wbkgd,         Cint,        ["win","ch"],                                 ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
      (:wmove,         Cvoid,       ["win","y","x"],                              ["Ptr{WINDOW}","T","T"],                ["Ptr{WINDOW}","Cint","Cint"]),
      (:wresize,       Cvoid,       ["win","lines","cols"],                       ["Ptr{WINDOW}","T","T"],                ["Ptr{WINDOW}","Cint","Cint"]),
      (:wtimeout,      Cvoid,       ["win","delay"],                              ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
