@@ -11,7 +11,7 @@
 ################################################################################
 
 export accept_focus, create_widget, destroy_widget, request_update,
-       request_focus, redraw, release_focus, update
+       request_focus, redraw, release_focus, set_widget_color, update
 
 """
     accept_focus(widget)
@@ -116,6 +116,17 @@ released or `false` otherwise.
 
 """
 release_focus(widget) = return true
+
+"""
+    set_widget_color(widget, color::Int)
+
+Set the background color of `widget` to `color`.
+
+"""
+function set_widget_color(widget, color::Int)
+    color >= 0 && (wbkgd(get_buffer(widget), color))
+    return nothing
+end
 
 """
     update(widget; force_redraw = false)
