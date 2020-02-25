@@ -705,6 +705,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.request_focus-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces.request_focus",
+    "category": "method",
+    "text": "request_focus(win::Window)\n\nRequest the focus to the window win. If win cannot get the focus, then nothing happens and it returns false. If wincan get the focus, then the focus is passed to it and the function returns true.\n\nRemarks\n\nEven if win is in the focus chain, the focus_id will not change by requesting focus to win. This means that the window focus order is not altered by this function.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.request_update-Tuple{Any}",
     "page": "Library",
     "title": "TextUserInterfaces.request_update",
@@ -782,6 +790,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.set_previous_window_func",
     "category": "method",
     "text": "set_previous_window_func(f)\n\nSet the function f to be the one that will be called to check whether the user wants the previous window. The signature must be:\n\nf(k::Keystroke)::Bool\n\nIt must return true if the previous window is required of false otherwise.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.set_widget_color-Tuple{Any,Int64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.set_widget_color",
+    "category": "method",
+    "text": "set_widget_color(widget, color::Int)\n\nSet the background color of widget to color.\n\n\n\n\n\n"
 },
 
 {
@@ -990,6 +1006,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._str",
     "category": "method",
     "text": "_str(wpc::ObjectPositioningConfiguration)\n\nConvert the information in wpc to a string for debugging purposes.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces._try_focus-Tuple{Window}",
+    "page": "Library",
+    "title": "TextUserInterfaces._try_focus",
+    "category": "method",
+    "text": "_try_focus(win::Window)\n\nTry to set to focus to the window win. If it was possible to make win the focused windows, then it returns true. Otherwise, it returns false.\n\n\n\n\n\n"
 },
 
 {
