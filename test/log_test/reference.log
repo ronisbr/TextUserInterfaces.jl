@@ -33,9 +33,7 @@
 [create_widget]     Value       = 100
 [create_widget]     Reference   = 0x0
 [next_window] Focus: Change the focused window.
-[_next_widget] WidgetContainer{Window} (0x0): Change the focused widget.
-[_next_widget] WidgetContainer{Window} (0x0): Focus was handled to widget #2 -> WidgetButton{WidgetContainer{Window}} (0x0).
-[next_window] Focus: Switched to window 0.
+[request_focus] Focus: Switched to window Window (0x0).
 [update_view] Window 0: Buffer was copied to the view.
 [destroy_tui] TUI will be destroyed.
 [destroy_tui] TUI destroying windows.
