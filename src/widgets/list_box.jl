@@ -39,6 +39,9 @@ export WidgetListBox, get_data, get_selected
     # Original configuration related to the number of lines.
     numlines₀::Int = 1
 
+    # Are the elements selectable?
+    selectable::Bool = false
+
     # Allow multiple selection.
     multiple_selection::Bool = false
 
@@ -76,6 +79,7 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                        numlines::Int = -1,
                        icon_not_selected::String = "[ ]",
                        icon_selected::String = "[X]",
+                       selectable::Bool = true,
                        show_icon::Bool = false,
                        kwargs...)
 
@@ -117,6 +121,7 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                            numlines           = numlines,
                            numlines₀          = numlines₀,
                            selected           = zeros(Bool, length(data)),
+                           selectable         = selectable,
                            show_icon          = show_icon)
 
     # Add the new widget to the parent widget list.
@@ -252,12 +257,25 @@ selected.
 """
 get_selected(widget::WidgetListBox) = widget.selected
 
+"""
+    get_selected_item(widget::WidgetListBox)
+
+Return the ID of the current item of the list box `widget` and the data
+associated with it.
+
+"""
+function get_current_item(widget::WidgetListBox)
+    id = widget.curh + 1
+    return id, widget.data[id]
+end
+
 ################################################################################
 #                              Private functions
 ################################################################################
 
 function _handle_input(widget::WidgetListBox, k::Keystroke)
-    @unpack data, curh, multiple_selection, numlines, begview, selected = widget
+    @unpack data, begview, curh, multiple_selection, numlines, selectable,
+            selected = widget
 
     # Shift that we must apply to the list highlight item.
     Δx = 0
@@ -269,13 +287,15 @@ function _handle_input(widget::WidgetListBox, k::Keystroke)
         widget.on_return_pressed(widget.vargs_on_return_pressed...)
     # Toggle the selection of the current item.
     elseif k.value == " "
-        id = curh + 1
+        if selectable
+            id = curh + 1
 
-        if multiple_selection
-            selected[id] = !selected[id]
-        else
-            selected .= false
-            selected[id] = true
+            if multiple_selection
+                selected[id] = !selected[id]
+            else
+                selected .= false
+                selected[id] = true
+            end
         end
     # Select previous value.
     elseif k.ktype == :up
