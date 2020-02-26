@@ -39,6 +39,9 @@ export WidgetListBox, get_data, get_selected, select_item
     # Original configuration related to the number of lines.
     numlines₀::Int = 1
 
+    # If `true`, then the list box will retain the focus indefinetly.
+    retain_focus::Bool = false
+
     # Are the elements selectable?
     selectable::Bool = false
 
@@ -81,6 +84,7 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                        numlines::Int = -1,
                        icon_not_selected::String = "[ ]",
                        icon_selected::String = "[X]",
+                       retain_focus::Bool = false,
                        selectable::Bool = true,
                        show_icon::Bool = false,
                        kwargs...)
@@ -123,6 +127,7 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                            multiple_selection = multiple_selection,
                            numlines           = numlines,
                            numlines₀          = numlines₀,
+                           retain_focus       = retain_focus,
                            selected           = zeros(Bool, length(data)),
                            selectable         = selectable,
                            show_icon          = show_icon)
@@ -151,7 +156,7 @@ function process_focus(widget::WidgetListBox, k::Keystroke)
         request_update(widget)
         return true
     else
-        return false
+        return widget.retain_focus
     end
 end
 
