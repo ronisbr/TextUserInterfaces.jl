@@ -265,6 +265,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_data-Tuple{WidgetListBox}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_data",
+    "category": "method",
+    "text": "get_data(widget::WidgetListBox)\n\nReturn the data of the list box widget.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_data-Union{Tuple{WidgetInputField{T,P}}, Tuple{P}, Tuple{T}} where P<:String where T",
     "page": "Library",
     "title": "TextUserInterfaces.get_data",
@@ -302,6 +310,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.get_selected",
     "category": "method",
     "text": "get_selected(group_name::AbstractString)\n\nReturn the WidgetRadioButton that is selected in group with name group_name. If the group_name does not exists or if no button is selected, then nothing is returned.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_selected-Tuple{WidgetListBox}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_selected",
+    "category": "method",
+    "text": "get_selected(widget::WidgetListBox)\n\nReturn an array of Bool indicating which elements of the list box widget are selected.\n\n\n\n\n\n"
 },
 
 {
