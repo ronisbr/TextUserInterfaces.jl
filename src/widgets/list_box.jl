@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetListBox, get_data, get_selected
+export WidgetListBox, get_data, get_selected, select_item
 
 ################################################################################
 #                                     Type
@@ -47,8 +47,9 @@ export WidgetListBox, get_data, get_selected
 
     # Styling
     # ==========================================================================
-    color::Int = -1
-    color_selected::Int = -1
+    color::Int = 0
+    color_highlight::Int = Int(A_REVERSE)
+    color_selected::Int = 0
     show_icon::Bool = false
     icon_not_selected::String = "[ ]"
     icon_selected::String = "[X]"
@@ -73,8 +74,9 @@ end
 
 function create_widget(::Val{:list_box}, parent::WidgetParent;
                        data::Vector{String} = String[],
-                       color::Int = -1,
-                       color_selected::Int = -1,
+                       color::Int = 0,
+                       color_highlight::Int = Int(A_REVERSE),
+                       color_selected::Int = 0,
                        multiple_selection::Bool = false,
                        numlines::Int = -1,
                        icon_not_selected::String = "[ ]",
@@ -113,6 +115,7 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
     # Create the widget.
     widget = WidgetListBox(common             = common,
                            color              = color,
+                           color_highlight    = color_highlight,
                            color_selected     = color_selected,
                            data               = data,
                            icon_not_selected  = icon_not_selected,
@@ -153,7 +156,7 @@ function process_focus(widget::WidgetListBox, k::Keystroke)
 end
 
 function redraw(widget::WidgetListBox)
-    @unpack common, begview, color, color_selected, curh, data,
+    @unpack common, begview, color, color_highlight, color_selected, curh, data,
             icon_not_selected, icon_selected, numlines, selected,
             show_icon = widget
     @unpack parent, buffer, width = common
@@ -182,11 +185,17 @@ function redraw(widget::WidgetListBox)
         # If the item is the highlighted (the one that holds the cursor), then
         # the color must be inverted.
         if (begview+i == curh) && has_focus(parent, widget)
-            color_i = color_i | A_REVERSE
+            color_i = color_highlight
         end
 
+        # Compute the padding after the text so that the entire field is filled
+        # with the correct color.
+        str = icon * data[id]
+        Δ   = common.width - length(str)
+        pad = Δ > 0 ? " "^Δ : ""
+
         wattron(buffer, color_i)
-        mvwprintw(buffer, i, 0, icon * data[id])
+        mvwprintw(buffer, i, 0, str * pad)
         wattroff(buffer, color_i)
     end
 
@@ -267,6 +276,24 @@ associated with it.
 function get_current_item(widget::WidgetListBox)
     id = widget.curh + 1
     return id, widget.data[id]
+end
+
+"""
+    select_item(widget::WidgetListBox, id::Int)
+
+Select the item `id` in the list box `widget`. Notice that `id` refers to the
+position of the item in the array `data`.
+
+"""
+function select_item(widget::WidgetListBox, id::Int)
+    @unpack data = widget
+
+    if 0 < id ≤ length(data)
+        widget.curh = id-1
+        _move_view(widget, 0)
+    end
+
+    return nothing
 end
 
 ################################################################################
