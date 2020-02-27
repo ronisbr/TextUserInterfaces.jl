@@ -745,6 +745,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.select_item-Tuple{WidgetListBox,Int64}",
+    "page": "Library",
+    "title": "TextUserInterfaces.select_item",
+    "category": "method",
+    "text": "select_item(widget::WidgetListBox, id::Int)\n\nSelect the item id in the list box widget. Notice that id refers to the position of the item in the array data.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.selected_items-Tuple{TextUserInterfaces.TUI_MENU}",
     "page": "Library",
     "title": "TextUserInterfaces.selected_items",
@@ -1030,6 +1038,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces._try_focus",
     "category": "method",
     "text": "_try_focus(win::Window)\n\nTry to set to focus to the window win. If it was possible to make win the focused windows, then it returns true. Otherwise, it returns false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.get_current_item-Tuple{WidgetListBox}",
+    "page": "Library",
+    "title": "TextUserInterfaces.get_current_item",
+    "category": "method",
+    "text": "get_selected_item(widget::WidgetListBox)\n\nReturn the ID of the current item of the list box widget and the data associated with it.\n\n\n\n\n\n"
 },
 
 {
