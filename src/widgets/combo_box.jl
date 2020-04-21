@@ -232,6 +232,14 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
             widget._list_box_opened = false
         end
 
+        # Set the function called when `ESC` is pressed inside the list box.
+        # This function just destroys the list box, ignoring the selection.
+        list_box.on_esc_pressed = () ->begin
+            destroy_widget(rwidget)
+            request_focus(parent, widget)
+            widget._list_box_opened = false
+        end
+
         return true
     else
         return false
