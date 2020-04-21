@@ -59,6 +59,9 @@ export WidgetListBox, get_data, get_selected, select_item
 
     # Signals
     # ==========================================================================
+    on_esc_pressed::Function = ()->return nothing
+    vargs_on_esc_pressed::Tuple = ()
+
     on_return_pressed::Function = ()->return nothing
     vargs_on_return_pressed::Tuple = ()
 end
@@ -317,6 +320,10 @@ function _handle_input(widget::WidgetListBox, k::Keystroke)
         return false
     elseif k.ktype == :enter
         widget.on_return_pressed(widget.vargs_on_return_pressed...)
+        return true
+    elseif k.ktype == :esc
+        widget.on_esc_pressed(widget.vargs_on_esc_pressed...)
+        return true
     # Toggle the selection of the current item.
     elseif k.value == " "
         if selectable
