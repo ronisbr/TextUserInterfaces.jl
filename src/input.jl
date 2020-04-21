@@ -32,26 +32,36 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
 
     c_raw < 0 && return Keystroke(raw = c_raw, value = "ERR", ktype = :undefined)
 
-    c::UInt32  = UInt32(c_raw)
-    nc::UInt32 = 0
+    c::UInt32 = UInt32(c_raw)
+    nc::Int32 = 0
 
     if c == 27
 
         s = string(Char(c))
 
+        # Here, we need to read a sequence of characters that is already in the
+        # buffer. Thus, we will disable the delay.
+        win_ptr = (win == nothing) ? tui.stdscr : win
+        nodelay(win_ptr, true)
+
+        # Read the entire sequence limited to 10 characters.
         for i = 1:10
-            nc = (win == nothing) ? getch() : wgetch(win)
-            nc == nocharval && break
+            nc = wgetch(win_ptr)
+            (nc < 0 || nc == nocharval) && break
             s *= string(Char(nc))
             haskey(keycodes, s) && break
         end
 
+        # Re-enable the delay.
+        nodelay(win_ptr, false)
+
         if length(s) == 1
-            return Keystroke(raw = c, value = c, ktype = :esc)
+            return Keystroke(raw = c, value = s, ktype = :esc)
         elseif haskey( keycodes, s )
             return Keystroke(keycodes[s], raw = c)
         else
-            return Keystroke(raw = c, value = s, ktype = :undefined)
+            # In this case, ALT was pressed.
+            return Keystroke(raw = c, value = s, alt = true, ktype = :undefined)
         end
     elseif c == nocharval
         return Keystroke(raw = c, value = c, ktype = :undefined)
