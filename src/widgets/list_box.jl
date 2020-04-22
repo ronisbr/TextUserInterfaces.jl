@@ -338,10 +338,10 @@ function _handle_input(widget::WidgetListBox, k::Keystroke)
     if k.ktype == :tab
         return false
     elseif k.ktype == :enter
-        widget.on_return_pressed(widget.vargs_on_return_pressed...)
+        @emit_signal widget return_pressed
         return true
     elseif k.ktype == :esc
-        widget.on_esc_pressed(widget.vargs_on_esc_pressed...)
+        @emit_signal widget esc_pressed
         return true
     # Toggle the selection of the current item.
     elseif k.value == " "

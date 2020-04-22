@@ -125,7 +125,7 @@ function process_focus(widget::WidgetButton, k::Keystroke)
         return false
     elseif k.ktype == :enter
         @log verbose "change_value" "$(obj_desc(widget)): Enter pressed on focused button."
-        widget.on_return_pressed(widget.vargs_on_return_pressed...)
+        @emit_signal widget return_pressed
     end
 
     return true

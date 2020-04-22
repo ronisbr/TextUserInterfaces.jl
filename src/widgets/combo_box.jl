@@ -243,21 +243,23 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         # Set the function called when `enter` is pressed inside the list box.
         # This function need to update the combo box current item, destroy the
         # created widgets, and return the focus to the combo box.
-        list_box.on_return_pressed = ()->begin
+        f_return() = begin
             cur, ~ = get_current_item(list_box)
             widget.cur = cur
             destroy_widget(rwidget)
             request_focus(parent, widget)
             widget._list_box_opened = false
         end
+        @connect_signal list_box return_pressed f_return()
 
         # Set the function called when `ESC` is pressed inside the list box.
         # This function just destroys the list box, ignoring the selection.
-        list_box.on_esc_pressed = () ->begin
+        f_esc() = begin
             destroy_widget(rwidget)
             request_focus(parent, widget)
             widget._list_box_opened = false
         end
+        @connect_signal list_box esc_pressed f_esc()
 
         return true
     else

@@ -47,12 +47,9 @@ function windows_and_widgets()
                              label = "Button 3", color = p1,
                              color_highlight = p3, style = :none)
 
-        bt1.on_return_pressed = (text)->change_text(text,"Button 1")
-        bt1.vargs_on_return_pressed = (text,)
-        bt2.on_return_pressed = (text)->change_text(text,"Button 2")
-        bt2.vargs_on_return_pressed = (text,)
-        bt3.on_return_pressed = (text)->change_text(text,"Button 3")
-        bt3.vargs_on_return_pressed = (text,)
+        @connect_signal bt1 return_pressed change_text(text,"Button 1")
+        @connect_signal bt2 return_pressed change_text(text,"Button 2")
+        @connect_signal bt3 return_pressed change_text(text,"Button 3")
 
         push!(wins, w)
 
