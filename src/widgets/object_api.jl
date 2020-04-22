@@ -7,12 +7,12 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-get_left(widget::T)   where T<:Widget = widget.common.left
-get_width(widget::T)  where T<:Widget = widget.common.width
-get_height(widget::T) where T<:Widget = widget.common.height
-get_top(widget::T)    where T<:Widget = widget.common.top
+get_left(widget::Widget)   = widget.common.left
+get_width(widget::Widget)  = widget.common.width
+get_height(widget::Widget) = widget.common.height
+get_top(widget::Widget)    = widget.common.top
 
-function reposition!(widget::T; force::Bool = false) where T<:Widget
+function reposition!(widget::Widget; force::Bool = false)
     @unpack common = widget
     @unpack opc, parent, height, width, top, left = common
 

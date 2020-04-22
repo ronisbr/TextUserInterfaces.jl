@@ -42,7 +42,18 @@ passing to `kwargs...` the arguments used in the function
 function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
                        border::Bool = true, border_color::Int = -1,
                        focusable::Bool = true, title::String = "",
-                       title_color::Int = -1, kwargs...)
+                       title_color::Int = -1,
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     # Check if the TUI has been initialized.
     !tui.init && error("The text user interface was not initialized.")
@@ -52,7 +63,16 @@ function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
     length(id) == 0 && ( id = string(length(tui.wins)) )
 
     # Compute the window positioning.
-    opc = object_positioning_conf(;kwargs...)
+    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
+                                  anchor_left    = anchor_left,
+                                  anchor_right   = anchor_right,
+                                  anchor_top     = anchor_top,
+                                  anchor_center  = anchor_center,
+                                  anchor_middle  = anchor_middle,
+                                  top            = top,
+                                  left           = left,
+                                  height         = height,
+                                  width          = width)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.

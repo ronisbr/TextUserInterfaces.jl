@@ -12,11 +12,11 @@ export WidgetProgressBar, change_value
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetProgressBar{T<:WidgetParent} <: Widget
+@with_kw mutable struct WidgetProgressBar <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon{T}
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -39,10 +39,29 @@ function create_widget(::Val{:progress_bar}, parent::WidgetParent;
                        color_highlight::Int = 0,
                        style::Symbol = :simple,
                        value::Int = 0,
-                       kwargs...)
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     # Positioning configuration.
-    opc = object_positioning_conf(; kwargs...)
+    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
+                                  anchor_left   = anchor_left,
+                                  anchor_right  = anchor_right,
+                                  anchor_top    = anchor_top,
+                                  anchor_center = anchor_center,
+                                  anchor_middle = anchor_middle,
+                                  top           = top,
+                                  left          = left,
+                                  height        = height,
+                                  width         = width)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.

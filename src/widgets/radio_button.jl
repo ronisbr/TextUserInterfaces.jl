@@ -12,11 +12,11 @@ export WidgetRadioButton, get_selected
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetRadioButton{T<:WidgetParent} <: Widget
+@with_kw mutable struct WidgetRadioButton <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon{T}
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -40,16 +40,36 @@ function create_widget(::Val{:radio_button}, parent::WidgetParent;
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,
-                       glyph_selected = "[X]",
-                       glyph_deselected = "[ ]",
-                       group_name = "group",
-                       kwargs...)
+                       glyph_selected::String = "[X]",
+                       glyph_deselected::String = "[ ]",
+                       group_name::String = "group",
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     # Create the button widget.
     button = create_widget(Val(:button), parent;
                            label = glyph_deselected * " " * label,
                            color = color, color_highlight = color_highlight,
-                           style = :none, _derive = true, kwargs...)
+                           style = :none, _derive = true,
+                           anchor_bottom  = anchor_bottom,
+                           anchor_left    = anchor_left,
+                           anchor_right   = anchor_right,
+                           anchor_top     = anchor_top,
+                           anchor_center  = anchor_center,
+                           anchor_middle  = anchor_middle,
+                           top            = top,
+                           left           = left,
+                           height         = height,
+                           width          = width)
 
     # Create the widget.
     widget = WidgetRadioButton(common           = button.common,

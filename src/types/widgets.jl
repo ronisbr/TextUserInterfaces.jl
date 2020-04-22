@@ -12,8 +12,8 @@ export Widget, WidgetCommon, WidgetParent
 WidgetParent = Union{Window,Widget}
 
 # Common configurations for all widgets.
-@with_kw mutable struct WidgetCommon{T<:WidgetParent}
-    parent::T
+@with_kw mutable struct WidgetCommon
+    parent::WidgetParent
     buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
 
     # Configuration related to the size and position of the widget.

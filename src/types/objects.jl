@@ -16,6 +16,9 @@ struct Anchor
     pad::Int
 end
 
+# Type of the tuple that defines an anchor.
+AnchorTuple = Union{Nothing,Tuple{Object,Symbol,Int}}
+
 # Types that can be anchors to objects.
 ObjectAnchor = Union{Nothing,Anchor}
 

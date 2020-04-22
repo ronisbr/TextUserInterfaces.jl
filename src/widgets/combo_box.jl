@@ -12,11 +12,11 @@ export WidgetComboBox, get_data, get_selected
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetComboBox{T<:WidgetParent} <: Widget
+@with_kw mutable struct WidgetComboBox <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon{T}
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -58,10 +58,29 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                        list_box_color::Int = 0,
                        list_box_color_highlight::Int = 0,
                        style::Symbol = :simple,
-                       kwargs...)
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     # Positioning configuration.
-    opc = object_positioning_conf(; kwargs...)
+    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
+                                  anchor_left   = anchor_left,
+                                  anchor_right  = anchor_right,
+                                  anchor_top    = anchor_top,
+                                  anchor_center = anchor_center,
+                                  anchor_middle = anchor_middle,
+                                  top           = top,
+                                  left          = left,
+                                  height        = height,
+                                  width         = width)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.

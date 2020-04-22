@@ -12,11 +12,11 @@ export WidgetInputField, clear_data!, get_data
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetInputField{T<:WidgetParent,P} <: Widget
+@with_kw mutable struct WidgetInputField{P} <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon{T}
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -81,10 +81,29 @@ function create_widget(::Val{:input_field}, parent::WidgetParent;
                        max_data_size::Int = 0,
                        validator = nothing,
                        parsed_data_sample = nothing,
-                       kwargs...)
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     # Positioning configuration.
-    opc = object_positioning_conf(; kwargs...)
+    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
+                                  anchor_left   = anchor_left,
+                                  anchor_right  = anchor_right,
+                                  anchor_top    = anchor_top,
+                                  anchor_center = anchor_center,
+                                  anchor_middle = anchor_middle,
+                                  top           = top,
+                                  left          = left,
+                                  height        = height,
+                                  width         = width)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
@@ -250,7 +269,7 @@ Get the data of `widget`. If a validator of type `DataType` is provided, then it
 will return the parsed data. Otherwise, it will return a string.
 
 """
-function get_data(widget::WidgetInputField{T,P}) where {T,P<:String}
+function get_data(widget::WidgetInputField{P}) where P<:String
     # TODO: The data is parsed when `tryparse` is called. Can we avoid this
     # double call?
     if widget.is_valid
@@ -260,7 +279,7 @@ function get_data(widget::WidgetInputField{T,P}) where {T,P<:String}
     end
 end
 
-function get_data(widget::WidgetInputField{T,P}) where {T,P}
+function get_data(widget::WidgetInputField{P}) where P
     # TODO: The data is parsed when `tryparse` is called. Can we avoid this
     # double call?
     if widget.is_valid

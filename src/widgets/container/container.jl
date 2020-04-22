@@ -12,11 +12,11 @@ export WidgetContainer
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetContainer{T<:WidgetParent} <: Widget
+@with_kw mutable struct WidgetContainer <: Widget
 
     # API
     # ==========================================================================
-    common::WidgetCommon{T}
+    common::WidgetCommon
 
     # Parameters related to the widget
     # ==========================================================================
@@ -33,15 +33,34 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Val{:container}, parent::T;
+function create_widget(::Val{:container}, parent::WidgetParent;
                        opc = nothing, border::Bool = false,
                        border_color::Int = -1, composed::Bool = false,
                        title::AbstractString = "", title_alignment::Symbol = :l,
-                       title_color::Int = -1, kwargs...) where
-    T<:WidgetParent
+                       title_color::Int = -1,
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     if opc == nothing
-        opc = object_positioning_conf(; kwargs...)
+        opc = object_positioning_conf(anchor_bottom = anchor_bottom,
+                                      anchor_left    = anchor_left,
+                                      anchor_right   = anchor_right,
+                                      anchor_top     = anchor_top,
+                                      anchor_center  = anchor_center,
+                                      anchor_middle  = anchor_middle,
+                                      top            = top,
+                                      left           = left,
+                                      height         = height,
+                                      width          = width)
 
         # Check if all positioning is defined and, if not, try to help by
         # automatically defining some anchors.
@@ -80,12 +99,12 @@ function create_widget(::Val{:container}, parent::T;
     common = create_widget_common(parent, opc)
 
     # Create the widget.
-    container = WidgetContainer{T}(common          = common,
-                                   border          = border,
-                                   border_color    = border_color,
-                                   title           = title,
-                                   title_alignment = title_alignment,
-                                   title_color     = title_color)
+    container = WidgetContainer(common          = common,
+                                border          = border,
+                                border_color    = border_color,
+                                title           = title,
+                                title_alignment = title_alignment,
+                                title_color     = title_color)
 
     # Add the new widget to the parent widget list.
     !composed && add_widget(parent, container)

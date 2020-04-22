@@ -174,12 +174,12 @@ anchor.
 
 """
 function object_positioning_conf(;
-    anchor_bottom::Union{Nothing,Tuple{Object,Symbol,Int}} = nothing,
-    anchor_left::Union{Nothing,Tuple{Object,Symbol,Int}}   = nothing,
-    anchor_right::Union{Nothing,Tuple{Object,Symbol,Int}}  = nothing,
-    anchor_top::Union{Nothing,Tuple{Object,Symbol,Int}}    = nothing,
-    anchor_center::Union{Nothing,Tuple{Object,Symbol,Int}} = nothing,
-    anchor_middle::Union{Nothing,Tuple{Object,Symbol,Int}} = nothing,
+    anchor_bottom::AnchorTuple = nothing,
+    anchor_left::AnchorTuple   = nothing,
+    anchor_right::AnchorTuple  = nothing,
+    anchor_top::AnchorTuple    = nothing,
+    anchor_center::AnchorTuple = nothing,
+    anchor_middle::AnchorTuple = nothing,
     top::Int    = -1,
     left::Int   = -1,
     height::Int = -1,

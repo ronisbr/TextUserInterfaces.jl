@@ -12,12 +12,12 @@ export WidgetForm, clear_daat!, get_data
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetForm{T<:WidgetParent,I<:Tuple} <: ComposedWidget
+@with_kw mutable struct WidgetForm{I<:Tuple} <: ComposedWidget
 
     # API
     # ==========================================================================
-    common::WidgetCommon{T}
-    container::WidgetContainer{T}
+    common::WidgetCommon
+    container::WidgetContainer
 
     # Derived widgets
     # ==========================================================================
@@ -34,7 +34,17 @@ function create_widget(::Val{:form}, parent::WidgetParent,
                        color_invalid::Int = 0,
                        field_size::Int = 40,
                        validator = nothing,
-                       kwargs...)
+                       # Keywords related to the object positioning.
+                       anchor_bottom::AnchorTuple = nothing,
+                       anchor_left::AnchorTuple   = nothing,
+                       anchor_right::AnchorTuple  = nothing,
+                       anchor_top::AnchorTuple    = nothing,
+                       anchor_center::AnchorTuple = nothing,
+                       anchor_middle::AnchorTuple = nothing,
+                       top::Int    = -1,
+                       left::Int   = -1,
+                       height::Int = -1,
+                       width::Int  = -1)
 
     # Get the size of the largest label.
     lmax = maximum(length.(labels))
@@ -51,7 +61,16 @@ function create_widget(::Val{:form}, parent::WidgetParent,
     end
 
     # Compute the positioning configuration.
-    opc = object_positioning_conf(; kwargs...)
+    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
+                                  anchor_left   = anchor_left,
+                                  anchor_right  = anchor_right,
+                                  anchor_top    = anchor_top,
+                                  anchor_center = anchor_center,
+                                  anchor_middle = anchor_middle,
+                                  top           = top,
+                                  left          = left,
+                                  height        = height,
+                                  width         = width)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
