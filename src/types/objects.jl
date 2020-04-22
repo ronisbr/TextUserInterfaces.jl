@@ -10,8 +10,8 @@
 #                                   Anchors
 ################################################################################
 
-struct Anchor{T<:Object}
-    obj::T
+struct Anchor
+    obj::Object
     side::Symbol
     pad::Int
 end
@@ -20,19 +20,14 @@ end
 ObjectAnchor = Union{Nothing,Anchor}
 
 # Configuration related to the position of the objects.
-@with_kw mutable struct ObjectPositioningConfiguration{Tb<:ObjectAnchor,
-                                                       Tl<:ObjectAnchor,
-                                                       Tr<:ObjectAnchor,
-                                                       Tt<:ObjectAnchor,
-                                                       Tc<:ObjectAnchor,
-                                                       Tm<:ObjectAnchor}
+@with_kw mutable struct ObjectPositioningConfiguration
     # Anchors (relative positioning).
-    anchor_bottom::Tb = nothing
-    anchor_left::Tl   = nothing
-    anchor_right::Tr  = nothing
-    anchor_top::Tt    = nothing
-    anchor_center::Tc = nothing
-    anchor_middle::Tm = nothing
+    anchor_bottom::ObjectAnchor = nothing
+    anchor_left::ObjectAnchor   = nothing
+    anchor_right::ObjectAnchor  = nothing
+    anchor_top::ObjectAnchor    = nothing
+    anchor_center::ObjectAnchor = nothing
+    anchor_middle::ObjectAnchor = nothing
 
     # Absolute positioning.
     top::Int    = -1
