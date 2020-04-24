@@ -90,6 +90,7 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                        retain_focus::Bool = false,
                        selectable::Bool = true,
                        show_icon::Bool = false,
+                       _derived::Bool = false,
                        # Keywords related to the object positioning.
                        anchor_bottom::AnchorTuple = nothing,
                        anchor_left::AnchorTuple   = nothing,
@@ -155,9 +156,9 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                            show_icon          = show_icon)
 
     # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
+    _derived && add_widget(parent, widget)
 
-    @log info "create_widget" """
+    _derived && @log info "create_widget" """
     A list box was created in $(obj_desc(parent)).
         Size           = ($(common.height), $(common.width))
         Coordinate     = ($(common.top), $(common.left))

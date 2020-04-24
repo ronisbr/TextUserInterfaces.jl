@@ -39,6 +39,7 @@ export WidgetComboBox, get_data, get_selected
     # Private
     # ==========================================================================
     _list_box_opened::Bool = false
+    _list_box::Union{Nothing,Widget} = nothing
 end
 
 ################################################################################
@@ -105,6 +106,42 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                             data                     = data,
                             style                    = style)
 
+    # If a border is required, then create a container and add the list box
+    # in this container.
+    if list_box_border
+        con = create_widget(Val(:container), parent, border = true,
+                            anchor_top   = (widget, :bottom, 0),
+                            anchor_left  = (widget, :left,   0),
+                            anchor_right = (widget, :right,  0),
+                            height       = 5)
+
+        list_box = create_widget(Val(:list_box), con,
+                                 selectable      = false,
+                                 retain_focus    = true,
+                                 data            = data,
+                                 color           = list_box_color,
+                                 color_highlight = list_box_color_highlight,
+                                 anchor_top      = (con, :top, 0),
+                                 anchor_left     = (con, :left,   0),
+                                 anchor_right    = (con, :right,  0),
+                                 anchor_bottom   = (con, :bottom,  0))
+
+        widget._list_box = con
+    else
+        list_box = create_widget(Val(:list_box), parent,
+                                 selectable      = false,
+                                 retain_focus    = true,
+                                 data            = data,
+                                 color           = list_box_color,
+                                 color_highlight = list_box_color_highlight,
+                                 anchor_top      = (widget, :bottom, 0),
+                                 anchor_left     = (widget, :left,   0),
+                                 anchor_right    = (widget, :right,  0),
+                                 height          = 5)
+
+        widget._list_box = list_box
+    end
+
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
 
@@ -118,6 +155,14 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
 
     # Return the created widget.
     return widget
+end
+
+function destroy_widget(widget::WidgetComboBox; refresh::Bool = true)
+    @unpack _list_box = widget
+    # Destroy the list box and the widget.
+    (_list_box != nothing) && destroy_widget(widget._list_box; refresh = false)
+    _destroy_widget(widget; refresh = refresh)
+    return nothing
 end
 
 function process_focus(widget::WidgetComboBox, k::Keystroke)
@@ -186,80 +231,44 @@ function _draw_combo_box(widget::WidgetComboBox)
 end
 
 function _handle_input(widget::WidgetComboBox, k::Keystroke)
-    @unpack common, data, list_box_border, list_box_color,
-            list_box_color_highlight = widget
+    @unpack common, data, _list_box = widget
     @unpack parent = common
 
     # If `enter` is pressed, then create a list box that contains all the data,
     # pass the focus to it, and keep it there until `enter` is pressed again.
     if k.ktype == :enter
-        # If a border is required, then create a container and add the list box
-        # in this container.
-        if list_box_border
-            con = create_widget(Val(:container), parent, border = true,
-                                anchor_top   = (widget, :bottom, 0),
-                                anchor_left  = (widget, :left,   0),
-                                anchor_right = (widget, :right,  0),
-                                height       = 5)
 
-            list_box = create_widget(Val(:list_box), con,
-                                     selectable      = false,
-                                     retain_focus    = true,
-                                     data            = data,
-                                     color           = list_box_color,
-                                     color_highlight = list_box_color_highlight,
-                                     anchor_top      = (con, :top, 0),
-                                     anchor_left     = (con, :left,   0),
-                                     anchor_right    = (con, :right,  0),
-                                     anchor_bottom   = (con, :bottom,  0))
+        # Correct the positioning of the list box.
+        reposition!(_list_box)
 
-            # `rwidget` is the widget that will be destroyed.
-            rwidget = con
-        else
-            list_box = create_widget(Val(:list_box), parent,
-                                     selectable      = false,
-                                     retain_focus    = true,
-                                     data            = data,
-                                     color           = list_box_color,
-                                     color_highlight = list_box_color_highlight,
-                                     anchor_top      = (widget, :bottom, 0),
-                                     anchor_left     = (widget, :left,   0),
-                                     anchor_right    = (widget, :right,  0),
-                                     height          = 5)
-
-            # `rwidget` is the widget that will be destroyed.
-            rwidget = list_box
-        end
+        # Add the list box widget to the same container of the combo box.
+        add_widget(parent, _list_box)
 
         # Make the selected item in the list box equal to the current item of
         # the comnbo box.
-        select_item(list_box, widget.cur)
+        select_item(_list_box, widget.cur)
 
         # Pass the focus to the newly created list box.
-        request_focus(parent, rwidget)
-
-        widget._list_box_opened = true
+        request_focus(parent, _list_box)
 
         # Set the function called when `enter` is pressed inside the list box.
         # This function need to update the combo box current item, destroy the
         # created widgets, and return the focus to the combo box.
         f_return() = begin
-            cur, ~ = get_current_item(list_box)
+            cur, ~ = get_current_item(_list_box)
             widget.cur = cur
-            destroy_widget(rwidget)
+            remove_widget(parent, _list_box)
             request_focus(parent, widget)
-            widget._list_box_opened = false
         end
-        @connect_signal list_box return_pressed f_return()
+        @connect_signal _list_box return_pressed f_return()
 
         # Set the function called when `ESC` is pressed inside the list box.
         # This function just destroys the list box, ignoring the selection.
         f_esc() = begin
-            destroy_widget(rwidget)
+            remove_widget(parent, _list_box)
             request_focus(parent, widget)
-            widget._list_box_opened = false
         end
-        @connect_signal list_box esc_pressed f_esc()
+        @connect_signal _list_box esc_pressed f_esc()
 
         return true
     else
