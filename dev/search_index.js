@@ -273,7 +273,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.get_data-Union{Tuple{WidgetInputField{T,P}}, Tuple{P}, Tuple{T}} where P<:String where T",
+    "location": "lib/library/#TextUserInterfaces.get_data-Union{Tuple{WidgetInputField{P}}, Tuple{P}} where P<:String",
     "page": "Library",
     "title": "TextUserInterfaces.get_data",
     "category": "method",
@@ -894,6 +894,30 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.validate_str",
     "category": "method",
     "text": "validate_str(str::AbstractString, v)\n\nValidate the string str using the validator v. v is an element of the type that will be used to validate or a regex.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@connect_signal-Tuple{Symbol,Symbol,Expr}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@connect_signal",
+    "category": "macro",
+    "text": "@connect_signal(obj::Symbol, signal::Symbol, fcall::Expr)\n\nConnect the signal signal of the object obj to the function fcall. Notice that fcall must be a function call with existing variables or literals. This function must not have keywords. Thus, when signal is emitted by obj, then fcall will be executed.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@disconnect_signal-Tuple{Symbol,Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@disconnect_signal",
+    "category": "macro",
+    "text": "@disconnect_signal(obj::Symbol, signal::Symbol)\n\nDisconnect the signal signal from object obj.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@emit_signal-Tuple{Symbol,Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@emit_signal",
+    "category": "macro",
+    "text": "@emit_signal(obj::Symbol, signal::Symbol)\n\nEmit the signal signal of the object obj, causing to execute the connected function.\n\n\n\n\n\n"
 },
 
 {
