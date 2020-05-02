@@ -272,6 +272,36 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
 
         return true
     else
-        return false
+        # The user can also change the selection without opening the list box.
+        #
+        # Select previous value.
+
+        Δx = 0
+
+        if k.ktype == :up
+            Δx = -1
+            # Select next value.
+        elseif k.ktype == :down
+            Δx = +1
+        elseif k.ktype == :pageup
+            Δx = -5
+        elseif k.ktype == :pagedown
+            Δx = +5
+        elseif k.ktype == :home
+            Δx = -length(data)
+        elseif k.ktype == :end
+            Δx = +length(data)
+        end
+
+        # If no movement key was pressed, then just release the focus.
+        if Δx != 0
+            widget.cur = clamp(widget.cur + Δx, 1, length(data))
+            request_update(widget)
+            return true
+        else
+            return false
+        end
     end
+
+    return false
 end
