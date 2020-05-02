@@ -59,11 +59,8 @@ export WidgetListBox, get_data, get_selected, select_item
 
     # Signals
     # ==========================================================================
-    on_esc_pressed::Function = ()->return nothing
-    vargs_on_esc_pressed::Tuple = ()
-
-    on_return_pressed::Function = ()->return nothing
-    vargs_on_return_pressed::Tuple = ()
+    @signal esc_pressed
+    @signal return_pressed
 end
 
 ################################################################################

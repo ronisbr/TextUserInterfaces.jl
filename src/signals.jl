@@ -92,3 +92,23 @@ macro emit_signal(obj::Symbol, signal::Symbol)
     # Create and return the complete expression.
     return esc(:($obj.$f_var($obj.$vargs_var...)))
 end
+
+"""
+    @signal(name)
+
+Create the signal named `name`. This must be used **inside** the widget
+structure that must be declared with `@with_kw` option (see package
+`Parameters.jl`).
+
+"""
+macro signal(name)
+    f = Symbol("on_", name)
+    v = Symbol("vargs_on_", name)
+
+    ex = quote
+        $f::Function = ()->nothing
+        $v::Tuple = ()
+    end
+
+    return esc(ex)
+end

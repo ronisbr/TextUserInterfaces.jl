@@ -27,8 +27,7 @@ export WidgetButton, change_label
 
     # Signals
     # ==========================================================================
-    on_return_pressed::Function = ()->return nothing
-    vargs_on_return_pressed::Tuple = ()
+    @signal return_pressed
 end
 
 # Conversion dictionary between style and height.
