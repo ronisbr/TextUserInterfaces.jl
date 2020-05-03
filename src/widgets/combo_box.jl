@@ -12,15 +12,7 @@ export WidgetComboBox, get_data, get_selected
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetComboBox <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
-
+@widget mutable struct WidgetComboBox
     # Data to be selected.
     data::Vector{String}
 
@@ -93,11 +85,9 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
         opc.width = maximum(length.(data)) + 5
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    widget = WidgetComboBox(common                   = common,
+    widget = WidgetComboBox(parent                   = parent,
+                            opc                      = opc,
                             color                    = color,
                             color_highlight          = color_highlight,
                             list_box_border          = list_box_border,
@@ -105,6 +95,9 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                             list_box_color_highlight = list_box_color_highlight,
                             data                     = data,
                             style                    = style)
+
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
 
     # If a border is required, then create a container and add the list box
     # in this container.
@@ -124,7 +117,8 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                                  anchor_top      = (con, :top, 0),
                                  anchor_left     = (con, :left,   0),
                                  anchor_right    = (con, :right,  0),
-                                 anchor_bottom   = (con, :bottom,  0))
+                                 anchor_bottom   = (con, :bottom,  0),
+                                 _derived        = true)
 
         widget._list_box = con
     else
@@ -137,7 +131,8 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                                  anchor_top      = (widget, :bottom, 0),
                                  anchor_left     = (widget, :left,   0),
                                  anchor_right    = (widget, :right,  0),
-                                 height          = 5)
+                                 height          = 5,
+                                 _derived        = true)
 
         widget._list_box = list_box
     end
@@ -147,10 +142,10 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
 
     @log info "create_widget" """
     A combo box was created in $(obj_desc(parent)).
-        Size           = ($(common.height), $(common.width))
-        Coordinate     = ($(common.top), $(common.left))
+        Size           = ($(widget.height), $(widget.width))
+        Coordinate     = ($(widget.top), $(widget.left))
         Data length    = $(length(data))
-        Positioning    = ($(common.opc.vertical),$(common.opc.horizontal))
+        Positioning    = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Reference      = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
@@ -170,8 +165,7 @@ function process_focus(widget::WidgetComboBox, k::Keystroke)
 end
 
 function redraw(widget::WidgetComboBox)
-    @unpack common, cur, data = widget
-    @unpack parent, buffer, width = common
+    @unpack buffer, cur, data, parent, width = widget
 
     wclear(buffer)
 
@@ -196,15 +190,14 @@ require_cursor(widget::WidgetComboBox) = false
 ################################################################################
 
 function _draw_combo_box(widget::WidgetComboBox)
-    @unpack common, color, color_highlight, cur, data, style,
+    @unpack parent, buffer, width, color, color_highlight, cur, data, style,
             _list_box_opened = widget
-    @unpack parent, buffer, width = common
 
     # Get the background color depending on the focus.
     c = (has_focus(parent, widget) || _list_box_opened) ? color_highlight : color
 
     if style == :boxed
-        w = common.width
+        w = width
 
         current = data[cur]
         Δ = width - 5 - length(current)
@@ -231,8 +224,7 @@ function _draw_combo_box(widget::WidgetComboBox)
 end
 
 function _handle_input(widget::WidgetComboBox, k::Keystroke)
-    @unpack common, data, _list_box = widget
-    @unpack parent = common
+    @unpack data, parent, _list_box = widget
 
     # If `enter` is pressed, then create a list box that contains all the data,
     # pass the focus to it, and keep it there until `enter` is pressed again.

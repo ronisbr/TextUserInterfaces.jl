@@ -16,8 +16,7 @@
 ################################################################################
 
 function destroy_widget(widget::ComposedWidget; refresh::Bool = true)
-    @unpack common, container = widget
-    @unpack parent, buffer = common
+    @unpack buffer, container, parent = widget
 
     widget_desc = obj_desc(widget)
 
@@ -47,4 +46,3 @@ release_focus(widget::ComposedWidget) = release_focus(widget.container)
 request_next_widget(widget::ComposedWidget) = request_next_widget(widget.container)
 request_prev_widget(widget::ComposedWidget) = request_prev_widget(widget.container)
 require_cursor(widget::ComposedWidget) = require_cursor(widget.container)
-reposition!(widget::ComposedWidget; force::Bool = false) = reposition!(widget.container; force = force)

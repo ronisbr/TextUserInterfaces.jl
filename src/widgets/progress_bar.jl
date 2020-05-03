@@ -12,14 +12,7 @@ export WidgetProgressBar, change_value
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetProgressBar <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
+@widget mutable struct WidgetProgressBar
     border::Bool = false
     color::Int = 0
     value::Int = 0
@@ -73,24 +66,25 @@ function create_widget(::Val{:progress_bar}, parent::WidgetParent;
         opc.width = 10
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    widget = WidgetProgressBar(common = common,
+    widget = WidgetProgressBar(parent = parent,
+                               opc    = opc,
                                border = border,
                                color  = color,
                                value  = value,
                                style  = style)
+
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
 
     @log info "create_widget" """
     A progress bar was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
+        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Style       = $(string(style))
         Value       = $value
         Reference   = $(obj_to_ptr(widget))"""
@@ -100,8 +94,7 @@ function create_widget(::Val{:progress_bar}, parent::WidgetParent;
 end
 
 function redraw(widget::WidgetProgressBar)
-    @unpack common, color, value, style = widget
-    @unpack buffer = common
+    @unpack buffer, color, style, value = widget
 
     wclear(buffer)
 
@@ -149,13 +142,12 @@ end
 # ==============================================================================
 
 function _draw_progress_bar_simple(widget::WidgetProgressBar)
-    @unpack common, border, color, value = widget
-    @unpack buffer = common
+    @unpack border, buffer, color, width, value = widget
 
     color > 0 && wattron(buffer, color)
 
     # Get the width of the progress bar.
-    wsx = common.width
+    wsx = width
 
     # Check if the user wants a border.
     if border
@@ -179,13 +171,12 @@ function _draw_progress_bar_simple(widget::WidgetProgressBar)
 end
 
 function _draw_progress_bar_complete(widget::WidgetProgressBar)
-    @unpack common, border, color, value = widget
-    @unpack buffer = common
+    @unpack border, buffer, color, width, value = widget
 
     color > 0 && wattron(buffer, color)
 
     # Get the width of the progress bar.
-    wsx = common.width
+    wsx = width
 
     # Check if the user wants a border.
     if border

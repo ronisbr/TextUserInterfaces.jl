@@ -107,7 +107,7 @@ all widgets in the window will be updated.
 
 """
 refresh_window(container::WidgetContainer; force_redraw::Bool = false) =
-    refresh_window(container.common.parent; force_redraw = force_redraw)
+    refresh_window(container.parent; force_redraw = force_redraw)
 
 """
     sync_cursor(widget::WidgetContainer)

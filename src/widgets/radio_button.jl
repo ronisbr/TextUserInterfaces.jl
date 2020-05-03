@@ -12,15 +12,7 @@ export WidgetRadioButton, get_selected
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetRadioButton <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
-    button::WidgetButton
+@derived_widget mutable struct WidgetRadioButton
     label::AbstractString
     group_name::AbstractString
     glyph_deselected::AbstractString
@@ -34,7 +26,7 @@ _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
 #                                     API
 ################################################################################
 
-accept_focus(widget::WidgetRadioButton) = accept_focus(widget.button)
+accept_focus(widget::WidgetRadioButton) = accept_focus(widget.base)
 
 function create_widget(::Val{:radio_button}, parent::WidgetParent;
                        label::AbstractString = "Button",
@@ -71,27 +63,24 @@ function create_widget(::Val{:radio_button}, parent::WidgetParent;
                            height         = height,
                            width          = width)
 
-    # Create the widget.
-    widget = WidgetRadioButton(common           = button.common,
-                               button           = button,
+    # Current size and position of the widget.
+    widget = WidgetRadioButton(base             = button,
                                label            = label,
                                glyph_deselected = glyph_deselected,
                                glyph_selected   = glyph_selected,
                                group_name       = group_name)
 
     # Function to be executed on return pressed.
-    button.vargs_on_return_pressed = (widget,)
-    button.on_return_pressed = (widget)->_select_radio_button(widget)
+    @connect_signal button return_pressed _select_radio_button(widget)
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
 
-    common = widget.common
     @log info "create_widget" """
     A radio button was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
+        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Label       = \"$label\"
         Group name  = $group_name
         Reference   = $(obj_to_ptr(widget))"""
@@ -119,8 +108,7 @@ end
 # We must override the function `destroy_widget` function because we need to
 # remove the radio button from the global list.
 function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
-    @unpack common = rb
-    @unpack parent, buffer = common
+    @unpack buffer, parent = rb
 
     if haskey(_radio_buttons_groups, rb.group_name)
         v  = _radio_buttons_groups[rb.group_name]
@@ -148,9 +136,9 @@ function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
     _destroy_widget(rb; refresh = refresh)
 end
 
-process_focus(widget::WidgetRadioButton, k::Keystroke) = process_focus(widget.button, k)
-redraw(widget::WidgetRadioButton) = redraw(widget.button, has_focus(widget.common.parent, widget))
-release_focus(widget::WidgetRadioButton) = release_focus(widget.button)
+process_focus(widget::WidgetRadioButton, k::Keystroke) = process_focus(widget.base, k)
+redraw(widget::WidgetRadioButton) = redraw(widget.base, has_focus(widget.parent, widget))
+release_focus(widget::WidgetRadioButton) = release_focus(widget.base)
 
 ################################################################################
 #                           Custom widget functions
@@ -202,7 +190,7 @@ function _select_radio_button(rb::WidgetRadioButton)
         end
     end
 
-    change_label(rb.button, rb.glyph_selected * " " * rb.label)
+    change_label(rb.base, rb.glyph_selected * " " * rb.label)
     rb.selected = true
 end
 
@@ -214,7 +202,7 @@ Deselect the radio button `rb` in its group name.
 """
 function _deselect_radio_button(rb::WidgetRadioButton)
     if rb.selected
-        change_label(rb.button, rb.glyph_deselected * " " * rb.label)
+        change_label(rb.base, rb.glyph_deselected * " " * rb.label)
         rb.selected = false
     end
 end

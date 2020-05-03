@@ -12,14 +12,7 @@ export WidgetButton, change_label
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetButton <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
+@widget mutable struct WidgetButton
     label::String
     color::Int
     color_highlight::Int
@@ -93,24 +86,25 @@ function create_widget(::Val{:button}, parent::WidgetParent;
         opc.width = length(label) + 4
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    widget = WidgetButton(common          = common,
+    widget = WidgetButton(parent          = parent,
+                          opc             = opc,
                           label           = label,
                           color           = color,
                           color_highlight = color_highlight,
                           style           = style)
+
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
 
     # Add the new widget to the parent widget list.
     !_derive && add_widget(parent, widget)
 
     !_derive && @log info "create_widget" """
     A button was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
+        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Label       = \"$label\"
         Style       = $style
         Reference   = $(obj_to_ptr(widget))"""
@@ -130,10 +124,10 @@ function process_focus(widget::WidgetButton, k::Keystroke)
     return true
 end
 
-redraw(widget::WidgetButton) = redraw(widget, has_focus(widget.common.parent,widget))
+redraw(widget::WidgetButton) = redraw(widget, has_focus(widget.parent,widget))
 
 function redraw(widget::WidgetButton, focused::Bool)
-    wclear(widget.common.buffer)
+    wclear(widget.buffer)
 
     # Draw the button.
     _draw_button(widget, focused)
@@ -173,8 +167,7 @@ include("./radio_button.jl")
 ################################################################################
 
 function _draw_button(widget::WidgetButton, focused::Bool = false)
-    @unpack common, label, color, color_highlight, style = widget
-    @unpack buffer, parent = common
+    @unpack buffer, color_highlight, width, color, label, parent, style = widget
 
     # Get the background color depending on the focus.
     c = focused ? color_highlight : color
@@ -185,7 +178,7 @@ function _draw_button(widget::WidgetButton, focused::Bool = false)
         wattroff(buffer, c)
     else
         # Center the label in the button.
-        w   = common.width
+        w   = width
         Δ   = w - 4 - length(label)
         pad = div(Δ,2)
         str = " "^pad * label * " "^(Δ - pad)

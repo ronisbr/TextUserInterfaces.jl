@@ -12,15 +12,7 @@ export WidgetListBox, get_data, get_selected, select_item
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetListBox <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
-
+@widget mutable struct WidgetListBox
     # Data to be listed.
     data::Vector{String}
 
@@ -124,20 +116,9 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                                        length(icon_not_selected)) + 1)
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
-    numlines₀ = numlines
-
-    # If `numlines` is less or equal 0, then make it equal to the number of
-    # available lines of the widget.
-    numlines ≤ 0 && (numlines = common.height)
-
-    # `numlines` must not be greater than the widget height.
-    numlines > common.height && (numline = common.height)
-
     # Create the widget.
-    widget = WidgetListBox(common             = common,
+    widget = WidgetListBox(parent             = parent,
+                           opc                = opc,
                            color              = color,
                            color_highlight    = color_highlight,
                            color_selected     = color_selected,
@@ -145,24 +126,35 @@ function create_widget(::Val{:list_box}, parent::WidgetParent;
                            icon_not_selected  = icon_not_selected,
                            icon_selected      = icon_selected,
                            multiple_selection = multiple_selection,
-                           numlines           = numlines,
-                           numlines₀          = numlines₀,
+                           numlines₀          = numlines,
                            retain_focus       = retain_focus,
                            selected           = zeros(Bool, length(data)),
                            selectable         = selectable,
                            show_icon          = show_icon)
 
-    # Add the new widget to the parent widget list.
-    _derived && add_widget(parent, widget)
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
 
-    _derived && @log info "create_widget" """
+    # If `numlines` is less or equal 0, then make it equal to the number of
+    # available lines of the widget.
+    numlines ≤ 0 && (numlines = widget.height)
+
+    # `numlines` must not be greater than the widget height.
+    numlines > widget.height && (numline = widget.height)
+
+    widget.numlines = numlines
+
+    # Add the new widget to the parent widget list.
+    !_derived && add_widget(parent, widget)
+
+    !_derived && @log info "create_widget" """
     A list box was created in $(obj_desc(parent)).
-        Size           = ($(common.height), $(common.width))
-        Coordinate     = ($(common.top), $(common.left))
+        Size           = ($(widget.height), $(widget.width))
+        Coordinate     = ($(widget.top), $(widget.left))
         Data length    = $(length(data))
         Mul. Selection = $multiple_selection
         Num. lines     = $numlines
-        Positioning    = ($(common.opc.vertical),$(common.opc.horizontal))
+        Positioning    = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Reference      = $(obj_to_ptr(widget))
         Show icon      = $show_icon"""
 
@@ -181,10 +173,9 @@ function process_focus(widget::WidgetListBox, k::Keystroke)
 end
 
 function redraw(widget::WidgetListBox)
-    @unpack common, begview, color, color_highlight, color_selected, curh, data,
-            icon_not_selected, icon_selected, numlines, selected,
-            show_icon = widget
-    @unpack parent, buffer, width = common
+    @unpack begview, buffer, color, color_highlight, color_selected, curh, data,
+            icon_not_selected, icon_selected, numlines, parent, selected,
+            show_icon, width = widget
 
     wclear(buffer)
 
@@ -216,7 +207,7 @@ function redraw(widget::WidgetListBox)
         # Compute the padding after the text so that the entire field is filled
         # with the correct color.
         str = icon * data[id]
-        Δ   = common.width - length(str)
+        Δ   = width - length(str)
         pad = Δ > 0 ? " "^Δ : ""
 
         wattron(buffer, color_i)
@@ -235,19 +226,19 @@ end
 function reposition!(widget::WidgetListBox; force::Bool = false)
     # Call the default repositioning function.
     if invoke(reposition!, Tuple{Widget}, widget; force = force)
-        @unpack common, begview, data, numlines, numlines₀ = widget
+        @unpack begview, data, height, numlines, numlines₀ = widget
 
         len_data = length(data)
 
         # In this case, we must take care about the size.
         if numlines₀ ≤ 0
-            numlines = common.height
+            numlines = height
         elseif numlines > numlines₀
             numlines = numlines₀
         end
 
         # `numlines` must not be greater than the widget height.
-        common.height < numlines && (numlines = common.height)
+        height < numlines && (numlines = height)
 
         # `numlines` must not be greater than the number of data.
         len_data < numlines && (numlines = len_data)

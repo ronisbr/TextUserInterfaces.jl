@@ -12,14 +12,7 @@ export WidgetContainer
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetContainer <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
+@widget mutable struct WidgetContainer
     border::Bool = false
     border_color::Int = 0
     focus_id::Int = 0
@@ -95,25 +88,26 @@ function create_widget(::Val{:container}, parent::WidgetParent;
         end
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    container = WidgetContainer(common          = common,
+    container = WidgetContainer(parent          = parent,
+                                opc             = opc,
                                 border          = border,
                                 border_color    = border_color,
                                 title           = title,
                                 title_alignment = title_alignment,
                                 title_color     = title_color)
 
+    # Initialize the internal variables of the widget.
+    init_widget!(container)
+
     # Add the new widget to the parent widget list.
     !composed && add_widget(parent, container)
 
     !composed && @log info "create_widget" """
     A container was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(container.height), $(container.width))
+        Coordinate  = ($(container.top), $(container.left))
+        Positioning = ($(container.opc.vertical),$(container.opc.horizontal))
         Reference   = $(obj_to_ptr(container))"""
 
     # Return the created container.
@@ -131,8 +125,7 @@ function destroy_widget(container::WidgetContainer; refresh::Bool = true)
 end
 
 function process_focus(container::WidgetContainer, k::Keystroke)
-    @unpack common, widgets, focus_id = container
-    @unpack parent = common
+    @unpack focus_id, parent, widgets = container
 
     # If there is any element in focus, ask to process the keystroke.
     if focus_id > 0
@@ -155,8 +148,8 @@ function process_focus(container::WidgetContainer, k::Keystroke)
 end
 
 function redraw(container::WidgetContainer)
-    @unpack border, border_color, common, widgets, title_color = container
-    @unpack buffer, parent = common
+    @unpack border, border_color, buffer, parent, update_needed, widgets,
+            title_color = container
 
     wclear(buffer)
 
@@ -170,17 +163,11 @@ function redraw(container::WidgetContainer)
         title_color  > 0 && wattroff(buffer, title_color)
     end
 
-    if common.update_needed
-        update_needed = true
-    else
-        # Check if any widget must be redrawn.
-        update_needed = false
-
-        for widget in widgets
-            if widget.common.update_needed
-                update_needed = true
-                break
-            end
+    # Check if any widget must be redrawn.
+    for widget in widgets
+        if widget.update_needed
+            update_needed = true
+            break
         end
     end
 
@@ -250,8 +237,7 @@ Draw the title in the container `container`.
 
 """
 function _draw_title(container::WidgetContainer)
-    @unpack common, title, title_alignment = container
-    @unpack buffer = common
+    @unpack buffer, title, title_alignment = container
 
     # Get the width of the container.
     width = get_width(container)
@@ -284,8 +270,7 @@ Move the focus of container `container` to the next widget.
 
 """
 function _next_widget(container::WidgetContainer)
-    @unpack common, widgets, focus_id = container
-    @unpack parent = common
+    @unpack parent, widgets, focus_id = container
 
     @log verbose "_next_widget" "$(obj_desc(container)): Change the focused widget."
 
@@ -320,8 +305,7 @@ Move the focus of container `container` to the previous widget.
 
 """
 function _previous_widget(container::WidgetContainer)
-    @unpack common, widgets, focus_id = container
-    @unpack parent = common
+    @unpack parent, widgets, focus_id = container
 
     @log verbose "_previous_widget" "$(obj_desc(container)): Change the focused widget."
 

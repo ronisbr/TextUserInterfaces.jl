@@ -14,3 +14,6 @@ abstract type Widget <: Object end
 
 # Abstract type for all composed widgets.
 abstract type ComposedWidget <: Widget end
+
+# Abstract type for all derived widgets.
+abstract type DerivedWidget <: Widget end

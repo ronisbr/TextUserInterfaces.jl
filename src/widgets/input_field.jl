@@ -12,15 +12,7 @@ export WidgetInputField, clear_data!, get_data
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetInputField{P} <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
-
+@widget mutable struct WidgetInputField{P}
     # Data array that contains the input to the field.
     data::Vector{Char} = Char[]
 
@@ -115,9 +107,6 @@ function create_widget(::Val{:input_field}, parent::WidgetParent;
         opc.width = 30
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Validator.
     enable_validator = (validator != nothing)
 
@@ -147,29 +136,32 @@ function create_widget(::Val{:input_field}, parent::WidgetParent;
         parsed_data = ""
     end
 
-    # Usable size.
-    size = border ? common.width - 2 : common.width
-
     # Create the widget.
-    widget = WidgetInputField(common           = common,
+    widget = WidgetInputField(parent           = parent,
+                              opc              = opc,
                               border           = border,
                               color_valid      = color_valid,
                               color_invalid    = color_invalid,
                               enable_validator = enable_validator,
                               max_data_size    = max_data_size,
                               parsed_data      = parsed_data,
-                              size             = size,
                               regex            = regex,
                               use_regex        = use_regex)
+
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
+
+    # Usable size.
+    widget.size = border ? widget.width - 2 : widget.width
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
 
     @log info "create_widget" """
     A input field was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
+        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Border      = $border
         Max. size   = $max_data_size
         Validator?  = $enable_validator
@@ -197,9 +189,8 @@ function process_focus(widget::WidgetInputField, k::Keystroke)
 end
 
 function redraw(widget::WidgetInputField)
-    @unpack common, view, data, cury, curx, border, color_valid, color_invalid,
-            is_valid, size = widget
-    @unpack buffer, width = common
+    @unpack border, buffer, color_invalid, color_valid, curx, cury, data,
+            is_valid, size, view = widget
 
     wclear(buffer)
 
@@ -411,7 +402,7 @@ function _update_cursor(widget::WidgetInputField)
     # 0.
     py = widget.border ? widget.cury : widget.cury-1
     px = widget.border ? widget.curx : widget.curx-1
-    wmove(widget.common.buffer, py, px)
+    wmove(widget.buffer, py, px)
 
     return nothing
 end

@@ -7,27 +7,27 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-get_left(widget::Widget)   = widget.common.left
-get_width(widget::Widget)  = widget.common.width
-get_height(widget::Widget) = widget.common.height
-get_top(widget::Widget)    = widget.common.top
+get_left(widget::Widget)   = widget.left
+get_width(widget::Widget)  = widget.width
+get_height(widget::Widget) = widget.height
+get_top(widget::Widget)    = widget.top
 
 function reposition!(widget::Widget; force::Bool = false)
-    @unpack common = widget
-    @unpack opc, parent, height, width, top, left = common
+    @unpack opc, parent = widget
 
-    # Compute the widget true position based on the configuration.
+    # Compute the widget true position based on the configuration given the new
+    # size of the parent.
     height, width, top, left = compute_object_positioning(opc, parent)
 
     # Check if resize or move is required.
     widget_resize = false
     widget_move   = false
 
-    ( (height != common.height) || (width != common.width) ) && (widget_resize = true)
-    ( (top    != common.top)    || (left  != common.left)  ) && (widget_move   = true)
+    ( (height != widget.height) || (width != widget.width) ) && (widget_resize = true)
+    ( (top    != widget.top)    || (left  != widget.left)  ) && (widget_move   = true)
 
     # Repack values.
-    @pack! common = height, width, top, left
+    @pack! widget = height, width, top, left
 
     # Check if we need to recreate the widget.
     repos = widget_resize || widget_move || force
@@ -35,9 +35,9 @@ function reposition!(widget::Widget; force::Bool = false)
     # TODO: Calling `mvwin` on subpad does not work. Hence, we destroy and
     # recreate the subpad. We must check if there is a better way.
     if repos
-        delwin(common.buffer)
-        common.buffer = Ptr{WINDOW}(0)
-        common.buffer = subpad(get_buffer(parent), height, width, top, left)
+        delwin(widget.buffer)
+        widget.buffer = Ptr{WINDOW}(0)
+        widget.buffer = subpad(get_buffer(parent), height, width, top, left)
         request_update(widget)
     end
 

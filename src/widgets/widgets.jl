@@ -10,8 +10,9 @@
 #                                API functions
 ################################################################################
 
-export accept_focus, create_widget, destroy_widget, request_update,
-       request_focus, redraw, release_focus, set_widget_color, update
+export accept_focus, create_widget, destroy_widget, init_widget!,
+       request_update, request_focus, redraw, release_focus, set_widget_color,
+       update
 
 """
     accept_focus(widget)
@@ -51,8 +52,7 @@ destroy_widget(widget; refresh::Bool = true) =
 Return the buffer of the widget `widget`.
 
 """
-get_buffer(widget) = widget.common.buffer
-
+get_buffer(widget) = widget.buffer
 
 """
     get_parent(widget)
@@ -60,7 +60,34 @@ get_buffer(widget) = widget.common.buffer
 Return the parent of the widget `widget`.
 
 """
-get_parent(widget) = widget.common.parent
+get_parent(widget) = widget.parent
+
+"""
+    init_widget!(widget::Widget)
+
+Initialize the widget `widget`. It allocates the buffer and also compute the
+positioning of the widget. The variables `opc` and `parent` must be set before
+calling this function.
+
+"""
+function init_widget!(widget::Widget)
+
+    # Compute the widget true position based on the configuration.
+    height, width, top, left = compute_object_positioning(widget.opc,
+                                                          widget.parent)
+
+    # Create the buffer that will hold the contents.
+    buffer = subpad(get_buffer(widget.parent), height, width, top, left)
+
+    # Update the variables in the widget.
+    widget.buffer = buffer
+    widget.height = height
+    widget.width  = width
+    widget.left   = left
+    widget.top    = top
+
+    return nothing
+end
 
 """
     process_focus(widget, k::Keystroke)
@@ -79,8 +106,7 @@ Request to focus to the widget `widget`.
 
 """
 function request_focus(widget)
-    @unpack common = widget
-    @unpack parent = common
+    @unpack parent = widget
 
     # Only request focus if the widget can accept the focus.
     request_focus(parent, widget)
@@ -95,8 +121,8 @@ Request update of the widget `widget`.
 
 """
 function request_update(widget)
-    widget.common.update_needed = true
-    request_update(widget.common.parent)
+    widget.update_needed = true
+    request_update(widget.parent)
     return nothing
 end
 
@@ -139,9 +165,9 @@ needed.
 
 """
 function update(widget; force_redraw = false)
-    if widget.common.update_needed || force_redraw
+    if widget.update_needed || force_redraw
         redraw(widget)
-        widget.common.update_needed = false
+        widget.update_needed = false
         return true
     else
         return false
@@ -168,45 +194,6 @@ request_next_widget(widget) = accept_focus(widget)
 request_prev_widget(widget) = accept_focus(widget)
 
 ################################################################################
-#                              Helpers functions
-################################################################################
-
-export create_widget_common
-
-"""
-    create_widget_common(parent::WidgetParent, opc::ObjectPositioningConfiguration)
-
-Create all the variables in the common structure of the widget API.
-
-# Args
-
-* `parent`: Parent widget.
-* `opc`: Object positioning configuration (see `ObjectPositioningConfiguration`).
-
-"""
-function create_widget_common(parent::WidgetParent,
-                              opc::ObjectPositioningConfiguration)
-
-
-    # Compute the widget true position based on the configuration.
-    height, width, top, left = compute_object_positioning(opc, parent)
-
-    # Create the buffer that will hold the contents.
-    buffer = subpad(get_buffer(parent), height, width, top, left)
-
-    # Create the common parameters of the widget.
-    common = WidgetCommon(parent = parent,
-                          buffer = buffer,
-                          opc    = opc,
-                          height = height,
-                          width  = width,
-                          top    = top,
-                          left   = left)
-
-    return common
-end
-
-################################################################################
 #                              Private functions
 ################################################################################
 
@@ -218,8 +205,7 @@ to reimplement the destroy function.
 
 """
 function _destroy_widget(widget; refresh::Bool = true)
-    @unpack common = widget
-    @unpack parent, buffer = common
+    @unpack buffer, parent = widget
 
     widget_desc = obj_desc(widget)
 

@@ -12,14 +12,7 @@ export WidgetANSILabel, change_text
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetANSILabel <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
+@widget mutable struct WidgetANSILabel
     text::Vector{String} = String[]
     colors::Vector{Int} = Int[]
 end
@@ -68,11 +61,12 @@ function create_widget(::Val{:ansi_label}, parent::WidgetParent;
         opc.horizontal == :unknown && (opc.width  = maximum(length.(lines)))
     end
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    widget = WidgetANSILabel(common = common)
+    widget = WidgetANSILabel(parent = parent,
+                             opc    = opc)
+
+    # initialize the internal variables of the widget.
+    init_widget!(widget)
 
     # Update the text.
     change_text(widget, text; alignment = alignment)
@@ -82,9 +76,9 @@ function create_widget(::Val{:ansi_label}, parent::WidgetParent;
 
     @log info "create_widget" """
     An ANSI label was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
+        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Text        = \"$text\"
         Reference   = $(obj_to_ptr(widget))"""
 
@@ -93,8 +87,7 @@ function create_widget(::Val{:ansi_label}, parent::WidgetParent;
 end
 
 function redraw(widget::WidgetANSILabel)
-    @unpack common, colors, text = widget
-    @unpack buffer = common
+    @unpack buffer, colors, text = widget
 
     wclear(buffer)
 
@@ -132,7 +125,7 @@ The text color can be selected by the keyword `color`. It it is negative
 function change_text(widget::WidgetANSILabel, new_text::AbstractString;
                      alignment = :l, color::Int = -1)
 
-    @unpack parent, buffer, width = widget.common
+    @unpack parent, buffer, width = widget
 
     # Split the string in each line.
     tokens = split(new_text, "\n")

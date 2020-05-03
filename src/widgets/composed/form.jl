@@ -12,15 +12,7 @@ export WidgetForm, clear_daat!, get_data
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetForm{I<:Tuple} <: ComposedWidget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-    container::WidgetContainer
-
-    # Derived widgets
-    # ==========================================================================
+@composed_widget mutable struct WidgetForm{I<:Tuple}
     inputs::I
 end
 
@@ -113,8 +105,7 @@ function create_widget(::Val{:form}, parent::WidgetParent,
     end
 
     # Create the widget.
-    widget = WidgetForm(common    = container.common,
-                        container = container,
+    widget = WidgetForm(container = container,
                         inputs    = tuple(widget_inputs...))
 
     # Add the new widget to the parent widget list.
@@ -122,9 +113,9 @@ function create_widget(::Val{:form}, parent::WidgetParent,
 
     @log info "create_widget" """
     A form widget was created in $(obj_desc(parent)).
-        Size        = ($(container.common.height), $(container.common.width))
-        Coordinate  = ($(container.common.top), $(container.common.left))
-        Positioning = ($(container.common.opc.vertical),$(container.common.opc.horizontal))
+        Size        = ($(container.height), $(container.width))
+        Coordinate  = ($(container.top), $(container.left))
+        Positioning = ($(container.opc.vertical),$(container.opc.horizontal))
         Fields      = $labels
         Reference   = $(obj_to_ptr(widget))"""
 

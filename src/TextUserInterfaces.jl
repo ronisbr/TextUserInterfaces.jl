@@ -4,6 +4,8 @@ using Dates
 using LinearAlgebra
 using Parameters
 
+import Base: getproperty, setproperty!
+
 ################################################################################
 #                                  Submodules
 ################################################################################

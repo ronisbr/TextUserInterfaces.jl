@@ -12,14 +12,7 @@ export WidgetLabel, change_text
 #                                     Type
 ################################################################################
 
-@with_kw mutable struct WidgetLabel <: Widget
-
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
-    # Parameters related to the widget
-    # ==========================================================================
+@widget mutable struct WidgetLabel
     color::Int
     fill_color::Bool
     text::AbstractString
@@ -66,14 +59,15 @@ function create_widget(::Val{:label}, parent::WidgetParent;
     opc.vertical   == :unknown && (opc.height = length(split(text, '\n')))
     opc.horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n'))))
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    widget = WidgetLabel(common     = common,
+    widget = WidgetLabel(parent     = parent,
+                         opc        = opc,
                          text       = "",
                          color      = color,
                          fill_color = fill_color)
+
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
 
     # Update the text.
     change_text(widget, text; alignment = alignment)
@@ -83,9 +77,9 @@ function create_widget(::Val{:label}, parent::WidgetParent;
 
     @log info "create_widget" """
     A label was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
-        Positioning = ($(common.opc.vertical),$(common.opc.horizontal))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
+        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Text        = \"$text\"
         Reference   = $(obj_to_ptr(widget))"""
 
@@ -94,8 +88,7 @@ function create_widget(::Val{:label}, parent::WidgetParent;
 end
 
 function redraw(widget::WidgetLabel)
-    @unpack common, color, text = widget
-    @unpack buffer = common
+    @unpack buffer, color, text = widget
 
     wclear(buffer)
     color > 0 && wattron(buffer, color)
@@ -127,8 +120,7 @@ The text color can be selected by the keyword `color`. It it is negative
 function change_text(widget::WidgetLabel, new_text::AbstractString;
                      alignment = :l, color::Int = -1)
 
-    @unpack fill_color = widget
-    @unpack parent, buffer, width = widget.common
+    @unpack buffer, fill_color, parent, width = widget
 
     # Split the string in each line.
     tokens = split(new_text, "\n")
