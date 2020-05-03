@@ -154,7 +154,7 @@ function plots()
                            anchor_bottom  = (con,   :bottom, 0))
 
     # Button actions.
-    bplot.on_return_pressed = ()->begin
+    function plot()
         f_str = get_data(func)[1]
 
         if f_str != nothing
@@ -181,16 +181,23 @@ function plots()
         end
     end
 
-    bcfor.on_return_pressed = ()->begin
+    function clear_form()
         clear_data!(func)
         clear_data!(tlim)
         clear_data!(ylim)
     end
 
-    bcplt.on_return_pressed = ()->begin
+    function clear_plot()
         str = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
         change_text(canvas, str)
     end
+
+    @connect_signal bplot return_pressed plot()
+    @connect_signal bcfor return_pressed clear_form()
+    @connect_signal bcplt return_pressed clear_plot()
+
+    @forward_signal tlim bplot return_pressed
+    @forward_signal ylim bplot return_pressed
 
     # Initialize the focus manager.
     tui.focus_chain = [win]
@@ -225,16 +232,31 @@ function get_limits(tlim,ylim)
     vt = get_data(tlim)
     vy = get_data(ylim)
 
-    eltype(vt) == Nothing && (vt = [0.,1.])
-    eltype(vy) == Nothing && (vy = [0.,1.])
+    if vt[1] == nothing
+        t_min = (vt[2] == nothing) ? 0. : Float64(vt[2] - 1)
+    else
+        t_min = Float64(vt[1])
+    end
 
-    vt[1] == nothing && (vt[1] = vt[2] == nothing ? 0 : vt[2] - 1)
-    vt[2] == nothing && (vt[2] = vt[1] + 1)
+    if vt[2] == nothing
+        t_max = t_min + 1
+    else
+        t_max = Float64(vt[2])
+    end
 
-    vy[1] == nothing && (vy[1] = vy[2] == nothing ? 0 : vy[2] - 1)
-    vy[2] == nothing && (vy[2] = vy[1] + 1)
+    if vy[1] == nothing
+        y_min = (vy[2] == nothing) ? 0. : Float64(vy[2] - 1)
+    else
+        y_min = Float64(vy[1])
+    end
 
-    return vt[1], vt[2], vy[1], vy[2]
+    if vy[2] == nothing
+        y_max = y_min + 1
+    else
+        y_max = Float64(vy[2])
+    end
+
+    return t_min, t_max, y_min, y_max
 end
 
 plots()

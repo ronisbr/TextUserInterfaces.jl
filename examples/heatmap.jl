@@ -145,7 +145,7 @@ function plots()
                            anchor_bottom  = (con,   :bottom, 0))
 
     # Button actions.
-    bplot.on_return_pressed = ()->begin
+    function plot()
         f_str = get_data(func)[1]
 
         if f_str != nothing
@@ -173,16 +173,23 @@ function plots()
         end
     end
 
-    bcfor.on_return_pressed = ()->begin
+    function clear_form()
         clear_data!(func)
         clear_data!(xlim)
         clear_data!(ylim)
     end
 
-    bcplt.on_return_pressed = ()->begin
+    function clear_plot()
         str = create_plot(zeros(40,40), get_limits(xlim,ylim)...)
         change_text(canvas, str)
     end
+
+    @connect_signal bplot return_pressed plot()
+    @connect_signal bcfor return_pressed clear_form()
+    @connect_signal bcplt return_pressed clear_plot()
+
+    @forward_signal xlim bplot return_pressed
+    @forward_signal ylim bplot return_pressed
 
     # Initialize the focus manager.
     tui.focus_chain = [win]
@@ -214,22 +221,37 @@ function create_plot(z, xmin, xmax, ymin, ymax, colormap = :viridis)
     return String(take!(io))
 end
 
-function get_limits(xlim,ylim)
+function get_limits(tlim,ylim)
     # Without this, we will have an bad type instability leading to a huge
     # performance hit when ploting data.
-    vx = get_data(xlim)
+    vt = get_data(tlim)
     vy = get_data(ylim)
 
-    eltype(vx) == Nothing && (vx = [0.,1.])
-    eltype(vy) == Nothing && (vy = [0.,1.])
+    if vt[1] == nothing
+        x_min = (vt[2] == nothing) ? 0. : Float64(vt[2] - 1)
+    else
+        x_min = Float64(vt[1])
+    end
 
-    vx[1] == nothing && (vx[1] = vx[2] == nothing ? 0 : vx[2] - 1)
-    vx[2] == nothing && (vx[2] = vx[1] + 1)
+    if vt[2] == nothing
+        x_max = x_min + 1
+    else
+        x_max = Float64(vt[2])
+    end
 
-    vy[1] == nothing && (vy[1] = vy[2] == nothing ? 0 : vy[2] - 1)
-    vy[2] == nothing && (vy[2] = vy[1] + 1)
+    if vy[1] == nothing
+        y_min = (vy[2] == nothing) ? 0. : Float64(vy[2] - 1)
+    else
+        y_min = Float64(vy[1])
+    end
 
-    return vx[1], vx[2], vy[1], vy[2]
+    if vy[2] == nothing
+        y_max = y_min + 1
+    else
+        y_max = Float64(vy[2])
+    end
+
+    return x_min, x_max, y_min, y_max
 end
 
 plots()

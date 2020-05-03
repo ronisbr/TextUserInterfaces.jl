@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export @connect_signal, @disconnect_signal, @emit_signal
+export @connect_signal, @disconnect_signal, @emit_signal, @forward_signal
 
 """
     @connect_signal(obj::Symbol, signal::Symbol, fcall::Expr)
@@ -91,6 +91,29 @@ macro emit_signal(obj::Symbol, signal::Symbol)
 
     # Create and return the complete expression.
     return esc(:($obj.$f_var($obj.$vargs_var...)))
+end
+
+"""
+    @forward_signal(src::Symbol, dest::Symbol, signal::Symbol)
+
+Forward the signal `signal` from `src` to `dest`. This means that every time
+that the signal `signal` is generated in `src`, then the function in `dest` will
+be called.
+
+"""
+macro forward_signal(src::Symbol, dest::Symbol, signal::Symbol)
+    # Variable that stores the signal name.
+    f_var = Symbol("on_", signal)
+
+    # Variable that stores the signal input variables.
+    vargs_var = Symbol("vargs_on_", signal)
+
+    ex = quote
+        $src.$f_var     = $dest.$f_var
+        $src.$vargs_var = $dest.$vargs_var
+    end
+
+    return esc(ex)
 end
 
 """
