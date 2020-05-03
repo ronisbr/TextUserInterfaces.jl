@@ -145,14 +145,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_widget_common-Tuple{Union{Widget, Window},TextUserInterfaces.ObjectPositioningConfiguration}",
-    "page": "Library",
-    "title": "TextUserInterfaces.create_widget_common",
-    "category": "method",
-    "text": "create_widget_common(parent::WidgetParent, opc::ObjectPositioningConfiguration)\n\nCreate all the variables in the common structure of the widget API.\n\nArgs\n\nparent: Parent widget.\nopc: Object positioning configuration (see ObjectPositioningConfiguration).\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.create_window",
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
@@ -382,6 +374,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.init_tui",
     "category": "function",
     "text": "init_tui(dir::String = \"\")\n\nInitialize the Text User Interface (TUI). The full-path of the ncurses directory can be specified by dir. If it is empty or omitted, then it will look on the default library directories.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.init_widget!-Tuple{Widget}",
+    "page": "Library",
+    "title": "TextUserInterfaces.init_widget!",
+    "category": "method",
+    "text": "init_widget!(widget::Widget)\n\nInitialize the widget widget. It allocates the buffer and also compute the positioning of the widget. The variables opc and parent must be set before calling this function.\n\n\n\n\n\n"
 },
 
 {
@@ -897,6 +897,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.@composed_widget-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@composed_widget",
+    "category": "macro",
+    "text": "@composed_widget(ex)\n\nDeclare a structure of a composed widget.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.@connect_signal-Tuple{Symbol,Symbol,Expr}",
     "page": "Library",
     "title": "TextUserInterfaces.@connect_signal",
@@ -921,6 +929,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.@forward_signal-Tuple{Symbol,Symbol,Symbol}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@forward_signal",
+    "category": "macro",
+    "text": "@forward_signal(src::Symbol, dest::Symbol, signal::Symbol)\n\nForward the signal signal from src to dest. This means that every time that the signal signal is generated in src, then the function in dest will be called.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.@log-Tuple{Any,Any,Any}",
     "page": "Library",
     "title": "TextUserInterfaces.@log",
@@ -934,6 +950,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.@log",
     "category": "macro",
     "text": "macro log(level, msg)\n\nLog the message msg with level level.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@widget-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@widget",
+    "category": "macro",
+    "text": "@widget(ex)\n\nDeclare a structure of a widget.\n\n\n\n\n\n"
 },
 
 {
@@ -1166,6 +1190,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.require_cursor",
     "category": "method",
     "text": "require_cursor()\n\nIf true, then the physical cursor will be shown and the position will be updated according to its position in the widget window. Otherwise, the physical cursor will be hidden.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@derived_widget-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@derived_widget",
+    "category": "macro",
+    "text": "@derived_widget(ex)\n\nDeclare a structure of a derived widget.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.@signal-Tuple{Any}",
+    "page": "Library",
+    "title": "TextUserInterfaces.@signal",
+    "category": "macro",
+    "text": "@signal(name)\n\nCreate the signal named name. This must be used inside the widget structure that must be declared with @with_kw option (see package Parameters.jl).\n\n\n\n\n\n"
 },
 
 {
