@@ -174,30 +174,23 @@ anchor.
 
 """
 function object_positioning_conf(;
-    anchor_bottom::AnchorTuple = nothing,
-    anchor_left::AnchorTuple   = nothing,
-    anchor_right::AnchorTuple  = nothing,
-    anchor_top::AnchorTuple    = nothing,
-    anchor_center::AnchorTuple = nothing,
-    anchor_middle::AnchorTuple = nothing,
+    anchor_bottom::Anchor = _no_anchor,
+    anchor_left::Anchor   = _no_anchor,
+    anchor_right::Anchor  = _no_anchor,
+    anchor_top::Anchor    = _no_anchor,
+    anchor_center::Anchor = _no_anchor,
+    anchor_middle::Anchor = _no_anchor,
     top::Int    = -1,
     left::Int   = -1,
     height::Int = -1,
     width::Int  = -1)
 
-    ab = anchor_bottom != nothing ? Anchor(anchor_bottom...) : nothing
-    al = anchor_left   != nothing ? Anchor(anchor_left...)   : nothing
-    ar = anchor_right  != nothing ? Anchor(anchor_right...)  : nothing
-    at = anchor_top    != nothing ? Anchor(anchor_top...)    : nothing
-    ac = anchor_center != nothing ? Anchor(anchor_center...) : nothing
-    am = anchor_middle != nothing ? Anchor(anchor_middle...) : nothing
-
-    opc = ObjectPositioningConfiguration(anchor_bottom = ab,
-                                         anchor_left   = al,
-                                         anchor_right  = ar,
-                                         anchor_top    = at,
-                                         anchor_center = ac,
-                                         anchor_middle = am,
+    opc = ObjectPositioningConfiguration(anchor_bottom = anchor_bottom,
+                                         anchor_left   = anchor_left  ,
+                                         anchor_right  = anchor_right ,
+                                         anchor_top    = anchor_top   ,
+                                         anchor_center = anchor_center,
+                                         anchor_middle = anchor_middle,
                                          top           = top,
                                          left          = left,
                                          height        = height,
@@ -219,21 +212,21 @@ end
     _check_vertical_anchor(anchor::Anchor)
 
 Check if the `side` parameter of `anchor` is valid for vertical positioning. If
-`anchor` is `nothing`, then `true` is always returned.
+`anchor` is `_no_anchor`, then `true` is always returned.
 
 """
-_check_vertical_anchor(anchor::Nothing) = true
-_check_vertical_anchor(anchor::Anchor)  = anchor.side ∈ [:bottom,:middle,:top]
+_check_vertical_anchor(anchor::Anchor) =
+    (anchor == _no_anchor) || (anchor.side ∈ [:bottom,:middle,:top])
 
 """
     _check_horizontal_anchor(anchor::Anchor)
 
 Check if the `side` parameter of `anchor` is valid for horizontal positioning.
-If `anchor` is `nothing`, then `true` is always returned.
+If `anchor` is `_no_anchor`, then `true` is always returned.
 
 """
-_check_horizontal_anchor(anchor::Nothing) = true
-_check_horizontal_anchor(anchor::Anchor)  = anchor.side ∈ [:left,:center,:right]
+_check_horizontal_anchor(anchor::Anchor) =
+    (anchor == _no_anchor) || (anchor.side ∈ [:left,:center,:right])
 
 """
     _get_anchor(anchor::Anchor, parent)
@@ -313,13 +306,13 @@ function _process_vertical_info!(opc::ObjectPositioningConfiguration)
     end
 
     # TODO: What about defining `top` and `anchor_bottom`?
-    if (anchor_bottom != nothing) && (anchor_top != nothing)
+    if (anchor_bottom != _no_anchor) && (anchor_top != _no_anchor)
         vertical = :abottom_atop
-    elseif (anchor_bottom != nothing) && (height > 0)
+    elseif (anchor_bottom != _no_anchor) && (height > 0)
         vertical = :abottom_height
-    elseif (anchor_top != nothing) && (height > 0)
+    elseif (anchor_top != _no_anchor) && (height > 0)
         vertical = :atop_height
-    elseif (anchor_middle != nothing) && (height > 0)
+    elseif (anchor_middle != _no_anchor) && (height > 0)
         vertical = :amiddle_height
     elseif (top >= 0) && (height > 0)
         vertical = :top_height
@@ -367,13 +360,13 @@ function _process_horizontal_info!(opc::ObjectPositioningConfiguration)
     end
 
     # TODO: What about defining `left` and `anchor_right`?
-    if (anchor_left != nothing) && (anchor_right != nothing)
+    if (anchor_left != _no_anchor) && (anchor_right != _no_anchor)
         horizontal = :aleft_aright
-    elseif (anchor_left != nothing) && (width > 0)
+    elseif (anchor_left != _no_anchor) && (width > 0)
         horizontal = :aleft_width
-    elseif (anchor_right != nothing) && (width > 0)
+    elseif (anchor_right != _no_anchor) && (width > 0)
         horizontal = :aright_width
-    elseif (anchor_center != nothing) && (width > 0)
+    elseif (anchor_center != _no_anchor) && (width > 0)
         horizontal = :acenter_width
     elseif (left >= 0) && (width > 0)
         horizontal = :left_width
@@ -400,12 +393,12 @@ function _str(opc::ObjectPositioningConfiguration)
     ac = opc.anchor_center
     am = opc.anchor_middle
 
-    ab_str = ab == nothing ? "nothing" : "($(typeof(ab.obj)), $(ab.side), $(ab.pad))"
-    al_str = al == nothing ? "nothing" : "($(typeof(al.obj)), $(al.side), $(al.pad))"
-    ar_str = ar == nothing ? "nothing" : "($(typeof(ar.obj)), $(ar.side), $(ar.pad))"
-    at_str = at == nothing ? "nothing" : "($(typeof(at.obj)), $(at.side), $(at.pad))"
-    ac_str = ac == nothing ? "nothing" : "($(typeof(ac.obj)), $(ac.side), $(ac.pad))"
-    am_str = am == nothing ? "nothing" : "($(typeof(am.obj)), $(am.side), $(am.pad))"
+    ab_str = ab == _no_anchor ? "No anchor" : "($(typeof(ab.obj)), $(ab.side), $(ab.pad))"
+    al_str = al == _no_anchor ? "No anchor" : "($(typeof(al.obj)), $(al.side), $(al.pad))"
+    ar_str = ar == _no_anchor ? "No anchor" : "($(typeof(ar.obj)), $(ar.side), $(ar.pad))"
+    at_str = at == _no_anchor ? "No anchor" : "($(typeof(at.obj)), $(at.side), $(at.pad))"
+    ac_str = ac == _no_anchor ? "No anchor" : "($(typeof(ac.obj)), $(ac.side), $(ac.pad))"
+    am_str = am == _no_anchor ? "No anchor" : "($(typeof(am.obj)), $(am.side), $(am.pad))"
 
     return str = """
     anchor_bottom = $am_str

@@ -32,12 +32,12 @@ function create_widget(::Val{:container}, parent::WidgetParent;
                        title::AbstractString = "", title_alignment::Symbol = :l,
                        title_color::Int = -1,
                        # Keywords related to the object positioning.
-                       anchor_bottom::AnchorTuple = nothing,
-                       anchor_left::AnchorTuple   = nothing,
-                       anchor_right::AnchorTuple  = nothing,
-                       anchor_top::AnchorTuple    = nothing,
-                       anchor_center::AnchorTuple = nothing,
-                       anchor_middle::AnchorTuple = nothing,
+                       anchor_bottom::Anchor = _no_anchor,
+                       anchor_left::Anchor   = _no_anchor,
+                       anchor_right::Anchor  = _no_anchor,
+                       anchor_top::Anchor    = _no_anchor,
+                       anchor_center::Anchor = _no_anchor,
+                       anchor_middle::Anchor = _no_anchor,
                        top::Int    = -1,
                        left::Int   = -1,
                        height::Int = -1,
@@ -45,15 +45,15 @@ function create_widget(::Val{:container}, parent::WidgetParent;
 
     if opc == nothing
         opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                      anchor_left    = anchor_left,
-                                      anchor_right   = anchor_right,
-                                      anchor_top     = anchor_top,
-                                      anchor_center  = anchor_center,
-                                      anchor_middle  = anchor_middle,
-                                      top            = top,
-                                      left           = left,
-                                      height         = height,
-                                      width          = width)
+                                      anchor_left   = anchor_left,
+                                      anchor_right  = anchor_right,
+                                      anchor_top    = anchor_top,
+                                      anchor_center = anchor_center,
+                                      anchor_middle = anchor_middle,
+                                      top           = top,
+                                      left          = left,
+                                      height        = height,
+                                      width         = width)
 
         # Check if all positioning is defined and, if not, try to help by
         # automatically defining some anchors.

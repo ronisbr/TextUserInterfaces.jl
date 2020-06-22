@@ -6,6 +6,8 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+export Anchor, ObjectPositioningConfiguration
+
 ################################################################################
 #                                   Anchors
 ################################################################################
@@ -16,21 +18,19 @@ struct Anchor
     pad::Int
 end
 
-# Type of the tuple that defines an anchor.
-AnchorTuple = Union{Nothing,Tuple{Object,Symbol,Int}}
-
-# Types that can be anchors to objects.
-ObjectAnchor = Union{Nothing,Anchor}
+# Singleton that indicates that no anchor is available.
+struct _NO_OBJECT <: Object end
+const _no_anchor = Anchor(_NO_OBJECT(), :nosize, 0)
 
 # Configuration related to the position of the objects.
 @with_kw mutable struct ObjectPositioningConfiguration
     # Anchors (relative positioning).
-    anchor_bottom::ObjectAnchor = nothing
-    anchor_left::ObjectAnchor   = nothing
-    anchor_right::ObjectAnchor  = nothing
-    anchor_top::ObjectAnchor    = nothing
-    anchor_center::ObjectAnchor = nothing
-    anchor_middle::ObjectAnchor = nothing
+    anchor_bottom::Anchor = _no_anchor
+    anchor_left::Anchor   = _no_anchor
+    anchor_right::Anchor  = _no_anchor
+    anchor_top::Anchor    = _no_anchor
+    anchor_center::Anchor = _no_anchor
+    anchor_middle::Anchor = _no_anchor
 
     # Absolute positioning.
     top::Int    = -1

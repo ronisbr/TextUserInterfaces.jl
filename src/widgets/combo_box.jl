@@ -52,12 +52,12 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                        list_box_color_highlight::Int = 0,
                        style::Symbol = :simple,
                        # Keywords related to the object positioning.
-                       anchor_bottom::AnchorTuple = nothing,
-                       anchor_left::AnchorTuple   = nothing,
-                       anchor_right::AnchorTuple  = nothing,
-                       anchor_top::AnchorTuple    = nothing,
-                       anchor_center::AnchorTuple = nothing,
-                       anchor_middle::AnchorTuple = nothing,
+                       anchor_bottom::Anchor = _no_anchor,
+                       anchor_left::Anchor   = _no_anchor,
+                       anchor_right::Anchor  = _no_anchor,
+                       anchor_top::Anchor    = _no_anchor,
+                       anchor_center::Anchor = _no_anchor,
+                       anchor_middle::Anchor = _no_anchor,
                        top::Int    = -1,
                        left::Int   = -1,
                        height::Int = -1,
@@ -114,10 +114,10 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                                  data            = data,
                                  color           = list_box_color,
                                  color_highlight = list_box_color_highlight,
-                                 anchor_top      = (con, :top, 0),
-                                 anchor_left     = (con, :left,   0),
-                                 anchor_right    = (con, :right,  0),
-                                 anchor_bottom   = (con, :bottom,  0),
+                                 anchor_top      = Anchor(con, :top,    0),
+                                 anchor_left     = Anchor(con, :left,   0),
+                                 anchor_right    = Anchor(con, :right,  0),
+                                 anchor_bottom   = Anchor(con, :bottom, 0),
                                  _derived        = true)
 
         widget._list_box = con
@@ -128,9 +128,9 @@ function create_widget(::Val{:combo_box}, parent::WidgetParent;
                                  data            = data,
                                  color           = list_box_color,
                                  color_highlight = list_box_color_highlight,
-                                 anchor_top      = (widget, :bottom, 0),
-                                 anchor_left     = (widget, :left,   0),
-                                 anchor_right    = (widget, :right,  0),
+                                 anchor_top      = Anchor(widget, :bottom, 0),
+                                 anchor_left     = Anchor(widget, :left,   0),
+                                 anchor_right    = Anchor(widget, :right,  0),
                                  height          = 5,
                                  _derived        = true)
 
