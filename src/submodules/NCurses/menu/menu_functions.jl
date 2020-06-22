@@ -77,6 +77,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -100,6 +101,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) = @_ccallm $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end
 
@@ -114,6 +116,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -137,6 +140,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:Integer = @_ccallm $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end
 
@@ -150,6 +154,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s == "T" ? "String," : s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -173,5 +178,6 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:AbstractString = @_ccallm $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end

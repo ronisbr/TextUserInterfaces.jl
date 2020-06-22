@@ -97,6 +97,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -120,6 +121,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end
 
@@ -154,6 +156,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -177,6 +180,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:Integer = @_ccalln $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end
 
@@ -190,9 +194,11 @@ for (f,r,v,j,c) in
      (:wborder,       Cvoid,       ["win","ls","rs","ts","bs","tl","tr","bl","br"], ["Ptr{WINDOW}",["T" for _ = 1:8]...], ["Ptr{WINDOW}",["chtype" for _ = 1:8]...]),
     )
 
-    fb    = Meta.quot(f)
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    fb     = Meta.quot(f)
+    argst1 = Meta.parse("(" * ([s == "T" ? "Char," : s * "," for s in j]...) * ")")
+    argst2 = Meta.parse("(" * ([s == "T" ? "Int,"  : s * "," for s in j]...) * ")")
+    argsj  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
+    argsc  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -214,8 +220,8 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:jlchtype = @_ccalln $f($(argsc...))::$r
         export $f
-
-
+        precompile($f, $argst1)
+        precompile($f, $argst2)
     end
 end
 
@@ -234,9 +240,11 @@ for (f,r,v,j,c) in
      (:wvline,   Cint, ["win","ch","n"],         ["Ptr{WINDOW}","Tc","Ti"],           ["Ptr{WINDOW}","chtype","Cint"]),
     )
 
-    fb    = Meta.quot(f)
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    fb     = Meta.quot(f)
+    argst1 = Meta.parse("(" * ([s == "Tc" ? "Char," : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
+    argst2 = Meta.parse("(" * ([s == "Tc" ? "Int,"  : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
+    argsj  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
+    argsc  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -258,6 +266,8 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where {Tc<:jlchtype,Ti<:Integer} = @_ccalln $f($(argsc...))::$r
         export $f
+        precompile($f, $argst1)
+        precompile($f, $argst2)
     end
 end
 
@@ -271,6 +281,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s == "T" ? "String," : s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -294,6 +305,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:AbstractString = @_ccalln $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end
 
@@ -307,6 +319,7 @@ for (f,r,v,j,c) in
     )
 
     fb    = Meta.quot(f)
+    argst = Meta.parse("(" * ([s == "Ts" ? "String," : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
     argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
     argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
 
@@ -330,6 +343,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccalln $f($(argsc...))::$r
         export $f
+        precompile($f, $argst)
     end
 end
 
