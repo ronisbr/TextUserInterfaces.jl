@@ -83,4 +83,9 @@ include("./widgets/container/api.jl")
 
 include("./widgets/composed/form.jl")
 
+# Precompile
+# ==============================================================================
+
+include("precompile.jl")
+
 end # module
