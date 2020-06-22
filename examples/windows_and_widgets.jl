@@ -4,7 +4,6 @@ logger.enabled = true
 logger.level = 3
 
 function windows_and_widgets()
-
     init_tui()
     NCurses.noecho()
 
@@ -29,21 +28,21 @@ function windows_and_widgets()
                              top = 2, left = 2, height = 1,
                              text = "The last pressed button was:", color = p0)
         text = create_widget(Val(:label), c;
-                             anchor_middle = (l, :middle, 0),
-                             anchor_left   = (l, :right,  1),
+                             anchor_middle = Anchor(l, :middle, 0),
+                             anchor_left   = Anchor(l, :right,  1),
                              width = 10, text = "", color = p2)
         bt1  = create_widget(Val(:button), c;
-                             top = 5, anchor_left = (c, :left, 0),
+                             top = 5, anchor_left = Anchor(c, :left, 0),
                              label = "Button 1", color = p1,
                              color_highlight = p3, style = :simple)
         bt2  = create_widget(Val(:button), c,
-                             anchor_middle = (bt1, :middle, 0),
-                             anchor_center = (c, :center, 0),
+                             anchor_middle = Anchor(bt1, :middle, 0),
+                             anchor_center = Anchor(c, :center, 0),
                              label = "Button 2", color = p1,
                              color_highlight = p3, style = :boxed)
         bt3  = create_widget(Val(:button), c;
-                             anchor_middle = (bt2, :middle, 0),
-                             anchor_right = (c, :right, 0),
+                             anchor_middle = Anchor(bt2, :middle, 0),
+                             anchor_right =  Anchor(c, :right, 0),
                              label = "Button 3", color = p1,
                              color_highlight = p3, style = :none)
 
@@ -69,6 +68,8 @@ function windows_and_widgets()
     refresh_all_windows()
     NCurses.update_panels()
     NCurses.doupdate()
+
+    t1 = time()
 
     k = jlgetch()
 

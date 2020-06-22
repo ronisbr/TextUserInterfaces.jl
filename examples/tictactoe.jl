@@ -25,11 +25,7 @@ logger.level = 3
 logger.enabled = true
 
 # Structure of the widget.
-@with_kw mutable struct WidgetField <: Widget
-    # API
-    # ==========================================================================
-    common::WidgetCommon
-
+@widget mutable struct WidgetField
     # Parameters related to the widget
     # ==========================================================================
     pos::Tuple{Int,Int} = (0,0)
@@ -54,19 +50,19 @@ function create_widget(::Val{:field}, parent::WidgetParent, top::Integer,
     opc = object_positioning_conf(top = top, left = left, height = height,
                                   width = width)
 
-    # Create the common parameters of the widget.
-    common = create_widget_common(parent, opc)
-
     # Create the widget.
-    widget = WidgetField(common = common, pos = pos)
+    widget = WidgetField(parent = parent, opc = opc, pos = pos)
 
-    # Add to the parent window widget list.
-    push!(parent.widgets, widget)
+    # Initialize the internal variables of the widget.
+    init_widget!(widget)
+
+    # Add the new widget to the parent widget list.
+    add_widget(parent, widget)
 
     @log info "create_widget" """
     A field was created in $(obj_desc(parent)).
-        Size        = ($(common.height), $(common.width))
-        Coordinate  = ($(common.top), $(common.left))
+        Size        = ($(widget.height), $(widget.width))
+        Coordinate  = ($(widget.top), $(widget.left))
         Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
@@ -100,8 +96,7 @@ end
 
 # Redraw event.
 function redraw(widget::WidgetField)
-    @unpack common, t, player = widget
-    @unpack parent, buffer = common
+    @unpack parent, buffer, t, player = widget
 
     wclear(buffer)
 
