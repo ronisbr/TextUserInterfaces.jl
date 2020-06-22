@@ -15,16 +15,16 @@ function log_test()
     w,c = create_window_with_container(border = true, title = " WINDOW ",
                                        top = 2, left = 2, width = 56, height = 10)
     ~   = create_widget(Val(:label), c;
-                        anchor_top = (c, :top, 0),   height = 1,
-                        anchor_left = (c, :left, 0), width  = 40,
+                        anchor_top = Anchor(c, :top, 0),   height = 1,
+                        anchor_left = Anchor(c, :left, 0), width  = 40,
                         text = "This is a label", color = p0)
     bt  = create_widget(Val(:button), c;
-                        anchor_middle = (c, :middle, 0),
-                        anchor_left = (c, :left, 0), width = 12,
+                        anchor_middle = Anchor(c, :middle, 0),
+                        anchor_left = Anchor(c, :left, 0), width = 12,
                         label = "Button 1", color = p0, color_highlight = p1)
     pb  = create_widget(Val(:progress_bar), c;
-                         anchor_bottom = (c, :bottom, 0), width = 40,
-                         anchor_left = (c, :left, 0), value = 100)
+                         anchor_bottom = Anchor(c, :bottom, 0), width = 40,
+                         anchor_left = Anchor(c, :left, 0), value = 100)
 
     # Focus manager.
     tui.focus_chain = [w]
