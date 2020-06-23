@@ -13,14 +13,14 @@ export @connect_signal, @disconnect_signal, @emit_signal, @forward_signal
 ################################################################################
 
 """
-    @connect_signal(obj::Symbol, signal::Symbol, f::Symbol, vargs...)
+    @connect_signal(obj, signal::Symbol, f::Symbol, vargs...)
 
 Connect the signal `signal` of the object `obj` to the function `f` passing the
 additional arguments `vargs`. Thus, when `signal` is emitted by `obj`, then
 `fcall` will be executed.
 
 """
-macro connect_signal(obj::Symbol, signal::Symbol, f, vargs...)
+macro connect_signal(obj, signal::Symbol, f, vargs...)
     # Variable that stores the signal name.
     f_var = Symbol("on_", signal)
 
@@ -37,12 +37,12 @@ macro connect_signal(obj::Symbol, signal::Symbol, f, vargs...)
 end
 
 """
-    @disconnect_signal(obj::Symbol, signal::Symbol)
+    @disconnect_signal(obj, signal::Symbol)
 
 Disconnect the signal `signal` from object `obj`.
 
 """
-macro disconnect_signal(obj::Symbol, signal::Symbol)
+macro disconnect_signal(obj, signal::Symbol)
     # Variable that stores the signal name.
     f_var = Symbol("on_", signal)
 
@@ -59,13 +59,13 @@ macro disconnect_signal(obj::Symbol, signal::Symbol)
 end
 
 """
-    @emit_signal(obj::Symbol, signal::Symbol, params...)
+    @emit_signal(obj, signal::Symbol, params...)
 
 Emit the signal `signal` of the object `obj` with the parameters `params...`,
 causing to execute the connected function.
 
 """
-macro emit_signal(obj::Symbol, signal::Symbol, params...)
+macro emit_signal(obj, signal::Symbol, params...)
     # Variable that stores the signal name.
     f_var = Symbol("on_", signal)
 
@@ -77,14 +77,14 @@ macro emit_signal(obj::Symbol, signal::Symbol, params...)
 end
 
 """
-    @forward_signal(src::Symbol, dest::Symbol, signal::Symbol)
+    @forward_signal(src, dest, signal::Symbol)
 
 Forward the signal `signal` from `src` to `dest`. This means that every time
 that the signal `signal` is generated in `src`, then the function in `dest` will
 be called.
 
 """
-macro forward_signal(src::Symbol, dest::Symbol, signal::Symbol)
+macro forward_signal(src, dest, signal::Symbol)
     # Variable that stores the signal name.
     f_var = Symbol("on_", signal)
 
