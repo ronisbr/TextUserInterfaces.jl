@@ -52,7 +52,7 @@ function create_widget(::Val{:radio_button},
                                group_name       = group_name)
 
     # Function to be executed on return pressed.
-    @connect_signal button return_pressed _select_radio_button(widget)
+    @connect_signal button return_pressed _select_radio_button widget
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
@@ -151,6 +151,9 @@ end
 ################################################################################
 #                              Private functions
 ################################################################################
+
+# Signal handler.
+_select_radio_button(w, rb) = _select_radio_button(rb)
 
 """
     _select_radio_button(rb::WidgetRadioButton)

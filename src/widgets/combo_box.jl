@@ -84,36 +84,36 @@ function create_widget(::Val{:combo_box},
     # If a border is required, then create a container and add the list box
     # in this container.
     if list_box_border
-        con = create_widget(Val(:container), parent, border = true,
-                            anchor_top   = (widget, :bottom, 0),
-                            anchor_left  = (widget, :left,   0),
-                            anchor_right = (widget, :right,  0),
-                            height       = 5)
+        opc = newopc(anchor_top   = (widget, :bottom, 0),
+                     anchor_left  = (widget, :left,   0),
+                     anchor_right = (widget, :right,  0),
+                     height       = 5)
+        con = create_widget(Val(:container), parent, opc; border = true)
 
-        list_box = create_widget(Val(:list_box), con,
+        opc = newopc(anchor_top    = Anchor(con, :top, 0),
+                     anchor_left   = Anchor(con, :left,   0),
+                     anchor_right  = Anchor(con, :right,  0),
+                     anchor_bottom = Anchor(con, :bottom, 0))
+        list_box = create_widget(Val(:list_box), con, opc;
                                  selectable      = false,
                                  retain_focus    = true,
                                  data            = data,
                                  color           = list_box_color,
                                  color_highlight = list_box_color_highlight,
-                                 anchor_top      = Anchor(con, :top,    0),
-                                 anchor_left     = Anchor(con, :left,   0),
-                                 anchor_right    = Anchor(con, :right,  0),
-                                 anchor_bottom   = Anchor(con, :bottom, 0),
                                  _derived        = true)
 
         widget._list_box = con
     else
-        list_box = create_widget(Val(:list_box), parent,
+        opc = newopc(anchor_top   = Anchor(widget, :bottom, 0),
+                     anchor_left  = Anchor(widget, :left,   0),
+                     anchor_right = Anchor(widget, :right,  0),
+                     height       = 5)
+        list_box = create_widget(Val(:list_box), parent, opc;
                                  selectable      = false,
                                  retain_focus    = true,
                                  data            = data,
                                  color           = list_box_color,
                                  color_highlight = list_box_color_highlight,
-                                 anchor_top      = Anchor(widget, :bottom, 0),
-                                 anchor_left     = Anchor(widget, :left,   0),
-                                 anchor_right    = Anchor(widget, :right,  0),
-                                 height          = 5,
                                  _derived        = true)
 
         widget._list_box = list_box
@@ -228,21 +228,21 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         # Set the function called when `enter` is pressed inside the list box.
         # This function need to update the combo box current item, destroy the
         # created widgets, and return the focus to the combo box.
-        f_return() = begin
-            cur, ~ = get_current_item(_list_box)
+        f_return(list_box) = begin
+            cur, ~ = get_current_item(list_box)
             widget.cur = cur
-            remove_widget(parent, _list_box)
+            remove_widget(parent, list_box)
             request_focus(parent, widget)
         end
-        @connect_signal _list_box return_pressed f_return()
+        @connect_signal _list_box return_pressed f_return
 
         # Set the function called when `ESC` is pressed inside the list box.
         # This function just destroys the list box, ignoring the selection.
-        f_esc() = begin
-            remove_widget(parent, _list_box)
+        f_esc(list_box) = begin
+            remove_widget(parent, list_box)
             request_focus(parent, widget)
         end
-        @connect_signal _list_box esc_pressed f_esc()
+        @connect_signal _list_box esc_pressed f_esc
 
         return true
     else

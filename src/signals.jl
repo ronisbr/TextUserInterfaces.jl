@@ -8,41 +8,24 @@
 
 export @connect_signal, @disconnect_signal, @emit_signal, @forward_signal
 
-"""
-    @connect_signal(obj::Symbol, signal::Symbol, fcall::Expr)
-
-Connect the signal `signal` of the object `obj` to the function `fcall`. Notice
-that `fcall` must be a function call with existing variables or literals. This
-function **must not** have keywords. Thus, when `signal` is emitted by `obj`,
-then `fcall` will be executed.
+################################################################################
+#                                    Macros
+################################################################################
 
 """
-macro connect_signal(obj::Symbol, signal::Symbol, fcall::Expr)
-    # The expression must be a function call.
-    (fcall.head != :call) &&
-        error("""
-              Error in @connect_signal.
-              Usage:
-                  @connect_signal object signal function(arg1, arg2, ...)
-              """)
+    @connect_signal(obj::Symbol, signal::Symbol, f::Symbol, vargs...)
 
-    # Get the function name.
-    f = fcall.args[1]
+Connect the signal `signal` of the object `obj` to the function `f` passing the
+additional arguments `vargs`. Thus, when `signal` is emitted by `obj`, then
+`fcall` will be executed.
 
-    # The remaining arguments must be symbol.
-    for i = 2:length(fcall.args)
-        typeof(fcall.args[i]) <: Expr &&
-            error("All arguments in the function call must be a variable or a literal. Expressions are not permitted.")
-    end
-
+"""
+macro connect_signal(obj::Symbol, signal::Symbol, f, vargs...)
     # Variable that stores the signal name.
     f_var = Symbol("on_", signal)
 
     # Variable that stores the signal input variables.
     vargs_var = Symbol("vargs_on_", signal)
-
-    # Input variables.
-    vargs = tuple(fcall.args[2:end]...)
 
     # Create and return the complete expression.
     ex = quote
@@ -76,13 +59,13 @@ macro disconnect_signal(obj::Symbol, signal::Symbol)
 end
 
 """
-    @emit_signal(obj::Symbol, signal::Symbol)
+    @emit_signal(obj::Symbol, signal::Symbol, params...)
 
-Emit the signal `signal` of the object `obj`, causing to execute the connected
-function.
+Emit the signal `signal` of the object `obj` with the parameters `params...`,
+causing to execute the connected function.
 
 """
-macro emit_signal(obj::Symbol, signal::Symbol)
+macro emit_signal(obj::Symbol, signal::Symbol, params...)
     # Variable that stores the signal name.
     f_var = Symbol("on_", signal)
 
@@ -90,7 +73,7 @@ macro emit_signal(obj::Symbol, signal::Symbol)
     vargs_var = Symbol("vargs_on_", signal)
 
     # Create and return the complete expression.
-    return esc(:($obj.$f_var($obj.$vargs_var...)))
+    return esc(:($obj.$f_var($obj, $params..., $obj.$vargs_var...)))
 end
 
 """
@@ -129,7 +112,7 @@ macro signal(name)
     v = Symbol("vargs_on_", name)
 
     ex = quote
-        $f::Function = ()->nothing
+        $f::Function = (w)->nothing
         $v::Tuple = ()
     end
 

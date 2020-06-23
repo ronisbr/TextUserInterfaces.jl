@@ -149,7 +149,7 @@ function plots()
     canvas = create_widget(Val(:ansi_label), con, opc, text = str)
 
     # Button actions.
-    function plot()
+    function plot(w)
         f_str = get_data(func)[1]
 
         if f_str != nothing
@@ -176,20 +176,20 @@ function plots()
         end
     end
 
-    function clear_form()
+    function clear_form(w)
         clear_data!(func)
         clear_data!(tlim)
         clear_data!(ylim)
     end
 
-    function clear_plot()
+    function clear_plot(w)
         str = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
         change_text(canvas, str)
     end
 
-    @connect_signal bplot return_pressed plot()
-    @connect_signal bcfor return_pressed clear_form()
-    @connect_signal bcplt return_pressed clear_plot()
+    @connect_signal bplot return_pressed plot
+    @connect_signal bcfor return_pressed clear_form
+    @connect_signal bcplt return_pressed clear_plot
 
     @forward_signal tlim bplot return_pressed
     @forward_signal ylim bplot return_pressed
