@@ -51,6 +51,7 @@ macro widget(ex)
         # Default signals.
         :(@signal focus_acquired)
         :(@signal focus_lost)
+        :(@signal key_pressed)
     ]...)
 
     ret = quote
@@ -83,6 +84,11 @@ macro composed_widget(ex)
     push!(ex.args[3].args, [
         # Container that holds the widgets.
         :(container::WidgetContainer)
+
+        # Default signals.
+        :(@signal focus_acquired)
+        :(@signal focus_lost)
+        :(@signal key_pressed)
     ]...)
 
     ret = quote
@@ -161,6 +167,11 @@ macro derived_widget(ex)
     push!(ex.args[3].args, [
         # Widget that is the base of the derived widget.
         :(base::Widget)
+
+        # Default signals.
+        :(@signal focus_acquired)
+        :(@signal focus_lost)
+        :(@signal key_pressed)
     ]...)
 
     ret = quote

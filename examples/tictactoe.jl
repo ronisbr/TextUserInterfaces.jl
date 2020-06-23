@@ -133,16 +133,21 @@ function tictactoe()
     # in a field.
     #
     # It checks if the field is empty and then show the tick of the player.
-    field_return_pressed(widget, i, j) = begin
-        # If the field has not been marked yet, then mark using the current
-        # player and ask to change the player.
-        if board_marks[i,j] == 0
-            widget.chars[2,4] = ticks[current_player[1]]
-            mark_board(i,j)
+    field_key_pressed(widget, k, i, j) = begin
+        if k.ktype == :enter
+            # If the field has not been marked yet, then mark using the current
+            # player and ask to change the player.
+            if board_marks[i,j] == 0
+                widget.chars[2,4] = ticks[current_player[1]]
+                mark_board(i,j)
 
-            change_player()
-            request_update(widget)
+                change_player()
+                request_update(widget)
+            end
         end
+
+        # Never loses focus.
+        return true
     end
 
     # This is a signal handler that will called every time the field gains
@@ -174,7 +179,7 @@ function tictactoe()
     for i = 1:3, j = 1:3
         @connect_signal fields[i,j] focus_acquired field_focus_acquired
         @connect_signal fields[i,j] focus_lost field_focus_lost
-        @connect_signal fields[i,j] return_pressed field_return_pressed i j
+        @connect_signal fields[i,j] key_pressed field_key_pressed i j
     end
 
     # Initialize the focus manager.

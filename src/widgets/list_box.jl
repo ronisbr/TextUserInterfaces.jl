@@ -31,9 +31,6 @@ export WidgetListBox, get_data, get_selected, select_item
     # Original configuration related to the number of lines.
     numlines₀::Int = 1
 
-    # If `true`, then the list box will retain the focus indefinetly.
-    retain_focus::Bool = false
-
     # Are the elements selectable?
     selectable::Bool = false
 
@@ -78,7 +75,6 @@ function create_widget(::Val{:list_box},
                        numlines::Int = -1,
                        icon_not_selected::String = "[ ]",
                        icon_selected::String = "[X]",
-                       retain_focus::Bool = false,
                        selectable::Bool = true,
                        show_icon::Bool = false,
                        _derived::Bool = false)
@@ -109,7 +105,6 @@ function create_widget(::Val{:list_box},
                            icon_selected      = icon_selected,
                            multiple_selection = multiple_selection,
                            numlines₀          = numlines,
-                           retain_focus       = retain_focus,
                            selected           = zeros(Bool, length(data)),
                            selectable         = selectable,
                            show_icon          = show_icon)
@@ -145,13 +140,20 @@ function create_widget(::Val{:list_box},
 end
 
 function process_focus(widget::WidgetListBox, k::Keystroke)
-    # Handle the input.
-    if _handle_input(widget, k)
-        request_update(widget)
-        return true
-    else
-        return widget.retain_focus
+    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused list box."
+    ret = @emit_signal widget key_pressed k
+
+    if isnothing(ret)
+        # Handle the input.
+        if _handle_input(widget, k)
+            request_update(widget)
+            return true
+        else
+            return false
+        end
     end
+
+    return ret
 end
 
 function redraw(widget::WidgetListBox)
@@ -305,15 +307,12 @@ function _handle_input(widget::WidgetListBox, k::Keystroke)
     # Shift that we must apply to the list highlight item.
     Δx = 0
 
+    # Flag that indicates if the input was handled.
+    input_handled = true
+
     # Release focus.
     if k.ktype == :tab
-        return false
-    elseif k.ktype == :enter
-        @emit_signal widget return_pressed
-        return true
-    elseif k.ktype == :esc
-        @emit_signal widget esc_pressed
-        return true
+        input_handled = false
     # Toggle the selection of the current item.
     elseif k.value == " "
         if selectable
@@ -342,11 +341,16 @@ function _handle_input(widget::WidgetListBox, k::Keystroke)
     elseif k.ktype == :end
         # The overflow will be handled by `_move_view`.
         Δx += length(data)
+    else
+        input_handled = false
     end
 
-    _move_view(widget, Δx)
-
-    return true
+    if input_handled
+        _move_view(widget, Δx)
+        return true
+    else
+        return false
+    end
 end
 
 function _move_view(widget::WidgetListBox, Δx::Int)

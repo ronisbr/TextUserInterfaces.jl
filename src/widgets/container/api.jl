@@ -101,6 +101,11 @@ function request_focus(container::WidgetContainer, widget)
 
             @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$id -> $(obj_desc(widgets[id]))."
 
+            # Indicate that a change focus request was made to avoid changing
+            # the focus again if this was done inside a `process_focus` for
+            # example.
+            container.change_focus_requested = true
+
             # TODO: What should we do if the widget does not accept the focus?
             return true
         end

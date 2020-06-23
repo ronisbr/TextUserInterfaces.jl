@@ -27,10 +27,14 @@ macro connect_signal(obj, signal::Symbol, f, vargs...)
     # Variable that stores the signal input variables.
     vargs_var = Symbol("vargs_on_", signal)
 
+    # Flag that stores if a signal is connected.
+    conn_var = Symbol("conn_on_", signal)
+
     # Create and return the complete expression.
     ex = quote
-        $obj.$f_var = $f
+        $obj.$f_var     = $f
         $obj.$vargs_var = ($(vargs...),)
+        $obj.$conn_var  = true
     end
 
     return esc(ex)
@@ -49,10 +53,14 @@ macro disconnect_signal(obj, signal::Symbol)
     # Variable that stores the signal input variables.
     vargs_var = Symbol("vargs_on_", signal)
 
+    # Flag that stores if a signal is connected.
+    conn_var = Symbol("conn_on_", signal)
+
     # Create and return the complete expression.
     ex = quote
         $obj.$f_var = ()->nothing
         $obj.$vargs_var = tuple()
+        $obj.conn_var = false
     end
 
     return esc(ex)
@@ -72,8 +80,18 @@ macro emit_signal(obj, signal::Symbol, params...)
     # Variable that stores the signal input variables.
     vargs_var = Symbol("vargs_on_", signal)
 
+    # Flag that stores if a signal is connected.
+    conn_var = Symbol("conn_on_", signal)
+
     # Create and return the complete expression.
-    return esc(:($obj.$f_var($obj, $params..., $obj.$vargs_var...)))
+    ex = quote
+        if $obj.$conn_var
+            $obj.$f_var($obj, $(params...), $obj.$vargs_var...)
+        else
+            nothing
+        end
+    end
+    return esc(ex)
 end
 
 """
@@ -91,9 +109,14 @@ macro forward_signal(src, dest, signal::Symbol)
     # Variable that stores the signal input variables.
     vargs_var = Symbol("vargs_on_", signal)
 
+    # Flag that stores if a signal is connected.
+    conn_var = Symbol("conn_on_", signal)
+
     ex = quote
+        # TODO: Check if the destination signal is connected.
         $src.$f_var     = $dest.$f_var
         $src.$vargs_var = $dest.$vargs_var
+        $src.$conn_var  = $dest.$conn_var
     end
 
     return esc(ex)
@@ -110,10 +133,12 @@ structure that must be declared with `@with_kw` option (see package
 macro signal(name)
     f = Symbol("on_", name)
     v = Symbol("vargs_on_", name)
+    c = Symbol("conn_on_", name)
 
     ex = quote
         $f::Function = (w)->nothing
         $v::Tuple = ()
+        $c::Bool = false
     end
 
     return esc(ex)

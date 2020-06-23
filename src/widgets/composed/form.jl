@@ -14,10 +14,6 @@ export WidgetForm, clear_daat!, get_data
 
 @composed_widget mutable struct WidgetForm{I<:Tuple}
     inputs::I
-
-    # Signals
-    # ==========================================================================
-    @signal return_pressed
 end
 
 ################################################################################
@@ -109,11 +105,10 @@ function create_widget(::Val{:form},
 end
 
 function process_focus(widget::WidgetForm, k::Keystroke)
-    if k.ktype == :enter
-        @emit_signal widget return_pressed
-    end
-
-    process_focus(widget.container, k)
+    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused form."
+    ret = @emit_signal widget key_pressed k
+    isnothing(ret) && return process_focus(widget.container, k)
+    return ret
 end
 
 ################################################################################

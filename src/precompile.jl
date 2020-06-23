@@ -167,10 +167,9 @@ function _precompile()
                 (Val{:list_box}, WidgetContainer, ObjectPositioningConfiguration),
                 (:data, :color, :color_highlight, :color_selected,
                  :multiple_selection, :numlines, :icon_not_selected,
-                 :icon_selected, :retain_focus, :selectable, :show_icon,
-                 :_derive),
+                 :icon_selected, :selectable, :show_icon, :_derive),
                 (Vector{String}, Int, Int, Int, Bool, Int, String, String, Bool,
-                 Bool, Bool, Bool))
+                 Bool, Bool))
     @precompile destroy_widget WidgetListBox :refresh Bool
     @precompile init_widget! WidgetListBox
     @precompile redraw WidgetListBox

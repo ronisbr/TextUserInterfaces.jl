@@ -15,6 +15,7 @@ export WidgetContainer
 @widget mutable struct WidgetContainer
     border::Bool = false
     border_color::Int = 0
+    change_focus_requested::Bool = false
     focus_id::Int = 0
     title::String = ""
     title_alignment::Symbol = :l
@@ -100,14 +101,20 @@ function process_focus(container::WidgetContainer, k::Keystroke)
         end
     end
 
-    # Otherwise, we must search another widget that can accept the focus.
-    # In this case, if the keystorke was SHIFT-TAB, we will move the focus to
-    # the previous widget.
-    if k.ktype == :tab && k.shift == true
-         return _previous_widget(container)
-    else
-        return _next_widget(container)
+    # If a widget requested the focus, we should not change the focus again.
+    if !container.change_focus_requested
+        # Otherwise, we must search another widget that can accept the focus. In
+        # this case, if the keystorke was SHIFT-TAB, we will move the focus to
+        # the previous widget.
+        if k.ktype == :tab && k.shift == true
+            return _previous_widget(container)
+        else
+            return _next_widget(container)
+        end
     end
+
+    container.change_focus_requested = false
+    return true
 end
 
 function redraw(container::WidgetContainer)

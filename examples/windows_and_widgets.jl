@@ -20,7 +20,7 @@ function windows_and_widgets()
     Δx = 5
     Δy = 15
 
-    button_return_pressed(w,l,t) = change_text(l,t)
+    button_key_pressed(w,k,l,t) = k.ktype == :enter && change_text(l,t)
 
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
         w,c  = create_window_with_container(newopc(top = x,
@@ -55,9 +55,9 @@ function windows_and_widgets()
                              label = "Button 3", color = p1,
                              color_highlight = p3, style = :none)
 
-        @connect_signal bt1 return_pressed button_return_pressed text "Button 1"
-        @connect_signal bt2 return_pressed button_return_pressed text "Button 2"
-        @connect_signal bt3 return_pressed button_return_pressed text "Button 3"
+        @connect_signal bt1 key_pressed button_key_pressed text "Button 1"
+        @connect_signal bt2 key_pressed button_key_pressed text "Button 2"
+        @connect_signal bt3 key_pressed button_key_pressed text "Button 3"
 
         push!(wins, w)
 

@@ -96,7 +96,6 @@ function create_widget(::Val{:combo_box},
                      anchor_bottom = Anchor(con, :bottom, 0))
         list_box = create_widget(Val(:list_box), con, opc;
                                  selectable      = false,
-                                 retain_focus    = true,
                                  data            = data,
                                  color           = list_box_color,
                                  color_highlight = list_box_color_highlight,
@@ -110,7 +109,6 @@ function create_widget(::Val{:combo_box},
                      height       = 5)
         list_box = create_widget(Val(:list_box), parent, opc;
                                  selectable      = false,
-                                 retain_focus    = true,
                                  data            = data,
                                  color           = list_box_color,
                                  color_highlight = list_box_color_highlight,
@@ -143,7 +141,12 @@ function destroy_widget(widget::WidgetComboBox; refresh::Bool = true)
 end
 
 function process_focus(widget::WidgetComboBox, k::Keystroke)
-    return _handle_input(widget, k)
+    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused combo box."
+    ret = @emit_signal widget key_pressed k
+
+    isnothing(ret) && return _handle_input(widget, k)
+
+    return ret
 end
 
 function redraw(widget::WidgetComboBox)
@@ -225,24 +228,30 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         # Pass the focus to the newly created list box.
         request_focus(parent, _list_box)
 
-        # Set the function called when `enter` is pressed inside the list box.
-        # This function need to update the combo box current item, destroy the
-        # created widgets, and return the focus to the combo box.
-        f_return(list_box) = begin
-            cur, ~ = get_current_item(list_box)
-            widget.cur = cur
-            remove_widget(parent, list_box)
-            request_focus(parent, widget)
-        end
-        @connect_signal _list_box return_pressed f_return
+        # Set the function called when a key is pressed inside the list box.
+        #
+        # If `enter` is pressed, then this function need to update the combo box
+        # current item, destroy the created widgets, and return the focus to the
+        # combo box.
+        #
+        # If `esc` is pressed, then this function just destroys the list box,
+        # ignoring the selection.
+        _handler_key_pressed(list_box, k) = begin
+            if k.ktype == :enter
+                cur, ~ = get_current_item(list_box)
+                widget.cur = cur
+                remove_widget(parent, list_box)
+                request_focus(parent, widget)
+            elseif k.ktype == :esc
+                remove_widget(parent, list_box)
+                request_focus(parent, widget)
+            end
 
-        # Set the function called when `ESC` is pressed inside the list box.
-        # This function just destroys the list box, ignoring the selection.
-        f_esc(list_box) = begin
-            remove_widget(parent, list_box)
-            request_focus(parent, widget)
+            # Make sure the list box does not loose the focus.
+            return nothing
         end
-        @connect_signal _list_box esc_pressed f_esc
+
+        @connect_signal _list_box key_pressed _handler_key_pressed
 
         return true
     else

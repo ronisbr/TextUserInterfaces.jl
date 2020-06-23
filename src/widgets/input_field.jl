@@ -156,17 +156,24 @@ end
 function process_focus(widget::WidgetInputField, k::Keystroke)
     @unpack border = widget
 
-    # Handle the input.
-    if _handle_input(widget, k)
-        # Update the cursor position.
-        _update_cursor(widget)
+    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused input field."
+    ret = @emit_signal widget key_pressed k
 
-        # Validate the input.
-        _validator(widget)
+    if isnothing(ret)
+        # Handle the input.
+        if _handle_input(widget, k)
+            # Update the cursor position.
+            _update_cursor(widget)
 
-        return true
+            # Validate the input.
+            _validator(widget)
+
+            return true
+        else
+            return false
+        end
     else
-        return false
+        return ret
     end
 end
 

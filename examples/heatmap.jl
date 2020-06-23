@@ -142,7 +142,9 @@ function plots()
     canvas = create_widget(Val(:ansi_label), con, opc; text = str)
 
     # Button actions.
-    function plot(w)
+    function plot(w,k)
+        k.ktype != :enter && return nothing
+
         f_str = get_data(func)[1]
 
         if f_str != nothing
@@ -168,25 +170,35 @@ function plots()
             catch
             end
         end
+
+        return nothing
     end
 
-    function clear_form(w)
-        clear_data!(func)
-        clear_data!(xlim)
-        clear_data!(ylim)
+    function clear_form(w,k)
+        if k.ktype == :enter
+            clear_data!(func)
+            clear_data!(xlim)
+            clear_data!(ylim)
+        end
+
+        return nothing
     end
 
-    function clear_plot(w)
-        str = create_plot(zeros(40,40), get_limits(xlim,ylim)...)
-        change_text(canvas, str)
+    function clear_plot(w,k)
+        if k.ktype == :enter
+            str = create_plot(zeros(40,40), get_limits(xlim,ylim)...)
+            change_text(canvas, str)
+        end
+
+        return nothing
     end
 
-    @connect_signal bplot return_pressed plot
-    @connect_signal bcfor return_pressed clear_form
-    @connect_signal bcplt return_pressed clear_plot
+    @connect_signal bplot key_pressed plot
+    @connect_signal bcfor key_pressed clear_form
+    @connect_signal bcplt key_pressed clear_plot
 
-    @forward_signal xlim bplot return_pressed
-    @forward_signal ylim bplot return_pressed
+    @forward_signal xlim bplot key_pressed
+    @forward_signal ylim bplot key_pressed
 
     # Initialize the focus manager.
     tui.focus_chain = [win]

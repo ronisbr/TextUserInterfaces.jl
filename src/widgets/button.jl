@@ -96,14 +96,12 @@ function create_widget(::Val{:button},
 end
 
 function process_focus(widget::WidgetButton, k::Keystroke)
-    if k.ktype == :tab
-        return false
-    elseif k.ktype == :enter
-        @log verbose "change_value" "$(obj_desc(widget)): Enter pressed on focused button."
-        @emit_signal widget return_pressed
-    end
+    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused button."
+    ret = @emit_signal widget key_pressed k
 
-    return true
+    isnothing(ret) && return k.ktype == :tab ? false : true
+
+    return ret
 end
 
 redraw(widget::WidgetButton) = redraw(widget, has_focus(widget.parent,widget))
