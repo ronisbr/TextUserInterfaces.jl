@@ -121,7 +121,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.compute_object_positioning-Tuple{TextUserInterfaces.ObjectPositioningConfiguration,Any}",
+    "location": "lib/library/#TextUserInterfaces.compute_object_positioning-Tuple{ObjectPositioningConfiguration,Any}",
     "page": "Library",
     "title": "TextUserInterfaces.compute_object_positioning",
     "category": "method",
@@ -149,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Library",
     "title": "TextUserInterfaces.create_window",
     "category": "function",
-    "text": "function createwindow(id::String = \"\"; bcols::Int = 0, blines::Int = 0, border::Bool = true, bordercolor::Int = -1, focusable::Bool = true, title::String = \"\", title_color::Int = -1, kwargs...)\n\nCreate a window. The window ID id is used to identify the new window in the global window list. The size and location of the window can be configured by passing to kwargs... the arguments used in the function object_positioning_conf.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window.          (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window.           (Default = 0)\nborder: If true, then the window will have a border.           (Default = true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
+    "text": "function create_window(opc::ObjectPositioningConfiguration = newopc(), id::String = \"\";  kwargs...)\n\nCreate a window. The window ID id is used to identify the new window in the global window list. The size and location of the window is configured by the object opc.\n\nKeyword\n\nbcols: Number of columns in the window buffer. This will be automatically          increased to, at least, fit the viewable part of the window.          (Default = 0)\nblines: Number of lines in the window buffer. This will be automatically           increased to, at least, fit the viewable part of the window.           (Default = 0)\nborder: If true, then the window will have a border.           (Default = true)\nborder_color: Color mask that will be used to print the border. See function                 ncurses_color. If negative, then the color will not be                 changed. (Default = -1)\nfocusable: If true, then the window can have focus. Otherwise, all focus              request will be rejected. (Default = true)\ntitle: The title of the window, which will only be printed if border is          true. (Default = \"\")\ntitle_color: Color mask that will be used to print the title. See                function ncurses_color. If negative, then the color will not                be changed. (Default = -1)\n\n\n\n\n\n"
 },
 
 {
@@ -569,14 +569,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.object_positioning_conf-Tuple{}",
-    "page": "Library",
-    "title": "TextUserInterfaces.object_positioning_conf",
-    "category": "method",
-    "text": "object_positioning_conf(...)\n\nHelper function to create the object positioning configuration. In this case, the anchor can be passed by keywords and a tuple containing the object and its anchor.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.post_menu-Tuple{TextUserInterfaces.TUI_MENU}",
     "page": "Library",
     "title": "TextUserInterfaces.post_menu",
@@ -961,19 +953,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._check_horizontal_anchor-Tuple{Nothing}",
+    "location": "lib/library/#TextUserInterfaces._check_horizontal_anchor-Tuple{Anchor}",
     "page": "Library",
     "title": "TextUserInterfaces._check_horizontal_anchor",
     "category": "method",
-    "text": "_check_horizontal_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for horizontal positioning. If anchor is nothing, then true is always returned.\n\n\n\n\n\n"
+    "text": "_check_horizontal_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for horizontal positioning. If anchor is _no_anchor, then true is always returned.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._check_vertical_anchor-Tuple{Nothing}",
+    "location": "lib/library/#TextUserInterfaces._check_vertical_anchor-Tuple{Anchor}",
     "page": "Library",
     "title": "TextUserInterfaces._check_vertical_anchor",
     "category": "method",
-    "text": "_check_vertical_anchor(anchor::Nothing)\n_check_vertical_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for vertical positioning. If anchor is nothing, then true is always returned.\n\n\n\n\n\n"
+    "text": "_check_vertical_anchor(anchor::Nothing)\n_check_vertical_anchor(anchor::Anchor)\n\nCheck if the side parameter of anchor is valid for vertical positioning. If anchor is _no_anchor, then true is always returned.\n\n\n\n\n\n"
 },
 
 {
@@ -1001,7 +993,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._get_anchor-Tuple{TextUserInterfaces.Anchor,Any}",
+    "location": "lib/library/#TextUserInterfaces._get_anchor-Tuple{Anchor,Any}",
     "page": "Library",
     "title": "TextUserInterfaces._get_anchor",
     "category": "method",
@@ -1049,7 +1041,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._process_horizontal_info!-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces._process_horizontal_info!-Tuple{ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._process_horizontal_info!",
     "category": "method",
@@ -1057,7 +1049,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._process_vertical_info!-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces._process_vertical_info!-Tuple{ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._process_vertical_info!",
     "category": "method",
@@ -1073,7 +1065,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._str-Tuple{TextUserInterfaces.ObjectPositioningConfiguration}",
+    "location": "lib/library/#TextUserInterfaces._str-Tuple{ObjectPositioningConfiguration}",
     "page": "Library",
     "title": "TextUserInterfaces._str",
     "category": "method",
