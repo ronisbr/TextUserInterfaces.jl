@@ -142,6 +142,7 @@ function tictactoe()
                 mark_board(i,j)
 
                 change_player()
+                widget.colors .= field_highlight_colors[current_player[1]]
                 request_update(widget)
             end
         end
