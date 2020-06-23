@@ -47,6 +47,10 @@ macro widget(ex)
 
         # Mark if the widget needs to be update.
         :(update_needed::Bool = true)
+
+        # Default signals.
+        :(@signal focus_acquired)
+        :(@signal focus_lost)
     ]...)
 
     ret = quote

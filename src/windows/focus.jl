@@ -30,6 +30,7 @@ function accept_focus(window::Window)
 
         # Pass the focus to the widget.
         if accept_focus(widget)
+            @emit_signal widget focus_acquired
             # Check if the widget wants the cursor.
             require_cursor(widget) && curs_set(1)
         end

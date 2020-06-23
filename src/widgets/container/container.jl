@@ -238,13 +238,18 @@ function _next_widget(container::WidgetContainer)
     @log verbose "_next_widget" "$(obj_desc(container)): Change the focused widget."
 
     # Release the focus from previous widget.
-    focus_id > 0 && release_focus(widgets[focus_id])
+    if focus_id > 0
+        release_focus(widgets[focus_id])
+        @emit_signal widgets[focus_id] focus_lost
+    end
 
     # Search for the next widget that can handle the focus.
     for i = focus_id+1:length(widgets)
         if request_next_widget(widgets[i])
             container.focus_id = i
             sync_cursor(container)
+
+            @emit_signal widgets[i] focus_acquired
 
             @log verbose "_next_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
 
