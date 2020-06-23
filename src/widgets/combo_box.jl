@@ -43,40 +43,22 @@ function accept_focus(widget::WidgetComboBox)
     return true
 end
 
-function create_widget(::Val{:combo_box}, parent::WidgetParent;
+function create_widget(::Val{:combo_box},
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration;
                        data::Vector{String} = String[],
                        color::Int = 0,
                        color_highlight::Int = 0,
                        list_box_border::Bool = false,
                        list_box_color::Int = 0,
                        list_box_color_highlight::Int = 0,
-                       style::Symbol = :simple,
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
-
-    # Positioning configuration.
-    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                  anchor_left   = anchor_left,
-                                  anchor_right  = anchor_right,
-                                  anchor_top    = anchor_top,
-                                  anchor_center = anchor_center,
-                                  anchor_middle = anchor_middle,
-                                  top           = top,
-                                  left          = left,
-                                  height        = height,
-                                  width         = width)
+                       style::Symbol = :simple)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
+
     if opc.vertical == :unknown
         opc.height = style == :boxed ? 3 : 1
     end

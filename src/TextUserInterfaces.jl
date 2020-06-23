@@ -86,6 +86,9 @@ include("./widgets/composed/form.jl")
 # Precompile
 # ==============================================================================
 
+include("precompile_helpers.jl")
 include("precompile.jl")
+
+_precompile()
 
 end # module

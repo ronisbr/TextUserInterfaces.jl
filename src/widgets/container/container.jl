@@ -26,66 +26,29 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Val{:container}, parent::WidgetParent;
-                       opc = nothing, border::Bool = false,
-                       border_color::Int = -1, composed::Bool = false,
-                       title::AbstractString = "", title_alignment::Symbol = :l,
-                       title_color::Int = -1,
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
+function create_widget(::Val{:container},
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration;
+                       border::Bool = false,
+                       border_color::Int = -1,
+                       composed::Bool = false,
+                       title::AbstractString = "",
+                       title_alignment::Symbol = :l,
+                       title_color::Int = -1)
 
-    if opc == nothing
-        opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                      anchor_left   = anchor_left,
-                                      anchor_right  = anchor_right,
-                                      anchor_top    = anchor_top,
-                                      anchor_center = anchor_center,
-                                      anchor_middle = anchor_middle,
-                                      top           = top,
-                                      left          = left,
-                                      height        = height,
-                                      width         = width)
+    # Check if all positioning is defined and, if not, try to help by
+    # automatically defining some anchors.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
 
-        # Check if all positioning is defined and, if not, try to help by
-        # automatically defining some anchors.
-        if opc.vertical == :unknown
-            opc = ObjectPositioningConfiguration(
-                    anchor_bottom = Anchor(parent, :bottom, 0),
-                    anchor_left   = opc.anchor_left,
-                    anchor_right  = opc.anchor_right,
-                    anchor_top    = Anchor(parent, :top,    0),
-                    anchor_center = opc.anchor_center,
-                    anchor_middle = opc.anchor_middle,
-                    top           = opc.top,
-                    left          = opc.left,
-                    height        = opc.height,
-                    width         = opc.width
-                   )
-        end
+    if opc.vertical == :unknown
+        opc.anchor_bottom = Anchor(parent, :bottom, 0)
+        opc.anchor_top    = Anchor(parent, :top,    0)
+    end
 
-        if opc.horizontal == :unknown
-            opc = ObjectPositioningConfiguration(
-                    anchor_bottom = opc.anchor_bottom,
-                    anchor_left   = Anchor(parent, :left,  0),
-                    anchor_right  = Anchor(parent, :right, 0),
-                    anchor_top    = opc.anchor_top,
-                    anchor_center = opc.anchor_center,
-                    anchor_middle = opc.anchor_middle,
-                    top           = opc.top,
-                    left          = opc.left,
-                    height        = opc.height,
-                    width         = opc.width
-                   )
-        end
+    if opc.horizontal == :unknown
+        opc.anchor_left   = Anchor(parent, :left,  0)
+        opc.anchor_right  = Anchor(parent, :right, 0)
     end
 
     # Create the widget.

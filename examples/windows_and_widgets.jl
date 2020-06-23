@@ -21,28 +21,35 @@ function windows_and_widgets()
     Δy = 15
 
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
-        w,c  = create_window_with_container(border = true, title = title,
-                                            top = x, left = y, height = 10,
-                                            width = 56)
-        l    = create_widget(Val(:label), c;
-                             top = 2, left = 2, height = 1,
+        w,c  = create_window_with_container(newopc(top = x,
+                                                   left = y,
+                                                   height = 10,
+                                                   width = 56),
+                                            border = true,
+                                            title = title)
+        l    = create_widget(Val(:label), c,
+                             newopc(top = 2,
+                                    left = 2,
+                                    height = 1),
                              text = "The last pressed button was:", color = p0)
-        text = create_widget(Val(:label), c;
-                             anchor_middle = Anchor(l, :middle, 0),
-                             anchor_left   = Anchor(l, :right,  1),
-                             width = 10, text = "", color = p2)
-        bt1  = create_widget(Val(:button), c;
-                             top = 5, anchor_left = Anchor(c, :left, 0),
+        text = create_widget(Val(:label), c,
+                             newopc(anchor_middle = Anchor(l, :middle, 0),
+                                    anchor_left   = Anchor(l, :right,  1),
+                                    width         = 10);
+                             text = "", color = p2)
+        bt1  = create_widget(Val(:button), c,
+                             newopc(top = 5,
+                                    anchor_left = Anchor(c, :left, 0));
                              label = "Button 1", color = p1,
                              color_highlight = p3, style = :simple)
         bt2  = create_widget(Val(:button), c,
-                             anchor_middle = Anchor(bt1, :middle, 0),
-                             anchor_center = Anchor(c, :center, 0),
+                             newopc(anchor_middle = Anchor(bt1, :middle, 0),
+                                    anchor_center = Anchor(c, :center, 0));
                              label = "Button 2", color = p1,
                              color_highlight = p3, style = :boxed)
-        bt3  = create_widget(Val(:button), c;
-                             anchor_middle = Anchor(bt2, :middle, 0),
-                             anchor_right =  Anchor(c, :right, 0),
+        bt3  = create_widget(Val(:button), c,
+                             newopc(anchor_middle = Anchor(bt2, :middle, 0),
+                                    anchor_right =  Anchor(c, :right, 0)),
                              label = "Button 3", color = p1,
                              color_highlight = p3, style = :none)
 
@@ -68,8 +75,6 @@ function windows_and_widgets()
     refresh_all_windows()
     NCurses.update_panels()
     NCurses.doupdate()
-
-    t1 = time()
 
     k = jlgetch()
 

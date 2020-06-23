@@ -10,12 +10,11 @@ export create_window, create_window_with_container, destroy_window,
        destroy_all_windows
 
 """
-function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0, border::Bool = true, border_color::Int = -1, focusable::Bool = true, title::String = "", title_color::Int = -1, kwargs...)
+function create_window(opc::ObjectPositioningConfiguration = newopc(), id::String = "";  kwargs...)
 
 Create a window. The window ID `id` is used to identify the new window in the
-global window list. The size and location of the window can be configured by
-passing to `kwargs...` the arguments used in the function
-`object_positioning_conf`.
+global window list. The size and location of the window is configured by the
+object `opc`.
 
 # Keyword
 
@@ -39,21 +38,15 @@ passing to `kwargs...` the arguments used in the function
                  be changed. (**Default** = -1)
 
 """
-function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
-                       border::Bool = true, border_color::Int = -1,
-                       focusable::Bool = true, title::String = "",
-                       title_color::Int = -1,
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
+function create_window(opc::ObjectPositioningConfiguration = newopc(),
+                       id::String = "";
+                       bcols::Int = 0,
+                       blines::Int = 0,
+                       border::Bool = true,
+                       border_color::Int = -1,
+                       focusable::Bool = true,
+                       title::String = "",
+                       title_color::Int = -1)
 
     # Check if the TUI has been initialized.
     !tui.init && error("The text user interface was not initialized.")
@@ -62,49 +55,19 @@ function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
     # of available windows.
     length(id) == 0 && ( id = string(length(tui.wins)) )
 
-    # Compute the window positioning.
-    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                  anchor_left    = anchor_left,
-                                  anchor_right   = anchor_right,
-                                  anchor_top     = anchor_top,
-                                  anchor_center  = anchor_center,
-                                  anchor_middle  = anchor_middle,
-                                  top            = top,
-                                  left           = left,
-                                  height         = height,
-                                  width          = width)
-
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
+
     if opc.vertical == :unknown
-        # TODO: Make this recreation easier.
-        opc = ObjectPositioningConfiguration(
-                anchor_bottom = Anchor(rootwin, :bottom, 0),
-                anchor_left   = opc.anchor_left,
-                anchor_right  = opc.anchor_right,
-                anchor_top    = Anchor(rootwin, :top,    0),
-                anchor_center = opc.anchor_center,
-                anchor_middle = opc.anchor_middle,
-                top           = opc.top,
-                left          = opc.left,
-                height        = opc.height,
-                width         = opc.width
-               )
+        opc.anchor_bottom = Anchor(rootwin, :bottom, 0)
+        opc.anchor_top    = Anchor(rootwin, :top,    0)
     end
 
     if opc.horizontal == :unknown
-        opc = ObjectPositioningConfiguration(
-                anchor_bottom = opc.anchor_bottom,
-                anchor_left   = Anchor(rootwin, :left,  0),
-                anchor_right  = Anchor(rootwin, :right, 0),
-                anchor_top    = opc.anchor_top,
-                anchor_center = opc.anchor_center,
-                anchor_middle = opc.anchor_middle,
-                top           = opc.top,
-                left          = opc.left,
-                height        = opc.height,
-                width         = opc.width
-               )
+        opc.anchor_left   = Anchor(rootwin, :left,  0)
+        opc.anchor_right  = Anchor(rootwin, :right, 0)
     end
 
     # Get the positioning information of the window.
@@ -154,7 +117,7 @@ function create_window(id::String = ""; bcols::Int = 0, blines::Int = 0,
        Physical size = ($nlines, $ncols)
        Buffer size   = ($blines, $bcols)
        Coordinate    = ($begin_y, $begin_x)
-       Title         = \"$title\""""
+       Title         = \"$title\" """
 
     # Return the pointer to the window.
     return win
@@ -175,7 +138,7 @@ size of the window buffer.
 """
 function create_window_with_container(vargs...; kwargs...)
     win = create_window(vargs...; kwargs...)
-    con = create_widget(Val(:container), win)
+    con = create_widget(Val(:container), win, newopc())
     return win, con
 end
 

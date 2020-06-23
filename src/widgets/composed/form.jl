@@ -24,23 +24,15 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Val{:form}, parent::WidgetParent,
-                       labels::Vector{String}; borders::Bool = false,
+function create_widget(::Val{:form},
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration,
+                       labels::Vector{String};
+                       borders::Bool = false,
                        color_valid::Int = 0,
                        color_invalid::Int = 0,
                        field_size::Int = 40,
-                       validator = nothing,
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
+                       validator = nothing)
 
     # Get the size of the largest label.
     lmax = maximum(length.(labels))
@@ -56,20 +48,11 @@ function create_widget(::Val{:form}, parent::WidgetParent,
         validator = [validator for _ = 1:nfields]
     end
 
-    # Compute the positioning configuration.
-    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                  anchor_left   = anchor_left,
-                                  anchor_right  = anchor_right,
-                                  anchor_top    = anchor_top,
-                                  anchor_center = anchor_center,
-                                  anchor_middle = anchor_middle,
-                                  top           = top,
-                                  left          = left,
-                                  height        = height,
-                                  width         = width)
-
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
+
     if opc.vertical == :unknown
         opc.height = borders ? 3nfields : nfields
     end
@@ -79,8 +62,7 @@ function create_widget(::Val{:form}, parent::WidgetParent,
     end
 
     # Create the container.
-    container = create_widget(Val(:container), parent; opc = opc,
-                              composed = true)
+    container = create_widget(Val(:container), parent, opc; composed = true)
 
     widget_labels = Vector{WidgetLabel}(undef, nfields)
     widget_inputs = Vector{WidgetInputField}(undef, nfields)
@@ -89,20 +71,19 @@ function create_widget(::Val{:form}, parent::WidgetParent,
         at  = i == 1 ? container : widget_inputs[i-1]
         ats = i == 1 ? :top : :bottom
 
-        wii = create_widget(Val(:input_field), container,
-                            anchor_top    = Anchor(at, ats, 0),
-                            anchor_left   = Anchor(container, :left, lmax+1),
-                            anchor_right  = Anchor(container, :right, 0),
+        opc = newopc(anchor_top = Anchor(at, ats, 0),
+                     anchor_left   = Anchor(container, :left, lmax+1),
+                     anchor_right  = Anchor(container, :right, 0))
+        wii = create_widget(Val(:input_field), container, opc;
                             color_valid   = color_valid,
                             color_invalid = color_invalid,
                             border        = borders,
                             validator     = validator[i])
 
-        wli = create_widget(Val(:label), container,
-                            anchor_middle = Anchor(wii, :middle, 0),
-                            anchor_left   = Anchor(container, :left, 0),
-                            width         = lmax,
-                            text          = labels[i])
+        opc = newopc(anchor_middle = Anchor(wii, :middle, 0),
+                     anchor_left   = Anchor(container, :left, 0),
+                     width         = lmax)
+        wli = create_widget(Val(:label), container, opc; text = labels[i])
 
         widget_labels[i] = wli
         widget_inputs[i] = wii

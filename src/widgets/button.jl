@@ -37,23 +37,14 @@ function accept_focus(widget::WidgetButton)
     return true
 end
 
-function create_widget(::Val{:button}, parent::WidgetParent;
+function create_widget(::Val{:button},
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration;
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,
                        style::Symbol = :simple,
-                       _derive::Bool = false,
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
+                       _derive::Bool = false)
 
     # Check arguments.
     if !haskey(_button_style_height, style)
@@ -64,20 +55,11 @@ function create_widget(::Val{:button}, parent::WidgetParent;
         style = :simple
     end
 
-    # Positioning configuration.
-    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                  anchor_left   = anchor_left,
-                                  anchor_right  = anchor_right,
-                                  anchor_top    = anchor_top,
-                                  anchor_center = anchor_center,
-                                  anchor_middle = anchor_middle,
-                                  top           = top,
-                                  left          = left,
-                                  height        = height,
-                                  width         = width)
-
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
+
     if opc.vertical == :unknown
         opc.height = _button_style_height[style]
     end

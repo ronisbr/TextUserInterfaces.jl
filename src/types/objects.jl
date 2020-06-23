@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export Anchor, ObjectPositioningConfiguration
+export Anchor, ObjectPositioningConfiguration, newopc
 
 ################################################################################
 #                                   Anchors
@@ -42,3 +42,5 @@ const _no_anchor = Anchor(_NO_OBJECT(), :nosize, 0)
     vertical::Symbol   = :unknown
     horizontal::Symbol = :unknown
 end
+
+const newopc = ObjectPositioningConfiguration

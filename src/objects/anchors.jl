@@ -6,7 +6,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export object_positioning_conf, compute_object_positioning
+export compute_object_positioning
 
 ################################################################################
 #                              Public functions
@@ -163,44 +163,6 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
     end
 
     return height, width, top, left
-end
-
-"""
-    object_positioning_conf(...)
-
-Helper function to create the object positioning configuration. In this case,
-the anchor can be passed by keywords and a tuple containing the object and its
-anchor.
-
-"""
-function object_positioning_conf(;
-    anchor_bottom::Anchor = _no_anchor,
-    anchor_left::Anchor   = _no_anchor,
-    anchor_right::Anchor  = _no_anchor,
-    anchor_top::Anchor    = _no_anchor,
-    anchor_center::Anchor = _no_anchor,
-    anchor_middle::Anchor = _no_anchor,
-    top::Int    = -1,
-    left::Int   = -1,
-    height::Int = -1,
-    width::Int  = -1)
-
-    opc = ObjectPositioningConfiguration(anchor_bottom = anchor_bottom,
-                                         anchor_left   = anchor_left  ,
-                                         anchor_right  = anchor_right ,
-                                         anchor_top    = anchor_top   ,
-                                         anchor_center = anchor_center,
-                                         anchor_middle = anchor_middle,
-                                         top           = top,
-                                         left          = left,
-                                         height        = height,
-                                         width         = width)
-
-    # Process the vertical and horizontal positioning.
-    _process_vertical_info!(opc)
-    _process_horizontal_info!(opc)
-
-    return opc
 end
 
 ################################################################################

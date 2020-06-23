@@ -26,38 +26,20 @@ end
 # Progress bar cannot accept focus.
 accept_focus(widget::WidgetProgressBar) = false
 
-function create_widget(::Val{:progress_bar}, parent::WidgetParent;
+function create_widget(::Val{:progress_bar},
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration;
                        border::Bool = false,
                        color::Int = 0,
                        color_highlight::Int = 0,
                        style::Symbol = :simple,
-                       value::Int = 0,
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
-
-    # Positioning configuration.
-    opc = object_positioning_conf(anchor_bottom = anchor_bottom,
-                                  anchor_left   = anchor_left,
-                                  anchor_right  = anchor_right,
-                                  anchor_top    = anchor_top,
-                                  anchor_center = anchor_center,
-                                  anchor_middle = anchor_middle,
-                                  top           = top,
-                                  left          = left,
-                                  height        = height,
-                                  width         = width)
+                       value::Int = 0)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
+
     if opc.vertical == :unknown
         opc.height = _progress_bar_height(style, border)
     end

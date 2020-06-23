@@ -47,8 +47,7 @@ function create_widget(::Val{:field}, parent::WidgetParent, top::Integer,
     width  = 7
 
     # Create the widget positioning configuration.
-    opc = object_positioning_conf(top = top, left = left, height = height,
-                                  width = width)
+    opc = newopc(top = top, left = left, height = height, width = width)
 
     # Create the widget.
     widget = WidgetField(parent = parent, opc = opc, pos = pos)
@@ -218,25 +217,27 @@ function tictactoe()
            │       │
            │       │"""
 
-    win, con = create_window_with_container(border = true,
-                                            title = " Tic Tac Toe ",
-                                            height = 18, width = 60,
-                                            top = 2, left = 2)
-    board    = create_widget(Val(:label), con;
-                             top = 2, left = 2, height = 11, width = 24,
-                             text = board, color = pb)
-    ~        = create_widget(Val(:label), con;
-                             top = 2, left = 30, height = 1, width = 18,
-                             text = "Player 1: $(ticks[1])", color = p1)
-    ~        = create_widget(Val(:label), con;
-                             top = 3, left = 30, height = 1, width = 18,
-                             text = "Player 2: $(ticks[2])", color = p2)
-    result   = create_widget(Val(:label), con;
-                             top = 5, left = 30, height = 2, width = 27,
-                             text = "", color = p0)
-    info     = create_widget(Val(:label), con;
-                             top = 15, left = 2, height = 1, width = 20,
-                             text = "Press F1 to exit.", color = p0)
+    opc = newopc(height = 18, width = 60, top = 2, left = 2)
+    win, con = create_window_with_container(opc,
+                                            border = true,
+                                            title  = " Tic Tac Toe ")
+
+
+    opc   = newopc(top = 2, left = 2, height = 11, width = 24)
+    board = create_widget(Val(:label), con, opc; text = board, color = pb)
+
+    opc = newopc(top = 2, left = 30, height = 1, width = 18)
+    ~   = create_widget(Val(:label), con, opc; text = "Player 1: $(ticks[1])", color = p1)
+
+    opc = newopc(top = 3, left = 30, height = 1, width = 18)
+    ~   = create_widget(Val(:label), con, opc; text = "Player 2: $(ticks[2])", color = p2)
+
+    opc    = newopc(top = 5, left = 30, height = 2, width = 27)
+    result = create_widget(Val(:label), con, opc; text = "", color = p0)
+
+    opc = newopc(top = 15, left = 2, height = 1, width = 20)
+    info = create_widget(Val(:label), con, opc; text = "Press F1 to exit.", color = p0)
+
     fields   = [create_widget(Val(:field), con, 2 + 4(i-1), 2 + 8(j-1), (i,j)) for i = 1:3,j = 1:3]
 
     # Initialize the focus manager.

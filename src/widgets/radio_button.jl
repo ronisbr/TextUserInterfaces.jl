@@ -28,40 +28,21 @@ _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
 
 accept_focus(widget::WidgetRadioButton) = accept_focus(widget.base)
 
-function create_widget(::Val{:radio_button}, parent::WidgetParent;
+function create_widget(::Val{:radio_button},
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration;
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,
                        glyph_selected::String = "[X]",
                        glyph_deselected::String = "[ ]",
-                       group_name::String = "group",
-                       # Keywords related to the object positioning.
-                       anchor_bottom::Anchor = _no_anchor,
-                       anchor_left::Anchor   = _no_anchor,
-                       anchor_right::Anchor  = _no_anchor,
-                       anchor_top::Anchor    = _no_anchor,
-                       anchor_center::Anchor = _no_anchor,
-                       anchor_middle::Anchor = _no_anchor,
-                       top::Int    = -1,
-                       left::Int   = -1,
-                       height::Int = -1,
-                       width::Int  = -1)
+                       group_name::String = "group")
 
     # Create the button widget.
-    button = create_widget(Val(:button), parent;
+    button = create_widget(Val(:button), parent, opc;
                            label = glyph_deselected * " " * label,
                            color = color, color_highlight = color_highlight,
-                           style = :none, _derive = true,
-                           anchor_bottom  = anchor_bottom,
-                           anchor_left    = anchor_left,
-                           anchor_right   = anchor_right,
-                           anchor_top     = anchor_top,
-                           anchor_center  = anchor_center,
-                           anchor_middle  = anchor_middle,
-                           top            = top,
-                           left           = left,
-                           height         = height,
-                           width          = width)
+                           style = :none, _derive = true)
 
     # Current size and position of the widget.
     widget = WidgetRadioButton(base             = button,

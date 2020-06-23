@@ -17,51 +17,25 @@ get_height_for_child(win::T) where T<:Window = win.buffer != C_NULL ? Int(getmax
 get_width_for_child(win::T) where T<:Window  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
 get_top_for_child(win::T) where T<:Window    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
 
-function reposition!(win::Window; force::Bool = false, kwargs...)
-    if !isempty(kwargs)
-        # Compute the window positioning.
-        opc = object_positioning_conf(;kwargs...)
-    else
-        opc = win.opc
-    end
-
-    return reposition!(win, opc, force = force)
-end
+@inline reposition!(win::Window; force::Bool = false) =
+    reposition!(win, win.opc; force = force)
 
 function reposition!(win::Window, opc::ObjectPositioningConfiguration;
                      force::Bool = false)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
+    _process_horizontal_info!(opc)
+    _process_vertical_info!(opc)
+
     if opc.vertical == :unknown
-        # TODO: Make this recreation easier.
-        opc = ObjectPositioningConfiguration(
-                anchor_bottom = Anchor(rootwin, :bottom, 0),
-                anchor_left   = opc.anchor_left,
-                anchor_right  = opc.anchor_right,
-                anchor_top    = Anchor(rootwin, :top,    0),
-                anchor_center = opc.anchor_center,
-                anchor_middle = opc.anchor_middle,
-                top           = opc.top,
-                left          = opc.left,
-                height        = opc.height,
-                width         = opc.width
-               )
+        opc.anchor_bottom = Anchor(rootwin, :bottom, 0)
+        opc.anchor_top    = Anchor(rootwin, :top,    0)
     end
 
     if opc.horizontal == :unknown
-        opc = ObjectPositioningConfiguration(
-                anchor_bottom = opc.anchor_bottom,
-                anchor_left   = Anchor(rootwin, :left,  0),
-                anchor_right  = Anchor(rootwin, :right, 0),
-                anchor_top    = opc.anchor_top,
-                anchor_center = opc.anchor_center,
-                anchor_middle = opc.anchor_middle,
-                top           = opc.top,
-                left          = opc.left,
-                height        = opc.height,
-                width         = opc.width
-               )
+        opc.anchor_left   = Anchor(rootwin, :left,  0)
+        opc.anchor_right  = Anchor(rootwin, :right, 0)
     end
 
     # Get the positioning information of the window.
