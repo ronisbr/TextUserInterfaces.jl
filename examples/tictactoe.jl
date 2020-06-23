@@ -13,118 +13,9 @@ const field_color = Int64[]
 const field_highlight_colors = Int64[]
 const ticks = ["X","O"]
 
-################################################################################
-#                                Custom widget
-################################################################################
-
-# The following functions create the field widget. This will be used to create
-# each field of the board.
-
 # We want full logging.
 logger.level = 3
 logger.enabled = true
-
-# Structure of the widget.
-@widget mutable struct WidgetField
-    # Parameters related to the widget
-    # ==========================================================================
-    pos::Tuple{Int,Int} = (0,0)
-    player::Int = 0
-    t::AbstractString = " "
-end
-
-# Report to the focus manager that the widget can accept focus.
-function accept_focus(widget::WidgetField)
-    request_update(widget)
-    return true
-end
-
-# Function to create the widget.
-function create_widget(::Val{:field}, parent::WidgetParent, top::Integer,
-                       left::Integer, pos::Tuple{Int,Int} = (0,0))
-
-    height = 3
-    width  = 7
-
-    # Create the widget positioning configuration.
-    opc = newopc(top = top, left = left, height = height, width = width)
-
-    # Create the widget.
-    widget = WidgetField(parent = parent, opc = opc, pos = pos)
-
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
-    @log info "create_widget" """
-    A field was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Reference   = $(obj_to_ptr(widget))"""
-
-    # Return the created widget.
-    return widget
-end
-
-# Function to process a keystroke when the widget is in focus.
-function process_focus(widget::WidgetField, k::Keystroke)
-    @unpack player, pos = widget
-
-    # If the user pressed `enter`, then mark the board with the current player
-    # tick.
-    if k.ktype == :enter
-        @log verbose "change_value" "$(obj_to_ptr(widget)): Enter pressed on focused field."
-
-        # If the field has not been marked yet, then mark using the current
-        # player and ask to change the player.
-        if player == 0
-            widget.t = ticks[current_player[1]]
-            widget.player = current_player[1]
-            mark_board(pos...)
-
-            change_player()
-            request_update(widget)
-        end
-    end
-
-    # This widget will never pass the focus, it must be changed manually.
-    return true
-end
-
-# Redraw event.
-function redraw(widget::WidgetField)
-    @unpack parent, buffer, t, player = widget
-
-    wclear(buffer)
-
-    # Get the colors.
-    if player == 0
-        c = field_color[current_player[1]]
-    else
-        c = field_color[player]
-    end
-
-    ch = field_highlight_colors[current_player[1]]
-
-    # Get the background color depending on the focus.
-    c = has_focus(parent, widget) ? ch : c
-
-    wattron(buffer, c)
-    mvwprintw(buffer, 0, 0, "       ")
-    mvwprintw(buffer, 1, 0, "   $t    ")
-    mvwprintw(buffer, 2, 0, "       ")
-    wattroff(buffer, c)
-
-    return nothing
-end
-
-# Function called when the focus is released.
-function release_focus(widget::WidgetField)
-    request_update(widget)
-    return true
-end
 
 ################################################################################
 #                                     Game
@@ -238,14 +129,45 @@ function tictactoe()
     opc = newopc(top = 15, left = 2, height = 1, width = 20)
     info = create_widget(Val(:label), con, opc; text = "Press F1 to exit.", color = p0)
 
-    fields   = [create_widget(Val(:field), con, 2 + 4(i-1), 2 + 8(j-1), (i,j)) for i = 1:3,j = 1:3]
+    field_return_pressed(widget, i, j) = begin
+        # If the field has not been marked yet, then mark using the current
+        # player and ask to change the player.
+        if board_marks[i,j] == 0
+            widget.chars[2,4] = ticks[current_player[1]]
+            mark_board(i,j)
+
+            change_player()
+            request_update(widget)
+        end
+    end
+
+    field_focus_acquired(widget) = begin
+        widget.colors .= field_highlight_colors[current_player[1]]
+        request_update(widget)
+    end
+
+    field_focus_lost(widget) = begin
+        widget.colors .= p0
+        request_update(widget)
+    end
+
+    fields = [create_widget(Val(:canvas), con,
+                            newopc(top  = 2 + 4(i-1),
+                                   left = 2 + 8(j-1));
+                                   num_columns = 7,
+                                   num_rows = 3) for i = 1:3,j = 1:3]
+
+    for i = 1:3, j = 1:3
+        @connect_signal fields[i,j] focus_acquired field_focus_acquired
+        @connect_signal fields[i,j] focus_lost field_focus_lost
+        @connect_signal fields[i,j] return_pressed field_return_pressed i j
+    end
 
     # Initialize the focus manager.
     tui.focus_chain = [win]
     init_focus_manager()
 
     request_focus(fields[1,1])
-
 
     # Initial painting.
     refresh_all_windows()
