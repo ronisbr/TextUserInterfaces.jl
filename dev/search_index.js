@@ -897,35 +897,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.@connect_signal-Tuple{Symbol,Symbol,Expr}",
+    "location": "lib/library/#TextUserInterfaces.@connect_signal-Tuple{Any,Symbol,Any,Vararg{Any,N} where N}",
     "page": "Library",
     "title": "TextUserInterfaces.@connect_signal",
     "category": "macro",
-    "text": "@connect_signal(obj::Symbol, signal::Symbol, fcall::Expr)\n\nConnect the signal signal of the object obj to the function fcall. Notice that fcall must be a function call with existing variables or literals. This function must not have keywords. Thus, when signal is emitted by obj, then fcall will be executed.\n\n\n\n\n\n"
+    "text": "@connect_signal(obj, signal::Symbol, f::Symbol, vargs...)\n\nConnect the signal signal of the object obj to the function f passing the additional arguments vargs. Thus, when signal is emitted by obj, then fcall will be executed.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.@disconnect_signal-Tuple{Symbol,Symbol}",
+    "location": "lib/library/#TextUserInterfaces.@disconnect_signal-Tuple{Any,Symbol}",
     "page": "Library",
     "title": "TextUserInterfaces.@disconnect_signal",
     "category": "macro",
-    "text": "@disconnect_signal(obj::Symbol, signal::Symbol)\n\nDisconnect the signal signal from object obj.\n\n\n\n\n\n"
+    "text": "@disconnect_signal(obj, signal::Symbol)\n\nDisconnect the signal signal from object obj.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.@emit_signal-Tuple{Symbol,Symbol}",
+    "location": "lib/library/#TextUserInterfaces.@emit_signal-Tuple{Any,Symbol,Vararg{Any,N} where N}",
     "page": "Library",
     "title": "TextUserInterfaces.@emit_signal",
     "category": "macro",
-    "text": "@emit_signal(obj::Symbol, signal::Symbol)\n\nEmit the signal signal of the object obj, causing to execute the connected function.\n\n\n\n\n\n"
+    "text": "@emit_signal(obj, signal::Symbol, params...)\n\nEmit the signal signal of the object obj with the parameters params..., causing to execute the connected function.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.@forward_signal-Tuple{Symbol,Symbol,Symbol}",
+    "location": "lib/library/#TextUserInterfaces.@forward_signal-Tuple{Any,Any,Symbol}",
     "page": "Library",
     "title": "TextUserInterfaces.@forward_signal",
     "category": "macro",
-    "text": "@forward_signal(src::Symbol, dest::Symbol, signal::Symbol)\n\nForward the signal signal from src to dest. This means that every time that the signal signal is generated in src, then the function in dest will be called.\n\n\n\n\n\n"
+    "text": "@forward_signal(src, dest, signal::Symbol)\n\nForward the signal signal from src to dest. This means that every time that the signal signal is generated in src, then the function in dest will be called.\n\n\n\n\n\n"
 },
 
 {
