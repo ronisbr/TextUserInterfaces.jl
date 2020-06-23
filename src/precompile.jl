@@ -58,7 +58,10 @@ function _precompile()
                 (WidgetANSILabel, String),
                 (:alignment, :color),
                 (Symbol, Int))
+    @precompile destroy_widget WidgetANSILabel :refresh Bool
+    @precompile init_widget! WidgetANSILabel
     @precompile redraw WidgetANSILabel
+    @precompile _destroy_widget WidgetANSILabel :refresh Bool
 
     # Button
     # ------------------------------------------------------------------------------
@@ -68,7 +71,10 @@ function _precompile()
                 (:label, :color, :color_highlight, :style, :_derive),
                 (String, Int, Int, Symbol, Bool))
     @precompile change_label (WidgetButton, String)
+    @precompile destroy_widget WidgetButton :refresh Bool
+    @precompile init_widget! WidgetButton
     @precompile redraw WidgetButton
+    @precompile _destroy_widget WidgetButton :refresh Bool
     @precompile _draw_button (WidgetButton, Bool)
 
     # Container
@@ -80,6 +86,9 @@ function _precompile()
                 :title_color),
                 (Bool, Int, Bool, String, Symbol, Int))
     @precompile redraw WidgetContainer
+    @precompile destroy_widget WidgetContainer :refresh Bool
+    @precompile init_widget! WidgetContainer
+    @precompile _destroy_widget WidgetContainer :refresh Bool
 
     # Combo box
     # ------------------------------------------------------------------------------
@@ -90,6 +99,9 @@ function _precompile()
                  :list_box_color, :list_box_color_highlight, :style),
                 (Vector{String}, Int, Int, Bool, Int, Int, Symbol))
     @precompile redraw WidgetComboBox
+    @precompile destroy_widget WidgetComboBox :refresh Bool
+    @precompile init_widget! WidgetComboBox
+    @precompile _destroy_widget WidgetComboBox :refresh Bool
     @precompile _draw_combo_box WidgetComboBox
     @precompile _handle_input (WidgetComboBox, Keystroke)
 
@@ -143,7 +155,10 @@ function _precompile()
                 (Val{:label}, WidgetContainer, ObjectPositioningConfiguration),
                 (:alignment, :color, :fill_color, :text),
                 (Symbol, Int, Bool, String))
+    @precompile destroy_widget WidgetLabel :refresh Bool
+    @precompile init_widget! WidgetLabel
     @precompile redraw WidgetLabel
+    @precompile _destroy_widget WidgetLabel :refresh Bool
 
     # List box
     # ------------------------------------------------------------------------------
@@ -156,7 +171,10 @@ function _precompile()
                  :_derive),
                 (Vector{String}, Int, Int, Int, Bool, Int, String, String, Bool,
                  Bool, Bool, Bool))
+    @precompile destroy_widget WidgetListBox :refresh Bool
+    @precompile init_widget! WidgetListBox
     @precompile redraw WidgetListBox
+    @precompile _destroy_widget WidgetListBox :refresh Bool
     @precompile _handle_input (WidgetListBox, Keystroke)
 
     # Progress bar
@@ -167,7 +185,10 @@ function _precompile()
                 (:border, :color, :color_highlight, :style, :value),
                 (Bool, Int, Int, Symbol, Int))
     @precompile change_value (WidgetProgressBar, Int) :color Int
+    @precompile destroy_widget WidgetProgressBar :refresh Bool
+    @precompile init_widget! WidgetProgressBar
     @precompile redraw WidgetProgressBar
+    @precompile _destroy_widget WidgetProgressBar :refresh Bool
     @precompile _draw_progress_bar_simple WidgetProgressBar
     @precompile _draw_progress_bar_complete WidgetProgressBar
 
