@@ -11,6 +11,16 @@ using Parameters
 include("./types.jl")
 
 ################################################################################
+#                                Precompilation
+################################################################################
+
+# Precompile the NCurses exported functions.
+@inline function _precompile_func(func, args)
+    ccall(:jl_generating_output, Cint, ()) == 1 || return nothing
+    return precompile(func, args)
+end
+
+################################################################################
 #                                   Includes
 ################################################################################
 

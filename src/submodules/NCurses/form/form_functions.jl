@@ -103,7 +103,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:Integer = @_ccallf $f($(argsc...))::$r
         export $f
-        precompile($f, $argst)
+        _precompile_func($f, $argst)
     end
 end
 
@@ -149,7 +149,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where T<:Integer = @_ccallf $f($(argsc...))::$r
         export $f
-        precompile($f, $argst)
+        _precompile_func($f, $argst)
     end
 end
 
@@ -186,7 +186,7 @@ for (f,r,v,j,c) in
         """
         $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccallf $f($(argsc...))::$r
         export $f
-        precompile($f, $argst)
+        _precompile_func($f, $argst)
     end
 end
 
