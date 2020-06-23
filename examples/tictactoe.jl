@@ -1,12 +1,7 @@
 using Parameters
 using TextUserInterfaces
-using TextUserInterfaces.NCurses
-import TextUserInterfaces: accept_focus, create_widget, process_focus, redraw,
-                           release_focus
 
 # Global variables necessary to handle the game logic.
-#
-# This should be improved.
 const board_marks = [0 0 0; 0 0 0; 0 0 0]
 const current_player = [1]
 const field_color = Int64[]
@@ -76,10 +71,9 @@ end
 
 # Create the TUI.
 function tictactoe()
-
     # Initialize the TUI.
     init_tui()
-    noecho()
+    NCurses.noecho()
 
     # Initialize the colors.
     p0   = ncurses_color(bold = false)
@@ -108,27 +102,37 @@ function tictactoe()
            │       │
            │       │"""
 
+    # Create the main window and its container.
     opc = newopc(height = 18, width = 60, top = 2, left = 2)
     win, con = create_window_with_container(opc,
                                             border = true,
                                             title  = " Tic Tac Toe ")
 
 
+    # Create the label widget that will display the board.
     opc   = newopc(top = 2, left = 2, height = 11, width = 24)
     board = create_widget(Val(:label), con, opc; text = board, color = pb)
 
+    # Create the label showing the information related to player 1.
     opc = newopc(top = 2, left = 30, height = 1, width = 18)
     ~   = create_widget(Val(:label), con, opc; text = "Player 1: $(ticks[1])", color = p1)
 
+    # Create the label showing the information related to player 2.
     opc = newopc(top = 3, left = 30, height = 1, width = 18)
     ~   = create_widget(Val(:label), con, opc; text = "Player 2: $(ticks[2])", color = p2)
 
+    # Create the label that will show the end game information.
     opc    = newopc(top = 5, left = 30, height = 2, width = 27)
     result = create_widget(Val(:label), con, opc; text = "", color = p0)
 
+    # Create the label with the information about how exit the TUI.
     opc = newopc(top = 15, left = 2, height = 1, width = 20)
     info = create_widget(Val(:label), con, opc; text = "Press F1 to exit.", color = p0)
 
+    # This is a signal handler that will called every time the user press enter
+    # in a field.
+    #
+    # It checks if the field is empty and then show the tick of the player.
     field_return_pressed(widget, i, j) = begin
         # If the field has not been marked yet, then mark using the current
         # player and ask to change the player.
@@ -141,22 +145,32 @@ function tictactoe()
         end
     end
 
+    # This is a signal handler that will called every time the field gains
+    # focus.
+    #
+    # It changes the background color to that of the current player.
     field_focus_acquired(widget) = begin
         widget.colors .= field_highlight_colors[current_player[1]]
         request_update(widget)
     end
 
+    # This is a signal handler that will called every time the field loses
+    # focus.
+    #
+    # It removes the background color.
     field_focus_lost(widget) = begin
         widget.colors .= p0
         request_update(widget)
     end
 
+    # Create the fields of the board.
     fields = [create_widget(Val(:canvas), con,
                             newopc(top  = 2 + 4(i-1),
                                    left = 2 + 8(j-1));
                                    num_columns = 7,
                                    num_rows = 3) for i = 1:3,j = 1:3]
 
+    # Connect the required signals to the fields created.
     for i = 1:3, j = 1:3
         @connect_signal fields[i,j] focus_acquired field_focus_acquired
         @connect_signal fields[i,j] focus_lost field_focus_lost
@@ -171,8 +185,8 @@ function tictactoe()
 
     # Initial painting.
     refresh_all_windows()
-    update_panels()
-    doupdate()
+    NCurses.update_panels()
+    NCurses.doupdate()
 
     i = 1
     j = 1
@@ -181,10 +195,8 @@ function tictactoe()
     k = jlgetch()
 
     while (k.ktype != :F1) && !finish
-        process_focus(k)
-
         # If the key is an arrow, then move the focused widget.
-        update = true
+        change_focus = true
         if k.ktype == :down
             i = clamp(i+1,1,3)
         elseif k.ktype == :up
@@ -193,7 +205,19 @@ function tictactoe()
             j = clamp(j+1,1,3)
         elseif k.ktype == :left
             j = clamp(j-1,1,3)
+        elseif k.ktype == :tab
+            # Ignore tab's because we do not want that the focus manager change
+            # the focused widget.
+            k = jlgetch()
+            continue
+        else
+            change_focus = false
         end
+
+        change_focus && request_focus(fields[i,j])
+
+        # This function handles the screen update.
+        process_focus(k)
 
         # Check for victory.
         status = check_victory()
@@ -208,12 +232,12 @@ function tictactoe()
             finish = true
         end
 
-        # Update if necessary because of focus change.
-        if update
-            request_focus(fields[i,j])
+        # If the game is finished, we must also update the screen to show the
+        # information immediately.
+        if finish
             refresh_all_windows()
-            update_panels()
-            doupdate()
+            NCurses.update_panels()
+            NCurses.doupdate()
         end
 
         k = jlgetch()
