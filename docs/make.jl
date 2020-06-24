@@ -11,7 +11,13 @@ makedocs(
     authors = "Ronan Arraes Jardim Chagas",
     pages = [
         "Home"    => "index.md",
-        "Library" => "lib/library.md",
+        "Objects" => Any[
+            "Object positioning" => "man/object_positioning.md",
+        ],
+        "Library" => Any[
+            "TextUserInterfaces" => "lib/library.md",
+            "NCurses"            => "lib/library_ncurses.md",
+        ],
     ],
 )
 

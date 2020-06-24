@@ -1,7 +1,7 @@
 Library
 =======
 
-Documentation for `TextUserInterfaces.jl`.
+Documentation for `TextUserInterfaces`.
 
 ```@autodocs
 Modules = [TextUserInterfaces]
