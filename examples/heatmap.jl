@@ -43,7 +43,7 @@ function plots()
     xlim = create_widget(Val(:form), con, opc, ["x min.", "x max."];
                          color_valid   = c0,
                          color_invalid = c3,
-                         validator     = Float64)
+                         validators    = Float64)
 
     opc = newopc(anchor_left  = Anchor(func, :center, +1),
                  anchor_top    = Anchor(label, :bottom,  0),
@@ -51,7 +51,7 @@ function plots()
     ylim = create_widget(Val(:form), con, opc, ["y min.", "y max."];
                          color_valid   = c0,
                          color_invalid = c3,
-                         validator     = Float64)
+                         validators    = Float64)
 
     opc = newopc(anchor_left  = Anchor(func, :left, 0),
                  anchor_right = Anchor(func, :right,  0),
@@ -237,27 +237,27 @@ function get_limits(tlim,ylim)
     vy = get_data(ylim)
 
     if vt[1] == nothing
-        x_min = (vt[2] == nothing) ? 0. : Float64(vt[2] - 1)
+        x_min = (vt[2] == nothing) ? 0. : parse(Float64,vt[2]) - 1
     else
-        x_min = Float64(vt[1])
+        x_min = parse(Float64,vt[1])
     end
 
     if vt[2] == nothing
         x_max = x_min + 1
     else
-        x_max = Float64(vt[2])
+        x_max = parse(Float64,vt[2])
     end
 
     if vy[1] == nothing
-        y_min = (vy[2] == nothing) ? 0. : Float64(vy[2] - 1)
+        y_min = (vy[2] == nothing) ? 0. : parse(Float64,vy[2]) - 1
     else
-        y_min = Float64(vy[1])
+        y_min = parse(Float64,vy[1])
     end
 
     if vy[2] == nothing
         y_max = y_min + 1
     else
-        y_max = Float64(vy[2])
+        y_max = parse(Float64,vy[2])
     end
 
     return x_min, x_max, y_min, y_max

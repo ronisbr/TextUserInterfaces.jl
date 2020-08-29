@@ -125,28 +125,18 @@ function _precompile()
     @precompile(create_widget,
                 (Val{:input_field}, WidgetContainer, ObjectPositioningConfiguration),
                 (:border, :color_valid, :color_invalid, :max_data_size,
-                 :validator, :parsed_data_sample),
-                (Bool, Int, Int, Int, Nothing, Nothing))
+                 :validator),
+                (Bool, Int, Int, Int, Nothing))
     @precompile(create_widget,
                 (Val{:input_field}, WidgetContainer, ObjectPositioningConfiguration),
                 (:border, :color_valid, :color_invalid, :max_data_size,
-                 :validator, :parsed_data_sample),
-                (Bool, Int, Int, Int, DataType, Float32))
+                 :validator),
+                (Bool, Int, Int, Int, Regex))
     @precompile(create_widget,
                 (Val{:input_field}, WidgetContainer, ObjectPositioningConfiguration),
                 (:border, :color_valid, :color_invalid, :max_data_size,
-                 :validator, :parsed_data_sample),
-                (Bool, Int, Int, Int, DataType, Float64))
-    @precompile(create_widget,
-                (Val{:input_field}, WidgetContainer, ObjectPositioningConfiguration),
-                (:border, :color_valid, :color_invalid, :max_data_size,
-                 :validator, :parsed_data_sample),
-                (Bool, Int, Int, Int, DataType, Int))
-    @precompile(create_widget,
-                (Val{:input_field}, WidgetContainer, ObjectPositioningConfiguration),
-                (:border, :color_valid, :color_invalid, :max_data_size,
-                 :validator, :parsed_data_sample),
-                (Bool, Int, Int, Int, DataType, String))
+                 :validator),
+                (Bool, Int, Int, Int, DataType))
 
     # Label
     # ------------------------------------------------------------------------------

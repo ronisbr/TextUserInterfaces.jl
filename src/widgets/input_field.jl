@@ -12,7 +12,7 @@ export WidgetInputField, clear_data!, get_data
 #                                     Type
 ################################################################################
 
-@widget mutable struct WidgetInputField{P}
+@widget mutable struct WidgetInputField
     # Data array that contains the input to the field.
     data::Vector{Char} = Char[]
 
@@ -43,14 +43,8 @@ export WidgetInputField, clear_data!, get_data
     # Validator
     # =========
 
-    enable_validator::Bool = false
     is_valid::Bool = false
-    regex::Regex = r".*"
-    use_regex::Bool = false
-
-    # Store an element of the type that will be parsed by the validator. This is
-    # necessary to avoid type instability.
-    parsed_data::P
+    validator::Union{Nothing,Function} = nothing
 end
 
 ################################################################################
@@ -73,8 +67,7 @@ function create_widget(::Val{:input_field},
                        color_valid::Int = 0,
                        color_invalid::Int = 0,
                        max_data_size::Int = 0,
-                       validator = nothing,
-                       parsed_data_sample = nothing)
+                       validator = nothing)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
@@ -90,32 +83,18 @@ function create_widget(::Val{:input_field},
     end
 
     # Validator.
-    enable_validator = (validator != nothing)
-
-    use_regex = false
-    regex = r".*"
-
-    if enable_validator
+    if validator != nothing
         # Check if the user wants a `Regex`. In this case, the parsed data will
         # be a string.
         if typeof(validator) <: Regex
-            parsed_data = ""
             regex = validator
-            use_regex = true
-
-        # If the user passed a `DataType` derived from `Number`, then we can
-        # guess the parsed data type.
-        elseif typeof(validator) <: DataType && (validator <: Number)
-            parsed_data = validator(0)
-
-        # Otherwise, we must use the type of parsed data from the field
-        # `parsed_data_sample` that must be provided. This is required to avoid
-        # type instability when getting the data from the field.
-        else
-            parsed_data = parsed_data_sample
+            validator = (str)->occursin(regex,str)
+        elseif typeof(validator) <: DataType
+            field_type = validator
+            validator = (str)->tryparse(field_type, str) != nothing
+        elseif !(typeof(validator) <: Function)
+            error("`validator` must be a regex, a data type, or a function.")
         end
-    else
-        parsed_data = ""
     end
 
     # Create the widget.
@@ -124,11 +103,8 @@ function create_widget(::Val{:input_field},
                               border           = border,
                               color_valid      = color_valid,
                               color_invalid    = color_invalid,
-                              enable_validator = enable_validator,
                               max_data_size    = max_data_size,
-                              parsed_data      = parsed_data,
-                              regex            = regex,
-                              use_regex        = use_regex)
+                              validator        = validator)
 
     # Initialize the internal variables of the widget.
     init_widget!(widget)
@@ -146,7 +122,7 @@ function create_widget(::Val{:input_field},
         Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
         Border      = $border
         Max. size   = $max_data_size
-        Validator?  = $enable_validator
+        Validator?  = $(validator != nothing)
         Reference   = $(obj_to_ptr(widget))"""
 
     # Return the created widget.
@@ -245,25 +221,13 @@ end
 """
     get_data(widget::WidgetInputField)
 
-Get the data of `widget`. If a validator of type `DataType` is provided, then it
-will return the parsed data. Otherwise, it will return a string.
+Get the data of `widget` as a string. If the validator is enabled and the data
+is not valid, then return `nothing`.
 
 """
-function get_data(widget::WidgetInputField{P}) where P<:String
-    # TODO: The data is parsed when `tryparse` is called. Can we avoid this
-    # double call?
-    if widget.is_valid
+function get_data(widget::WidgetInputField)
+    if !_has_validator(widget) || widget.is_valid
         return String(widget.data)
-    else
-        return nothing
-    end
-end
-
-function get_data(widget::WidgetInputField{P}) where P
-    # TODO: The data is parsed when `tryparse` is called. Can we avoid this
-    # double call?
-    if widget.is_valid
-        return tryparse(P, String(widget.data))
     else
         return nothing
     end
@@ -290,7 +254,7 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     if k.ktype == :tab
         # If validation is required, then handle focus only if the input is
         # valid of empty
-        return !isempty(data) && (widget.enable_validator && !widget.is_valid)
+        return !isempty(data) && (_has_validator(widget) && !widget.is_valid)
     # Move cursor to the left.
     elseif k.ktype == :left
         Δx = -1
@@ -396,17 +360,13 @@ function _update_cursor(widget::WidgetInputField)
     return nothing
 end
 
+_has_validator(widget::WidgetInputField) = widget.validator != nothing
+
 function _validator(widget::WidgetInputField)
-    @unpack data, enable_validator, regex, parsed_data = widget
-
-    if enable_validator
+    if _has_validator(widget)
+        @unpack data, validator = widget
         data_str = String(data)
-
-        if widget.use_regex
-            widget.is_valid = validate_str(data_str, regex)
-        else
-            widget.is_valid = validate_str(data_str, parsed_data)
-        end
+        widget.is_valid = validator(data_str)
     else
         widget.is_valid = true
     end

@@ -12,8 +12,14 @@ export WidgetForm, clear_daat!, get_data
 #                                     Type
 ################################################################################
 
-@composed_widget mutable struct WidgetForm{I<:Tuple}
-    inputs::I
+@composed_widget mutable struct WidgetForm
+    inputs::Vector{WidgetInputField}
+
+    # Private
+    # ==========================================================================
+
+    # This vector reduces allocation when calling `get_data`.
+    _data::Vector{Union{Nothing,String}}
 end
 
 ################################################################################
@@ -28,7 +34,7 @@ function create_widget(::Val{:form},
                        color_valid::Int = 0,
                        color_invalid::Int = 0,
                        field_size::Int = 40,
-                       validator = nothing)
+                       validators = nothing)
 
     # Get the size of the largest label.
     lmax = maximum(length.(labels))
@@ -37,11 +43,11 @@ function create_widget(::Val{:form},
     nfields = length(labels)
 
     # Check arguments.
-    if typeof(validator) <: AbstractVector
-        length(validator) != nfields &&
-        error("`validator` must have the same length as the number of fields.")
+    if typeof(validators) <: AbstractVector
+        length(validators) != nfields &&
+        error("`validators` must have the same length as the number of fields.")
     else
-        validator = [validator for _ = 1:nfields]
+        validators = [validators for _ = 1:nfields]
     end
 
     # Check if all positioning is defined and, if not, try to help by
@@ -74,7 +80,7 @@ function create_widget(::Val{:form},
                             color_valid   = color_valid,
                             color_invalid = color_invalid,
                             border        = borders,
-                            validator     = validator[i])
+                            validator     = validators[i])
 
         opc = newopc(anchor_middle = Anchor(wii, :middle, 0),
                      anchor_left   = Anchor(container, :left, 0),
@@ -85,9 +91,13 @@ function create_widget(::Val{:form},
         widget_inputs[i] = wii
     end
 
+    # Pre-allocate the vector that will store the data.
+    _data = Vector{Union{Nothing,String}}(nothing, nfields)
+
     # Create the widget.
     widget = WidgetForm(container = container,
-                        inputs    = tuple(widget_inputs...))
+                        inputs    = widget_inputs,
+                        _data     = _data)
 
     # Add the new widget to the parent widget list.
     add_widget(parent, widget)
@@ -132,4 +142,12 @@ end
 Return a vector with the data of all fields.
 
 """
-get_data(widget::WidgetForm) = map(get_data,widget.inputs)
+function get_data(widget::WidgetForm)
+    @unpack _data, inputs = widget
+
+    @inbounds for i = 1:length(inputs)
+        _data[i] = get_data(inputs[i])
+    end
+
+    return _data
+end
