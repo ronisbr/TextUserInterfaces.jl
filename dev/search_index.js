@@ -305,19 +305,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.get_data-Tuple{WidgetInputField}",
+    "page": "TextUserInterfaces",
+    "title": "TextUserInterfaces.get_data",
+    "category": "method",
+    "text": "get_data(widget::WidgetInputField)\n\nGet the data of widget as a string. If the validator is enabled and the data is not valid, then return nothing.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.get_data-Tuple{WidgetListBox}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.get_data",
     "category": "method",
     "text": "get_data(widget::WidgetListBox)\n\nReturn the data of the list box widget.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.get_data-Union{Tuple{WidgetInputField{P}}, Tuple{P}} where P<:String",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.get_data",
-    "category": "method",
-    "text": "get_data(widget::WidgetInputField)\n\nGet the data of widget. If a validator of type DataType is provided, then it will return the parsed data. Otherwise, it will return a string.\n\n\n\n\n\n"
 },
 
 {
