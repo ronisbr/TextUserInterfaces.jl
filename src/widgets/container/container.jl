@@ -7,6 +7,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetContainer
+export add_widget, remove_widget
 
 ################################################################################
 #                                     Type
@@ -197,117 +198,167 @@ function reposition!(container::WidgetContainer; force::Bool = false)
 end
 
 ################################################################################
-#                              Private functions
+#                      Functions related to the Container
 ################################################################################
 
 """
-    _draw_title(container::WidgetContainer)
+    add_widget(container::WidgetContainer, widget::Widget)
 
-Draw the title in the container `container`.
+Add the widget `widget` to the container `container.
 
 """
-function _draw_title(container::WidgetContainer)
-    @unpack buffer, title, title_alignment = container
+function add_widget(container::WidgetContainer, widget::Widget)
+    push!(container.widgets, widget)
+    return nothing
+end
 
-    # Get the width of the container.
-    width = get_width(container)
+"""
+    remove_widget(container::WidgetContainer, widget::Widget)
 
-    # If the width is too small, then do nothing.
-    width ≤ 4 && return nothing
+Remove the widget `widget` from the container `container`.
 
-    # Check if the entire title cannot be written. In this case, the title will
-    # be shrinked.
-    length(title) ≥ width - 4 && (title = title[1:width-4])
+"""
+function remove_widget(container::WidgetContainer, widget::Widget)
+    idx = findfirst(x->x == widget, container.widgets)
 
-    # Compute the padding to print the title based on the alignemnt.
-    if title_alignment == :r
-        pad = width - 2 - length(title)
-    elseif title_alignment == :c
-        pad = div(width - length(title), 2)
-    else
-        pad = 2
+    if idx == nothing
+        # TODO: Write to the log.
+        return nothing
     end
 
-    mvwprintw(buffer, 0, pad, title)
+    # If the widget that will be deleted has the focus, then we must pass the
+    # focus.
+    if (container.focus_id == idx) && (length(container.widgets) > 1)
+        _next_widget(container)
+    end
+
+    # Adjust the `focus_id` since the widget vector will be changed.
+    container.focus_id > idx && (container.focus_id -= 1)
+
+    # Delete the widget from the list.
+    deleteat!(container.widgets, idx)
 
     return nothing
 end
 
 """
-    _next_widget(container::WidgetContainer)
+    has_focus(container::WidgetContainer, widget)
 
-Move the focus of container `container` to the next widget.
+Return `true` if the widget `widget` is in focus on container `container`, or
+`false` otherwise.
 
 """
-function _next_widget(container::WidgetContainer)
-    @unpack parent, widgets, focus_id = container
+function has_focus(container::WidgetContainer, widget)
+    @unpack widgets, focus_id = container
 
-    @log verbose "_next_widget" "$(obj_desc(container)): Change the focused widget."
-
-    # Release the focus from previous widget.
-    if focus_id > 0
-        release_focus(widgets[focus_id])
-        @emit_signal widgets[focus_id] focus_lost
-    end
-
-    # Search for the next widget that can handle the focus.
-    for i = focus_id+1:length(widgets)
-        if request_next_widget(widgets[i])
-            container.focus_id = i
-            sync_cursor(container)
-
-            @emit_signal widgets[i] focus_acquired
-
-            @log verbose "_next_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
-
-            return true
-        end
-    end
-
-    # No more element could accept the focus.
-    container.focus_id = 0
-    sync_cursor(container)
-
-    @log verbose "_next_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
-
-    return false
+    focus_id <= 0 && return false
+    return widgets[focus_id] === widget
 end
 
 """
-    _previous_widget(container::WidgetContainer)
+    request_focus(container::WidgetContainer, widget)
 
-Move the focus of container `container` to the previous widget.
+Request the focus to the widget `widget` of the container `container`. It
+returns `true` if the focus could be changed or `false` otherwise.
 
 """
-function _previous_widget(container::WidgetContainer)
-    @unpack parent, widgets, focus_id = container
+function request_focus(container::WidgetContainer, widget)
+    @unpack widgets, focus_id = container
 
-    @log verbose "_previous_widget" "$(obj_desc(container)): Change the focused widget."
+    # Find the widget in the widget list.
+    id = findfirst(x->x == widget, widgets)
 
-    # Release the focus from previous widget.
-    if focus_id > 0
-        release_focus(widgets[focus_id])
+    # If `id` is `nothing`, then the `widget` does not belong to the
+    # `container`.
+    if id == nothing
+        @log warning "request_focus" "$(obj_desc(widget)) does not belong to $(obj_desc(container))."
+        return false
     else
-        focus_id = length(widgets)+1
-    end
+        # If the widget is already in focus, then do nothing.
+        if (focus_id > 0) && (widgets[focus_id] == widget)
+            return true
+        end
 
-    # Search for the next widget that can handle the focus.
-    for i = focus_id-1:-1:1
-        if request_prev_widget(widgets[i])
-            container.focus_id = i
-            sync_cursor(container)
+        # If an element is in focus, then it must release it before moving to
+        # the next one. If the element cannot release the focus, then this
+        # function will not change the focus.
+        if (focus_id > 0) && !release_focus(widgets[focus_id])
+            @log verbose "request_focus" "$(obj_desc(container)): $(obj_desc(widgets[focus_id])) could not handle the focus to $(obj_desc(widget))."
+            return false
+        else
+            old_focused_widget = focus_id > 0 ? widgets[focus_id] : nothing
+            new_focused_widget = widgets[id]
+            container.focus_id = id
 
-            @log verbose "_previous_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
+            if old_focused_widget != nothing
+                @emit_signal old_focused_widget focus_lost
+            end
 
+            if request_next_widget(new_focused_widget)
+                @emit_signal new_focused_widget focus_acquired
+            end
+
+            @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$(container.focus_id) -> $(obj_desc(widgets[container.focus_id]))."
+
+            # Indicate that a change focus request was made to avoid changing
+            # the focus again if this was done inside a `process_focus` for
+            # example.
+            container.change_focus_requested = true
+
+            # TODO: What should we do if the widget does not accept the focus?
             return true
         end
     end
+end
 
-    # No more element could accept the focus.
-    container.focus_id = 0
-    sync_cursor(container)
+"""
+    refresh_window(container::WidgetContainer; force_redraw::Bool = false)
 
-    @log verbose "_previous_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
+Ask the parent widget to refresh the window. If `force_redraw` is `true`, then
+all widgets in the window will be updated.
 
-    return false
+"""
+refresh_window(container::WidgetContainer; force_redraw::Bool = false) =
+    refresh_window(container.parent; force_redraw = force_redraw)
+
+"""
+    sync_cursor(widget::WidgetContainer)
+
+Synchronize the cursor to the position of the focused widget in container
+`container`. This is necessary because all the operations are done in the
+buffer and then copied to the view.
+
+"""
+function sync_cursor(container::WidgetContainer)
+    @unpack widgets, focus_id = container
+
+    # If the window has no widget, then just hide the cursor.
+    if focus_id > 0
+        widget = widgets[focus_id]
+
+        # Get the cursor position on the `buffer` of the widget.
+        cy,cx = _get_window_cur_pos(get_buffer(widget))
+        by,bx = _get_window_coord(get_buffer(widget))
+
+        # Get the position of the container window.
+        #
+        # This algorithm assumes that the cursor position after `wmove` is
+        # relative to the beginning of the container window. However, since
+        # everything is a `subpad`, the window coordinate (by,bx) is relative to
+        # the pad. Thus, we must subtract the `subpad` position so that the
+        # algorithm is consistent.
+        wy,wx = _get_window_coord(get_buffer(container))
+
+        # Compute the coordinates of the cursor with respect to the window.
+        y = by + cy - wy
+        x = bx + cx - wx
+
+        # Move the cursor.
+        wmove(get_buffer(container), y, x)
+
+        # We must sync the cursor in the parent as well.
+        sync_cursor(get_parent(container))
+    end
+
+    return nothing
 end
