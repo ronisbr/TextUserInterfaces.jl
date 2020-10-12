@@ -82,6 +82,11 @@ function request_focus(container::WidgetContainer, widget)
         @log warning "request_focus" "$(obj_desc(widget)) does not belong to $(obj_desc(container))."
         return false
     else
+        # If the widget is already in focus, then do nothing.
+        if (focus_id > 0) && (widgets[focus_id] == widget)
+            return true
+        end
+
         # If an element is in focus, then it must release it before moving to
         # the next one. If the element cannot release the focus, then this
         # function will not change the focus.
@@ -89,17 +94,19 @@ function request_focus(container::WidgetContainer, widget)
             @log verbose "request_focus" "$(obj_desc(container)): $(obj_desc(widgets[focus_id])) could not handle the focus to $(obj_desc(widget))."
             return false
         else
-            if container.focus_id > 0
-                @emit_signal widgets[container.focus_id] focus_lost
-            end
-
+            old_focused_widget = focus_id > 0 ? widgets[focus_id] : nothing
+            new_focused_widget = widgets[id]
             container.focus_id = id
 
-            if request_next_widget(widgets[container.focus_id])
-                @emit_signal widgets[container.focus_id] focus_acquired
+            if old_focused_widget != nothing
+                @emit_signal old_focused_widget focus_lost
             end
 
-            @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$id -> $(obj_desc(widgets[id]))."
+            if request_next_widget(new_focused_widget)
+                @emit_signal new_focused_widget focus_acquired
+            end
+
+            @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$(container.focus_id) -> $(obj_desc(widgets[container.focus_id]))."
 
             # Indicate that a change focus request was made to avoid changing
             # the focus again if this was done inside a `process_focus` for

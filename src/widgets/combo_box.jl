@@ -228,6 +228,9 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         # Pass the focus to the newly created list box.
         request_focus(parent, _list_box)
 
+        # Mark that the list box is opened.
+        widget._list_box_opened = true
+
         # Set the function called when a key is pressed inside the list box.
         #
         # If `enter` is pressed, then this function need to update the combo box
@@ -240,9 +243,11 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
             if k.ktype == :enter
                 cur, ~ = get_current_item(list_box)
                 widget.cur = cur
+                widget._list_box_opened = false
                 remove_widget(parent, list_box)
                 request_focus(parent, widget)
             elseif k.ktype == :esc
+                widget._list_box_opened = false
                 remove_widget(parent, list_box)
                 request_focus(parent, widget)
             end
@@ -251,7 +256,16 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
             return nothing
         end
 
+        # If the list box for any reason lost focus, then it must be closed.
+        _handler_focus_lost(list_box) = begin
+            if widget._list_box_opened
+                widget._list_box_opened = false
+                remove_widget(parent, list_box)
+            end
+        end
+
         @connect_signal _list_box key_pressed _handler_key_pressed
+        @connect_signal _list_box focus_lost _handler_focus_lost
 
         return true
     else
