@@ -16,7 +16,6 @@ export add_widget, remove_widget
 @widget mutable struct WidgetContainer
     border::Bool = false
     border_color::Int = 0
-    change_focus_requested::Bool = false
     focus_id::Int = 0
     title::String = ""
     title_alignment::Symbol = :l
@@ -92,29 +91,44 @@ end
 function process_focus(container::WidgetContainer, k::Keystroke)
     @unpack focus_id, parent, widgets = container
 
-    # If there is any element in focus, ask to process the keystroke.
-    if focus_id > 0
-        # If `process_focus` returns `false`, it means that the widget wants to
-        # release the focus.
-        if process_focus(widgets[focus_id],k)
-            sync_cursor(container)
-            return true
-        end
-    end
-
-    # If a widget requested the focus, we should not change the focus again.
-    if !container.change_focus_requested
-        # Otherwise, we must search another widget that can accept the focus. In
-        # this case, if the keystorke was SHIFT-TAB, we will move the focus to
-        # the previous widget.
-        if k.ktype == :tab && k.shift == true
-            return _previous_widget(container)
+    # Check if the user wants to change the focus.
+    if k.ktype == :tab
+        # In this case, we need to verify if the widget can release the focus.
+        if focus_id > 0
+            # If the children is a container, then we need to pass the focus
+            # change request to it.
+            if (widgets[focus_id] isa WidgetContainer) ||
+               (widgets[focus_id] isa ComposedWidget)
+                if !process_focus(widgets[focus_id], k)
+                    # Check if we need to go to the next or previous widget.
+                    return k.shift ? _previous_widget(container) :
+                                     _next_widget(container)
+                else
+                    # The focus was processed by a children.
+                    return true
+                end
+            elseif release_focus(widgets[focus_id])
+                # Check if we need to go to the next or previous widget.
+                return k.shift ? _previous_widget(container) :
+                                 _next_widget(container)
+            end
         else
-            return _next_widget(container)
+            # Check if we need to go to the next or previous widget.
+            return k.shift ? _previous_widget(container) :
+                             _next_widget(container)
+        end
+    else
+        # If there is any element in focus, ask to process the keystroke.
+        if focus_id > 0
+            # If `process_focus` returns `false`, it means that the widget wants to
+            # release the focus.
+            if process_focus(widgets[focus_id],k)
+                sync_cursor(container)
+                return true
+            end
         end
     end
 
-    container.change_focus_requested = false
     return true
 end
 
@@ -300,10 +314,7 @@ function request_focus(container::WidgetContainer, widget)
 
             @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$(container.focus_id) -> $(obj_desc(widgets[container.focus_id]))."
 
-            # Indicate that a change focus request was made to avoid changing
-            # the focus again if this was done inside a `process_focus` for
-            # example.
-            container.change_focus_requested = true
+            sync_cursor(container)
 
             # TODO: What should we do if the widget does not accept the focus?
             return true

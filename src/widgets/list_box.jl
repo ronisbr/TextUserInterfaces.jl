@@ -310,11 +310,8 @@ function _handle_input(widget::WidgetListBox, k::Keystroke)
     # Flag that indicates if the input was handled.
     input_handled = true
 
-    # Release focus.
-    if k.ktype == :tab
-        input_handled = false
     # Toggle the selection of the current item.
-    elseif k.value == " "
+    if k.value == " "
         if selectable
             id = curh + 1
 

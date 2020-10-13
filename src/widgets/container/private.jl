@@ -52,8 +52,11 @@ function _next_widget(container::WidgetContainer)
 
     # Release the focus from previous widget.
     if focus_id > 0
-        release_focus(widgets[focus_id])
-        @emit_signal widgets[focus_id] focus_lost
+        if release_focus(widgets[focus_id])
+            @emit_signal widgets[focus_id] focus_lost
+        else
+            return true
+        end
     end
 
     # Search for the next widget that can handle the focus.
@@ -92,7 +95,11 @@ function _previous_widget(container::WidgetContainer)
 
     # Release the focus from previous widget.
     if focus_id > 0
-        release_focus(widgets[focus_id])
+        if release_focus(widgets[focus_id])
+            @emit_signal widgets[focus_id] focus_lost
+        else
+            return true
+        end
     else
         focus_id = length(widgets)+1
     end

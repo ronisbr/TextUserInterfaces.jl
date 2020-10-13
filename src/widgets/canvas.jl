@@ -71,10 +71,7 @@ end
 function process_focus(widget::WidgetCanvas, k::Keystroke)
     @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused canvas."
     ret = @emit_signal widget key_pressed k
-
-    isnothing(ret) && return k.ktype == :tab ? false : true
-
-    return ret
+    return isnothing(ret) ? true : false
 end
 
 function redraw(widget::WidgetCanvas)

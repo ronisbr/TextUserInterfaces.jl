@@ -188,6 +188,14 @@ function redraw(widget::WidgetInputField)
 end
 
 function release_focus(widget::WidgetInputField)
+    @unpack data = widget
+
+    # If validation is required, then handle focus only if the input is valid of
+    # empty
+    if !isempty(data) && (_has_validator(widget) && !widget.is_valid)
+        return false
+    end
+
     request_update(widget)
     return true
 end
@@ -238,7 +246,7 @@ end
 ################################################################################
 
 function _handle_input(widget::WidgetInputField, k::Keystroke)
-    @unpack  data, max_data_size, view, curx, cury, size, vcury, vcurx = widget
+    @unpack data, max_data_size, view, curx, cury, size, vcury, vcurx = widget
 
     # We do not support multiple lines yet.
     vcury  = 1
@@ -250,13 +258,8 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     # Flag to inform if the widget must be updated.
     update = false
 
-    # Release focus.
-    if k.ktype == :tab
-        # If validation is required, then handle focus only if the input is
-        # valid of empty
-        return !isempty(data) && (_has_validator(widget) && !widget.is_valid)
     # Move cursor to the left.
-    elseif k.ktype == :left
+    if k.ktype == :left
         Δx = -1
     # Move cursor to the right.
     elseif k.ktype == :right

@@ -98,10 +98,7 @@ end
 function process_focus(widget::WidgetButton, k::Keystroke)
     @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused button."
     ret = @emit_signal widget key_pressed k
-
-    isnothing(ret) && return k.ktype == :tab ? false : true
-
-    return ret
+    return isnothing(ret) ? true : false
 end
 
 redraw(widget::WidgetButton) = redraw(widget, has_focus(widget.parent,widget))

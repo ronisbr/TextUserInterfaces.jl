@@ -65,18 +65,10 @@ function process_focus(window::Window, k::Keystroke)
     # If there is any element in the window, then it must be the one with active
     # focus.
     if widget != nothing
-        if process_focus(widget,k)
-            if require_cursor(widget)
-                curs_set(1)
-            else
-                curs_set(0)
-            end
-
-            return true
-        end
-
-        curs_set(0)
+        return process_focus(widget,k)
     end
+
+    curs_set(0)
 
     return false
 end
@@ -93,25 +85,31 @@ function sync_cursor(window::Window)
     @unpack widget = window
 
     if widget != nothing
-        # Get the cursor position on the `buffer` of the widget.
-        cy,cx = _get_window_cur_pos(get_buffer(widget))
-        by,bx = _get_window_coord(get_buffer(widget))
+        if require_cursor(widget)
+            curs_set(1)
 
-        # Compute the coordinates of the cursor with respect to the window.
-        y = by + cy
-        x = bx + cx
+            # Get the cursor position on the `buffer` of the widget.
+            cy,cx = _get_window_cur_pos(get_buffer(widget))
+            by,bx = _get_window_coord(get_buffer(widget))
 
-        # If the window has a border, then we must take this into account when
-        # updating the cursor coordinates.
-        if window.has_border
-            y += 1
-            x += 1
+            # Compute the coordinates of the cursor with respect to the window.
+            y = by + cy
+            x = bx + cx
+
+            # If the window has a border, then we must take this into account when
+            # updating the cursor coordinates.
+            if window.has_border
+                y += 1
+                x += 1
+            end
+
+            # Move the cursor.
+            wmove(window.view, y, x)
+
+            # TODO: Limit the cursor position to the edge of the screen.
+        else
+            curs_set(0)
         end
-
-        # Move the cursor.
-        wmove(window.view, y, x)
-
-        # TODO: Limit the cursor position to the edge of the screen.
     end
 
     return nothing
