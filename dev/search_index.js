@@ -753,14 +753,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.request_focus-Tuple{Window,Any}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.request_focus",
-    "category": "method",
-    "text": "request_focus(win::Window, widget)\n\nRequest the focus to the widget widget of the window win. This function is only necessary to make Window comply to the containers API. Since a window can contain only one widget, then a function to change the focus is not meaningful.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.request_focus-Tuple{Window}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.request_focus",
