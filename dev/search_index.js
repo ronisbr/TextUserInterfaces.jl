@@ -89,14 +89,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.accept_focus",
-    "category": "method",
-    "text": "accept_focus(menu::TUI_MENU)\n\nCommand executed when menu menu must state whether or not it accepts the focus. If the focus is accepted, then this function returns true. Otherwise, it returns false.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.accept_focus-Tuple{Window}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.accept_focus",
@@ -118,6 +110,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.add_widget",
     "category": "method",
     "text": "add_widget(win::Window, widget::Widget)\n\nAdd widget widget to the window win. If the win already have a widget, then it will be replaced.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/library/#TextUserInterfaces.app_main_loop",
+    "page": "TextUserInterfaces",
+    "title": "TextUserInterfaces.app_main_loop",
+    "category": "function",
+    "text": "app_main_loop(fprev::Function = (k)->true, fpost::Function = (k)->true; destroy_on_exit::Bool = true, manage_window_switch::Bool = true)\n\nInitialize the application main loop.\n\nThe function fprev is called after every pressed key and before the focus is processed. It must have the following signature:\n\nfprev(k::Keystroke)::Bool\n\nIf it returns true, then the keystroke is processed. Otherwise, the software waits for another keystroke.\n\nThe function fpost is called after the keystroke is processed. It must have the following signature:\n\nfpost(k::Keystroke)::Bool\n\nIf it return true, then the loop continues and a next keysotrke is requested. Otherwise, the loop is terminated.\n\nKeywords\n\ndestroy_on_exit: If true, then destroy_tui() is called when we exit from                    the loop.\nmanage_window_switch: If true, then F2 and F3 move to next and                         previous windows.\n\n\n\n\n\n"
 },
 
 {
@@ -177,14 +177,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.create_menu-Union{Tuple{Array{T1,1}}, Tuple{T2}, Tuple{T1}, Tuple{Array{T1,1},Union{Nothing, Array{T2,1}}}} where T2<:AbstractString where T1<:AbstractString",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.create_menu",
-    "category": "method",
-    "text": "function create_menu(names::Vector{T1}, descriptions::Union{Nothing,Vector{T2}} = nothing; kwargs...)\n\nCreate a menu with the names names and descriptions descriptions. If descriptions is nothing or is omitted, then the menu descriptions will not be shown.\n\nKeywords\n\nformat: If nothing, then the default menu format will be used. Otherwise,           it must be a tuple with two integers describing respectively the           number of rows and columns. (Default = nothing)\nmark: The menu mark. (Default = -)\none_value: If true, then the menu cannot have multiple selections.              (Default = true)\nshow_desc: If true, then the menu description will be shown.              (Default = true)\nrow_major: If true, then the menu will be constructed in a row-major              ordering.\nignore_case: If true, then the case will be ignored on pattern matching.\nshow_match: If true, then the cursor will be moved to within the item name               while pattern-matching.\nnon_cyclic: If true, then the menu will be non cyclic.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.create_widget",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.create_widget",
@@ -209,43 +201,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.current_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.current_item",
-    "category": "method",
-    "text": "current_item(menu::TUI_MENU) = current_item(menu.ptr)\n\nReturn the current item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.current_item_desc-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.current_item_desc",
-    "category": "method",
-    "text": "current_item_desc(menu::TUI_MENU)\n\nReturn the item description of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.current_item_name-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.current_item_name",
-    "category": "method",
-    "text": "current_item_name(menu::TUI_MENU)\n\nReturn the item name of the menu menu.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.destroy_all_windows-Tuple{}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.destroy_all_windows",
     "category": "method",
     "text": "destroy_all_windows()\n\nDestroy all windows managed by the TUI.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.destroy_menu-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.destroy_menu",
-    "category": "method",
-    "text": "destroy_menu(menu::TUI_MENU)\n\nDestroy the menu menu.\n\n\n\n\n\n"
 },
 
 {
@@ -449,110 +409,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.menu_down_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_down_item",
-    "category": "method",
-    "text": "menu_down_item(menu::TUI_MENU)\n\nMove down to an item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_down_line-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_down_line",
-    "category": "method",
-    "text": "menu_down_line(menu::TUI_MENU)\n\nScroll down a line of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_down_page-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_down_page",
-    "category": "method",
-    "text": "menu_down_page(menu::TUI_MENU)\n\nScroll down a page of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_first_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_first_item",
-    "category": "method",
-    "text": "menu_first_item(menu::TUI_MENU)\n\nMove to the first item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_last_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_last_item",
-    "category": "method",
-    "text": "menu_last_item(menu::TUI_MENU)\n\nMove to the last item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_left_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_left_item",
-    "category": "method",
-    "text": "menu_left_item(menu::TUI_MENU)\n\nMove left to an item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_next_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_next_item",
-    "category": "method",
-    "text": "menu_next_item(menu::TUI_MENU)\n\nMove to the next item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_prev_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_prev_item",
-    "category": "method",
-    "text": "menu_prev_item(menu::TUI_MENU)\n\nMove to the previous menu item of the menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_right_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_right_item",
-    "category": "method",
-    "text": "menu_right_item(menu::TUI_MENU)\n\nMove right to an item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_toggle_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_toggle_item",
-    "category": "method",
-    "text": "menu_toggle_item(menu::TUI_MENU)\n\nToggle the current item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_up_item-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_up_item",
-    "category": "method",
-    "text": "menu_up_item(menu::TUI_MENU)\n\nMove up to an item of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_up_line-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_up_line",
-    "category": "method",
-    "text": "menu_up_line(menu::TUI_MENU)\n\nScroll up a line of the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.menu_up_page-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.menu_up_page",
-    "category": "method",
-    "text": "menu_up_page(menu::TUI_MENU)\n\nScroll up a page of the menu menu.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.modify_color-Tuple{Symbol,Int64,Int64,Int64,Int64}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.modify_color",
@@ -601,6 +457,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/library/#TextUserInterfaces.next_window-Tuple{}",
+    "page": "TextUserInterfaces",
+    "title": "TextUserInterfaces.next_window",
+    "category": "method",
+    "text": "next_window()\n\nMove the focus to the next window.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/library/#TextUserInterfaces.obj_desc-Tuple{Any}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.obj_desc",
@@ -617,11 +481,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.post_menu-Tuple{TextUserInterfaces.TUI_MENU}",
+    "location": "lib/library/#TextUserInterfaces.previous_window-Tuple{}",
     "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.post_menu",
+    "title": "TextUserInterfaces.previous_window",
     "category": "method",
-    "text": "post_menu(menu::TUI_MENU)\n\nPost the menu menu.\n\n\n\n\n\n"
+    "text": "previous_window()\n\nMove the focus to the previous window.\n\n\n\n\n\n"
 },
 
 {
@@ -638,14 +502,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.process_focus",
     "category": "method",
     "text": "process_focus(k::Keystroke)\n\nProcess the focus considering the user\'s keystorke k.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.process_focus-Tuple{TextUserInterfaces.TUI_MENU,Keystroke}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.process_focus",
-    "category": "method",
-    "text": "process_focus(menu::TUI_MENU, k::Keystroke)\n\nProcess the actions when the menu menu is in focus and the keystroke k was issued by the user.\n\n\n\n\n\n"
 },
 
 {
@@ -702,14 +558,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.release_focus",
     "category": "method",
     "text": "release_focus(widget)\n\nRequest focus to be released. It should return true if the focus can be released or false otherwise.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.release_focus-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.release_focus",
-    "category": "method",
-    "text": "release_focus(menu::TUI_MENU)\n\nRelease the focus from the menu menu.\n\n\n\n\n\n"
 },
 
 {
@@ -785,30 +633,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.selected_items-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.selected_items",
-    "category": "method",
-    "text": "selected_items(menu::TUI_MENU)\n\nReturn a Vector with the selected items in the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.selected_items_desc-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.selected_items_desc",
-    "category": "method",
-    "text": "selected_items_desc(menu::TUI_MENU)\n\nReturn a Vector with the selected items descriptions in the menu menu.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.selected_items_names-Tuple{TextUserInterfaces.TUI_MENU}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.selected_items_names",
-    "category": "method",
-    "text": "selected_items_names(menu::TUI_MENU)\n\nReturn a Vector with the selected items names in the menu menu.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.set_color-Tuple{Int64}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.set_color",
@@ -822,30 +646,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.set_focus_chain",
     "category": "method",
     "text": "set_focus_chain(wins::Window...; new_focus_id::Int = 1)\n\nSet the focus chain, i.e. the ordered list of windows that can receive the focus. The keyword new_focus_id can be set to specify which element is currently focused in the new chain.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_menu_win-Tuple{TextUserInterfaces.TUI_MENU,Window}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.set_menu_win",
-    "category": "method",
-    "text": "set_menu_win(menu::TUI_MENU, win::Window)\n\nSet menu menu window to win.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_next_window_func-Tuple{Any}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.set_next_window_func",
-    "category": "method",
-    "text": "set_next_window_func(f)\n\nSet the function f to be the one that will be called to check whether the user wants the next window. The signature must be:\n\nf(k::Keystroke)::Bool\n\nIt must return true if the next window is required of false otherwise.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.set_previous_window_func-Tuple{Any}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.set_previous_window_func",
-    "category": "method",
-    "text": "set_previous_window_func(f)\n\nSet the function f to be the one that will be called to check whether the user wants the previous window. The signature must be:\n\nf(k::Keystroke)::Bool\n\nIt must return true if the previous window is required of false otherwise.\n\n\n\n\n\n"
 },
 
 {
@@ -889,11 +689,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces.unpost_menu-Tuple{TextUserInterfaces.TUI_MENU}",
+    "location": "lib/library/#TextUserInterfaces.tui_update-Tuple{}",
     "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.unpost_menu",
+    "title": "TextUserInterfaces.tui_update",
     "category": "method",
-    "text": "unpost_menu(menu::TUI_MENU)\n\nUnpost the menu menu.\n\n\n\n\n\n"
+    "text": "tui_update()\n\nUpdate the entire TUI.\n\n\n\n\n\n"
 },
 
 {
@@ -1113,14 +913,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/library/#TextUserInterfaces._try_focus-Tuple{Window}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces._try_focus",
-    "category": "method",
-    "text": "_try_focus(win::Window)\n\nTry to set to focus to the window win. If it was possible to make win the focused windows, then it returns true. Otherwise, it returns false.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/library/#TextUserInterfaces.get_current_item-Tuple{WidgetListBox}",
     "page": "TextUserInterfaces",
     "title": "TextUserInterfaces.get_current_item",
@@ -1174,22 +966,6 @@ var documenterSearchIndex = {"docs": [
     "title": "TextUserInterfaces.get_width_for_child",
     "category": "function",
     "text": "get_width_for_child\n\nReturn the usable width of object object for a child object.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.next_window-Tuple{}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.next_window",
-    "category": "method",
-    "text": "next_window()\n\nMove the focus to the next window.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/library/#TextUserInterfaces.previous_window-Tuple{}",
-    "page": "TextUserInterfaces",
-    "title": "TextUserInterfaces.previous_window",
-    "category": "method",
-    "text": "previous_window()\n\nMove the focus to the previous window.\n\n\n\n\n\n"
 },
 
 {
