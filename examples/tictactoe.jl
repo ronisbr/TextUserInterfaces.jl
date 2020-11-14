@@ -183,26 +183,13 @@ function tictactoe()
         @connect_signal fields[i,j] key_pressed field_key_pressed i j
     end
 
-    # Initialize the focus manager.
-    tui.focus_chain = [win]
-    init_focus_manager()
-
-    request_focus(fields[1,1])
-
-    # Initial painting.
-    refresh_all_windows()
-    NCurses.update_panels()
-    NCurses.doupdate()
-
     i = 1
     j = 1
-    finish = false
 
-    k = jlgetch()
-
-    while (k.ktype != :F1) && !finish
-        # If the key is an arrow, then move the focused widget.
+    function fprev(k::Keystroke)
         change_focus = true
+
+        # If the key is an arrow, then move the focused widget.
         if k.ktype == :down
             i = clamp(i+1,1,3)
         elseif k.ktype == :up
@@ -214,42 +201,43 @@ function tictactoe()
         elseif k.ktype == :tab
             # Ignore tab's because we do not want that the focus manager change
             # the focused widget.
-            k = jlgetch()
-            continue
+            return false
         else
             change_focus = false
         end
 
         change_focus && request_focus(fields[i,j])
 
-        # This function handles the screen update.
-        process_focus(k)
+        return true
+    end
 
+    function fpost(k::Keystroke)
         # Check for victory.
         status = check_victory()
         if status == 1
             change_text(result, "Player 1 won!!\nPress any key to exit...")
-            finish = true
+            tui_update()
+            jlgetch()
+            return false
+
         elseif status == 2
             change_text(result, "Player 2 won!!\nPress any key to exit...")
-            finish = true
+            tui_update()
+            jlgetch()
+            return false
+
         elseif status == -1
             change_text(result, "No player has won...\nPress any key to exit...")
-            finish = true
+            tui_update()
+            jlgetch()
+            return false
         end
 
-        # If the game is finished, we must also update the screen to show the
-        # information immediately.
-        if finish
-            refresh_all_windows()
-            NCurses.update_panels()
-            NCurses.doupdate()
-        end
-
-        k = jlgetch()
+        return true
     end
 
-    destroy_tui()
+    request_focus(fields[1,1])
+    app_main_loop(fprev, fpost)
 end
 
 tictactoe()

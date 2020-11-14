@@ -65,30 +65,7 @@ function windows_and_widgets()
         y += Δy
     end
 
-    # Focus manager.
-    tui.focus_chain = wins
-    init_focus_manager()
-
-    # Initial painting.
-    refresh_all_windows()
-    NCurses.update_panels()
-    NCurses.doupdate()
-
-    while true
-        k = jlgetch()
-
-        if k.ktype == :F1
-            break
-        elseif k.ktype == :F2
-            next_window()
-        elseif k.ktype == :F3
-            previous_window()
-        else
-            process_focus(k)
-        end
-    end
-
-    destroy_tui()
+    app_main_loop()
 end
 
 windows_and_widgets()

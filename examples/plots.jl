@@ -204,23 +204,7 @@ function plots()
     @forward_signal tlim bplot key_pressed
     @forward_signal ylim bplot key_pressed
 
-    # Initialize the focus manager.
-    tui.focus_chain = [win]
-    init_focus_manager()
-
-    # Initial painting.
-    refresh_all_windows()
-    NCurses.update_panels()
-    NCurses.doupdate()
-
-    k = jlgetch()
-
-    while (k.ktype != :F1)
-        process_focus(k)
-        k = jlgetch()
-    end
-
-    destroy_tui()
+    app_main_loop()
 end
 
 function create_plot(t,y,color,tmin,tmax,ymin,ymax)

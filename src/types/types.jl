@@ -14,7 +14,6 @@ include("./logger.jl")
 include("./objects.jl")
 include("./windows.jl")
 include("./widgets.jl")
-include("./temp.jl")
 
 @with_kw mutable struct TUI
     init::Bool = false
@@ -33,10 +32,6 @@ include("./temp.jl")
     focus_chain::Vector{Window} = Vector{Window}[]
     focus_win::Union{Nothing,Window} = nothing
     focus_id::Int = 0
-
-    # Functions to check if a keystroke must change the window.
-    wants_next_window::Function     = (k)->return false
-    wants_previous_window::Function = (k)->return false
 end
 
 # Global instance to store the TUI configurations.
