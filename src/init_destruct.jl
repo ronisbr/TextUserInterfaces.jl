@@ -46,6 +46,10 @@ Destroy the Text User Interface (TUI).
 function destroy_tui()
     @log info "destroy_tui" "TUI will be destroyed."
     if tui.init
+        tui.focus_win = nothing
+        tui.focus_id = 0
+        empty!(tui.focus_chain)
+
         @log info "destroy_tui" "TUI destroying windows."
         destroy_all_windows()
         endwin()

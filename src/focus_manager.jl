@@ -6,7 +6,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export get_focused_window, init_focus_manager, process_focus, request_focus,
-       set_focus_chain, set_next_window_func, set_previous_window_func
+       set_focus_chain, next_window, previous_window
 
 """
     get_focused_window()
@@ -23,9 +23,7 @@ Initialization of the focus manager. The elements in `focus_chain` are iterated
 to find the first one that can accept the focus.
 
 """
-function init_focus_manager()
-    next_window()
-end
+init_focus_manager() = next_window()
 
 """
     process_focus(k::Keystroke)
@@ -48,29 +46,16 @@ function process_focus(k::Keystroke)
             # not be noticeable impact.
             reposition!(win; force = true)
         end
-
-        update_panels()
-        doupdate()
     else
         if focus_win == nothing
             length(focus_chain) == 0 && return nothing
             next_window()
         end
 
-        # Check if the user wants the another window.
-        if tui.wants_next_window(k)
-            next_window()
-        elseif tui.wants_previous_window(k)
-            previous_window()
-        else
-            process_focus(focus_win, k)
-        end
-
-        refresh_all_windows()
+        process_focus(focus_win, k)
     end
 
-    update_panels()
-    doupdate()
+    tui_update()
 
     return nothing
 end
@@ -98,6 +83,8 @@ function next_window()
     for i = focus_id+1:num_wins
         if request_focus(focus_chain[i])
             tui.focus_id = i
+            tui_update()
+
             return nothing
         end
     end
@@ -106,6 +93,8 @@ function next_window()
     for i = 1:tui.focus_id
         if request_focus(focus_chain[i])
             tui.focus_id = i
+            tui_update()
+
             return nothing
         end
     end
@@ -137,6 +126,8 @@ function previous_window()
     for i = focus_id-1:-1:1
         if request_focus(focus_chain[i])
             tui.focus_id = i
+            tui_update()
+
             return nothing
         end
     end
@@ -145,6 +136,8 @@ function previous_window()
     for i = num_wins:-1:tui.focus_id
         if request_focus(focus_chain[i])
             tui.focus_id = i
+            tui_update()
+
             return nothing
         end
     end
@@ -171,10 +164,7 @@ function request_focus(win::Window)
     if accept_focus(win)
         @log verbose "request_focus" "Focus: Switched to window $(obj_desc(win))."
         tui.focus_win = win
-
-        refresh_all_windows()
-        update_panels()
-        doupdate()
+        tui_update()
 
         return true
     else
@@ -197,50 +187,4 @@ function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
     tui.focus_chain = [wins...]
     force_focus_change(new_focus_id)
     return nothing
-end
-
-"""
-    set_next_window_func(f)
-
-Set the function `f` to be the one that will be called to check whether the user
-wants the next window. The signature must be:
-
-    f(k::Keystroke)::Bool
-
-It must return `true` if the next window is required of `false` otherwise.
-
-"""
-function set_next_window_func(f)
-    tui.wants_next_window = f
-    return nothing
-end
-
-"""
-    set_previous_window_func(f)
-
-Set the function `f` to be the one that will be called to check whether the user
-wants the previous window. The signature must be:
-
-    f(k::Keystroke)::Bool
-
-It must return `true` if the previous window is required of `false` otherwise.
-
-"""
-function set_previous_window_func(f)
-    tui.wants_previous_window = f
-    return nothing
-end
-
-################################################################################
-#                              Private functions
-################################################################################
-
-"""
-    _try_focus(win::Window)
-
-Try to set to focus to the window `win`. If it was possible to make `win` the
-focused windows, then it returns `true`. Otherwise, it returns `false`.
-
-"""
-function _try_focus(win::Window)
 end

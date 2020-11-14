@@ -65,10 +65,6 @@ function windows_and_widgets()
         y += Δy
     end
 
-    # Keys to change windows.
-    set_next_window_func((k)->k.ktype == :F2)
-    set_previous_window_func((k)->k.ktype == :F3)
-
     # Focus manager.
     tui.focus_chain = wins
     init_focus_manager()
@@ -78,11 +74,18 @@ function windows_and_widgets()
     NCurses.update_panels()
     NCurses.doupdate()
 
-    k = jlgetch()
-
-    while k.ktype != :F1
-        process_focus(k)
+    while true
         k = jlgetch()
+
+        if k.ktype == :F1
+            break
+        elseif k.ktype == :F2
+            next_window()
+        elseif k.ktype == :F3
+            previous_window()
+        else
+            process_focus(k)
+        end
     end
 
     destroy_tui()
