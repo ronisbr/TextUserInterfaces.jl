@@ -45,12 +45,16 @@ include("logger.jl")
 
 include("colors.jl")
 include("focus_manager.jl")
-include("input.jl")
 include("init_destruct.jl")
 include("menus.jl")
 include("misc.jl")
 include("signals.jl")
 include("validators.jl")
+
+# Input
+# ==============================================================================
+
+include("./input/input.jl")
 
 # Objects
 # ==============================================================================
