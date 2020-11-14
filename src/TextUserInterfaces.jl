@@ -46,9 +46,9 @@ include("logger.jl")
 include("colors.jl")
 include("focus_manager.jl")
 include("init_destruct.jl")
-include("menus.jl")
 include("misc.jl")
 include("signals.jl")
+include("update.jl")
 include("validators.jl")
 
 # Input
