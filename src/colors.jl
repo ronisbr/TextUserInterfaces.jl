@@ -10,7 +10,7 @@ export ncurses_color, get_color_pair, modify_color, init_color_pair, set_color,
        unset_color
 
 """
-    ncurses_color([foreground, background,] attrs::Int = 0; kwargs...)
+    ncurses_color([foreground, background,] attrs::Integer = 0; kwargs...)
 
 Return a mask to apply a color format with the foreground color `foreground`,
 background color `background`, and the attributes `attrs`.
@@ -29,7 +29,7 @@ using `Int`.
                (**Default** = `false`)
 
 """
-function ncurses_color(foreground::Symbol, background::Symbol, attrs::Int = 0;
+function ncurses_color(foreground::Symbol, background::Symbol, attrs::Integer = 0;
                        kwargs...)
 
     # Get the index related to the selected colors.
@@ -38,7 +38,7 @@ function ncurses_color(foreground::Symbol, background::Symbol, attrs::Int = 0;
     return ncurses_color(foreground_id, background_id, attrs; kwargs...)
 end
 
-function ncurses_color(foreground::Symbol, background::Int, attrs::Int = 0;
+function ncurses_color(foreground::Symbol, background::Int, attrs::Integer = 0;
                        kwargs...)
 
     # Get the index related to the selected colors.
@@ -46,7 +46,7 @@ function ncurses_color(foreground::Symbol, background::Int, attrs::Int = 0;
     return ncurses_color(foreground_id, background, attrs; kwargs...)
 end
 
-function ncurses_color(foreground::Int, background::Symbol, attrs::Int = 0;
+function ncurses_color(foreground::Int, background::Symbol, attrs::Integer = 0;
                        kwargs...)
 
     # Get the index related to the selected colors.
@@ -54,7 +54,7 @@ function ncurses_color(foreground::Int, background::Symbol, attrs::Int = 0;
     return ncurses_color(foreground, background_id, attrs; kwargs...)
 end
 
-function ncurses_color(foreground::Int, background::Int, attrs::Int = 0;
+function ncurses_color(foreground::Int, background::Int, attrs::Integer = 0;
                        kwargs...)
 
     idp = init_color_pair(foreground, background)
