@@ -62,7 +62,7 @@ function ncurses_color(foreground::Int, background::Int, attrs::Int = 0;
     return ncurses_color(COLOR_PAIR(idp) | attrs; kwargs...)
 end
 
-function ncurses_color(attrs::Int = 0;
+function ncurses_color(attrs::Integer = 0;
                        bold::Bool = false, underline::Bool = false)
 
     attrs |= bold ? A_BOLD : 0
