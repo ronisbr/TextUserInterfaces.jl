@@ -39,7 +39,7 @@ function create_widget(::Val{:label},
     _process_vertical_info!(opc)
 
     opc.vertical   == :unknown && (opc.height = length(split(text, '\n')))
-    opc.horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n'))))
+    opc.horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n')))+1)
 
     # Create the widget.
     widget = WidgetLabel(parent     = parent,
