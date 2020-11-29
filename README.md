@@ -1,7 +1,7 @@
 TextUserInterfaces.jl
 =====================
 
-[![Build Status](https://travis-ci.org/ronisbr/TextUserInterfaces.jl.svg?branch=master)](https://travis-ci.org/ronisbr/TextUserInterfaces.jl)
+[![Build status](https://github.com/ronisbr/TextUserInterfaces.jl/workflows/CI/badge.svg)](https://github.com/ronisbr/TextUserInterfaces.jl/actions)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)][docs-dev-url]
 
 **WARNING**: This package should be considered alpha!
