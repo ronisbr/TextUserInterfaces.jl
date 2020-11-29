@@ -95,6 +95,12 @@ include("./widgets/container/private.jl")
 
 include("./widgets/composed/form.jl")
 
+# Dialogs
+# ==============================================================================
+
+include("./dialogs/base_dialog.jl")
+include("./dialogs/message_dialog.jl")
+
 # Precompile
 # ==============================================================================
 
