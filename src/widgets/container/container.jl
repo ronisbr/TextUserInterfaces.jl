@@ -316,6 +316,8 @@ function request_focus(container::WidgetContainer, widget)
 
             sync_cursor(container)
 
+            tui_update()
+
             # TODO: What should we do if the widget does not accept the focus?
             return true
         end
