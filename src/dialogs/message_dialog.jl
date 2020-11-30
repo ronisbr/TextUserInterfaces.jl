@@ -13,7 +13,6 @@ function create_dialog(::Val{:message},
                        icon_color::Union{Nothing, Int} = nothing,
                        icon_type::Symbol = :info,
                        show_icon::Bool = true,
-                       title::AbstractString = " Message ",
                        kwargs...)
 
     # Function that create the widgets of the dialog.
@@ -41,6 +40,15 @@ function create_dialog(::Val{:message},
                             ╰─────────╯"""
 
                 isnothing(icon_color) && (ic = ncurses_color(:yellow, :black))
+            elseif icon_type == :question
+                icon_text = """
+                            ╭─────────╮
+                            │         │
+                            │    ?    │
+                            │         │
+                            ╰─────────╯"""
+
+                isnothing(icon_color) && (ic = ncurses_color(:blue, :black, A_BOLD))
             else
                 icon_text = """
                             ╭─────────╮
@@ -69,5 +77,5 @@ function create_dialog(::Val{:message},
                              text = msg)
     end
 
-    return create_dialog(f_widgets, buttons; title = title, kwargs...)
+    return create_dialog(f_widgets, buttons; kwargs...)
 end
