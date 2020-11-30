@@ -64,7 +64,6 @@ function _next_widget(container::WidgetContainer)
         if request_next_widget(widgets[i])
             container.focus_id = i
             sync_cursor(container)
-            tui_update()
 
             @emit_signal widgets[i] focus_acquired
 
@@ -77,7 +76,6 @@ function _next_widget(container::WidgetContainer)
     # No more element could accept the focus.
     container.focus_id = 0
     sync_cursor(container)
-    tui_update()
 
     @log verbose "_next_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
 
@@ -111,7 +109,6 @@ function _previous_widget(container::WidgetContainer)
         if request_prev_widget(widgets[i])
             container.focus_id = i
             sync_cursor(container)
-            tui_update()
 
             @log verbose "_previous_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
 
@@ -122,7 +119,6 @@ function _previous_widget(container::WidgetContainer)
     # No more element could accept the focus.
     container.focus_id = 0
     sync_cursor(container)
-    tui_update()
 
     @log verbose "_previous_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
 
