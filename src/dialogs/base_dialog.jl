@@ -19,17 +19,23 @@ function create_dialog(f_widgets::Function,
                        width::Int = 80)
 
     # Create a new window with a container in the middle of the root window.
-    opc  = newopc(anchor_center = Anchor(rootwin, :center, 0),
-                  anchor_middle = Anchor(rootwin, :middle, 0),
-                  height        = height,
-                  width         = width)
+    opc = newopc(anchor_center = Anchor(rootwin, :center, 0),
+                 anchor_middle = Anchor(rootwin, :middle, 0),
+                 height        = height,
+                 width         = width)
 
-    w,c  = create_window_with_container(opc,
-                                        border = true,
-                                        title = title,
-                                        border_color = border_color,
-                                        title_color = title_color)
+    w = create_window(opc,
+                      border = true,
+                      title = title,
+                      border_color = border_color,
+                      title_color = title_color)
 
+    opc_c = newopc(anchor_top    = Anchor(w, :top,    0),
+                   anchor_left   = Anchor(w, :left,   1),
+                   anchor_right  = Anchor(w, :right, -1),
+                   anchor_bottom = Anchor(w, :bottom, 0))
+
+    c = create_widget(Val(:container), w, opc_c)
 
     # Call the function to create the widgets.
     f_widgets(c)
@@ -56,7 +62,7 @@ function create_dialog(f_widgets::Function,
 
     for k = num_buttons:-1:1
         anchor_right = (k == num_buttons) ? Anchor(c, :right, 0) :
-                                            Anchor(last_button, :left, 0)
+                                            Anchor(last_button, :left, -1)
         opc_b = newopc(anchor_right  = anchor_right,
                        anchor_bottom = Anchor(c, :bottom, 0))
 

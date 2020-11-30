@@ -7,7 +7,9 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-function create_dialog(::Val{:message}, msg::AbstractString;
+function create_dialog(::Val{:message},
+                       msg::AbstractString,
+                       buttons::AbstractVector{String} = ["OK"];
                        icon_color::Union{Nothing, Int} = nothing,
                        icon_type::Symbol = :info,
                        show_icon::Bool = true,
@@ -16,7 +18,7 @@ function create_dialog(::Val{:message}, msg::AbstractString;
     # Function that create the widgets of the dialog.
     function f_widgets(c)
         if show_icon
-            opc_icon = newopc(top = 0, left = 1)
+            opc_icon = newopc(top = 0, left = 0)
             ic = isnothing(icon_color) ? -1 : icon_color
 
             if icon_type == :error
@@ -66,7 +68,5 @@ function create_dialog(::Val{:message}, msg::AbstractString;
                              text = msg)
     end
 
-    create_dialog(f_widgets, ["OK"]; kwargs...)
-
-    return nothing
+    return create_dialog(f_widgets, buttons; kwargs...)
 end
