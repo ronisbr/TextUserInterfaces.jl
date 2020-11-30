@@ -36,7 +36,6 @@ function create_dialog(::Val{:input_field},
                               border = true,
                               color_valid = color_valid,
                               color_invalid = color_invalid,
-                              color_text = color_text,
                               max_data_size = max_data_size,
                               validator = nothing)
     end
