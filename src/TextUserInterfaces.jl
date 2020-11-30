@@ -99,6 +99,7 @@ include("./widgets/composed/form.jl")
 # ==============================================================================
 
 include("./dialogs/base_dialog.jl")
+include("./dialogs/input_dialog.jl")
 include("./dialogs/message_dialog.jl")
 
 # Precompile
