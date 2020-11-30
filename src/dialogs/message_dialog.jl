@@ -13,6 +13,7 @@ function create_dialog(::Val{:message},
                        icon_color::Union{Nothing, Int} = nothing,
                        icon_type::Symbol = :info,
                        show_icon::Bool = true,
+                       title::AbstractString = " Message ",
                        kwargs...)
 
     # Function that create the widgets of the dialog.
@@ -68,5 +69,5 @@ function create_dialog(::Val{:message},
                              text = msg)
     end
 
-    return create_dialog(f_widgets, buttons; kwargs...)
+    return create_dialog(f_widgets, buttons; title = title, kwargs...)
 end
