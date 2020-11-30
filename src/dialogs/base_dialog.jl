@@ -77,6 +77,7 @@ function create_dialog(f_widgets::Function,
     old_win = get_focused_window()
     request_focus(w)
     request_next_widget(c)
+    tui_update()
 
     # Get the focus until one of the buttons is pressed.
     while !terminate
