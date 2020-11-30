@@ -11,7 +11,7 @@ export create_dialog
 
 function create_dialog(f_widgets::Function,
                        buttons::AbstractVector{String};
-                       title::AbstractString = " Information ",
+                       title::AbstractString = " Dialog ",
                        border_color::Int = -1,
                        text_color::Int = -1,
                        title_color::Int = -1,
