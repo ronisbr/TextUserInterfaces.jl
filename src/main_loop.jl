@@ -40,6 +40,7 @@ Otherwise, the loop is terminated.
 """
 function app_main_loop(fprev::Function = (k)->true,
                        fpost::Function = (k)->true;
+                       confirm_exit::Bool = true,
                        destroy_on_exit::Bool = true,
                        manage_window_switch::Bool = true)
 
@@ -60,7 +61,19 @@ function app_main_loop(fprev::Function = (k)->true,
         !fprev(k) && continue
 
         if k.ktype == :F1
-            break
+            if confirm_exit
+                ret = create_dialog(Val(:message),
+                                    "Are you sure you want to quit?",
+                                    ["NO", "YES"];
+                                    icon_type = :question,
+                                    title = " Exiting... ",
+                                    title_color = ncurses_color(A_BOLD))
+
+                ret == 1 ? continue : break
+            else
+                break
+            end
+
         elseif manage_window_switch && (k.ktype == :F2)
             next_window()
         elseif manage_window_switch && (k.ktype == :F3)
