@@ -66,7 +66,8 @@ include("./objects/anchors.jl")
 # Windows
 # ==============================================================================
 
-include("./windows/create_destroy.jl")
+include("./windows/create.jl")
+include("./windows/destroy.jl")
 include("./windows/focus.jl")
 include("./windows/manage.jl")
 include("./windows/misc.jl")
@@ -77,21 +78,21 @@ include("./windows/rootwin.jl")
 # Widgets
 # ==============================================================================
 
+include("./widgets/container/container.jl")
+include("./widgets/container/object_api.jl")
+include("./widgets/container/private.jl")
+
 include("./widgets/widgets.jl")
-include("./widgets/ansi_labels.jl")
+include("./widgets/ansi_label.jl")
 include("./widgets/button.jl")
 include("./widgets/canvas.jl")
 include("./widgets/composed_widgets.jl")
 include("./widgets/combo_box.jl")
-include("./widgets/labels.jl")
+include("./widgets/label.jl")
 include("./widgets/list_box.jl")
 include("./widgets/input_field.jl")
 include("./widgets/object_api.jl")
 include("./widgets/progress_bar.jl")
-
-include("./widgets/container/container.jl")
-include("./widgets/container/object_api.jl")
-include("./widgets/container/private.jl")
 
 include("./widgets/composed/form.jl")
 

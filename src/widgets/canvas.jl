@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Canvas.
 #
@@ -26,50 +27,39 @@ end
 ################################################################################
 
 function create_widget(::Val{:canvas},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        num_columns = 1,
                        num_rows = 1)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    opc.vertical   == :unknown && (opc.height = num_rows)
-    opc.horizontal == :unknown && (opc.width  = num_columns)
+    vertical   == :unknown && (opc.height = num_rows)
+    horizontal == :unknown && (opc.width  = num_columns)
 
     # Create the matrices that will hold the characters and the colors.
     chars  = [" " for i = 1:num_rows, j = 1:num_columns]
     colors = zeros(Int, num_rows, num_columns)
 
     # Create the widget.
-    widget = WidgetCanvas(parent = parent,
-                          opc    = opc,
+    widget = WidgetCanvas(opc    = opc,
                           chars  = chars,
                           colors = colors)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
-    A canvas was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Num. cols   = $num_columns
-        Num. rows   = $num_rows
-        Reference   = $(obj_to_ptr(widget))"""
+    Canvas created:
+        Reference = $(obj_to_ptr(widget))
+        Num. cols = $num_columns
+        Num. rows = $num_rows"""
 
     # Return the created widget.
     return widget
 end
 
 function process_focus(widget::WidgetCanvas, k::Keystroke)
-    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused canvas."
+    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
     ret = @emit_signal widget key_pressed k
     return isnothing(ret) ? true : false
 end

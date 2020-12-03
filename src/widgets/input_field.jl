@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Input field.
 #
@@ -44,7 +45,7 @@ export WidgetInputField, clear_data!, get_data
     # =========
 
     is_valid::Bool = false
-    validator::Union{Nothing,Function} = nothing
+    validator::Union{Nothing, Function} = nothing
 end
 
 ################################################################################
@@ -61,7 +62,6 @@ function accept_focus(widget::WidgetInputField)
 end
 
 function create_widget(::Val{:input_field},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        border::Bool = false,
                        color_valid::Int = 0,
@@ -71,14 +71,14 @@ function create_widget(::Val{:input_field},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.height = !border ? 1 : 3
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.width = 30
     end
 
@@ -98,32 +98,19 @@ function create_widget(::Val{:input_field},
     end
 
     # Create the widget.
-    widget = WidgetInputField(parent           = parent,
-                              opc              = opc,
+    widget = WidgetInputField(opc              = opc,
                               border           = border,
                               color_valid      = color_valid,
                               color_invalid    = color_invalid,
                               max_data_size    = max_data_size,
                               validator        = validator)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Usable size.
-    widget.size = border ? widget.width - 2 : widget.width
-
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
-    A input field was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Border      = $border
-        Max. size   = $max_data_size
-        Validator?  = $(validator != nothing)
-        Reference   = $(obj_to_ptr(widget))"""
+    Input field created:
+        Reference  = $(obj_to_ptr(widget))
+        Border     = $border
+        Max. size  = $max_data_size
+        Validator? = $(validator != nothing)"""
 
     # Return the created widget.
     return widget
@@ -132,7 +119,7 @@ end
 function process_focus(widget::WidgetInputField, k::Keystroke)
     @unpack border = widget
 
-    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused input field."
+    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
     ret = @emit_signal widget key_pressed k
 
     if isnothing(ret)
@@ -198,6 +185,19 @@ function release_focus(widget::WidgetInputField)
 
     request_update(widget)
     return true
+end
+
+function reposition!(widget::WidgetInputField; force::Bool = false)
+    # Call the default repositioning function.
+    if invoke(reposition!, Tuple{Widget}, widget; force = force)
+        # Since the widget could have changed its size, we need to compute the
+        # usable size to display the text.
+        widget.size = widget.border ? widget.width - 2 : widget.width
+
+        return true
+    else
+        return false
+    end
 end
 
 require_cursor(widget::WidgetInputField) = true

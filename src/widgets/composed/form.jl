@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Forms.
 #
@@ -13,6 +14,7 @@ export WidgetForm, clear_daat!, get_data
 ################################################################################
 
 @composed_widget mutable struct WidgetForm
+    labels::Vector{WidgetLabel}
     inputs::Vector{WidgetInputField}
 
     # Private
@@ -26,8 +28,14 @@ end
 #                                     API
 ################################################################################
 
+# TODO: We must define those functions separately. Otherwise, if a `Union` is
+# used, we get an ambiguity.
+add_widget!(container::WidgetContainer, widget::WidgetForm) =
+    _add_widget_form!(container, widget)
+
+add_widget!(win::Window, widget::WidgetForm) = _add_widget_form!(win, widget)
+
 function create_widget(::Val{:form},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration,
                        labels::Vector{String};
                        borders::Bool = false,
@@ -52,61 +60,56 @@ function create_widget(::Val{:form},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.height = borders ? 3nfields : nfields
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.width = lmax + 1 + field_size
     end
 
     # Create the container.
-    container = create_widget(Val(:container), parent, opc; composed = true)
+    container = create_widget(Val(:container), opc)
 
     widget_labels = Vector{WidgetLabel}(undef, nfields)
     widget_inputs = Vector{WidgetInputField}(undef, nfields)
 
     for i = 1:length(labels)
-        at  = i == 1 ? container : widget_inputs[i-1]
-        ats = i == 1 ? :top : :bottom
+        at  = i == 1 ? :parent : widget_inputs[i-1]
+        ats = i == 1 ? :top    : :bottom
 
-        opc = newopc(anchor_top = Anchor(at, ats, 0),
-                     anchor_left   = Anchor(container, :left, lmax+1),
-                     anchor_right  = Anchor(container, :right, 0))
-        wii = create_widget(Val(:input_field), container, opc;
+        opc = newopc(anchor_top   = Anchor(at, ats, 0),
+                     anchor_left  = Anchor(:parent, :left, lmax+1),
+                     anchor_right = Anchor(:parent, :right, 0))
+        wii = create_widget(Val(:input_field), opc;
                             color_valid   = color_valid,
                             color_invalid = color_invalid,
                             border        = borders,
                             validator     = validators[i])
 
-        opc = newopc(anchor_middle = Anchor(wii, :middle, 0),
-                     anchor_left   = Anchor(container, :left, 0),
+        opc = newopc(anchor_middle = Anchor(wii,     :middle, 0),
+                     anchor_left   = Anchor(:parent, :left,   0),
                      width         = lmax)
-        wli = create_widget(Val(:label), container, opc; text = labels[i])
+        wli = create_widget(Val(:label), opc; text = labels[i])
 
         widget_labels[i] = wli
         widget_inputs[i] = wii
     end
 
     # Pre-allocate the vector that will store the data.
-    _data = Vector{Union{Nothing,String}}(nothing, nfields)
+    _data = Vector{Union{Nothing, String}}(nothing, nfields)
 
     # Create the widget.
     widget = WidgetForm(container = container,
+                        labels    = widget_labels,
                         inputs    = widget_inputs,
                         _data     = _data)
 
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
     A form widget was created in $(obj_desc(parent)).
-        Size        = ($(container.height), $(container.width))
-        Coordinate  = ($(container.top), $(container.left))
-        Positioning = ($(container.opc.vertical),$(container.opc.horizontal))
         Fields      = $labels
         Reference   = $(obj_to_ptr(widget))"""
 
@@ -120,6 +123,14 @@ function process_focus(widget::WidgetForm, k::Keystroke)
     isnothing(ret) && return process_focus(widget.container, k)
     return ret
 end
+
+# TODO: We must define those functions separately. Otherwise, if a `Union` is
+# used, we get an ambiguity.
+remove_widget!(container::WidgetContainer, widget::WidgetForm) =
+    _remove_widget_form!(container, widget)
+
+remove_widget!(win::Window, widget::WidgetForm) =
+    _remove_widget_form!(win, widget)
 
 ################################################################################
 #                           Custom widget functions
@@ -150,4 +161,40 @@ function get_data(widget::WidgetForm)
     end
 
     return _data
+end
+
+################################################################################
+#                              Private functions
+################################################################################
+
+# Function when the form is added to a parent.
+function _add_widget_form!(parent::Union{Window, WidgetContainer},
+                           widget::WidgetForm)
+
+    add_widget!(parent, widget.container)
+
+    # The labels have anchors that reference the inputs. Hence, the latter must
+    # be added first.
+    for i in widget.inputs
+        add_widget!(widget.container, i)
+    end
+
+    for l in widget.labels
+        add_widget!(widget.container, l)
+    end
+end
+
+# Function when the form is removed from its parent.
+function _remove_widget_form!(parent::Union{Window, WidgetContainer},
+                              widget::WidgetForm)
+
+    for l in widget.labels
+        remove_widget!(widget.container, l)
+    end
+
+    for i in widget.inputs
+        remove_widget(widget.container, i)
+    end
+
+    remove_widget!(parent, widget.container)
 end

@@ -146,6 +146,9 @@ function update_view(win::Window; force::Bool = false)
     @unpack has_border, buffer, view, orig = win
 
     if win.view_needs_update || force
+        # We need to save the cursor position to restore later.
+        cy,cx = _get_window_cur_pos(view)
+
         # Get view dimensions.
         maxy, maxx = _get_window_dims(win.view)
 
@@ -164,6 +167,9 @@ function update_view(win::Window; force::Bool = false)
 
         # Mark that the buffer has been copied.
         win.view_needs_update = false
+
+        # Move the cursor back to the original position.
+        wmove(view, cy, cx)
 
         @log verbose "update_view" "Window $(win.id): Buffer was copied to the view."
 

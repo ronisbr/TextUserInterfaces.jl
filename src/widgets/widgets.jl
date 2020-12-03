@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   This file defines the widget API.
 #
@@ -10,7 +11,7 @@
 #                                API functions
 ################################################################################
 
-export accept_focus, create_widget, destroy_widget, init_widget!,
+export accept_focus, create_widget, destroy_widget!, init_widget_buffer!,
        request_update, request_focus, redraw, release_focus, set_widget_color,
        update
 
@@ -23,19 +24,32 @@ Return `true` is the widget `widget` accepts focus or `false` otherwise.
 accept_focus(widget) = return true
 
 """
-    create_widget(T, parent::Window, begin_y::Int, begin_x::Int, vargs...; kwargs...)
+    create_widget(T, opc::ObjectPositioningConfiguration, args...; kwargs...)
+    create_widget(T, parent::WidgetParent, opc::ObjectPositioningConfiguration, args...; kwargs)
 
-Create the widget of type `T` in the parent window `parent`. The widget will be
-positioned on the coordinate `(begin_y, begin_x)` of the parent window.
+Create the widget of type `T` using the positioning configuration [`opc`](@ref).
 
-Additional variables and keywords related to each widget can be passed using
-`vargs` and `kwargs` respectively.
+Additional arguments and keywords related to each widget can be passed using
+`args` and `kwargs`, respectively.
+
+If the second signature is called, then the created widget is added to the
+parent `parent`.
 
 """
 create_widget
 
+function create_widget(T,
+                       parent::WidgetParent,
+                       opc::ObjectPositioningConfiguration,
+                       args...;
+                       kwargs...)
+    widget = create_widget(T, opc, args...; kwargs...)
+    add_widget!(parent, widget)
+    return widget
+end
+
 """
-    destroy_widget(widget; refresh::Bool = true)
+    destroy_widget!(widget; refresh::Bool = true)
 
 Destroy the widget `widget`.
 
@@ -43,8 +57,23 @@ If `refresh` is `true` (**default**), then a full refresh will be performed on
 the parent window. Otherwise, no refresh will be performed.
 
 """
-destroy_widget(widget; refresh::Bool = true) =
-    _destroy_widget(widget; refresh = refresh)
+destroy_widget!(widget; refresh::Bool = true) =
+    _destroy_widget!(widget; refresh = refresh)
+
+"""
+    destroy_widget_buffer!(widget::Widget)
+
+Destroy the buffer of the widget `widget`.
+
+"""
+function destroy_widget_buffer!(widget::Widget)
+    if widget.buffer != Ptr{WINDOW}(0)
+        delwin(widget.buffer)
+        widget.buffer = Ptr{WINDOW}(0)
+    end
+
+    return nothing
+end
 
 """
     get_buffer(widget)
@@ -63,14 +92,15 @@ Return the parent of the widget `widget`.
 get_parent(widget) = widget.parent
 
 """
-    init_widget!(widget::Widget)
+    init_widget_buffer!(widget::Widget)
 
-Initialize the widget `widget`. It allocates the buffer and also compute the
-positioning of the widget. The variables `opc` and `parent` must be set before
-calling this function.
+Initialize the buffer of widget `widget`. The variables `opc` and `parent` must
+be set before calling this function. If the buffer is already initialized, then
+it will be deleted first.
 
 """
-function init_widget!(widget::Widget)
+function init_widget_buffer!(widget::Widget)
+    destroy_widget_buffer!(widget)
 
     # Compute the widget true position based on the configuration.
     height, width, top, left = compute_object_positioning(widget.opc,
@@ -125,6 +155,8 @@ function request_update(widget)
     request_update(widget.parent)
     return nothing
 end
+
+request_update(::Nothing) = return nothing
 
 """
     redraw(widget)
@@ -198,24 +230,24 @@ request_prev_widget(widget) = accept_focus(widget)
 ################################################################################
 
 """
-    _destroy_widget(widget; refresh::Bool = true)
+    _destroy_widget!(widget; refresh::Bool = true)
 
 Private function that destroys a widget. This can be used if a new widget needs
 to reimplement the destroy function.
 
 """
-function _destroy_widget(widget; refresh::Bool = true)
+function _destroy_widget!(widget; refresh::Bool = true)
     @unpack buffer, parent = widget
 
     widget_desc = obj_desc(widget)
 
-    delwin(buffer)
-    buffer = Ptr{WINDOW}(0)
+    # Destroy the widget buffer.
+    destroy_widget_buffer!(widget)
 
     # Remove the widget from the parent.
-    remove_widget(parent, widget)
+    remove_widget!(parent, widget)
 
-    @log info "destroy_widget" "Widget $widget_desc destroyed."
+    @log info "destroy_widget" "Widget destroyed: $widget_desc"
 
     # If required, perform a full refresh of the parent window.
     refresh && refresh_window(parent; force_redraw = true)

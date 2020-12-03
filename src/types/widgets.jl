@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Types related to widgets.
 #
@@ -10,7 +11,7 @@ export Widget, WidgetCommon, WidgetParent
 export @widget, @composed_widget
 
 # Types that can be parent of widgets.
-WidgetParent = Union{Window,Widget}
+WidgetParent = Union{Nothing, RootWin, Window, Widget}
 
 ################################################################################
 #                                   Widgets
@@ -33,7 +34,7 @@ macro widget(ex)
 
     # Then, we just need to add the required fields inside the arguments.
     push!(ex.args[3].args, [
-        :(parent::WidgetParent)
+        :(parent::WidgetParent = nothing)
         :(buffer::Ptr{WINDOW} = Ptr{WINDOW}(0))
 
         # Configuration related to the size and position of the widget.

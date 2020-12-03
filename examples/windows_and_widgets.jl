@@ -29,31 +29,41 @@ function windows_and_widgets()
                                                    width = 56),
                                             border = true,
                                             title = title)
-        l    = create_widget(Val(:label), c,
-                             newopc(top = 2,
-                                    left = 2,
-                                    height = 1),
-                             text = "The last pressed button was:", color = p0)
-        text = create_widget(Val(:label), c,
+
+        l = create_widget(Val(:label),
+                          newopc(top = 2,
+                                 left = 2,
+                                 height = 1),
+                          text = "The last pressed button was:", color = p0)
+        add_widget!(c, l)
+
+        text = create_widget(Val(:label),
                              newopc(anchor_middle = Anchor(l, :middle, 0),
                                     anchor_left   = Anchor(l, :right,  1),
                                     width         = 10);
                              text = "", color = p2)
-        bt1  = create_widget(Val(:button), c,
+        add_widget!(c, text)
+
+        bt1  = create_widget(Val(:button),
                              newopc(top = 5,
                                     anchor_left = Anchor(c, :left, 0));
                              label = "Button 1", color = p1,
                              color_highlight = p3, style = :simple)
-        bt2  = create_widget(Val(:button), c,
+        add_widget!(c, bt1)
+
+        bt2  = create_widget(Val(:button),
                              newopc(anchor_middle = Anchor(bt1, :middle, 0),
                                     anchor_center = Anchor(c, :center, 0));
                              label = "Button 2", color = p1,
                              color_highlight = p3, style = :boxed)
-        bt3  = create_widget(Val(:button), c,
+        add_widget!(c, bt2)
+
+        bt3  = create_widget(Val(:button),
                              newopc(anchor_middle = Anchor(bt2, :middle, 0),
                                     anchor_right =  Anchor(c, :right, 0)),
                              label = "Button 3", color = p1,
                              color_highlight = p3, style = :none)
+        add_widget!(c, bt3)
 
         @connect_signal bt1 key_pressed button_key_pressed text "Button 1"
         @connect_signal bt2 key_pressed button_key_pressed text "Button 2"

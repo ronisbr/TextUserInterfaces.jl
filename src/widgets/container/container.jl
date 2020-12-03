@@ -1,13 +1,14 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Button.
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetContainer
-export add_widget, remove_widget
+export add_widget!, remove_widget!
 
 ################################################################################
 #                                     Type
@@ -28,64 +29,55 @@ end
 ################################################################################
 
 function create_widget(::Val{:container},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        border::Bool = false,
                        border_color::Int = -1,
-                       composed::Bool = false,
                        title::AbstractString = "",
                        title_alignment::Symbol = :l,
                        title_color::Int = -1)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining some anchors.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
-        opc.anchor_bottom = Anchor(parent, :bottom, 0)
-        opc.anchor_top    = Anchor(parent, :top,    0)
+    if vertical == :unknown
+        opc.anchor_bottom = Anchor(:parent, :bottom, 0)
+        opc.anchor_top    = Anchor(:parent, :top,    0)
     end
 
-    if opc.horizontal == :unknown
-        opc.anchor_left   = Anchor(parent, :left,  0)
-        opc.anchor_right  = Anchor(parent, :right, 0)
+    if horizontal == :unknown
+        opc.anchor_left   = Anchor(:parent, :left,  0)
+        opc.anchor_right  = Anchor(:parent, :right, 0)
     end
 
     # Create the widget.
-    container = WidgetContainer(parent          = parent,
-                                opc             = opc,
+    container = WidgetContainer(opc             = opc,
                                 border          = border,
                                 border_color    = border_color,
                                 title           = title,
                                 title_alignment = title_alignment,
                                 title_color     = title_color)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(container)
-
-    # Add the new widget to the parent widget list.
-    !composed && add_widget(parent, container)
-
-    !composed && @log info "create_widget" """
-    A container was created in $(obj_desc(parent)).
-        Size        = ($(container.height), $(container.width))
-        Coordinate  = ($(container.top), $(container.left))
-        Positioning = ($(container.opc.vertical),$(container.opc.horizontal))
+    @log info "create_widget" """
+    Container created:
+        Positioning = ($(vertical), $(horizontal))
         Reference   = $(obj_to_ptr(container))"""
 
     # Return the created container.
     return container
 end
 
-function destroy_widget(container::WidgetContainer; refresh::Bool = true)
+function destroy_widget!(container::WidgetContainer; refresh::Bool = true)
     # First, we need to delete all children widgets.
     while length(container.widgets) > 0
         w = pop!(container.widgets)
-        destroy_widget(w, refresh = false)
+        destroy_widget!(w, refresh = false)
     end
 
-    _destroy_widget(container, refresh = refresh)
+    _destroy_widget!(container, refresh = refresh)
+
+    return nothing
 end
 
 function process_focus(container::WidgetContainer, k::Keystroke)
@@ -195,44 +187,49 @@ function release_focus(container::WidgetContainer)
     return true
 end
 
-function reposition!(container::WidgetContainer; force::Bool = false)
-    # Reposition the container as if it is a widget.
-    if invoke(reposition!, Tuple{Widget}, container; force = force)
-        # Then, reposition all the widgets.
-        for widget in container.widgets
-            # In this case, we must **force** a resize because the buffer on the
-            # container has been recreated.
-            reposition!(widget, force = true)
-        end
-
-        return true
-    else
-        return false
-    end
-end
-
 ################################################################################
 #                      Functions related to the Container
 ################################################################################
 
 """
-    add_widget(container::WidgetContainer, widget::Widget)
+    add_widget!(container::WidgetContainer, widget::Widget)
 
 Add the widget `widget` to the container `container.
 
 """
-function add_widget(container::WidgetContainer, widget::Widget)
+function add_widget!(container::WidgetContainer, widget::Widget)
+    # If the widget already has a parent, then we must remove it from there
+    # first.
+    !isnothing(widget.parent) && remove_widget!(widget.parent, widget)
+
+    widget.parent = container
+    init_widget_buffer!(widget)
     push!(container.widgets, widget)
+
+    # Since adding a widget into a container can change its size, we need to
+    # call the repositioning algorithm.
+    reposition!(widget; force = true)
+
+    request_update(container)
+
+    @log info "add_widget!" """
+    Add widget $(obj_desc(widget)) => $(obj_desc(container)):
+        Top    = $(widget.top)
+        Left   = $(widget.left)
+        Height = $(widget.height)
+        Width  = $(widget.width)
+    """
+
     return nothing
 end
 
 """
-    remove_widget(container::WidgetContainer, widget::Widget)
+    remove_widget!(container::WidgetContainer, widget::Widget)
 
 Remove the widget `widget` from the container `container`.
 
 """
-function remove_widget(container::WidgetContainer, widget::Widget)
+function remove_widget!(container::WidgetContainer, widget::Widget)
     idx = findfirst(x->x == widget, container.widgets)
 
     if idx == nothing
@@ -242,8 +239,12 @@ function remove_widget(container::WidgetContainer, widget::Widget)
 
     # If the widget that will be deleted has the focus, then we must pass the
     # focus.
-    if (container.focus_id == idx) && (length(container.widgets) > 1)
-        _next_widget(container)
+    if container.focus_id == idx
+        if length(container.widgets) > 1
+            _next_widget(container)
+        else
+            container.focus_id = 0
+        end
     end
 
     # Adjust the `focus_id` since the widget vector will be changed.
@@ -251,6 +252,11 @@ function remove_widget(container::WidgetContainer, widget::Widget)
 
     # Delete the widget from the list.
     deleteat!(container.widgets, idx)
+
+    widget.parent = nothing
+    destroy_widget_buffer!(widget)
+
+    request_update(container)
 
     return nothing
 end
@@ -314,6 +320,9 @@ function request_focus(container::WidgetContainer, widget)
 
             @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$(container.focus_id) -> $(obj_desc(widgets[container.focus_id]))."
 
+            # We need to update the TUI, now that the new widget has the focus,
+            # and then synchronize the cursors.
+            tui_update()
             sync_cursor(container)
 
             # TODO: What should we do if the widget does not accept the focus?
@@ -366,10 +375,10 @@ function sync_cursor(container::WidgetContainer)
 
         # Move the cursor.
         wmove(get_buffer(container), y, x)
-
-        # We must sync the cursor in the parent as well.
-        sync_cursor(get_parent(container))
     end
+
+    # We must sync the cursor in the parent as well.
+    sync_cursor(get_parent(container))
 
     return nothing
 end

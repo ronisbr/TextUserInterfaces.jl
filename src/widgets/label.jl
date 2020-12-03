@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Label.
 #
@@ -13,8 +14,13 @@ export WidgetLabel, change_text
 ################################################################################
 
 @widget mutable struct WidgetLabel
+    # Input label data from the user.
+    alignment::Symbol
     color::Int
     fill_color::Bool
+    text₀::AbstractString
+
+    # Variable to store the aligned text to save computational burden.
     text::AbstractString
 end
 
@@ -26,7 +32,6 @@ end
 accept_focus(widget::WidgetLabel) = false
 
 function create_widget(::Val{:label},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        alignment = :l,
                        color::Int = 0,
@@ -35,35 +40,27 @@ function create_widget(::Val{:label},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    opc.vertical   == :unknown && (opc.height = length(split(text, '\n')))
-    opc.horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n')))+1)
+    vertical   == :unknown && (opc.height = length(split(text, '\n')))
+    horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n')))+1)
 
     # Create the widget.
-    widget = WidgetLabel(parent     = parent,
-                         opc        = opc,
-                         text       = "",
+    widget = WidgetLabel(opc        = opc,
+                         alignment  = alignment,
+                         text₀      = text,
+                         text       = text,
                          color      = color,
                          fill_color = fill_color)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Update the text.
-    change_text(widget, text; alignment = alignment)
-
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
-    A label was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Text        = \"$text\"
-        Reference   = $(obj_to_ptr(widget))"""
+    Label created:
+        Reference  = $(obj_to_ptr(widget))
+        Alignment  = $alignment
+        Color      = $color
+        Fill color = $fill_color
+        Text       = \"$text\""""
 
     # Return the created widget.
     return widget
@@ -77,6 +74,17 @@ function redraw(widget::WidgetLabel)
     mvwprintw(buffer, 0, 0, widget.text)
     color > 0 && wattroff(buffer, color)
     return nothing
+end
+
+function reposition!(widget::WidgetLabel; force::Bool = false)
+    # Call the default repositioning function.
+    if invoke(reposition!, Tuple{Widget}, widget; force = force)
+        _align_text!(widget)
+
+        return true
+    else
+        return false
+    end
 end
 
 ################################################################################
@@ -102,10 +110,29 @@ The text color can be selected by the keyword `color`. It it is negative
 function change_text(widget::WidgetLabel, new_text::AbstractString;
                      alignment = :l, color::Int = -1)
 
-    @unpack buffer, fill_color, parent, width = widget
+    widget.text₀ = text
+    color > 0 && (widget.color = color)
+    _align_text!(widget)
+
+    @log verbose "change_text" "$(obj_desc(widget)): Label text changed to \"$new_text\"."
+
+    return nothing
+end
+
+################################################################################
+#                              Private functions
+################################################################################
+
+# This function gets the text in variable `text₀`, and apply the alignment. It
+# is only called when the widget is repositioned.
+function _align_text!(widget::WidgetLabel)
+    # If the widget does not has a parent, then we cannot align the text.
+    isnothing(widget.parent) && return nothing
+
+    @unpack alignment, buffer, fill_color, parent, text₀, width = widget
 
     # Split the string in each line.
-    tokens = split(new_text, "\n")
+    tokens = split(text₀, "\n")
 
     # Formatted text.
     text = ""
@@ -124,7 +151,7 @@ function change_text(widget::WidgetLabel, new_text::AbstractString;
             text_i *= line
         end
 
-        # If `fill_color` is `true`, then fill the remaning spaces up to the
+        # If `fill_color` is `true`, then fill the remaining spaces up to the
         # widget width.
         if fill_color
             rem     = clamp(width - length(text_i), 0, width)
@@ -135,11 +162,6 @@ function change_text(widget::WidgetLabel, new_text::AbstractString;
     end
 
     widget.text = text
-
-    # Set the color.
-    color >= 0 && (widget.color = color)
-
-    @log verbose "change_text" "$(obj_desc(widget)): Label text changed to \"$new_text\"."
 
     request_update(widget)
 

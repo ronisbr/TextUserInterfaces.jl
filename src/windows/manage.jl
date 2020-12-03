@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   This file contains functions to manage windows.
 #
@@ -50,26 +51,32 @@ show_window(win::Window) = show_panel(win.panel)
 ################################################################################
 
 """
-    add_widget(win::Window, widget::Widget)
+    add_widget!(win::Window, widget::Widget)
 
 Add widget `widget` to the window `win`. If the `win` already have a widget,
 then it will be replaced.
 
 """
-function add_widget(win::Window, widget::Widget)
+function add_widget!(win::Window, widget::Widget)
+    !isnothing(widget.parent) && remove_widget!(widget.parent, widget)
+
+    widget.parent = win
+    init_widget_buffer!(widget)
     win.widget = widget
+
     return nothing
 end
 
 """
-    remove_widget(win::Window, widget::Widget)
+    remove_widget!(win::Window, widget::Widget)
 
 Remove the widget `widget` from the window `win`. If `widget` does not belong to
 `win`, then nothing is done.
 
 """
-function remove_widget(win::Window, widget::Widget)
+function remove_widget!(win::Window, widget::Widget)
     if win.widget === widget
+        destroy_widget_buffer!(widget)
         win.widget = nothing
     end
 

@@ -1,5 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
 # Description
+# ==============================================================================
 #
 #   Function related to initialization and destructions of the TUI.
 #

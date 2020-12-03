@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Types related to objects.
 #
@@ -31,14 +32,13 @@ the fields `anchor_*` of `ObjectPositioningConfiguration`.
 
 """
 struct Anchor
-    obj::Object
+    obj::Union{Symbol, Object}
     side::Symbol
     pad::Int
 end
 
 # Singleton that indicates that no anchor is available.
-struct _NO_OBJECT <: Object end
-const _no_anchor = Anchor(_NO_OBJECT(), :nosize, 0)
+const _no_anchor = Anchor(:noobject, :nosize, 0)
 
 """
     struct ObjectPositioningConfiguration
@@ -76,14 +76,10 @@ the function `newopc`.
     anchor_middle::Anchor = _no_anchor
 
     # Absolute positioning.
-    top::Int    = -1
-    left::Int   = -1
-    height::Int = -1
-    width::Int  = -1
-
-    # Type of positioning.
-    vertical::Symbol   = :unknown
-    horizontal::Symbol = :unknown
+    top::Union{Int, String}    = -1
+    left::Union{Int, String}   = -1
+    height::Union{Int, String} = -1
+    width::Union{Int, String}  = -1
 end
 
 """

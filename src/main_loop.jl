@@ -10,7 +10,7 @@
 export app_main_loop
 
 """
-    app_main_loop(fprev::Function = (k)->true, fpost::Function = (k)->true; destroy_on_exit::Bool = true, manage_window_switch::Bool = true)
+    app_main_loop(;fprev::Function = (k)->true, fpost::Function = (k)->true, destroy_on_exit::Bool = true, manage_window_switch::Bool = true)
 
 Initialize the application main loop.
 
@@ -30,7 +30,7 @@ the following signature:
 If it return `true`, then the loop continues and a next keysotrke is requested.
 Otherwise, the loop is terminated.
 
-# Keywords
+# Configuration keywords
 
 * `destroy_on_exit`: If `true`, then `destroy_tui()` is called when we exit from
                      the loop.
@@ -38,8 +38,8 @@ Otherwise, the loop is terminated.
                           previous windows.
 
 """
-function app_main_loop(fprev::Function = (k)->true,
-                       fpost::Function = (k)->true;
+function app_main_loop(;fprev::Function = (k)->true,
+                       fpost::Function = (k)->true,
                        confirm_exit::Bool = true,
                        destroy_on_exit::Bool = true,
                        manage_window_switch::Bool = true)

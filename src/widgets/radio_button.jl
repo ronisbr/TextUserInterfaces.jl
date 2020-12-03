@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Radio button.
 #
@@ -29,7 +30,6 @@ _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
 accept_focus(widget::WidgetRadioButton) = accept_focus(widget.base)
 
 function create_widget(::Val{:radio_button},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        label::AbstractString = "Button",
                        color::Int = 0,
@@ -39,10 +39,10 @@ function create_widget(::Val{:radio_button},
                        group_name::String = "group")
 
     # Create the button widget.
-    button = create_widget(Val(:button), parent, opc;
+    button = create_widget(Val(:button), opc;
                            label = glyph_deselected * " " * label,
                            color = color, color_highlight = color_highlight,
-                           style = :none, _derive = true)
+                           style = :none)
 
     # Current size and position of the widget.
     widget = WidgetRadioButton(base             = button,
@@ -54,32 +54,22 @@ function create_widget(::Val{:radio_button},
     # Function to be executed on return pressed.
     @connect_signal button key_pressed _handler_key_pressed widget
 
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
-    A radio button was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Label       = \"$label\"
-        Group name  = $group_name
-        Reference   = $(obj_to_ptr(widget))"""
+    Radio button created:
+        Label      = \"$label\"
+        Group name = $group_name
+        Reference  = $(obj_to_ptr(widget))"""
 
     # Add the button to the desired group.
     if !haskey(_radio_buttons_groups, group_name)
         _radio_buttons_groups[group_name] = WidgetRadioButton[widget]
         _select_radio_button(widget)
 
-        @log info "create_widget" """
-        The radio button group \"$group_name\" was created with $(obj_desc(widget)) in it.
-        """
+        @log info "create_widget" "Radio button group \"$group_name\" created."
     else
         push!(_radio_buttons_groups[group_name], widget)
 
-        @log info "create_widget" """
-        $(obj_desc(widget)) was added to the group \"$group_name\".
-        """
+        @log info "create_widget" "$(obj_desc(widget)) added to the group \"$group_name\"."
     end
 
     # Return the created widget.
@@ -98,14 +88,12 @@ function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
         if id != nothing
             deleteat!(v,id)
 
-            @log info "destroy_widget" """
-            $(obj_desc(rb)) has been removed from group \"$(rb.group_name)\"."""
+            @log info "destroy_widget" "$(obj_desc(rb)) removed from group \"$(rb.group_name)\"."
 
             if isempty(v)
                 pop!(_radio_buttons_groups, rb.group_name)
 
-                @log info "destroy_widget" """
-                Radio group name \"$(rb.group_name)\" has been deleted."""
+                @log info "destroy_widget" "Radio group name \"$(rb.group_name)\" deleted."
             else
                 # If the deleted button was selected, then we must select
                 # another one.
@@ -136,9 +124,7 @@ is returned.
 function get_selected(group_name::AbstractString)
 
     if !haskey(_radio_buttons_groups, group_name)
-        @log warning "get_selected" """
-        The radio button group named $group_name was not found!
-        """
+        @log warning "get_selected" "The radio button group named \"$group_name\" was not found!"
 
         return nothing
     else
@@ -165,9 +151,7 @@ function _select_radio_button(rb::WidgetRadioButton)
     group_name = rb.group_name
 
     if !haskey(_radio_buttons_groups, group_name)
-        @log warning "_select_radio_button" """
-        The radio button group named $group_name was not found!
-        """
+        @log warning "_select_radio_button" "The radio button group named \"$group_name\" was not found!"
     else
         for b in _radio_buttons_groups[group_name]
             _deselect_radio_button(b)
@@ -190,4 +174,3 @@ function _deselect_radio_button(rb::WidgetRadioButton)
         rb.selected = false
     end
 end
-

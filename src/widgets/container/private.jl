@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Private functions related to the widget containers.
 #
@@ -63,6 +64,10 @@ function _next_widget(container::WidgetContainer)
     for i = focus_id+1:length(widgets)
         if request_next_widget(widgets[i])
             container.focus_id = i
+
+            # We need to update the TUI, now that the new widget has the focus,
+            # and then synchronize the cursors.
+            tui_update()
             sync_cursor(container)
 
             @emit_signal widgets[i] focus_acquired
@@ -75,6 +80,10 @@ function _next_widget(container::WidgetContainer)
 
     # No more element could accept the focus.
     container.focus_id = 0
+
+    # We need to update the TUI, now that the new widget has the focus, and then
+    # synchronize the cursors.
+    tui_update()
     sync_cursor(container)
 
     @log verbose "_next_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."
@@ -108,6 +117,10 @@ function _previous_widget(container::WidgetContainer)
     for i = focus_id-1:-1:1
         if request_prev_widget(widgets[i])
             container.focus_id = i
+
+            # We need to update the TUI, now that the new widget has the focus,
+            # and then syncrhonize the cursors.
+            tui_update()
             sync_cursor(container)
 
             @log verbose "_previous_widget" "$(obj_desc(container)): Focus was handled to widget #$i -> $(obj_desc(widgets[i]))."
@@ -118,6 +131,10 @@ function _previous_widget(container::WidgetContainer)
 
     # No more element could accept the focus.
     container.focus_id = 0
+
+    # We need to update the TUI, now that the new widget has the focus, and then
+    # synchronize the cursors.
+    tui_update()
     sync_cursor(container)
 
     @log verbose "_previous_widget" "$(obj_desc(container)): There are no more widgets to receive the focus."

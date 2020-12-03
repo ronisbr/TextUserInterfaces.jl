@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Labels with colors defined by ANSI escape sequences.
 #
@@ -13,6 +14,12 @@ export WidgetANSILabel, change_text
 ################################################################################
 
 @widget mutable struct WidgetANSILabel
+    # Input label data from the user.
+    alignment::Symbol
+    text₀::AbstractString
+
+    # Variable to store the parsed text and color to reduce the computational
+    # burden.
     text::Vector{String} = String[]
     colors::Vector{Int} = Int[]
 end
@@ -25,7 +32,6 @@ end
 accept_focus(widget::WidgetANSILabel) = false
 
 function create_widget(::Val{:ansi_label},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        alignment = :l,
                        color::Int = 0,
@@ -33,36 +39,26 @@ function create_widget(::Val{:ansi_label},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if (opc.vertical == :unknown) || (opc.horizontal == :unknown)
+    if (vertical == :unknown) || (horizontal == :unknown)
         printable_text = replace(text, r"\e\[[0-9;]*m(?:\e\[K)?" => s"")
         lines          = split(text, '\n')
-        opc.vertical   == :unknown && (opc.height = length(lines))
-        opc.horizontal == :unknown && (opc.width  = maximum(length.(lines)))
+        vertical   == :unknown && (opc.height = length(lines))
+        horizontal == :unknown && (opc.width  = maximum(length.(lines)) + 1)
     end
 
     # Create the widget.
-    widget = WidgetANSILabel(parent = parent,
-                             opc    = opc)
-
-    # initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Update the text.
-    change_text(widget, text; alignment = alignment)
-
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
+    widget = WidgetANSILabel(opc       = opc,
+                             alignment = alignment,
+                             text₀     = text)
 
     @log info "create_widget" """
-    An ANSI label was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Text        = \"$text\"
-        Reference   = $(obj_to_ptr(widget))"""
+    ANSI label created:
+        Reference = $(obj_to_ptr(widget))
+        Alignment = $alignment
+        Text      = \"$text\""""
 
     # Return the created widget.
     return widget
@@ -84,12 +80,22 @@ function redraw(widget::WidgetANSILabel)
     return nothing
 end
 
+function reposition!(widget::WidgetANSILabel; force::Bool = false)
+    # Call the default repositioning function.
+    if invoke(reposition!, Tuple{Widget}, widget; force = force)
+        _parse_ansi_text!(widget)
+        return true
+    else
+        return false
+    end
+end
+
 ################################################################################
 #                           Custom widget functions
 ################################################################################
 
 """
-    change_text(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l, color::Int = -1)
+    change_text(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l)
 
 Change to text of the label widget `widget` to `new_text`.
 
@@ -100,17 +106,33 @@ which can be:
 * `:c`: Center alignment; or
 * `:r`: Right alignment.
 
-The text color can be selected by the keyword `color`. It it is negative
-(**default**), then the current color will not be changed.
-
 """
 function change_text(widget::WidgetANSILabel, new_text::AbstractString;
-                     alignment = :l, color::Int = -1)
+                     alignment = :l)
 
-    @unpack parent, buffer, width = widget
+    widget.text₀ = new_text
+    _parse_ansi_text!(widget)
+
+    @log verbose "change_text" "$(obj_desc(widget)): ANSI Label text changed to \"$new_text\"."
+
+    return nothing
+end
+
+################################################################################
+#                              Private functions
+################################################################################
+
+# This function gets the text in the variable `text₀`, and converts the ANSI
+# escape sequences to NCurse colors. It is only called when the widget is
+# repositioned.
+function _parse_ansi_text!(widget::WidgetANSILabel)
+    # If the widget does not has a parent, then we cannot align the text.
+    isnothing(widget.parent) && return nothing
+
+    @unpack parent, alignment, buffer, text₀, width = widget
 
     # Split the string in each line.
-    tokens = split(new_text, "\n")
+    tokens = split(text₀, "\n")
 
     # Formatted text.
     text = ""
@@ -152,8 +174,6 @@ function change_text(widget::WidgetANSILabel, new_text::AbstractString;
 
     widget.text   = v_str
     widget.colors = colors
-
-    @log verbose "change_text" "$(obj_desc(widget)): ANSI Label text changed to \"$new_text\"."
 
     request_update(widget)
 

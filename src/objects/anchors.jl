@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Functions related to anchors.
 #
@@ -29,10 +30,23 @@ parent object `parent`.
 function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
 
     # Process the positioning.
-    _process_vertical_info!(opc)
-    _process_horizontal_info!(opc)
+    horizontal =_process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
     @unpack_ObjectPositioningConfiguration opc
+
+    anchor_bottom = opc.anchor_bottom
+    anchor_left   = opc.anchor_left
+    anchor_right  = opc.anchor_right
+    anchor_top    = opc.anchor_top
+    anchor_center = opc.anchor_center
+    anchor_middle = opc.anchor_middle
+
+    # Absolute positioning.
+    top    = _process_positioning_value(top,    :height, parent)
+    left   = _process_positioning_value(left,   :width,  parent)
+    height = _process_positioning_value(height, :height, parent)
+    width  = _process_positioning_value(width,  :width,  parent)
 
     # Vertical
     # ==========================================================================
@@ -40,6 +54,10 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
     if vertical == :abottom_atop
         bottom = _get_anchor(anchor_bottom, parent)
         top    = _get_anchor(anchor_top, parent)
+        height = bottom - top
+
+    elseif vertical == :abottom_top
+        bottom = _get_anchor(anchor_bottom, parent)
         height = bottom - top
 
     elseif vertical == :abottom_height
@@ -51,7 +69,7 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
 
     elseif vertical == :amiddle_height
         middle = _get_anchor(anchor_middle, parent)
-        top    = middle - div(height,2)
+        top    = middle - div(height, 2)
 
     elseif vertical == :unknown
         @log critical "compute_object_positioning" """
@@ -112,6 +130,10 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
     elseif horizontal == :aright_width
         right = _get_anchor(anchor_right, parent)
         left  = right - width
+
+    elseif horizontal == :aright_left
+        right = _get_anchor(anchor_right, parent)
+        width = right - left
 
     elseif horizontal == :acenter_width
         center = _get_anchor(anchor_center, parent)
@@ -204,12 +226,24 @@ function _get_anchor(anchor::Anchor, parent)
 
     # If `obj` is the parent of the object we want to anchor, then the
     # computation of the position must be performed differently.
-    if obj == parent
-        height = get_height_for_child(obj)
-        width  = get_width_for_child(obj)
-        top    = get_top_for_child(obj)
-        left   = get_left_for_child(obj)
+    if obj == :parent
+        height = get_height_for_child(parent)
+        width  = get_width_for_child(parent)
+        top    = get_top_for_child(parent)
+        left   = get_left_for_child(parent)
     else
+        # If the object is not added to a parent, we cannot get its information.
+        if !(obj isa Window) && isnothing(obj.parent)
+            @log critical "_get_anchor" """
+            An anchor is referencing an object which is not added to any parent yet.
+
+            obj:
+            @log_pad 4
+            $obj"""
+
+            error("An anchor is referencing an object which is not added to any parent yet.")
+        end
+
         top    = get_top(obj)
         left   = get_left(obj)
         height = get_height(obj)
@@ -234,7 +268,7 @@ function _get_anchor(anchor::Anchor, parent)
 end
 
 """
-    _process_vertical_info!(opc::ObjectPositioningConfiguration)
+    _process_vertical_info(opc::ObjectPositioningConfiguration)
 
 Process the vertical positioning information in `opc` and write the variable
 `vertical` of the same structure. The possible vertical positioning information
@@ -248,7 +282,7 @@ are:
 * `:unknown`: Insufficient information to compute the vertical positioning.
 
 """
-function _process_vertical_info!(opc::ObjectPositioningConfiguration)
+function _process_vertical_info(opc::ObjectPositioningConfiguration)
 
     @unpack anchor_bottom, anchor_top, anchor_middle, top, height = opc
 
@@ -267,28 +301,27 @@ function _process_vertical_info!(opc::ObjectPositioningConfiguration)
         error("Wrong vertical anchor type.")
     end
 
-    # TODO: What about defining `top` and `anchor_bottom`?
     if (anchor_bottom != _no_anchor) && (anchor_top != _no_anchor)
         vertical = :abottom_atop
-    elseif (anchor_bottom != _no_anchor) && (height > 0)
+    elseif (anchor_bottom != _no_anchor) && ((top isa String) || (top ≥ 0))
+        vertical = :abottom_top
+    elseif (anchor_bottom != _no_anchor) && ((height isa String) || (height > 0))
         vertical = :abottom_height
-    elseif (anchor_top != _no_anchor) && (height > 0)
+    elseif (anchor_top != _no_anchor) && ((height isa String) || (height > 0))
         vertical = :atop_height
-    elseif (anchor_middle != _no_anchor) && (height > 0)
+    elseif (anchor_middle != _no_anchor) && ((height isa String) || (height > 0))
         vertical = :amiddle_height
-    elseif (top >= 0) && (height > 0)
+    elseif ((top isa String) || (top ≥ 0)) && ((height isa String) || (height > 0))
         vertical = :top_height
     else
         vertical = :unknown
     end
 
-    opc.vertical = vertical
-
-    return nothing
+    return vertical
 end
 
 """
-    _process_horizontal_info!(opc::ObjectPositioningConfiguration)
+    _process_horizontal_info(opc::ObjectPositioningConfiguration)
 
 Process the horizontal positioning information in `opc` and write the variable
 `horizontal` of the same structure. The possible horizontal positioning information
@@ -302,7 +335,7 @@ are:
 * `:unknown`: Insufficient information to compute the horizontal positioning.
 
 """
-function _process_horizontal_info!(opc::ObjectPositioningConfiguration)
+function _process_horizontal_info(opc::ObjectPositioningConfiguration)
 
     @unpack anchor_left, anchor_right, anchor_center, left, width = opc
 
@@ -321,25 +354,49 @@ function _process_horizontal_info!(opc::ObjectPositioningConfiguration)
         error("Wrong vertical anchor type.")
     end
 
-    # TODO: What about defining `left` and `anchor_right`?
     if (anchor_left != _no_anchor) && (anchor_right != _no_anchor)
         horizontal = :aleft_aright
-    elseif (anchor_left != _no_anchor) && (width > 0)
+    elseif (anchor_left != _no_anchor) && ((width isa String) || (width > 0))
         horizontal = :aleft_width
-    elseif (anchor_right != _no_anchor) && (width > 0)
+    elseif (anchor_right != _no_anchor) && ((width isa String) || (width > 0))
         horizontal = :aright_width
-    elseif (anchor_center != _no_anchor) && (width > 0)
+    elseif (anchor_right != _no_anchor) && ((left isa String) || (left ≥ 0))
+        horizontal = :aright_left
+    elseif (anchor_center != _no_anchor) && ((width isa String) || (width > 0))
         horizontal = :acenter_width
-    elseif (left >= 0) && (width > 0)
+    elseif ((left isa String) || (left ≥ 0)) && ((width isa String) || (width > 0))
         horizontal = :left_width
     else
         horizontal = :unknown
     end
 
-    opc.horizontal = horizontal
-
-    return nothing
+    return horizontal
 end
+
+"""
+    _process_positioning_value(v, dim::Symbol, parent::WidgetParent)
+
+Process the positioning value `v` related to the dimension `dim` of the parent
+widget `parent`. `dim` can be `:height` or `:width`.
+
+If `v` is an `Int`, then it return  `v`.
+
+"""
+function _process_positioning_value(v::String, dim::Symbol, parent::WidgetParent)
+    # Check if the format is correct.
+    ids = findfirst(r"^[0-9]+%", v)
+
+    if isnothing(ids)
+        @log critical "_process_positioning_value" "Invalid value \"$v\" for positioning information."
+        error("Invalid value \"$v\" for positioning information.")
+    end
+
+    perc = parse(Int, v[ids][1:end-1])
+
+    return floor(Int, getfield(parent, dim)*perc/100)
+end
+
+_process_positioning_value(v::Int, ::Symbol, ::WidgetParent) = v
 
 """
     _str(wpc::ObjectPositioningConfiguration)
@@ -374,8 +431,5 @@ function _str(opc::ObjectPositioningConfiguration)
     left   = $(opc.left)
     height = $(opc.height)
     width  = $(opc.width)
-
-    vertical = $(opc.vertical)
-    horizontal = $(opc.horizontal)
     """
 end

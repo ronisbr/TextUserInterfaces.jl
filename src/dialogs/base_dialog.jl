@@ -19,8 +19,8 @@ function create_dialog(f_widgets::Function,
                        width::Int = 80)
 
     # Create a new window with a container in the middle of the root window.
-    opc = newopc(anchor_center = Anchor(rootwin, :center, 0),
-                 anchor_middle = Anchor(rootwin, :middle, 0),
+    opc = newopc(anchor_center = Anchor(:parent, :center, 0),
+                 anchor_middle = Anchor(:parent, :middle, 0),
                  height        = height,
                  width         = width)
 
@@ -30,12 +30,14 @@ function create_dialog(f_widgets::Function,
                       border_color = border_color,
                       title_color = title_color)
 
-    opc_c = newopc(anchor_top    = Anchor(w, :top,    0),
-                   anchor_left   = Anchor(w, :left,   1),
-                   anchor_right  = Anchor(w, :right, -1),
-                   anchor_bottom = Anchor(w, :bottom, 0))
+    opc_c = newopc(anchor_top    = Anchor(:parent, :top,    0),
+                   anchor_left   = Anchor(:parent, :left,   1),
+                   anchor_right  = Anchor(:parent, :right, -1),
+                   anchor_bottom = Anchor(:parent, :bottom, 0))
 
-    c = create_widget(Val(:container), w, opc_c)
+    c = create_widget(Val(:container), opc_c)
+
+    add_widget!(w, c)
 
     # Call the function to create the widgets.
     f_widgets(c)
@@ -61,14 +63,15 @@ function create_dialog(f_widgets::Function,
     c_button = ncurses_color(NCurses.A_REVERSE)
 
     for k = num_buttons:-1:1
-        anchor_right = (k == num_buttons) ? Anchor(c, :right, 0) :
-                                            Anchor(last_button, :left, -1)
+        anchor_right = (k == num_buttons) ? Anchor(:parent,     :right,  0) :
+                                            Anchor(last_button, :left,  -1)
         opc_b = newopc(anchor_right  = anchor_right,
-                       anchor_bottom = Anchor(c, :bottom, 0))
+                       anchor_bottom = Anchor(:parent, :bottom, 0))
 
-        last_button = create_widget(Val(:button), c, opc_b;
+        last_button = create_widget(Val(:button), opc_b;
                                     color_highlight = c_button,
                                     label = buttons[k])
+        add_widget!(c, last_button)
 
         @connect_signal last_button key_pressed _button_on_keypressed k
     end
@@ -77,7 +80,6 @@ function create_dialog(f_widgets::Function,
     old_win = get_focused_window()
     request_focus(w)
     request_next_widget(c)
-    tui_update()
 
     # Get the focus until one of the buttons is pressed.
     while !terminate
@@ -86,7 +88,7 @@ function create_dialog(f_widgets::Function,
     end
 
     # Destroy the dialog and return the focus to the previous window.
-    destroy_window(w)
+    destroy_window!(w)
     request_focus(old_win)
 
     return button_id

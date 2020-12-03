@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Progress bar.
 #
@@ -27,7 +28,6 @@ end
 accept_focus(widget::WidgetProgressBar) = false
 
 function create_widget(::Val{:progress_bar},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        border::Bool = false,
                        color::Int = 0,
@@ -37,39 +37,29 @@ function create_widget(::Val{:progress_bar},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.height = _progress_bar_height(style, border)
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.width = 10
     end
 
     # Create the widget.
-    widget = WidgetProgressBar(parent = parent,
-                               opc    = opc,
+    widget = WidgetProgressBar(opc    = opc,
                                border = border,
                                color  = color,
                                value  = value,
                                style  = style)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
-    A progress bar was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Style       = $(string(style))
-        Value       = $value
-        Reference   = $(obj_to_ptr(widget))"""
+    Progress bar created:
+        Reference = $(obj_to_ptr(widget))
+        Style     = $(string(style))
+        Value     = $value"""
 
     # Return the created widget.
     return widget
@@ -192,4 +182,3 @@ function _progress_bar_height(style::Symbol, border::Bool)
 
     return height
 end
-

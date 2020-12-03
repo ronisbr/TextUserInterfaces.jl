@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Functions related to the abstract class `ComposedWidget` that can be used to
 #   create widgets that are composed of a set of widgets.

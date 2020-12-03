@@ -1,21 +1,22 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   This file defines the implementation of the functions required by the Object
 #   API for the windows.
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-get_left(win::T)   where T<:Window = win.view != C_NULL ? Int(getbegx(win.view)) : -1
-get_height(win::T) where T<:Window = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
-get_width(win::T)  where T<:Window = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
-get_top(win::T)    where T<:Window = win.view != C_NULL ? Int(getbegy(win.view)) : -1
+get_left(win::Window)   = win.view != C_NULL ? Int(getbegx(win.view)) : -1
+get_height(win::Window) = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
+get_width(win::Window)  = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
+get_top(win::Window)    = win.view != C_NULL ? Int(getbegy(win.view)) : -1
 
-get_left_for_child(win::T) where T<:Window   = win.buffer != C_NULL ? Int(getbegx(win.buffer)) : -1
-get_height_for_child(win::T) where T<:Window = win.buffer != C_NULL ? Int(getmaxy(win.buffer)) : -1
-get_width_for_child(win::T) where T<:Window  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
-get_top_for_child(win::T) where T<:Window    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
+get_left_for_child(win::Window)   = win.buffer != C_NULL ? Int(getbegx(win.buffer)) : -1
+get_height_for_child(win::Window) = win.buffer != C_NULL ? Int(getmaxy(win.buffer)) : -1
+get_width_for_child(win::Window)  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
+get_top_for_child(win::Window)    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
 
 @inline reposition!(win::Window; force::Bool = false) =
     reposition!(win, win.opc; force = force)
@@ -25,21 +26,21 @@ function reposition!(win::Window, opc::ObjectPositioningConfiguration;
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.anchor_bottom = Anchor(rootwin, :bottom, 0)
         opc.anchor_top    = Anchor(rootwin, :top,    0)
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.anchor_left   = Anchor(rootwin, :left,  0)
         opc.anchor_right  = Anchor(rootwin, :right, 0)
     end
 
     # Get the positioning information of the window.
-    height, width, top, left = compute_object_positioning(opc, nothing)
+    height, width, top, left = compute_object_positioning(opc, rootwin)
 
     # Assign to the variables that will be used to create the window.
     begin_y = top

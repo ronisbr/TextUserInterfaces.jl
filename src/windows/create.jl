@@ -1,16 +1,16 @@
-#==# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
-#   This file contains functions to create and destroy windows.
+#   This file contains functions to create windows.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #==#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export create_window, create_window_with_container, destroy_window,
-       destroy_all_windows
+export create_window, create_window_with_container
 
 """
-function create_window(opc::ObjectPositioningConfiguration = newopc(), id::String = "";  kwargs...)
+    function create_window(opc::ObjectPositioningConfiguration = newopc(), id::String = "";  kwargs...)
 
 Create a window. The window ID `id` is used to identify the new window in the
 global window list. The size and location of the window is configured by the
@@ -57,21 +57,21 @@ function create_window(opc::ObjectPositioningConfiguration = newopc(),
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    vertical   = _process_horizontal_info(opc)
+    horizontal = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
-        opc.anchor_bottom = Anchor(rootwin, :bottom, 0)
-        opc.anchor_top    = Anchor(rootwin, :top,    0)
+    if vertical == :unknown
+        opc.anchor_bottom = Anchor(:parent, :bottom, 0)
+        opc.anchor_top    = Anchor(:parent, :top,    0)
     end
 
-    if opc.horizontal == :unknown
-        opc.anchor_left   = Anchor(rootwin, :left,  0)
-        opc.anchor_right  = Anchor(rootwin, :right, 0)
+    if horizontal == :unknown
+        opc.anchor_left   = Anchor(:parent, :left,  0)
+        opc.anchor_right  = Anchor(:parent, :right, 0)
     end
 
     # Get the positioning information of the window.
-    height, width, top, left = compute_object_positioning(opc, nothing)
+    height, width, top, left = compute_object_positioning(opc, rootwin)
 
     # Assign to the variables that will be used to create the window.
     begin_y = top
@@ -113,7 +113,8 @@ function create_window(opc::ObjectPositioningConfiguration = newopc(),
     push!(tui.wins, win)
 
     @log info "create_window" """
-    Window $id was created.
+    Window created:
+       ID            = $id
        Physical size = ($nlines, $ncols)
        Buffer size   = ($blines, $bcols)
        Coordinate    = ($begin_y, $begin_x)
@@ -138,64 +139,8 @@ size of the window buffer.
 """
 function create_window_with_container(vargs...; kwargs...)
     win = create_window(vargs...; kwargs...)
-    con = create_widget(Val(:container), win, newopc())
+    con = create_widget(Val(:container), newopc())
+    add_widget!(win, con)
+
     return win, con
-end
-
-"""
-    destroy_window(win::Window)
-
-Destroy the window `win`.
-
-"""
-function destroy_window(win::Window)
-    @log info "destroy_window" "$(obj_desc(win)) will be destroyed."
-    @log_ident 1
-
-    # Destroy the widget.
-    if win.widget != nothing
-        # In this case, we do not need to refresh the window.
-        destroy_widget(win.widget; refresh = false)
-        win.widget = nothing
-    end
-
-    # Delete everything.
-    if win.panel != C_NULL
-        del_panel(win.panel)
-        win.panel = Ptr{Cvoid}(0)
-    end
-
-    if win.buffer != C_NULL
-        delwin(win.buffer)
-        win.buffer = Ptr{WINDOW}(0)
-    end
-
-    if win.view != C_NULL
-        delwin(win.view)
-        win.view = Ptr{WINDOW}(0)
-    end
-
-    # Remove the window from the global list.
-    idx = findall(x->x == win, tui.wins)
-    deleteat!(tui.wins, idx)
-
-    @log_ident 0
-    @log info "destroy_window" "Window $(win.id) was destroyed."
-
-    return nothing
-end
-
-"""
-    destroy_all_windows()
-
-Destroy all windows managed by the TUI.
-
-"""
-function destroy_all_windows()
-    @log info "destroy_all_windows" "All windows will be destroyed."
-    while length(tui.wins) > 0
-        destroy_window(tui.wins[end])
-    end
-
-    return nothing
 end

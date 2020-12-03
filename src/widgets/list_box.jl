@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: List box.
 #
@@ -26,10 +27,10 @@ export WidgetListBox, get_data, get_selected, select_item
     begview::Int = 0
 
     # Number of lines that will be displayed.
-    numlines::Int = 1
+    numlines::Int = -1
 
     # Original configuration related to the number of lines.
-    numlines₀::Int = 1
+    numlines₀::Int = -1
 
     # Are the elements selectable?
     selectable::Bool = false
@@ -65,7 +66,6 @@ function accept_focus(widget::WidgetListBox)
 end
 
 function create_widget(::Val{:list_box},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        data::Vector{String} = String[],
                        color::Int = 0,
@@ -76,27 +76,25 @@ function create_widget(::Val{:list_box},
                        icon_not_selected::String = "[ ]",
                        icon_selected::String = "[X]",
                        selectable::Bool = true,
-                       show_icon::Bool = false,
-                       _derived::Bool = false)
+                       show_icon::Bool = false)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.height = length(data)
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.width = maximum(length.(data))
         show_icon && (opc.width += max(length(icon_selected),
                                        length(icon_not_selected)) + 1)
     end
 
     # Create the widget.
-    widget = WidgetListBox(parent             = parent,
-                           opc                = opc,
+    widget = WidgetListBox(opc                = opc,
                            color              = color,
                            color_highlight    = color_highlight,
                            color_selected     = color_selected,
@@ -105,34 +103,18 @@ function create_widget(::Val{:list_box},
                            icon_selected      = icon_selected,
                            multiple_selection = multiple_selection,
                            numlines₀          = numlines,
+                           numlines           = numlines,
                            selected           = zeros(Bool, length(data)),
                            selectable         = selectable,
                            show_icon          = show_icon)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
 
-    # If `numlines` is less or equal 0, then make it equal to the number of
-    # available lines of the widget.
-    numlines ≤ 0 && (numlines = widget.height)
-
-    # `numlines` must not be greater than the widget height.
-    numlines > widget.height && (numline = widget.height)
-
-    widget.numlines = numlines
-
-    # Add the new widget to the parent widget list.
-    !_derived && add_widget(parent, widget)
-
-    !_derived && @log info "create_widget" """
-    A list box was created in $(obj_desc(parent)).
-        Size           = ($(widget.height), $(widget.width))
-        Coordinate     = ($(widget.top), $(widget.left))
-        Data length    = $(length(data))
-        Mul. Selection = $multiple_selection
-        Num. lines     = $numlines
-        Positioning    = ($(widget.opc.vertical),$(widget.opc.horizontal))
+    @log info "create_widget" """
+    List box created:
         Reference      = $(obj_to_ptr(widget))
+        Data length    = $(length(data))
+        Mul. selection = $multiple_selection
+        Num. lines     = $numlines
         Show icon      = $show_icon"""
 
     # Return the created widget.
@@ -140,7 +122,7 @@ function create_widget(::Val{:list_box},
 end
 
 function process_focus(widget::WidgetListBox, k::Keystroke)
-    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused list box."
+    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
     ret = @emit_signal widget key_pressed k
 
     if isnothing(ret)
@@ -162,10 +144,6 @@ function redraw(widget::WidgetListBox)
             show_icon, width = widget
 
     wclear(buffer)
-
-    # Make sure that the number of lines that will be printed are inside the
-    # allowed interval.
-    numlines = clamp(numlines, 1, length(data))
 
     for i = 0:numlines-1
         # ID of the current item in the vectors.
@@ -217,7 +195,7 @@ function reposition!(widget::WidgetListBox; force::Bool = false)
         # In this case, we must take care about the size.
         if numlines₀ ≤ 0
             numlines = height
-        elseif numlines > numlines₀
+        else
             numlines = numlines₀
         end
 

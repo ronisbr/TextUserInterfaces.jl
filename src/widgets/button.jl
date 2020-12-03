@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: Button.
 #
@@ -38,13 +39,11 @@ function accept_focus(widget::WidgetButton)
 end
 
 function create_widget(::Val{:button},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        label::AbstractString = "Button",
                        color::Int = 0,
                        color_highlight::Int = 0,
-                       style::Symbol = :simple,
-                       _derive::Bool = false)
+                       style::Symbol = :simple)
 
     # Check arguments.
     if !haskey(_button_style_height, style)
@@ -57,46 +56,36 @@ function create_widget(::Val{:button},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.height = _button_style_height[style]
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.width = length(label) + 4
     end
 
     # Create the widget.
-    widget = WidgetButton(parent          = parent,
-                          opc             = opc,
+    widget = WidgetButton(opc             = opc,
                           label           = label,
                           color           = color,
                           color_highlight = color_highlight,
                           style           = style)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
-    # Add the new widget to the parent widget list.
-    !_derive && add_widget(parent, widget)
-
-    !_derive && @log info "create_widget" """
-    A button was created in $(obj_desc(parent)).
-        Size        = ($(widget.height), $(widget.width))
-        Coordinate  = ($(widget.top), $(widget.left))
-        Positioning = ($(widget.opc.vertical),$(widget.opc.horizontal))
+    @log info "create_widget" """
+    Button created:
+        Reference   = $(obj_to_ptr(widget))
         Label       = \"$label\"
-        Style       = $style
-        Reference   = $(obj_to_ptr(widget))"""
+        Style       = $style"""
 
     # Return the created widget.
     return widget
 end
 
 function process_focus(widget::WidgetButton, k::Keystroke)
-    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused button."
+    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
     ret = @emit_signal widget key_pressed k
     return isnothing(ret) ? true : false
 end

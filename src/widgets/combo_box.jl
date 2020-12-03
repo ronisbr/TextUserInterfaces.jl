@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Widget: List box.
 #
@@ -44,7 +45,6 @@ function accept_focus(widget::WidgetComboBox)
 end
 
 function create_widget(::Val{:combo_box},
-                       parent::WidgetParent,
                        opc::ObjectPositioningConfiguration;
                        data::Vector{String} = String[],
                        color::Int = 0,
@@ -56,20 +56,19 @@ function create_widget(::Val{:combo_box},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    _process_horizontal_info!(opc)
-    _process_vertical_info!(opc)
+    horizontal = _process_horizontal_info(opc)
+    vertical   = _process_vertical_info(opc)
 
-    if opc.vertical == :unknown
+    if vertical == :unknown
         opc.height = style == :boxed ? 3 : 1
     end
 
-    if opc.horizontal == :unknown
+    if horizontal == :unknown
         opc.width = maximum(length.(data)) + 5
     end
 
     # Create the widget.
-    widget = WidgetComboBox(parent                   = parent,
-                            opc                      = opc,
+    widget = WidgetComboBox(opc                      = opc,
                             color                    = color,
                             color_highlight          = color_highlight,
                             list_box_border          = list_box_border,
@@ -78,9 +77,6 @@ function create_widget(::Val{:combo_box},
                             data                     = data,
                             style                    = style)
 
-    # Initialize the internal variables of the widget.
-    init_widget!(widget)
-
     # If a border is required, then create a container and add the list box
     # in this container.
     if list_box_border
@@ -88,18 +84,18 @@ function create_widget(::Val{:combo_box},
                      anchor_left  = (widget, :left,   0),
                      anchor_right = (widget, :right,  0),
                      height       = 5)
-        con = create_widget(Val(:container), parent, opc; border = true)
+        con = create_widget(Val(:container), opc; border = true)
 
-        opc = newopc(anchor_top    = Anchor(con, :top, 0),
-                     anchor_left   = Anchor(con, :left,   0),
-                     anchor_right  = Anchor(con, :right,  0),
-                     anchor_bottom = Anchor(con, :bottom, 0))
-        list_box = create_widget(Val(:list_box), con, opc;
+        opc = newopc(anchor_top    = Anchor(:parent, :top, 0),
+                     anchor_left   = Anchor(:parent, :left,   0),
+                     anchor_right  = Anchor(:parent, :right,  0),
+                     anchor_bottom = Anchor(:parent, :bottom, 0))
+        list_box = create_widget(Val(:list_box), opc;
                                  selectable      = false,
                                  data            = data,
                                  color           = list_box_color,
-                                 color_highlight = list_box_color_highlight,
-                                 _derived        = true)
+                                 color_highlight = list_box_color_highlight)
+        add_widget!(con, list_box)
 
         widget._list_box = con
     else
@@ -107,26 +103,19 @@ function create_widget(::Val{:combo_box},
                      anchor_left  = Anchor(widget, :left,   0),
                      anchor_right = Anchor(widget, :right,  0),
                      height       = 5)
-        list_box = create_widget(Val(:list_box), parent, opc;
+        list_box = create_widget(Val(:list_box), opc;
                                  selectable      = false,
                                  data            = data,
                                  color           = list_box_color,
-                                 color_highlight = list_box_color_highlight,
-                                 _derived        = true)
+                                 color_highlight = list_box_color_highlight)
 
         widget._list_box = list_box
     end
 
-    # Add the new widget to the parent widget list.
-    add_widget(parent, widget)
-
     @log info "create_widget" """
-    A combo box was created in $(obj_desc(parent)).
-        Size           = ($(widget.height), $(widget.width))
-        Coordinate     = ($(widget.top), $(widget.left))
-        Data length    = $(length(data))
-        Positioning    = ($(widget.opc.vertical),$(widget.opc.horizontal))
-        Reference      = $(obj_to_ptr(widget))"""
+    Combo box created:
+        Reference   = $(obj_to_ptr(widget))
+        Data length = $(length(data))"""
 
     # Return the created widget.
     return widget
@@ -135,13 +124,13 @@ end
 function destroy_widget(widget::WidgetComboBox; refresh::Bool = true)
     @unpack _list_box = widget
     # Destroy the list box and the widget.
-    (_list_box != nothing) && destroy_widget(widget._list_box; refresh = false)
-    _destroy_widget(widget; refresh = refresh)
+    (_list_box != nothing) && destroy_widget!(widget._list_box; refresh = false)
+    _destroy_widget!(widget; refresh = refresh)
     return nothing
 end
 
 function process_focus(widget::WidgetComboBox, k::Keystroke)
-    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused combo box."
+    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
     ret = @emit_signal widget key_pressed k
 
     isnothing(ret) && return _handle_input(widget, k)
@@ -215,14 +204,11 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
     # pass the focus to it, and keep it there until `enter` is pressed again.
     if k.ktype == :enter
 
-        # Correct the positioning of the list box.
-        reposition!(_list_box)
-
         # Add the list box widget to the same container of the combo box.
-        add_widget(parent, _list_box)
+        add_widget!(parent, _list_box)
 
         # Make the selected item in the list box equal to the current item of
-        # the comnbo box.
+        # the combo box.
         select_item(_list_box, widget.cur)
 
         # Pass the focus to the newly created list box.
@@ -244,11 +230,11 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
                 cur, ~ = get_current_item(list_box)
                 widget.cur = cur
                 widget._list_box_opened = false
-                remove_widget(parent, list_box)
+                remove_widget!(parent, list_box)
                 request_focus(parent, widget)
             elseif k.ktype == :esc
                 widget._list_box_opened = false
-                remove_widget(parent, list_box)
+                remove_widget!(parent, list_box)
                 request_focus(parent, widget)
             end
 
@@ -260,7 +246,7 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         _handler_focus_lost(list_box) = begin
             if widget._list_box_opened
                 widget._list_box_opened = false
-                remove_widget(parent, list_box)
+                remove_widget!(parent, list_box)
             end
         end
 

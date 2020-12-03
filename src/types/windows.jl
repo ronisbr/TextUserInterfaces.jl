@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   Types related to windows.
 #
@@ -61,3 +62,7 @@ export Window
     on_focus_acquired::Function = (win)->return nothing
     on_focus_released::Function = (win)->return nothing
 end
+
+struct RootWin <: Object end
+
+const rootwin = RootWin()

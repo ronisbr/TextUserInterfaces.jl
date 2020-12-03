@@ -237,7 +237,7 @@ function tictactoe()
     end
 
     request_focus(fields[1,1])
-    app_main_loop(fprev, fpost)
+    app_main_loop(fprev = fprev, fpost = fpost)
 end
 
 tictactoe()
