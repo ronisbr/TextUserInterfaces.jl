@@ -110,7 +110,7 @@ The text color can be selected by the keyword `color`. It it is negative
 function change_text(widget::WidgetLabel, new_text::AbstractString;
                      alignment = :l, color::Int = -1)
 
-    widget.text₀ = text
+    widget.text₀ = new_text
     color > 0 && (widget.color = color)
     _align_text!(widget)
 
