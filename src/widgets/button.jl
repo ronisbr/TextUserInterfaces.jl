@@ -41,8 +41,8 @@ end
 function create_widget(::Val{:button},
                        opc::ObjectPositioningConfiguration;
                        label::AbstractString = "Button",
-                       color::Int = 0,
-                       color_highlight::Int = 0,
+                       color::Int = _color_default,
+                       color_highlight::Int = _color_highlight,
                        style::Symbol = :simple)
 
     # Check arguments.

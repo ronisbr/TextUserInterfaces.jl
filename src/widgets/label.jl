@@ -34,7 +34,7 @@ accept_focus(widget::WidgetLabel) = false
 function create_widget(::Val{:label},
                        opc::ObjectPositioningConfiguration;
                        alignment = :l,
-                       color::Int = 0,
+                       color::Int = _color_default,
                        fill_color::Bool = false,
                        text::AbstractString = "Text")
 

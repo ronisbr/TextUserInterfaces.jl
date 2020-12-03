@@ -47,11 +47,11 @@ end
 function create_widget(::Val{:combo_box},
                        opc::ObjectPositioningConfiguration;
                        data::Vector{String} = String[],
-                       color::Int = 0,
-                       color_highlight::Int = 0,
+                       color::Int = _color_default,
+                       color_highlight::Int = _color_highlight,
                        list_box_border::Bool = false,
-                       list_box_color::Int = 0,
-                       list_box_color_highlight::Int = 0,
+                       list_box_color::Int = _color_default,
+                       list_box_color_highlight::Int = _color_highlight,
                        style::Symbol = :simple)
 
     # Check if all positioning is defined and, if not, try to help by
@@ -195,6 +195,8 @@ function _draw_combo_box(widget::WidgetComboBox)
         mvwprintw(buffer, 0, 0, str * " ↓")
         wattroff(buffer, c)
     end
+
+    return nothing
 end
 
 function _handle_input(widget::WidgetComboBox, k::Keystroke)
@@ -203,6 +205,8 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
     # If `enter` is pressed, then create a list box that contains all the data,
     # pass the focus to it, and keep it there until `enter` is pressed again.
     if k.ktype == :enter
+        # Mark that the list box is opened.
+        widget._list_box_opened = true
 
         # Add the list box widget to the same container of the combo box.
         add_widget!(parent, _list_box)
@@ -213,9 +217,6 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
 
         # Pass the focus to the newly created list box.
         request_focus(parent, _list_box)
-
-        # Mark that the list box is opened.
-        widget._list_box_opened = true
 
         # Set the function called when a key is pressed inside the list box.
         #

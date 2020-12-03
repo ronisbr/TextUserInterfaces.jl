@@ -68,9 +68,9 @@ end
 function create_widget(::Val{:list_box},
                        opc::ObjectPositioningConfiguration;
                        data::Vector{String} = String[],
-                       color::Int = 0,
-                       color_highlight::Int = Int(A_REVERSE),
-                       color_selected::Int = 0,
+                       color::Int = _color_default,
+                       color_highlight::Int = _color_highlight,
+                       color_selected::Int = _color_highlight,
                        multiple_selection::Bool = false,
                        numlines::Int = -1,
                        icon_not_selected::String = "[ ]",

@@ -30,8 +30,8 @@ accept_focus(widget::WidgetProgressBar) = false
 function create_widget(::Val{:progress_bar},
                        opc::ObjectPositioningConfiguration;
                        border::Bool = false,
-                       color::Int = 0,
-                       color_highlight::Int = 0,
+                       color::Int = _color_default,
+                       color_highlight::Int = _color_highlight,
                        style::Symbol = :simple,
                        value::Int = 0)
 

@@ -64,8 +64,8 @@ end
 function create_widget(::Val{:input_field},
                        opc::ObjectPositioningConfiguration;
                        border::Bool = false,
-                       color_valid::Int = 0,
-                       color_invalid::Int = 0,
+                       color_valid::Int = _color_default,
+                       color_invalid::Int = _color_default,
                        max_data_size::Int = 0,
                        validator = nothing)
 

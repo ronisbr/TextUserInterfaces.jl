@@ -32,8 +32,8 @@ accept_focus(widget::WidgetRadioButton) = accept_focus(widget.base)
 function create_widget(::Val{:radio_button},
                        opc::ObjectPositioningConfiguration;
                        label::AbstractString = "Button",
-                       color::Int = 0,
-                       color_highlight::Int = 0,
+                       color::Int = _color_default,
+                       color_highlight::Int = _color_highlight,
                        glyph_selected::String = "[X]",
                        glyph_deselected::String = "[ ]",
                        group_name::String = "group")

@@ -34,7 +34,7 @@ accept_focus(widget::WidgetANSILabel) = false
 function create_widget(::Val{:ansi_label},
                        opc::ObjectPositioningConfiguration;
                        alignment = :l,
-                       color::Int = 0,
+                       color::Int = _color_default,
                        text::AbstractString = "Text")
 
     # Check if all positioning is defined and, if not, try to help by
