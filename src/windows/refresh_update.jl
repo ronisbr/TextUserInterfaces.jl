@@ -1,10 +1,11 @@
-#==# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
+# ==============================================================================
 #
 #   This file contains functions to refresh and update windows.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #==#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export refresh_window, refresh_all_windows, move_view, move_view_inc,
        update_view
