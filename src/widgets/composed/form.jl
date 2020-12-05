@@ -36,12 +36,12 @@ add_widget!(container::WidgetContainer, widget::WidgetForm) =
 add_widget!(win::Window, widget::WidgetForm) = _add_widget_form!(win, widget)
 
 function create_widget(::Val{:form},
-                       opc::ObjectPositioningConfiguration,
-                       labels::Vector{String};
+                       opc::ObjectPositioningConfiguration;
                        borders::Bool = false,
                        color_valid::Int = 0,
                        color_invalid::Int = 0,
                        field_size::Int = 40,
+                       labels::Vector{String} = String[],
                        validators = nothing)
 
     # Get the size of the largest label.
