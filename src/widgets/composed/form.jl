@@ -198,3 +198,9 @@ function _remove_widget_form!(parent::Union{Window, WidgetContainer},
 
     remove_widget!(parent, widget.container)
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper form

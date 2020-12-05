@@ -109,15 +109,15 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:form}, ObjectPositioningConfiguration, Vector{String}),
-                (:borders, :color_valid, :color_invalid, :field_size,
+                (Val{:form}, ObjectPositioningConfiguration),
+                (:borders, :color_valid, :color_invalid, :field_size, :labels,
                  :validator),
-                (Bool, Int, Int, Int, Nothing))
+                (Bool, Int, Int, Int, Vector{String}, Nothing))
     @precompile(create_widget,
-                (Val{:form}, ObjectPositioningConfiguration, Vector{String}),
-                (:borders, :color_valid, :color_invalid, :field_size,
+                (Val{:form}, ObjectPositioningConfiguration),
+                (:borders, :color_valid, :color_invalid, :field_size, :labels,
                  :validator),
-                (Bool, Int, Int, Int, Vector{DataType}))
+                (Bool, Int, Int, Int, Vector{String}, Vector{DataType}))
 
     # Input field
     # ------------------------------------------------------------------------------
