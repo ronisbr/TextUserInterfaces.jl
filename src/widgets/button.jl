@@ -145,14 +145,8 @@ function _draw_button(widget::WidgetButton, focused::Bool = false)
     c = focused ? color_highlight : color
 
     if style == :none
-        # Center the label in the button.
-        w   = width
-        Δ   = w - length(label)
-        pad = div(Δ,2)
-        str = " "^pad * label * " "^(Δ - pad)
-
         wattron(buffer, c)
-        mvwprintw(buffer, 0, 0, str)
+        mvwprintw(buffer, 0, 0, label)
         wattroff(buffer, c)
     else
         # Center the label in the button.
