@@ -346,3 +346,9 @@ function _move_view(widget::WidgetListBox, Δx::Int)
 
     return nothing
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper list_box

@@ -289,3 +289,9 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
 
     return false
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper combo_box

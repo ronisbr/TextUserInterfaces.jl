@@ -30,44 +30,46 @@ function windows_and_widgets()
                                             border = true,
                                             title = title)
 
-        l = create_widget(Val(:label),
-                          newopc(top = 2,
-                                 left = 2,
-                                 height = 1),
-                          text = "The last pressed button was:", color = p0)
-        add_widget!(c, l)
+        l = @tui_label(parent = c,
+                       height = 1,
+                       left = 2,
+                       top = 2,
+                       text = "The last pressed button was:",
+                       color = p0)
 
-        text = create_widget(Val(:label),
-                             newopc(anchor_middle = Anchor(l, :middle, 0),
-                                    anchor_left   = Anchor(l, :right,  1),
-                                    width         = 10);
-                             text = "", color = p2)
-        add_widget!(c, text)
+        text = @tui_label(parent = c,
+                          anchor_middle = (l, :middle, 0),
+                          anchor_left = (l, :right,  1),
+                          width = 10,
+                          color = p2,
+                          text = "")
 
-        bt1  = create_widget(Val(:button),
-                             newopc(top = 5,
-                                    anchor_left = Anchor(c, :left, 0));
-                             label = "Button 1", color = p1,
-                             color_highlight = p3, style = :simple)
-        add_widget!(c, bt1)
+        bt1  = @tui_button(parent = c,
+                           top = 5,
+                           anchor_left = (c, :left, 0),
+                           color = p1,
+                           color_highlight = p3,
+                           label = "Button 1",
+                           style = :simple,
+                           signal = (key_pressed, button_key_pressed, text, "Button 1"))
 
-        bt2  = create_widget(Val(:button),
-                             newopc(anchor_middle = Anchor(bt1, :middle, 0),
-                                    anchor_center = Anchor(c, :center, 0));
-                             label = "Button 2", color = p1,
-                             color_highlight = p3, style = :boxed)
-        add_widget!(c, bt2)
+        bt2  = @tui_button(parent = c,
+                           anchor_middle = (bt1, :middle, 0),
+                           anchor_center = (c, :center, 0),
+                           color = p1,
+                           color_highlight = p3,
+                           label = "Button 2",
+                           style = :boxed,
+                           signal = (key_pressed, button_key_pressed, text, "Button 2"))
 
-        bt3  = create_widget(Val(:button),
-                             newopc(anchor_middle = Anchor(bt2, :middle, 0),
-                                    anchor_right =  Anchor(c, :right, 0)),
-                             label = "Button 3", color = p1,
-                             color_highlight = p3, style = :none)
-        add_widget!(c, bt3)
-
-        @connect_signal bt1 key_pressed button_key_pressed text "Button 1"
-        @connect_signal bt2 key_pressed button_key_pressed text "Button 2"
-        @connect_signal bt3 key_pressed button_key_pressed text "Button 3"
+        bt3  = @tui_button(parent = c,
+                           anchor_middle = (bt2, :middle, 0),
+                           anchor_right =  (c, :right, 0),
+                           color = p1,
+                           color_highlight = p3,
+                           label = "Button 3",
+                           style = :none,
+                           signal = (key_pressed, button_key_pressed, text, "Button 3"))
 
         push!(wins, w)
 

@@ -78,6 +78,8 @@ include("./windows/rootwin.jl")
 # Widgets
 # ==============================================================================
 
+include("./widgets/helpers.jl")
+
 include("./widgets/container/container.jl")
 include("./widgets/container/object_api.jl")
 include("./widgets/container/private.jl")

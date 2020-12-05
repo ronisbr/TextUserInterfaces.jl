@@ -376,3 +376,9 @@ function _validator(widget::WidgetInputField)
 
     return nothing
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper input_field

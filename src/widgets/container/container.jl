@@ -382,3 +382,9 @@ function sync_cursor(container::WidgetContainer)
 
     return nothing
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper container

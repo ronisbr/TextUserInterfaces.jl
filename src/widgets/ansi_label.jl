@@ -179,3 +179,9 @@ function _parse_ansi_text!(widget::WidgetANSILabel)
 
     return nothing
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper ansi_label

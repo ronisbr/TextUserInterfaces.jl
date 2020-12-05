@@ -174,3 +174,9 @@ function _deselect_radio_button(rb::WidgetRadioButton)
         rb.selected = false
     end
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper radio_button

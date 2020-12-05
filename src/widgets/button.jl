@@ -168,3 +168,9 @@ function _draw_button(widget::WidgetButton, focused::Bool = false)
 
     return nothing
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper button

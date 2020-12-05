@@ -182,3 +182,9 @@ function _progress_bar_height(style::Symbol, border::Bool)
 
     return height
 end
+
+################################################################################
+#                                   Helpers
+################################################################################
+
+@create_widget_helper progress_bar
