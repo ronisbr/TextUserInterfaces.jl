@@ -25,9 +25,15 @@ export WidgetButton, change_label
 end
 
 # Conversion dictionary between style and height.
-_button_style_height = Dict(:boxed  => 3,
-                            :simple => 1,
-                            :none   => 1)
+const _button_style_height = Dict(:boxed  => 3,
+                                  :simple => 1,
+                                  :none   => 1)
+
+# Conversion dictionary between style and width that must be added to the label
+# length.
+const _button_style_width = Dict(:boxed  => 4,
+                                 :simple => 4,
+                                 :none   => 0)
 
 ################################################################################
 #                                     API
@@ -64,7 +70,7 @@ function create_widget(::Val{:button},
     end
 
     if horizontal == :unknown
-        opc.width = length(label) + 4
+        opc.width = length(label) + _button_style_width[style]
     end
 
     # Create the widget.
@@ -139,8 +145,14 @@ function _draw_button(widget::WidgetButton, focused::Bool = false)
     c = focused ? color_highlight : color
 
     if style == :none
+        # Center the label in the button.
+        w   = width
+        Δ   = w - length(label)
+        pad = div(Δ,2)
+        str = " "^pad * label * " "^(Δ - pad)
+
         wattron(buffer, c)
-        mvwprintw(buffer, 0, 0, label)
+        mvwprintw(buffer, 0, 0, str)
         wattroff(buffer, c)
     else
         # Center the label in the button.
