@@ -21,51 +21,56 @@ function plots()
 
     # Initialize the window.
     win = create_window(border = true, title = " Unicode Plots ")
-    con = create_widget(Val(:container), win, newopc())
+    con = @tui_container(parent = win)
 
-    opc = newopc(anchor_left = Anchor(win, :left, 1),
-                 anchor_top  = Anchor(win, :top,  0))
-    func = create_widget(Val(:form), con, opc, ["Function y ="]; borders = true)
+    func = @tui_form(parent = con,
+                     anchor_left = (:parent, :left, 1),
+                     anchor_top = (:parent, :top),
+                     borders = true,
+                     labels = ["Function y ="])
 
-    opc = newopc(anchor_left  = Anchor(func, :left, 0),
-                 anchor_right = Anchor(func, :right,  0),
-                 anchor_top   = Anchor(func, :bottom, 0))
-    label = create_widget(Val(:label), con, opc; alignment = :c,
-                          text = "Use `t` as the time variable for the plots.")
+    label = @tui_label(parent = con,
+                       anchor_left = (func, :left),
+                       anchor_right = (func, :right),
+                       anchor_top = (func, :bottom),
+                       alignment = :c,
+                       text = "Use `t` as the time variable for the plots.")
 
-    opc = newopc(anchor_left = Anchor(func, :left, 0),
-                 anchor_right = Anchor(func,  :right,  0),
-                 anchor_top   = Anchor(label, :bottom, 2))
-    label = create_widget(Val(:label), con, opc;
-                          alignment    = :c,
-                          color        = c1,
-                          fill_color   = true,
-                          text = "Setup limits")
+    label = @tui_label(parent = con,
+                       anchor_left = (func, :left),
+                       anchor_right = (func,  :right),
+                       anchor_top = (label, :bottom, 2),
+                       alignment = :c,
+                       color = c1,
+                       fill_color = true,
+                       text = "Setup limits")
 
-    opc = newopc(anchor_left = Anchor(func, :left, 0),
-                 anchor_top    = Anchor(label, :bottom,  0),
-                 anchor_right  = Anchor(func,  :center, -1))
-    tlim = create_widget(Val(:form), con, opc, ["t min.", "t max."];
-                         color_valid   = c0,
-                         color_invalid = c3,
-                         validators    = Float64)
+    tlim = @tui_form(parent = con,
+                     anchor_left = (func, :left),
+                     anchor_top = (label, :bottom),
+                     anchor_right = (func,  :center, -1),
+                     color_valid = c0,
+                     color_invalid = c3,
+                     labels = ["t min.", "t max."],
+                     validators = Float64)
 
-    opc = newopc(anchor_left = Anchor(func, :center, +1),
-                 anchor_top    = Anchor(label, :bottom,  0),
-                 anchor_right  = Anchor(func,  :right,   0))
-    ylim = create_widget(Val(:form), con, opc, ["y min.", "y max."];
-                         color_valid   = c0,
-                         color_invalid = c3,
-                         validators    = Float64)
+    ylim = @tui_form(parent = con,
+                     anchor_left = (func, :center, +1),
+                     anchor_top = (label, :bottom),
+                     anchor_right = (func,  :right),
+                     color_valid = c0,
+                     color_invalid = c3,
+                     labels = ["y min.", "y max."],
+                     validators = Float64)
 
-    opc = newopc(anchor_left = Anchor(func, :left, 0),
-                 anchor_right = Anchor(func, :right,  0),
-                 anchor_top   = Anchor(ylim, :bottom, 2))
-    label = create_widget(Val(:label), con, opc;
-                          alignment    = :c,
-                          color        = c1,
-                          fill_color   = true,
-                          text = "Select plot color")
+    label = @tui_label(parent = con,
+                       anchor_left = (func, :left),
+                       anchor_right = (func, :right),
+                       anchor_top = (ylim, :bottom, 2),
+                       alignment = :c,
+                       color = c1,
+                       fill_color = true,
+                       text = "Select plot color")
 
     color_dict = Dict("Red"     => :red,
                       "Blue"    => :blue,
@@ -86,13 +91,13 @@ function plots()
     rb = nothing
 
     for i = 1:length(color_keys)
-        opc = newopc(anchor_left = Anchor(lanchor_w, lanchor_a, 0),
-                     anchor_top      = Anchor(tanchor_w, :bottom,   0),
-                     anchor_right    = Anchor(ranchor_w, ranchor_a, 0))
-        rb = create_widget(Val(:radio_button), con, opc;
-                           group_name      = "Color",
-                           label           = color_keys[i],
-                           color_highlight = c2)
+        rb = @tui_radio_button(parent = con,
+                               anchor_left = (lanchor_w, lanchor_a),
+                               anchor_top = (tanchor_w, :bottom),
+                               anchor_right = (ranchor_w, ranchor_a),
+                               color_highlight = c2,
+                               group_name = "Color",
+                               label = color_keys[i])
 
         if i%2 == 1
             lanchor_w = rb
@@ -108,45 +113,23 @@ function plots()
         end
     end
 
-    opc = newopc(anchor_left = Anchor(func, :left, 0),
-                 anchor_top  = Anchor(rb  , :bottom, 3),
-                 width       = 14)
-    bplot = create_widget(Val(:button), con, opc,
-                          label           = "Plot",
-                          style           = :boxed,
-                          color_highlight = c2)
+    tplot = @tui_label(parent = con,
+                       anchor_left = (:parent, :center),
+                       anchor_right = (:parent, :right),
+                       anchor_top = (:parent, :top, 1),
+                       alignment = :c,
+                       color = c1,
+                       fill_color = true,
+                       text = "PLOT")
 
-    opc = newopc(anchor_center = Anchor(func, :center, 0),
-                 anchor_top    = Anchor(rb  , :bottom, 3),
-                 width         = 14)
-    bcplt = create_widget(Val(:button), con, opc,
-                          label             = "Clear plot",
-                          style             = :boxed,
-                          color_highlight   = c2)
+    str = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
 
-    opc = newopc(anchor_right = Anchor(func, :right, 0),
-                 anchor_top   = Anchor(rb  , :bottom, 3),
-                 width        = 14)
-    bcfor = create_widget(Val(:button), con, opc,
-                          label           = "Clear form",
-                          style           = :boxed,
-                          color_highlight = c2)
-
-    opc = newopc(anchor_left = Anchor(con, :center, 0),
-                 anchor_right   = Anchor(con, :right,  0),
-                 anchor_top     = Anchor(con, :top,    1))
-    tplot  = create_widget(Val(:label), con, opc,
-                           text           = "PLOT",
-                           fill_color     = true,
-                           color          = c1,
-                           alignment      = :c)
-
-    str    = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
-    opc = newopc(anchor_left = Anchor(tplot, :left, 0),
-                 anchor_right   = Anchor(tplot, :right,  0),
-                 anchor_top     = Anchor(tplot, :bottom, 1),
-                 anchor_bottom  = Anchor(con,   :bottom, 0))
-    canvas = create_widget(Val(:ansi_label), con, opc, text = str)
+    canvas = @tui_ansi_label(parent = con,
+                             anchor_left = (tplot, :left),
+                             anchor_right = (tplot, :right),
+                             anchor_top = (tplot, :bottom, 1),
+                             anchor_bottom = (con,   :bottom),
+                             text = str)
 
     # Button actions.
     function plot(w, k)
@@ -197,9 +180,32 @@ function plots()
         return nothing
     end
 
-    @connect_signal bplot key_pressed plot
-    @connect_signal bcfor key_pressed clear_form
-    @connect_signal bcplt key_pressed clear_plot
+    bplot = @tui_button(parent = con,
+                        anchor_left = (func, :left),
+                        anchor_top  = (rb, :bottom, 3),
+                        width = 14,
+                        color_highlight = c2,
+                        label = "Plot",
+                        style = :boxed,
+                        signal = (key_pressed, plot))
+
+    bcplt = @tui_button(parent = con,
+                        anchor_center = (func, :center),
+                        anchor_top = (rb  , :bottom, 3),
+                        width = 14,
+                        color_highlight = c2,
+                        label = "Clear plot",
+                        style = :boxed,
+                        signal = (key_pressed, clear_plot))
+
+    bcfor = @tui_button(parent = con,
+                        anchor_right = (func, :right, 0),
+                        anchor_top = (rb  , :bottom, 3),
+                        width = 14,
+                        color_highlight = c2,
+                        label = "Clear form",
+                        style = :boxed,
+                        signal = (key_pressed, clear_form))
 
     @forward_signal tlim bplot key_pressed
     @forward_signal ylim bplot key_pressed
