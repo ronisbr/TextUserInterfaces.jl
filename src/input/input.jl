@@ -34,7 +34,7 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
     nodelay(win_ptr, true)
     c_raw = wgetch(win_ptr)
     while c_raw < 0
-        sleep(0.1)
+        wait(RawFD(Base.STDIN_NO);readable=true)
         c_raw = wgetch(win_ptr)
     end
 
