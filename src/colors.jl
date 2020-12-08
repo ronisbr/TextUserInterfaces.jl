@@ -70,7 +70,7 @@ function ncurses_color(attrs::Integer = 0;
     attrs |= bold ? A_BOLD : 0
     attrs |= underline ? A_UNDERLINE : 0
 
-    return attrs
+    return signed(attrs)
 end
 
 """
