@@ -33,7 +33,7 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
     win_ptr = (win == nothing) ? tui.stdscr : win
     nodelay(win_ptr, true)
     c_raw = wgetch(win_ptr)
-    while c_raw < 0
+    while c_raw < 0 && isopen(stdin)
         wait(RawFD(Base.STDIN_NO);readable=true)
         c_raw = wgetch(win_ptr)
     end
