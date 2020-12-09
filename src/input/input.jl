@@ -29,7 +29,14 @@ listen for the keystroke.
 
 """
 function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
-    c_raw = (win == nothing) ? getch() : wgetch(win)
+
+    win_ptr = (win == nothing) ? tui.stdscr : win
+    nodelay(win_ptr, true)
+    c_raw = wgetch(win_ptr)
+    while c_raw < 0 && isopen(stdin)
+        wait(RawFD(Base.STDIN_NO);readable=true)
+        c_raw = wgetch(win_ptr)
+    end
 
     c_raw < 0 && return Keystroke(raw = c_raw, value = "ERR", ktype = :undefined)
 
@@ -43,7 +50,7 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
         # Here, we need to read a sequence of characters that is already in the
         # buffer. Thus, we will disable the delay.
         win_ptr = (win == nothing) ? tui.stdscr : win
-        nodelay(win_ptr, true)
+        #nodelay(win_ptr, true)
 
         # Read the entire sequence limited to 10 characters.
         for i = 1:10
@@ -54,7 +61,7 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
         end
 
         # Re-enable the delay.
-        nodelay(win_ptr, false)
+        #nodelay(win_ptr, false)
 
         if length(s) == 1
             return Keystroke(raw = c, value = s, ktype = :esc)
