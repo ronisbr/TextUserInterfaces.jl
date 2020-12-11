@@ -5,6 +5,7 @@ version = "0.0.1"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+FileWatching = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Ncurses_jll = "68e3532b-a499-55ff-9963-d1c0c0748b3a"
