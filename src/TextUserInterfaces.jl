@@ -1,6 +1,7 @@
 module TextUserInterfaces
 
 using Dates
+using FileWatching
 using LinearAlgebra
 using Parameters
 
