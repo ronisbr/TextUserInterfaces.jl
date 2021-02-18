@@ -19,6 +19,10 @@ export WidgetRadioButton, get_selected
     glyph_deselected::AbstractString
     glyph_selected::AbstractString
     selected::Bool = false
+
+    # Signals
+    # ==========================================================================
+    @signal return_pressed
 end
 
 _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
@@ -105,7 +109,11 @@ function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
     _destroy_widget(rb; refresh = refresh)
 end
 
-process_focus(widget::WidgetRadioButton, k::Keystroke) = process_focus(widget.base, k)
+function process_focus(widget::WidgetRadioButton, k::Keystroke)
+    k.ktype == :enter && (@emit_signal widget return_pressed)
+    return process_focus(widget.base, k)
+end
+
 redraw(widget::WidgetRadioButton) = redraw(widget.base, has_focus(widget.parent, widget))
 release_focus(widget::WidgetRadioButton) = release_focus(widget.base)
 

@@ -20,7 +20,14 @@ function windows_and_widgets()
     Δx = 5
     Δy = 15
 
-    button_key_pressed(w,k,l,t) = k.ktype == :enter && change_text(l,t)
+    function button_key_pressed(w, k, l, t)
+        if k.ktype == :enter
+            change_text(l,t)
+            return true
+        else
+            process_keystroke(w, k)
+        end
+    end
 
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
         w,c  = create_window_with_container(newopc(top = x,

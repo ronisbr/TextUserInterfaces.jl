@@ -112,6 +112,8 @@ function create_widget(::Val{:combo_box},
         widget._list_box = list_box
     end
 
+    @connect_signal widget key_pressed process_keystroke
+
     @log info "create_widget" """
     Combo box created:
         Reference   = $(obj_to_ptr(widget))
@@ -129,14 +131,8 @@ function destroy_widget(widget::WidgetComboBox; refresh::Bool = true)
     return nothing
 end
 
-function process_focus(widget::WidgetComboBox, k::Keystroke)
-    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
-    ret = @emit_signal widget key_pressed k
-
-    isnothing(ret) && return _handle_input(widget, k)
-
-    return ret
-end
+process_keystroke(widget::WidgetComboBox, k::Keystroke) =
+    _handle_input(widget, k)
 
 function redraw(widget::WidgetComboBox)
     @unpack buffer, cur, data, parent, width = widget
@@ -220,38 +216,35 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
 
         # Set the function called when a key is pressed inside the list box.
         #
-        # If `enter` is pressed, then this function need to update the combo box
-        # current item, destroy the created widgets, and return the focus to the
-        # combo box.
-        #
+        # If `return` is pressed, then this function need to update the combo
+        # box current item, destroy the created widgets, and return the focus to
+        # the combo box.
+        function _handler_return_pressed(list_box)
+            cur, ~ = get_current_item(list_box)
+            widget.cur = cur
+            widget._list_box_opened = false
+            remove_widget!(parent, list_box)
+            request_focus(parent, widget)
+        end
+
         # If `esc` is pressed, then this function just destroys the list box,
         # ignoring the selection.
-        _handler_key_pressed(list_box, k) = begin
-            if k.ktype == :enter
-                cur, ~ = get_current_item(list_box)
-                widget.cur = cur
-                widget._list_box_opened = false
-                remove_widget!(parent, list_box)
-                request_focus(parent, widget)
-            elseif k.ktype == :esc
-                widget._list_box_opened = false
-                remove_widget!(parent, list_box)
-                request_focus(parent, widget)
-            end
-
-            # Make sure the list box does not loose the focus.
-            return nothing
+        function _handler_esc_pressed(list_box)
+            widget._list_box_opened = false
+            remove_widget!(parent, list_box)
+            request_focus(parent, widget)
         end
 
         # If the list box for any reason lost focus, then it must be closed.
-        _handler_focus_lost(list_box) = begin
+        function _handler_focus_lost(list_box)
             if widget._list_box_opened
                 widget._list_box_opened = false
                 remove_widget!(parent, list_box)
             end
         end
 
-        @connect_signal _list_box key_pressed _handler_key_pressed
+        @connect_signal _list_box return_pressed _handler_return_pressed
+        @connect_signal _list_box esc_pressed _handler_esc_pressed
         @connect_signal _list_box focus_lost _handler_focus_lost
 
         return true

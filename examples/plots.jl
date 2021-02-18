@@ -160,7 +160,7 @@ function plots()
             end
         end
 
-        return nothing
+        return true
     end
 
     function clear_form(w, k)
@@ -169,7 +169,7 @@ function plots()
             clear_data!(tlim)
             clear_data!(ylim)
         end
-        return nothing
+        return true
     end
 
     function clear_plot(w, k)
@@ -177,7 +177,7 @@ function plots()
             str = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
             change_text(canvas, str)
         end
-        return nothing
+        return true
     end
 
     bplot = @tui_button(parent = con,

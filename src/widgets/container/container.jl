@@ -83,45 +83,18 @@ end
 function process_focus(container::WidgetContainer, k::Keystroke)
     @unpack focus_id, parent, widgets = container
 
-    # Check if the user wants to change the focus.
-    if k.ktype == :tab
-        # In this case, we need to verify if the widget can release the focus.
-        if focus_id > 0
-            # If the children is a container, then we need to pass the focus
-            # change request to it.
-            if (widgets[focus_id] isa WidgetContainer) ||
-               (widgets[focus_id] isa ComposedWidget)
-                if !process_focus(widgets[focus_id], k)
-                    # Check if we need to go to the next or previous widget.
-                    return k.shift ? _previous_widget(container) :
-                                     _next_widget(container)
-                else
-                    # The focus was processed by a children.
-                    return true
-                end
-            elseif release_focus(widgets[focus_id])
-                # Check if we need to go to the next or previous widget.
-                return k.shift ? _previous_widget(container) :
-                                 _next_widget(container)
-            end
-        else
-            # Check if we need to go to the next or previous widget.
-            return k.shift ? _previous_widget(container) :
-                             _next_widget(container)
-        end
+    # If there is any element in focus, ask to process the focus.
+    if ((focus_id > 0) && (process_focus(widgets[focus_id], k)))
+        sync_cursor(container)
+        return true
     else
-        # If there is any element in focus, ask to process the keystroke.
-        if focus_id > 0
-            # If `process_focus` returns `false`, it means that the widget wants to
-            # release the focus.
-            if process_focus(widgets[focus_id],k)
-                sync_cursor(container)
-                return true
-            end
+        # Now, we need to search for the next widget.
+        if (k.ktype != :tab) || (!k.shift)
+            return _next_widget(container)
+        else
+            return _previous_widget(container)
         end
     end
-
-    return true
 end
 
 function redraw(container::WidgetContainer)

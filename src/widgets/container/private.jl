@@ -60,8 +60,15 @@ function _next_widget(container::WidgetContainer)
         end
     end
 
+    # We need to mark that currently this container does not have any object
+    # in focus because it could be necessary to update the entire TUI when
+    # requesting the next widget. In this case, the old focused widget will be
+    # updated. If this widget needs to check if it has focus, then the function
+    # would wrongly return true.
+    container.focus_id = 0
+
     # Search for the next widget that can handle the focus.
-    for i = focus_id+1:length(widgets)
+    for i = (focus_id+1):length(widgets)
         if request_next_widget(widgets[i])
             container.focus_id = i
 
@@ -113,13 +120,20 @@ function _previous_widget(container::WidgetContainer)
         focus_id = length(widgets)+1
     end
 
+    # We need to mark that currently this container does not have any object
+    # in focus because it could be necessary to update the entire TUI when
+    # requesting the next widget. In this case, the old focused widget will be
+    # updated. If this widget needs to check if it has focus, then the function
+    # would wrongly return true.
+    container.focus_id = 0
+
     # Search for the next widget that can handle the focus.
     for i = focus_id-1:-1:1
         if request_prev_widget(widgets[i])
             container.focus_id = i
 
             # We need to update the TUI, now that the new widget has the focus,
-            # and then syncrhonize the cursors.
+            # and then synchronize the cursors.
             tui_update()
             sync_cursor(container)
 

@@ -108,6 +108,7 @@ function create_widget(::Val{:list_box},
                            selectable         = selectable,
                            show_icon          = show_icon)
 
+    @connect_signal widget key_pressed process_keystroke
 
     @log info "create_widget" """
     List box created:
@@ -121,21 +122,19 @@ function create_widget(::Val{:list_box},
     return widget
 end
 
-function process_focus(widget::WidgetListBox, k::Keystroke)
-    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
-    ret = @emit_signal widget key_pressed k
-
-    if isnothing(ret)
-        # Handle the input.
-        if _handle_input(widget, k)
-            request_update(widget)
-            return true
-        else
-            return false
-        end
+function process_keystroke(widget::WidgetListBox, k::Keystroke)
+    if k.ktype == :enter
+        @emit_signal widget return_pressed
+        return true
+    elseif k.ktype == :esc
+        @emit_signal widget esc_pressed
+        return true
+    elseif _handle_input(widget, k)
+        request_update(widget)
+        return true
+    else
+        return false
     end
-
-    return ret
 end
 
 function redraw(widget::WidgetListBox)

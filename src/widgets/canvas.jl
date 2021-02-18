@@ -48,6 +48,8 @@ function create_widget(::Val{:canvas},
                           chars  = chars,
                           colors = colors)
 
+    @connect_signal widget key_pressed process_keystroke
+
     @log info "create_widget" """
     Canvas created:
         Reference = $(obj_to_ptr(widget))
@@ -56,12 +58,6 @@ function create_widget(::Val{:canvas},
 
     # Return the created widget.
     return widget
-end
-
-function process_focus(widget::WidgetCanvas, k::Keystroke)
-    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
-    ret = @emit_signal widget key_pressed k
-    return isnothing(ret) ? true : false
 end
 
 function redraw(widget::WidgetCanvas)

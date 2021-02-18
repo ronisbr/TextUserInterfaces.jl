@@ -12,8 +12,8 @@
 ################################################################################
 
 export accept_focus, create_widget, destroy_widget!, init_widget_buffer!,
-       request_update, request_focus, redraw, release_focus, set_widget_color,
-       update
+       process_keystroke, request_update, request_focus, redraw, release_focus,
+       set_widget_color, update
 
 """
     accept_focus(widget)
@@ -127,7 +127,33 @@ pressed. If it returns `false`, then it is means that the widget was not capable
 to process the focus. Otherwise, it must return `true`.
 
 """
-process_focus(widget,k::Keystroke) = return false
+function process_focus(widget, k::Keystroke)
+    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
+    if k.ktype == :tab
+        return false
+    else
+        ret = @emit_signal widget key_pressed k
+
+        if ret isa Bool
+            return ret
+        elseif ret === nothing
+            return false
+        else
+            return true
+        end
+    end
+end
+
+"""
+    function process_keystroke(widget, k::Keystroke)
+
+Default function of `widget` to process a keystroke. This function is called
+inside `process_focus`. If the widget could process the keystore, then if must
+return `true`. Otherwise, if must return `false`. In this case, the keystroke
+will be passed to the next widget in the focus list.
+
+"""
+process_keystroke(widget, k::Keystroke) = false
 
 """
     request_focus(widget)

@@ -117,11 +117,8 @@ function create_widget(::Val{:form},
     return widget
 end
 
-function process_focus(widget::WidgetForm, k::Keystroke)
-    @log verbose "process_focus" "$(obj_desc(widget)): Key pressed on focused form."
-    ret = @emit_signal widget key_pressed k
-    isnothing(ret) && return process_focus(widget.container, k)
-    return ret
+function process_keystroke(widget::WidgetForm, k::Keystroke)
+    process_focus(widget.container, k)
 end
 
 # TODO: We must define those functions separately. Otherwise, if a `Union` is

@@ -105,6 +105,8 @@ function create_widget(::Val{:input_field},
                               max_data_size    = max_data_size,
                               validator        = validator)
 
+    @connect_signal widget key_pressed process_keystroke
+
     @log info "create_widget" """
     Input field created:
         Reference  = $(obj_to_ptr(widget))
@@ -116,27 +118,20 @@ function create_widget(::Val{:input_field},
     return widget
 end
 
-function process_focus(widget::WidgetInputField, k::Keystroke)
+function process_keystroke(widget::WidgetInputField, k::Keystroke)
     @unpack border = widget
 
-    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
-    ret = @emit_signal widget key_pressed k
+    # Handle the input.
+    if _handle_input(widget, k)
+        # Update the cursor position.
+        _update_cursor(widget)
 
-    if isnothing(ret)
-        # Handle the input.
-        if _handle_input(widget, k)
-            # Update the cursor position.
-            _update_cursor(widget)
+        # Validate the input.
+        _validator(widget)
 
-            # Validate the input.
-            _validator(widget)
-
-            return true
-        else
-            return false
-        end
+        return true
     else
-        return ret
+        return false
     end
 end
 
@@ -170,6 +165,9 @@ function redraw(widget::WidgetInputField)
     mvwprintw(buffer, y₀, x₀, " "^size)
     mvwprintw(buffer, y₀, x₀, str)
     wattroff(buffer, color)
+
+    # We need to update the cursor after every redraw.
+    _update_cursor(widget)
 
     return nothing
 end
@@ -304,10 +302,11 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     vcurx = clamp(vcurx + Δx, 1, cxlimit)
 
     # Check if we must change the view of the field.
+    curx += Δx
+
     if Δx < 0
-        # If the cursor is at the right edge and it was commanded to move it to
-        # the left, then just move the view.
-        if (curx == size) && (view > 1)
+        # Otherwise, move the view.
+        if (curx ≤ 0) && (view > 1)
             view += Δx
 
             # If the view reached the most left position, then we must move the
@@ -315,11 +314,8 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
             curx += min(0, view-1)
 
             update = true
-        elseif curx > 1
-            curx += Δx
         end
     elseif Δx > 0
-        curx += Δx
 
         # If the cursor is at the right edge, then just move the view.
         if curx > size

@@ -51,7 +51,6 @@ function create_dialog(f_widgets::Function,
         if k.ktype == :enter
             terminate = true
             button_id = b_id
-            return false
         end
 
         return true

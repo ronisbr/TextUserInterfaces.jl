@@ -80,6 +80,8 @@ function create_widget(::Val{:button},
                           color_highlight = color_highlight,
                           style           = style)
 
+    @connect_signal widget key_pressed process_keystroke
+
     @log info "create_widget" """
     Button created:
         Reference   = $(obj_to_ptr(widget))
@@ -90,10 +92,9 @@ function create_widget(::Val{:button},
     return widget
 end
 
-function process_focus(widget::WidgetButton, k::Keystroke)
-    @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
-    ret = @emit_signal widget key_pressed k
-    return isnothing(ret) ? true : false
+function process_keystroke(widget::WidgetButton, k::Keystroke)
+    k.ktype == :enter && (@emit_signal widget return_pressed)
+    return true
 end
 
 redraw(widget::WidgetButton) = redraw(widget, has_focus(widget.parent,widget))
