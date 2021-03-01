@@ -82,6 +82,7 @@ for (f,r,v,j,c) in
      (:initscr,          Ptr{WINDOW}, [],           [],                     []),
      (:keypad,           Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
      (:leaveok,          Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
+     (:scrollok,          Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
      (:nodelay,          Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
      (:noecho,           Cvoid,       [],           [],                     []),
      (:notimeout,        Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
