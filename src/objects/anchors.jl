@@ -21,14 +21,12 @@ parent object `parent`.
 
 # Return
 
-* The object height.
-* The object width.
-* The top position w.r.t. the `parent` object.
-* The left position w.r.t. the `parent` object.
-
+- The object height.
+- The object width.
+- The top position w.r.t. the `parent` object.
+- The left position w.r.t. the `parent` object.
 """
 function compute_object_positioning(layout::ObjectLayout, parent)
-
     # Process the positioning.
     horizontal =_process_horizontal_info(layout)
     vertical   = _process_vertical_info(layout)
@@ -197,20 +195,20 @@ end
 
 Check if the `side` parameter of `anchor` is valid for vertical positioning. If
 `anchor` is `_no_anchor`, then `true` is always returned.
-
 """
-_check_vertical_anchor(anchor::Anchor) =
-    (anchor == _no_anchor) || (anchor.side ∈ [:bottom,:middle,:top])
+function _check_vertical_anchor(anchor::Anchor)
+    return (anchor == _no_anchor) || (anchor.side ∈ [:bottom,:middle,:top])
+end
 
 """
     _check_horizontal_anchor(anchor::Anchor)
 
 Check if the `side` parameter of `anchor` is valid for horizontal positioning.
 If `anchor` is `_no_anchor`, then `true` is always returned.
-
 """
-_check_horizontal_anchor(anchor::Anchor) =
-    (anchor == _no_anchor) || (anchor.side ∈ [:left,:center,:right])
+function _check_horizontal_anchor(anchor::Anchor)
+    return (anchor == _no_anchor) || (anchor.side ∈ [:left,:center,:right])
+end
 
 """
     _get_anchor(anchor::Anchor, parent)
@@ -218,7 +216,6 @@ _check_horizontal_anchor(anchor::Anchor) =
 Return the line or column related to the anchor `anchor`. If the object in
 `anchor` is the `parent`, then the positioning will be computed relative to the
 `parent`.
-
 """
 function _get_anchor(anchor::Anchor, parent)
     obj = anchor.obj
@@ -231,6 +228,7 @@ function _get_anchor(anchor::Anchor, parent)
         width  = get_width_for_child(parent)
         top    = get_top_for_child(parent)
         left   = get_left_for_child(parent)
+
     else
         # If the object is not added to a parent, we cannot get its information.
         if !(obj isa Window) && isnothing(obj.parent)
@@ -274,16 +272,14 @@ Process the vertical positioning information in `layout` and write the variable
 `vertical` of the same structure. The possible vertical positioning information
 are:
 
-* `:abottom_atop`: Bottom and top anchors were specified.
-* `:abottom_height`: Bottom anchor and height were specified.
-* `:atop_height`: Top anchor and height were specified.
-* `:amiddle_height`: Middle anchor and height were specified.
-* `:top_height`: Top and height were specified.
-* `:unknown`: Insufficient information to compute the vertical positioning.
-
+- `:abottom_atop`: Bottom and top anchors were specified.
+- `:abottom_height`: Bottom anchor and height were specified.
+- `:atop_height`: Top anchor and height were specified.
+- `:amiddle_height`: Middle anchor and height were specified.
+- `:top_height`: Top and height were specified.
+- `:unknown`: Insufficient information to compute the vertical positioning.
 """
 function _process_vertical_info(layout::ObjectLayout)
-
     @unpack anchor_bottom, anchor_top, anchor_middle, top, height = layout
 
     # Check the input parameters.
@@ -324,19 +320,17 @@ end
     _process_horizontal_info(layout::ObjectLayout)
 
 Process the horizontal positioning information in `layout` and write the variable
-`horizontal` of the same structure. The possible horizontal positioning information
-are:
+`horizontal` of the same structure. The possible horizontal positioning
+information are:
 
-* `:aleft_aright`: Left and right anchors were specified.
-* `:aleft_height`: Left anchor and height were specified.
-* `:aright_height`: Right anchor and height were specified.
-* `:acenter_height`: Center anchor and height were specified.
-* `:right_height`: Right and height were specified.
-* `:unknown`: Insufficient information to compute the horizontal positioning.
-
+- `:aleft_aright`: Left and right anchors were specified.
+- `:aleft_height`: Left anchor and height were specified.
+- `:aright_height`: Right anchor and height were specified.
+- `:acenter_height`: Center anchor and height were specified.
+- `:right_height`: Right and height were specified.
+- `:unknown`: Insufficient information to compute the horizontal positioning.
 """
 function _process_horizontal_info(layout::ObjectLayout)
-
     @unpack anchor_left, anchor_right, anchor_center, left, width = layout
 
     # Check the input parameters.
@@ -380,7 +374,6 @@ Process the positioning value `v` related to the dimension `dim` of the parent
 widget `parent`. `dim` can be `:height` or `:width`.
 
 If `v` is an `Int`, then it return  `v`.
-
 """
 function _process_positioning_value(v::String, dim::Symbol, parent::WidgetParent)
     # Check if the format is correct.
@@ -402,7 +395,6 @@ _process_positioning_value(v::Int, ::Symbol, ::WidgetParent) = v
     _str(wpc::ObjectLayout)
 
 Convert the information in `wpc` to a string for debugging purposes.
-
 """
 function _str(layout::ObjectLayout)
     ab = layout.anchor_bottom
