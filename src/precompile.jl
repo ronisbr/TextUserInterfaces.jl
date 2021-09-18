@@ -37,8 +37,8 @@ function _precompile()
     # Objects
     # ==============================================================================
 
-    @precompile compute_object_positioning (ObjectLayout, Window)
-    @precompile compute_object_positioning (ObjectLayout, WidgetContainer)
+    @precompile compute_object_layout (ObjectLayout, Window)
+    @precompile compute_object_layout (ObjectLayout, WidgetContainer)
     @precompile _get_anchor (Anchor, Window)
     @precompile _get_anchor (Anchor, WidgetContainer)
     @precompile _process_vertical_info ObjectLayout

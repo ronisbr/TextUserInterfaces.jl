@@ -99,7 +99,7 @@ function init_widget_buffer!(widget::Widget)
     destroy_widget_buffer!(widget)
 
     # Compute the widget true position based on the configuration.
-    height, width, top, left = compute_object_positioning(widget.layout,
+    height, width, top, left = compute_object_layout(widget.layout,
                                                           widget.parent)
 
     # Create the buffer that will hold the contents.

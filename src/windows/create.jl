@@ -71,7 +71,7 @@ function create_window(layout::ObjectLayout = ObjectLayout(),
     end
 
     # Get the positioning information of the window.
-    height, width, top, left = compute_object_positioning(layout, rootwin)
+    height, width, top, left = compute_object_layout(layout, rootwin)
 
     # Assign to the variables that will be used to create the window.
     begin_y = top

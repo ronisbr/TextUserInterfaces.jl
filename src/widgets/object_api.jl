@@ -18,7 +18,7 @@ function reposition!(widget::Widget; force::Bool = false)
 
     # Compute the widget true position based on the configuration given the new
     # size of the parent.
-    height, width, top, left = compute_object_positioning(layout, parent)
+    height, width, top, left = compute_object_layout(layout, parent)
 
     # Check if resize or move is required.
     widget_resize = false

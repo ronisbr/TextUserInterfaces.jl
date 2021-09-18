@@ -7,17 +7,17 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export compute_object_positioning
+export compute_object_layout
 
 ################################################################################
 #                              Public functions
 ################################################################################
 
 """
-    compute_object_positioning(layout::ObjectLayout, parent)
+    compute_object_layout(layout::ObjectLayout, parent)
 
-Compute the object position based on the configuration `layout` and on its
-parent object `parent`.
+Compute the object layout based on the configuration `layout` and on its parent
+object `parent`.
 
 # Return
 
@@ -26,7 +26,7 @@ parent object `parent`.
 - The top position w.r.t. the `parent` object.
 - The left position w.r.t. the `parent` object.
 """
-function compute_object_positioning(layout::ObjectLayout, parent)
+function compute_object_layout(layout::ObjectLayout, parent)
     # Process the positioning.
     horizontal =_process_horizontal_info(layout)
     vertical   = _process_vertical_info(layout)
@@ -70,7 +70,7 @@ function compute_object_positioning(layout::ObjectLayout, parent)
         top    = middle - div(height, 2)
 
     elseif vertical == :unknown
-        @log critical "compute_object_positioning" """
+        @log critical "compute_object_layout" """
         It was not possible to guess the vertical positioning of the object.
 
         parent:
@@ -85,7 +85,7 @@ function compute_object_positioning(layout::ObjectLayout, parent)
     end
 
     if top < 0
-        @log critical "compute_object_positioning" """
+        @log critical "compute_object_layout" """
         Wrong vertical size configuration leading to negative top position.
 
         parent:
@@ -100,7 +100,7 @@ function compute_object_positioning(layout::ObjectLayout, parent)
     end
 
     if height <= 0
-        @log critical "compute_object_positioning" """
+        @log critical "compute_object_layout" """
         Wrong vertical size configuration leading to negative top position.
 
         parent:
@@ -138,7 +138,7 @@ function compute_object_positioning(layout::ObjectLayout, parent)
         left   = center - div(width,2)
 
     elseif horizontal == :unknown
-        @log critical "compute_object_positioning" """
+        @log critical "compute_object_layout" """
         It was not possible to guess the horizontal positioning of the object.
 
         parent:
@@ -153,7 +153,7 @@ function compute_object_positioning(layout::ObjectLayout, parent)
     end
 
     if left < 0
-        @log critical "compute_object_positioning" """
+        @log critical "compute_object_layout" """
         Wrong vertical size configuration leading to negative left position.
 
         parent:
@@ -168,7 +168,7 @@ function compute_object_positioning(layout::ObjectLayout, parent)
     end
 
     if width <= 0
-        @log critical "compute_object_positioning" """
+        @log critical "compute_object_layout" """
         Wrong vertical size configuration leading to non-positive width position.
 
         parent:
