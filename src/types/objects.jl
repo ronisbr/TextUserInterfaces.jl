@@ -21,15 +21,14 @@ the fields `anchor_*` of `ObjectLayout`.
 
 # Fields
 
-* `obj`: Reference object.
-* `side`: Side of the reference object to which we will apply the attachment.
-* `pad`: A space between the anchors of the two objects.
+- `obj::Union{Symbol, Object}`: Reference object.
+- `side::Symbol`: Side of the reference object to which we will apply the
+    attachment.
+- `pad::Int`: A space between the anchors of the two objects.
 
 !!! info
-
     `side` is one of the following symbols: `:left`, `:right`, `:top`,
     `:bottom`, `:center`, or `:middle`.
-
 """
 struct Anchor
     obj::Union{Symbol, Object}
@@ -47,23 +46,28 @@ This structure defines the layout of an object.
 
 # Fields
 
-* `anchor_bottom`: Bottom anchor specification. (**Default** = `_no_anchor`)
-* `anchor_left`: Left anchor specification. (**Default** = `_no_anchor`)
-* `anchor_right`: Right anchor specification. (**Default** = `_no_anchor`)
-* `anchor_top`: Top anchor specification. (**Default** = `_no_anchor`)
-* `anchor_center`: Center anchor specification. (**Default** = `_no_anchor`)
-* `anchor_middle`: Middle anchor specification. (**Default** = `_no_anchor`)
-* `top`: Absolute position of the object top side. (**Default** = -1)
-* `left`: Absolute position of the object left side. (**Default** = -1)
-* `height`: Height of the object. (**Default** = -1)
-* `width`: Width of the object. (**Default** = -1)
+* `anchor_bottom::Anchor`: Bottom anchor specification.
+    (**Default** = `_no_anchor`)
+* `anchor_left::Anchor`: Left anchor specification.
+    (**Default** = `_no_anchor`)
+* `anchor_right::Anchor`: Right anchor specification.
+    (**Default** = `_no_anchor`)
+* `anchor_top::Anchor`: Top anchor specification. (**Default** = `_no_anchor`)
+* `anchor_center::Anchor`: Center anchor specification.
+    (**Default** = `_no_anchor`)
+* `anchor_middle::Anchor`: Middle anchor specification.
+    (**Default** = `_no_anchor`)
+* `top::Union{Int, String}`: Absolute position of the object top side.
+    (**Default** = -1)
+* `left::Union{Int, String}`: Absolute position of the object left side.
+    (**Default** = -1)
+* `height::Union{Int, String}`: Height of the object. (**Default** = -1)
+* `width::Union{Int, String}`: Width of the object. (**Default** = -1)
 
 !!! info
-
     If the absolute positioning arguments (`top`, `left`, `height`, and `width`)
     are negative, then it means that there is no information about them. Hence,
     the relative arguments (anchors) must provide the missing information.
-
 """
 @with_kw mutable struct ObjectLayout
     # Anchors (relative positioning).

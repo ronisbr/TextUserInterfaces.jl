@@ -13,7 +13,7 @@ export Window
     id::String = ""
     title::String = ""
     title_color::Int = 0
-    coord::Tuple{Int,Int} = (0,0)
+    coord::Tuple{Int, Int} = (0, 0)
     has_border::Bool = false
     border_color::Int = 0
     focusable::Bool = true
@@ -26,7 +26,7 @@ export Window
     layout::ObjectLayout
 
     # Widget of the window.
-    widget::Union{Widget,Nothing} = nothing
+    widget::Union{Widget, Nothing} = nothing
 
     # Buffer
     # ==========================================================================
@@ -46,7 +46,7 @@ export Window
 
     # Origin of the view window with respect to the physical screen. This is
     # useful for setting the cursor position when required.
-    orig::Tuple{Int,Int} = (0,0)
+    orig::Tuple{Int, Int} = (0, 0)
 
     # If `true`, then the view has changed and must be updated.
     view_needs_update::Bool = true

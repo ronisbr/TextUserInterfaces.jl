@@ -21,13 +21,13 @@ WidgetParent = Union{Nothing, RootWin, Window, Widget}
     @widget(ex)
 
 Declare a structure of a widget.
-
 """
 macro widget(ex)
-
     # Expression must be a structure definition.
-    @assert((typeof(ex) <: Expr) && (ex.head == :struct),
-            "@widget must be used only with a structure definition.")
+    @assert(
+        (typeof(ex) <: Expr) && (ex.head == :struct),
+        "@widget must be used only with a structure definition."
+    )
 
     # Th structure supertype must be `Widget`.
     ex.args[2] = :($(ex.args[2]) <: Widget)
@@ -70,13 +70,13 @@ end
     @composed_widget(ex)
 
 Declare a structure of a composed widget.
-
 """
 macro composed_widget(ex)
-
     # Expression must be a structure definition.
-    @assert((typeof(ex) <: Expr) && (ex.head == :struct),
-            "@composed_widget must be used only with a structure definition.")
+    @assert(
+        (typeof(ex) <: Expr) && (ex.head == :struct),
+        "@composed_widget must be used only with a structure definition."
+    )
 
     # Th structure supertype must be `Widget`.
     ex.args[2] = :($(ex.args[2]) <: ComposedWidget)
@@ -156,10 +156,11 @@ Declare a structure of a derived widget.
 
 """
 macro derived_widget(ex)
-
     # Expression must be a structure definition.
-    @assert((typeof(ex) <: Expr) && (ex.head == :struct),
-            "@widget must be used only with a structure definition.")
+    @assert(
+        (typeof(ex) <: Expr) && (ex.head == :struct),
+        "@widget must be used only with a structure definition."
+    )
 
     # Th structure supertype must be `Widget`.
     ex.args[2] = :($(ex.args[2]) <: DerivedWidget)
