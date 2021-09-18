@@ -13,7 +13,6 @@ export tui_update
     tui_update()
 
 Update the entire TUI.
-
 """
 function tui_update()
     refresh_all_windows()

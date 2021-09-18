@@ -32,21 +32,24 @@ Otherwise, the loop is terminated.
 
 # Configuration keywords
 
-* `destroy_on_exit`: If `true`, then `destroy_tui()` is called when we exit from
-                     the loop.
-* `manage_window_switch`: If `true`, then `F2` and `F3` move to next and
-                          previous windows.
-
+- `destroy_on_exit::Bool`: If `true`, then `destroy_tui()` is called when we
+    exit from the loop.
+* `manage_window_switch::Bool`: If `true`, then `F2` and `F3` move to next and
+    previous windows.
 """
-function app_main_loop(;fprev::Function = (k)->true,
-                       fpost::Function = (k)->true,
-                       confirm_exit::Bool = true,
-                       destroy_on_exit::Bool = true,
-                       manage_window_switch::Bool = true)
-
+function app_main_loop(
+        ;
+        fprev::Function = (k) -> true,
+        fpost::Function = (k) -> true,
+        confirm_exit::Bool = true,
+        destroy_on_exit::Bool = true,
+        manage_window_switch::Bool = true
+)
     # If the user did not defined a focus chain, then set it with all available
     # windows.
-    isempty(tui.focus_chain) && (tui.focus_chain = copy(tui.wins))
+    if isempty(tui.focus_chain)
+        tui.focus_chain = copy(tui.wins)
+    end
 
     # Initialize focus manager.
     init_focus_manager()
@@ -62,13 +65,14 @@ function app_main_loop(;fprev::Function = (k)->true,
 
         if k.ktype == :F1
             if confirm_exit
-                ret = create_dialog(Val(:message),
-                                    "Are you sure you want to quit?",
-                                    ["NO", "YES"];
-                                    icon_type = :question,
-                                    title = " Exiting... ",
-                                    title_color = ncurses_color(A_BOLD))
-
+                ret = create_dialog(
+                    Val(:message),
+                    "Are you sure you want to quit?",
+                    ["NO", "YES"];
+                    icon_type = :question,
+                    title = " Exiting... ",
+                    title_color = ncurses_color(A_BOLD)
+                )
                 ret == 1 ? continue : break
             else
                 break

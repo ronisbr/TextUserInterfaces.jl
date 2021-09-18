@@ -19,7 +19,6 @@ export @connect_signal, @disconnect_signal, @emit_signal, @forward_signal
 Connect the signal `signal` of the object `obj` to the function `f` passing the
 additional arguments `vargs`. Thus, when `signal` is emitted by `obj`, then
 `fcall` will be executed.
-
 """
 macro connect_signal(obj, signal::Symbol, f, vargs...)
     # Variable that stores the signal name.
@@ -45,7 +44,6 @@ end
     @disconnect_signal(obj, signal::Symbol)
 
 Disconnect the signal `signal` from object `obj`.
-
 """
 macro disconnect_signal(obj, signal::Symbol)
     # Variable that stores the signal name.
@@ -72,7 +70,6 @@ end
 
 Emit the signal `signal` of the object `obj` with the parameters `params...`,
 causing to execute the connected function.
-
 """
 macro emit_signal(obj, signal::Symbol, params...)
     # Variable that stores the signal name.
@@ -101,7 +98,6 @@ end
 Forward the signal `signal` from `src` to `dest`. This means that every time
 that the signal `signal` is generated in `src`, then the function in `dest` will
 be called.
-
 """
 macro forward_signal(src, dest, signal::Symbol)
     # Variable that stores the signal name.
@@ -129,7 +125,6 @@ end
 Create the signal named `name`. This must be used **inside** the widget
 structure that must be declared with `@with_kw` option (see package
 `Parameters.jl`).
-
 """
 macro signal(name)
     f = Symbol("on_", name)

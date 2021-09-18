@@ -7,14 +7,13 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export get_focused_window, init_focus_manager, process_focus, request_focus,
-       set_focus_chain, next_window, previous_window
+export get_focused_window, init_focus_manager, process_focus, request_focus
+export set_focus_chain, next_window, previous_window
 
 """
     get_focused_window()
 
 Return the focused window.
-
 """
 get_focused_window() = tui.focus_win
 
@@ -23,7 +22,6 @@ get_focused_window() = tui.focus_win
 
 Initialization of the focus manager. The elements in `focus_chain` are iterated
 to find the first one that can accept the focus.
-
 """
 init_focus_manager() = next_window()
 
@@ -31,7 +29,6 @@ init_focus_manager() = next_window()
     process_focus(k::Keystroke)
 
 Process the focus considering the user's keystorke `k`.
-
 """
 function process_focus(k::Keystroke)
     @unpack focus_win, focus_chain = tui
@@ -66,7 +63,6 @@ end
     next_window()
 
 Move the focus to the next window.
-
 """
 function next_window()
     @unpack focus_chain, focus_id = tui
@@ -82,7 +78,7 @@ function next_window()
     end
 
     # Loop from the current position until the end of the focus chain.
-    for i = focus_id+1:num_wins
+    for i in focus_id+1:num_wins
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -92,7 +88,7 @@ function next_window()
     end
 
     # Loop from the beginning of the chain until the current position.
-    for i = 1:tui.focus_id
+    for i in 1:tui.focus_id
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -109,7 +105,6 @@ end
     previous_window()
 
 Move the focus to the previous window.
-
 """
 function previous_window()
     @unpack focus_chain, focus_id = tui
@@ -125,7 +120,7 @@ function previous_window()
     end
 
     # Loop from the current position until the beginning of the focus chain.
-    for i = focus_id-1:-1:1
+    for i in focus_id-1:-1:1
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -135,7 +130,7 @@ function previous_window()
     end
 
     # Loop from the end of the chain until the current position.
-    for i = num_wins:-1:tui.focus_id
+    for i in num_wins:-1:tui.focus_id
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -160,7 +155,6 @@ focus is passed to it and the function returns `true`.
 Even if `win` is in the focus chain, the `focus_id` will not change by
 requesting focus to `win`. This means that the window focus order is not altered
 by this function.
-
 """
 function request_focus(win::Window)
     if accept_focus(win)
@@ -171,6 +165,7 @@ function request_focus(win::Window)
         return true
     else
         @log verbose "request_focus" "Focus: The window $(obj_desc(win)) cannot get the focus."
+
         return false
     end
 end
@@ -181,7 +176,6 @@ end
 Set the focus chain, *i.e.* the ordered list of windows that can receive the
 focus. The keyword `new_focus_id` can be set to specify which element is
 currently focused in the new chain.
-
 """
 function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
     tui.focus_ptr != nothing && release_focus(tui.focus_ptr)

@@ -17,7 +17,6 @@ export @log, @log_ident, @reset_log_ident, log_message
     macro log(level, msg)
 
 Log the message `msg` with level `level`.
-
 """
 macro log(level, msg)
     return quote
@@ -31,7 +30,6 @@ end
     macro log(level, msg, id)
 
 Log the messagem `msg` with level `level` of the caller `id`
-
 """
 macro log(level, msg, id)
     return quote
@@ -42,8 +40,8 @@ macro log(level, msg, id)
     end
 end
 
-macro log_ident(ident)  return :( logger.pad = 4*$(esc(ident)) ) end
-macro reset_log_ident() return :( logger.pad = 0 )   end
+macro log_ident(ident)  return :(logger.pad = 4 * $(esc(ident))) end
+macro reset_log_ident() return :(logger.pad = 0)   end
 
 ################################################################################
 #                                  Functions
@@ -56,7 +54,6 @@ Log the message `msg` with level `level`. The ID of the called can be specified
 by `id`.
 
 If a line is `@log_pad X`, then the following lines will have a padding of X.
-
 """
 function log_message(level::LogLevels, msg::AbstractString, id::AbstractString = "")
     # Check if logging is enabled.
@@ -75,7 +72,7 @@ function log_message(level::LogLevels, msg::AbstractString, id::AbstractString =
 
     # Check if the user wants the timestamp.
     time_str = logger.timestamp ? Dates.format(now(), "Y-mm-dd HH:MM:SS") * " │ " : ""
-    time_pad = logger.timestamp ? " "^(length(time_str)-3) * " │ " : ""
+    time_pad = logger.timestamp ? " "^(length(time_str) - 3) * " │ " : ""
 
     # Split the message by each line.
     lines = split(msg,'\n')

@@ -86,9 +86,10 @@ macro precompile(fname, argtypes, kwnames, kwtypes)
         local _kwtypes  = typeof($kwtypes)  <: Tuple ? $kwtypes  : ($kwtypes,)
         local _kwnames  = typeof($kwnames)  <: Tuple ? $kwnames  : ($kwnames,)
 
-        if !precompile(Core.kwfunc($fname),
-                       (NamedTuple{_kwnames, Tuple{_kwtypes...}},
-                        typeof($fname), _argtypes...))
+        if !precompile(
+                Core.kwfunc($fname),
+                (NamedTuple{_kwnames, Tuple{_kwtypes...}}, typeof($fname), _argtypes...)
+        )
             @warn("The method $($fname)$_argtypes could not be precompiled.")
         end
 

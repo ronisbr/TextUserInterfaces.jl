@@ -17,7 +17,6 @@ const _test_hide_address = [false]
 Return a string with the description of the object `obj` formed by:
 
     <Object type> (<Object address if mutable>)
-
 """
 function obj_desc(obj)
     obj_type = string(typeof(obj))
@@ -35,7 +34,6 @@ end
 Returns the hexadecimal representation of the address of the object `obj`. It
 **only** works with mutable objects.  If `obj` is immutable, then `0x0` will be
 returned.
-
 """
 function obj_to_ptr(obj)
     if _test_hide_address[1]
