@@ -104,10 +104,11 @@ function tictactoe()
 
     # Create the main window and its container.
     layout = ObjectLayout(height = 18, width = 60, top = 2, left = 2)
-    win, con = create_window_with_container(layout,
-                                            border = true,
-                                            title  = " Tic Tac Toe ")
-
+    win, con = create_window_with_container(
+        layout,
+        border = true,
+        title  = " Tic Tac Toe "
+    )
 
     # Create the label widget that will display the board.
     layout   = ObjectLayout(top = 2, left = 2, height = 11, width = 24)
@@ -170,11 +171,12 @@ function tictactoe()
     end
 
     # Create the fields of the board.
-    fields = [create_widget(Val(:canvas), con,
-                            ObjectLayout(top  = 2 + 4(i-1),
-                                   left = 2 + 8(j-1));
-                                   num_columns = 7,
-                                   num_rows = 3) for i = 1:3,j = 1:3]
+    fields = [create_widget(
+        Val(:canvas), con,
+        ObjectLayout(top  = 2 + 4(i-1), left = 2 + 8(j-1));
+        num_columns = 7,
+        num_rows = 3
+    ) for i in 1:3, j in 1:3]
 
     # Connect the required signals to the fields created.
     for i = 1:3, j = 1:3
@@ -191,13 +193,13 @@ function tictactoe()
 
         # If the key is an arrow, then move the focused widget.
         if k.ktype == :down
-            i = clamp(i+1,1,3)
+            i = clamp(i + 1, 1, 3)
         elseif k.ktype == :up
-            i = clamp(i-1,1,3)
+            i = clamp(i - 1, 1 ,3)
         elseif k.ktype == :right
-            j = clamp(j+1,1,3)
+            j = clamp(j + 1, 1, 3)
         elseif k.ktype == :left
-            j = clamp(j-1,1,3)
+            j = clamp(j - 1, 1, 3)
         elseif k.ktype == :tab
             # Ignore tab's because we do not want that the focus manager change
             # the focused widget.

@@ -23,61 +23,75 @@ function plots()
     win = create_window(border = true, title = " Unicode Plots ")
     con = @tui_container(parent = win)
 
-    func = @tui_form(parent = con,
-                     anchor_left = (:parent, :left, 1),
-                     anchor_top = (:parent, :top),
-                     borders = true,
-                     labels = ["Function y ="])
+    func = @tui_form(
+        parent = con,
+        anchor_left = (:parent, :left, 1),
+        anchor_top = (:parent, :top),
+        borders = true,
+        labels = ["Function y ="]
+    )
 
-    label = @tui_label(parent = con,
-                       anchor_left = (func, :left),
-                       anchor_right = (func, :right),
-                       anchor_top = (func, :bottom),
-                       alignment = :c,
-                       text = "Use `t` as the time variable for the plots.")
+    label = @tui_label(
+        parent = con,
+        anchor_left = (func, :left),
+        anchor_right = (func, :right),
+        anchor_top = (func, :bottom),
+        alignment = :c,
+        text = "Use `t` as the time variable for the plots."
+    )
 
-    label = @tui_label(parent = con,
-                       anchor_left = (func, :left),
-                       anchor_right = (func,  :right),
-                       anchor_top = (label, :bottom, 2),
-                       alignment = :c,
-                       color = c1,
-                       fill_color = true,
-                       text = "Setup limits")
+    label = @tui_label(
+        parent = con,
+        anchor_left = (func, :left),
+        anchor_right = (func,  :right),
+        anchor_top = (label, :bottom, 2),
+        alignment = :c,
+        color = c1,
+        fill_color = true,
+        text = "Setup limits"
+    )
 
-    tlim = @tui_form(parent = con,
-                     anchor_left = (func, :left),
-                     anchor_top = (label, :bottom),
-                     anchor_right = (func,  :center, -1),
-                     color_valid = c0,
-                     color_invalid = c3,
-                     labels = ["t min.", "t max."],
-                     validators = Float64)
+    tlim = @tui_form(
+        parent = con,
+        anchor_left = (func, :left),
+        anchor_top = (label, :bottom),
+        anchor_right = (func,  :center, -1),
+        color_valid = c0,
+        color_invalid = c3,
+        labels = ["t min.", "t max."],
+        validators = Float64
+    )
 
-    ylim = @tui_form(parent = con,
-                     anchor_left = (func, :center, +1),
-                     anchor_top = (label, :bottom),
-                     anchor_right = (func,  :right),
-                     color_valid = c0,
-                     color_invalid = c3,
-                     labels = ["y min.", "y max."],
-                     validators = Float64)
+    ylim = @tui_form(
+        parent = con,
+        anchor_left = (func, :center, +1),
+        anchor_top = (label, :bottom),
+        anchor_right = (func,  :right),
+        color_valid = c0,
+        color_invalid = c3,
+        labels = ["y min.", "y max."],
+        validators = Float64
+    )
 
-    label = @tui_label(parent = con,
-                       anchor_left = (func, :left),
-                       anchor_right = (func, :right),
-                       anchor_top = (ylim, :bottom, 2),
-                       alignment = :c,
-                       color = c1,
-                       fill_color = true,
-                       text = "Select plot color")
+    label = @tui_label(
+        parent = con,
+        anchor_left = (func, :left),
+        anchor_right = (func, :right),
+        anchor_top = (ylim, :bottom, 2),
+        alignment = :c,
+        color = c1,
+        fill_color = true,
+        text = "Select plot color"
+    )
 
-    color_dict = Dict("Red"     => :red,
-                      "Blue"    => :blue,
-                      "Green"   => :green,
-                      "Yellow"  => :yellow,
-                      "Magenta" => :magenta,
-                      "Cyan"    => :cyan)
+    color_dict = Dict(
+        "Red"     => :red,
+        "Blue"    => :blue,
+        "Green"   => :green,
+        "Yellow"  => :yellow,
+        "Magenta" => :magenta,
+        "Cyan"    => :cyan
+    )
 
     color_keys  = collect(keys(color_dict))
 
@@ -90,16 +104,18 @@ function plots()
 
     rb = nothing
 
-    for i = 1:length(color_keys)
-        rb = @tui_radio_button(parent = con,
-                               anchor_left = (lanchor_w, lanchor_a),
-                               anchor_top = (tanchor_w, :bottom),
-                               anchor_right = (ranchor_w, ranchor_a),
-                               color_highlight = c2,
-                               group_name = "Color",
-                               label = color_keys[i])
+    for i in 1:length(color_keys)
+        rb = @tui_radio_button(
+            parent = con,
+            anchor_left = (lanchor_w, lanchor_a),
+            anchor_top = (tanchor_w, :bottom),
+            anchor_right = (ranchor_w, ranchor_a),
+            color_highlight = c2,
+            group_name = "Color",
+            label = color_keys[i]
+        )
 
-        if i%2 == 1
+        if i % 2 == 1
             lanchor_w = rb
             lanchor_a = :right
             ranchor_w = func
@@ -113,23 +129,27 @@ function plots()
         end
     end
 
-    tplot = @tui_label(parent = con,
-                       anchor_left = (:parent, :center),
-                       anchor_right = (:parent, :right),
-                       anchor_top = (:parent, :top, 1),
-                       alignment = :c,
-                       color = c1,
-                       fill_color = true,
-                       text = "PLOT")
+    tplot = @tui_label(
+        parent = con,
+        anchor_left = (:parent, :center),
+        anchor_right = (:parent, :right),
+        anchor_top = (:parent, :top, 1),
+        alignment = :c,
+        color = c1,
+        fill_color = true,
+        text = "PLOT"
+    )
 
     str = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
 
-    canvas = @tui_ansi_label(parent = con,
-                             anchor_left = (tplot, :left),
-                             anchor_right = (tplot, :right),
-                             anchor_top = (tplot, :bottom, 1),
-                             anchor_bottom = (con,   :bottom),
-                             text = str)
+    canvas = @tui_ansi_label(
+        parent = con,
+        anchor_left = (tplot, :left),
+        anchor_right = (tplot, :right),
+        anchor_top = (tplot, :bottom, 1),
+        anchor_bottom = (con,   :bottom),
+        text = str
+    )
 
     # Button actions.
     function plot(w, k)
@@ -180,32 +200,38 @@ function plots()
         return true
     end
 
-    bplot = @tui_button(parent = con,
-                        anchor_left = (func, :left),
-                        anchor_top  = (rb, :bottom, 3),
-                        width = 14,
-                        color_highlight = c2,
-                        label = "Plot",
-                        style = :boxed,
-                        signal = (key_pressed, plot))
+    bplot = @tui_button(
+        parent = con,
+        anchor_left = (func, :left),
+        anchor_top  = (rb, :bottom, 3),
+        width = 14,
+        color_highlight = c2,
+        label = "Plot",
+        style = :boxed,
+        signal = (key_pressed, plot)
+    )
 
-    bcplt = @tui_button(parent = con,
-                        anchor_center = (func, :center),
-                        anchor_top = (rb  , :bottom, 3),
-                        width = 14,
-                        color_highlight = c2,
-                        label = "Clear plot",
-                        style = :boxed,
-                        signal = (key_pressed, clear_plot))
+    bcplt = @tui_button(
+        parent = con,
+        anchor_center = (func, :center),
+        anchor_top = (rb  , :bottom, 3),
+        width = 14,
+        color_highlight = c2,
+        label = "Clear plot",
+        style = :boxed,
+        signal = (key_pressed, clear_plot)
+    )
 
-    bcfor = @tui_button(parent = con,
-                        anchor_right = (func, :right, 0),
-                        anchor_top = (rb  , :bottom, 3),
-                        width = 14,
-                        color_highlight = c2,
-                        label = "Clear form",
-                        style = :boxed,
-                        signal = (key_pressed, clear_form))
+    bcfor = @tui_button(
+        parent = con,
+        anchor_right = (func, :right, 0),
+        anchor_top = (rb  , :bottom, 3),
+        width = 14,
+        color_highlight = c2,
+        label = "Clear form",
+        style = :boxed,
+        signal = (key_pressed, clear_form)
+    )
 
     @forward_signal tlim bplot key_pressed
     @forward_signal ylim bplot key_pressed
@@ -215,9 +241,15 @@ end
 
 function create_plot(t,y,color,tmin,tmax,ymin,ymax)
     io = IOBuffer()
-    show(IOContext(io, :color=>true),
-         lineplot(t, y, color = color, xlim = (tmin, tmax),
-                  ylim = (ymin, ymax), xlabel = "t", ylabel = "f(t)"))
+    show(IOContext(io, :color=>true), lineplot(
+        t,
+        y,
+        color = color,
+        xlim = (tmin, tmax),
+        ylim = (ymin, ymax),
+        xlabel = "t",
+        ylabel = "f(t)"
+    ))
     return String(take!(io))
 end
 
@@ -228,27 +260,27 @@ function get_limits(tlim,ylim)
     vy = get_data(ylim)
 
     if vt[1] == nothing
-        t_min = (vt[2] == nothing) ? 0. : parse(Float64,vt[2]) - 1
+        t_min = (vt[2] == nothing) ? 0. : parse(Float64, vt[2]) - 1
     else
-        t_min = parse(Float64,vt[1])
+        t_min = parse(Float64, vt[1])
     end
 
     if vt[2] == nothing
         t_max = t_min + 1
     else
-        t_max = parse(Float64,vt[2])
+        t_max = parse(Float64, vt[2])
     end
 
     if vy[1] == nothing
-        y_min = (vy[2] == nothing) ? 0. : parse(Float64,vy[2]) - 1
+        y_min = (vy[2] == nothing) ? 0. : parse(Float64, vy[2]) - 1
     else
-        y_min = parse(Float64,vy[1])
+        y_min = parse(Float64, vy[1])
     end
 
     if vy[2] == nothing
         y_max = y_min + 1
     else
-        y_max = parse(Float64,vy[2])
+        y_max = parse(Float64, vy[2])
     end
 
     return t_min, t_max, y_min, y_max
