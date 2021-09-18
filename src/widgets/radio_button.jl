@@ -33,27 +33,34 @@ _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
 
 accept_focus(widget::WidgetRadioButton) = accept_focus(widget.base)
 
-function create_widget(::Val{:radio_button},
-                       layout::ObjectLayout;
-                       label::AbstractString = "Button",
-                       color::Int = _color_default,
-                       color_highlight::Int = _color_highlight,
-                       glyph_selected::String = "[X]",
-                       glyph_deselected::String = "[ ]",
-                       group_name::String = "group")
+function create_widget(
+    ::Val{:radio_button},
+    layout::ObjectLayout;
+    label::AbstractString = "Button",
+    color::Int = _color_default,
+    color_highlight::Int = _color_highlight,
+    glyph_selected::String = "[X]",
+    glyph_deselected::String = "[ ]",
+    group_name::String = "group"
+)
 
     # Create the button widget.
-    button = create_widget(Val(:button), layout;
-                           label = glyph_deselected * " " * label,
-                           color = color, color_highlight = color_highlight,
-                           style = :none)
+    button = create_widget(
+        Val(:button),
+        layout;
+        label = glyph_deselected * " " * label,
+        color = color, color_highlight = color_highlight,
+        style = :none
+    )
 
     # Current size and position of the widget.
-    widget = WidgetRadioButton(base             = button,
-                               label            = label,
-                               glyph_deselected = glyph_deselected,
-                               glyph_selected   = glyph_selected,
-                               group_name       = group_name)
+    widget = WidgetRadioButton(
+        base             = button,
+        label            = label,
+        glyph_deselected = glyph_deselected,
+        glyph_selected   = glyph_selected,
+        group_name       = group_name
+    )
 
     # Function to be executed on return pressed.
     @connect_signal button key_pressed _handler_key_pressed widget
@@ -107,6 +114,8 @@ function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
     end
 
     _destroy_widget(rb; refresh = refresh)
+
+    return nothing
 end
 
 function process_focus(widget::WidgetRadioButton, k::Keystroke)
@@ -127,10 +136,8 @@ release_focus(widget::WidgetRadioButton) = release_focus(widget.base)
 Return the `WidgetRadioButton` that is selected in group with name `group_name`.
 If the `group_name` does not exists or if no button is selected, then `nothing`
 is returned.
-
 """
 function get_selected(group_name::AbstractString)
-
     if !haskey(_radio_buttons_groups, group_name)
         @log warning "get_selected" "The radio button group named \"$group_name\" was not found!"
 
@@ -140,6 +147,8 @@ function get_selected(group_name::AbstractString)
             b.selected && return b
         end
     end
+
+    return nothing
 end
 
 ################################################################################
@@ -153,7 +162,6 @@ _handler_key_pressed(w, k, rb) = k.ktype == :enter && _select_radio_button(rb)
     _select_radio_button(rb::WidgetRadioButton)
 
 Select the radio button `rb` in its group name.
-
 """
 function _select_radio_button(rb::WidgetRadioButton)
     group_name = rb.group_name
@@ -168,19 +176,22 @@ function _select_radio_button(rb::WidgetRadioButton)
 
     change_label(rb.base, rb.glyph_selected * " " * rb.label)
     rb.selected = true
+
+    return nothing
 end
 
 """
     _select_radio_button(rb::WidgetRadioButton)
 
 Deselect the radio button `rb` in its group name.
-
 """
 function _deselect_radio_button(rb::WidgetRadioButton)
     if rb.selected
         change_label(rb.base, rb.glyph_deselected * " " * rb.label)
         rb.selected = false
     end
+
+    return nothing
 end
 
 ################################################################################

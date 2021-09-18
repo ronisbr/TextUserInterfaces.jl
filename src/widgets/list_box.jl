@@ -65,18 +65,20 @@ function accept_focus(widget::WidgetListBox)
     return true
 end
 
-function create_widget(::Val{:list_box},
-                       layout::ObjectLayout;
-                       data::Vector{String} = String[],
-                       color::Int = _color_default,
-                       color_highlight::Int = _color_highlight,
-                       color_selected::Int = _color_highlight,
-                       multiple_selection::Bool = false,
-                       numlines::Int = -1,
-                       icon_not_selected::String = "[ ]",
-                       icon_selected::String = "[X]",
-                       selectable::Bool = true,
-                       show_icon::Bool = false)
+function create_widget(
+    ::Val{:list_box},
+    layout::ObjectLayout;
+    data::Vector{String} = String[],
+    color::Int = _color_default,
+    color_highlight::Int = _color_highlight,
+    color_selected::Int = _color_highlight,
+    multiple_selection::Bool = false,
+    numlines::Int = -1,
+    icon_not_selected::String = "[ ]",
+    icon_selected::String = "[X]",
+    selectable::Bool = true,
+    show_icon::Bool = false
+)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
@@ -89,24 +91,31 @@ function create_widget(::Val{:list_box},
 
     if horizontal == :unknown
         layout.width = maximum(length.(data))
-        show_icon && (layout.width += max(length(icon_selected),
-                                       length(icon_not_selected)) + 1)
+
+        if show_icon
+            layout.width += max(
+                length(icon_selected),
+                length(icon_not_selected)
+            ) + 1
+        end
     end
 
     # Create the widget.
-    widget = WidgetListBox(layout                = layout,
-                           color              = color,
-                           color_highlight    = color_highlight,
-                           color_selected     = color_selected,
-                           data               = data,
-                           icon_not_selected  = icon_not_selected,
-                           icon_selected      = icon_selected,
-                           multiple_selection = multiple_selection,
-                           numlines₀          = numlines,
-                           numlines           = numlines,
-                           selected           = zeros(Bool, length(data)),
-                           selectable         = selectable,
-                           show_icon          = show_icon)
+    widget = WidgetListBox(
+        layout             = layout,
+        color              = color,
+        color_highlight    = color_highlight,
+        color_selected     = color_selected,
+        data               = data,
+        icon_not_selected  = icon_not_selected,
+        icon_selected      = icon_selected,
+        multiple_selection = multiple_selection,
+        numlines₀          = numlines,
+        numlines           = numlines,
+        selected           = zeros(Bool, length(data)),
+        selectable         = selectable,
+        show_icon          = show_icon
+    )
 
     @connect_signal widget key_pressed process_keystroke
 
@@ -138,15 +147,15 @@ function process_keystroke(widget::WidgetListBox, k::Keystroke)
 end
 
 function redraw(widget::WidgetListBox)
-    @unpack begview, buffer, color, color_highlight, color_selected, curh, data,
-            icon_not_selected, icon_selected, numlines, parent, selected,
-            show_icon, width = widget
+    @unpack begview, buffer, color, color_highlight, color_selected = widget
+    @unpack curh, data, icon_not_selected, icon_selected, numlines = widget
+    @unpack parent, selected, show_icon, width = widget
 
     wclear(buffer)
 
-    for i = 0:numlines-1
+    for i in 0:numlines-1
         # ID of the current item in the vectors.
-        id = clamp(begview+i+1, 1, length(data))
+        id = clamp(begview + i + 1, 1, length(data))
 
         # Select which icon must be used for this item.
         if show_icon
@@ -161,7 +170,7 @@ function redraw(widget::WidgetListBox)
 
         # If the item is the highlighted (the one that holds the cursor), then
         # the color must be inverted.
-        if (begview+i == curh) && has_focus(parent, widget)
+        if (begview + i == curh) && has_focus(parent, widget)
             color_i = color_highlight
         end
 
@@ -169,7 +178,7 @@ function redraw(widget::WidgetListBox)
         # with the correct color.
         str = icon * data[id]
         Δ   = width - length(str)
-        pad = Δ > 0 ? " "^Δ : ""
+        pad = Δ > 0 ? " " ^ Δ : ""
 
         wattron(buffer, color_i)
         mvwprintw(buffer, i, 0, str * pad)
@@ -199,10 +208,14 @@ function reposition!(widget::WidgetListBox; force::Bool = false)
         end
 
         # `numlines` must not be greater than the widget height.
-        height < numlines && (numlines = height)
+        if height < numlines
+            numlines = height
+        end
 
         # `numlines` must not be greater than the number of data.
-        len_data < numlines && (numlines = len_data)
+        if len_data < numlines
+            numlines = len_data
+        end
 
         # Adjust the beginning of the view.
         if begview + numlines > len_data
@@ -266,7 +279,7 @@ function select_item(widget::WidgetListBox, id::Int)
     @unpack data = widget
 
     if 0 < id ≤ length(data)
-        widget.curh = id-1
+        widget.curh = id - 1
         _move_view(widget, 0)
     end
 
@@ -278,8 +291,8 @@ end
 ################################################################################
 
 function _handle_input(widget::WidgetListBox, k::Keystroke)
-    @unpack data, begview, curh, multiple_selection, numlines, selectable,
-            selected = widget
+    @unpack data, begview, curh, multiple_selection, numlines = widget
+    @unpack selectable, selected = widget
 
     # Shift that we must apply to the list highlight item.
     Δx = 0
@@ -331,7 +344,7 @@ function _move_view(widget::WidgetListBox, Δx::Int)
     @unpack begview, curh, data, numlines = widget
 
     # Make sure `curh` is inside the allowed bounds considering the data.
-    curh = clamp(curh + Δx, 0, length(data)-1)
+    curh = clamp(curh + Δx, 0, length(data) - 1)
 
     # Check if the highlighted values is outside the view.
     if curh < begview

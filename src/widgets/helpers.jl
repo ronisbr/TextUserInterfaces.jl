@@ -9,23 +9,27 @@
 
 export @create_widget_helper
 
-const _list_layout_args = (:anchor_bottom,
-                        :anchor_left,
-                        :anchor_right,
-                        :anchor_top,
-                        :anchor_center,
-                        :anchor_middle,
-                        :top,
-                        :left,
-                        :height,
-                        :width)
+const _list_layout_args = (
+    :anchor_bottom,
+    :anchor_left,
+    :anchor_right,
+    :anchor_top,
+    :anchor_center,
+    :anchor_middle,
+    :top,
+    :left,
+    :height,
+    :width
+)
 
-const _list_layout_anchors = (:anchor_bottom,
-                           :anchor_left,
-                           :anchor_right,
-                           :anchor_top,
-                           :anchor_center,
-                           :anchor_middle)
+const _list_layout_anchors = (
+    :anchor_bottom,
+    :anchor_left,
+    :anchor_right,
+    :anchor_top,
+    :anchor_center,
+    :anchor_middle
+)
 
 """
     @create_widget_helper(widget_symbol[, macro_name])
@@ -98,13 +102,17 @@ any parent.
                             num_opts ∉ (2,3) && error("An anchor must have two or three parameters.")
 
                             if num_opts == 2
-                                v = :(Anchor($(a.args[2].args[1]),
-                                             $(a.args[2].args[2]),
-                                             0))
+                                v = :(Anchor(
+                                    $(a.args[2].args[1]),
+                                    $(a.args[2].args[2]),
+                                    0
+                                ))
                             else
-                                v = :(Anchor($(a.args[2].args[1]),
-                                             $(a.args[2].args[2]),
-                                             $(a.args[2].args[3])))
+                                v = :(Anchor(
+                                    $(a.args[2].args[1]),
+                                    $(a.args[2].args[2]),
+                                    $(a.args[2].args[3])
+                                ))
                             end
                         else
                             v = a.args[2]
@@ -128,7 +136,7 @@ any parent.
             # Assemble the expression that will create the widget.
             if !has_parent
                 create_widget_expr = quote
-                    layout    = ObjectLayout($(expr_layout...))
+                    layout = ObjectLayout($(expr_layout...))
                     widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                     $(expr_signals...)
                     widget
@@ -136,7 +144,7 @@ any parent.
 
             else
                 create_widget_expr = quote
-                    layout    = ObjectLayout($(expr_layout...))
+                    layout = ObjectLayout($(expr_layout...))
                     widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                     add_widget!($parent, widget)
                     $(expr_signals...)

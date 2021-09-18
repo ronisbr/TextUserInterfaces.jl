@@ -44,15 +44,17 @@ function accept_focus(widget::WidgetComboBox)
     return true
 end
 
-function create_widget(::Val{:combo_box},
-                       layout::ObjectLayout;
-                       data::Vector{String} = String[],
-                       color::Int = _color_default,
-                       color_highlight::Int = _color_highlight,
-                       list_box_border::Bool = false,
-                       list_box_color::Int = _color_default,
-                       list_box_color_highlight::Int = _color_highlight,
-                       style::Symbol = :simple)
+function create_widget(
+    ::Val{:combo_box},
+    layout::ObjectLayout;
+    data::Vector{String} = String[],
+    color::Int = _color_default,
+    color_highlight::Int = _color_highlight,
+    list_box_border::Bool = false,
+    list_box_color::Int = _color_default,
+    list_box_color_highlight::Int = _color_highlight,
+    style::Symbol = :simple
+)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
@@ -68,46 +70,64 @@ function create_widget(::Val{:combo_box},
     end
 
     # Create the widget.
-    widget = WidgetComboBox(layout                      = layout,
-                            color                    = color,
-                            color_highlight          = color_highlight,
-                            list_box_border          = list_box_border,
-                            list_box_color           = list_box_color,
-                            list_box_color_highlight = list_box_color_highlight,
-                            data                     = data,
-                            style                    = style)
+    widget = WidgetComboBox(
+        layout                   = layout,
+        color                    = color,
+        color_highlight          = color_highlight,
+        list_box_border          = list_box_border,
+        list_box_color           = list_box_color,
+        list_box_color_highlight = list_box_color_highlight,
+        data                     = data,
+        style                    = style
+    )
 
     # If a border is required, then create a container and add the list box
     # in this container.
     if list_box_border
-        layout = ObjectLayout(anchor_top   = (widget, :bottom, 0),
-                     anchor_left  = (widget, :left,   0),
-                     anchor_right = (widget, :right,  0),
-                     height       = 5)
+        layout = ObjectLayout(
+            anchor_top   = (widget, :bottom, 0),
+            anchor_left  = (widget, :left,   0),
+            anchor_right = (widget, :right,  0),
+            height       = 5
+        )
+
         con = create_widget(Val(:container), layout; border = true)
 
-        layout = ObjectLayout(anchor_top    = Anchor(:parent, :top, 0),
-                     anchor_left   = Anchor(:parent, :left,   0),
-                     anchor_right  = Anchor(:parent, :right,  0),
-                     anchor_bottom = Anchor(:parent, :bottom, 0))
-        list_box = create_widget(Val(:list_box), layout;
-                                 selectable      = false,
-                                 data            = data,
-                                 color           = list_box_color,
-                                 color_highlight = list_box_color_highlight)
+        layout = ObjectLayout(
+            anchor_top    = Anchor(:parent, :top,    0),
+            anchor_left   = Anchor(:parent, :left,   0),
+            anchor_right  = Anchor(:parent, :right,  0),
+            anchor_bottom = Anchor(:parent, :bottom, 0)
+        )
+
+        list_box = create_widget(
+            Val(:list_box),
+            layout;
+            selectable      = false,
+            data            = data,
+            color           = list_box_color,
+            color_highlight = list_box_color_highlight
+        )
+
         add_widget!(con, list_box)
 
         widget._list_box = con
     else
-        layout = ObjectLayout(anchor_top   = Anchor(widget, :bottom, 0),
-                     anchor_left  = Anchor(widget, :left,   0),
-                     anchor_right = Anchor(widget, :right,  0),
-                     height       = 5)
-        list_box = create_widget(Val(:list_box), layout;
-                                 selectable      = false,
-                                 data            = data,
-                                 color           = list_box_color,
-                                 color_highlight = list_box_color_highlight)
+        layout = ObjectLayout(
+            anchor_top   = Anchor(widget, :bottom, 0),
+            anchor_left  = Anchor(widget, :left,   0),
+            anchor_right = Anchor(widget, :right,  0),
+            height       = 5
+        )
+
+        list_box = create_widget(
+            Val(:list_box),
+            layout;
+            selectable      = false,
+            data            = data,
+            color           = list_box_color,
+            color_highlight = list_box_color_highlight
+        )
 
         widget._list_box = list_box
     end
@@ -131,8 +151,7 @@ function destroy_widget(widget::WidgetComboBox; refresh::Bool = true)
     return nothing
 end
 
-process_keystroke(widget::WidgetComboBox, k::Keystroke) =
-    _handle_input(widget, k)
+process_keystroke(widget::WidgetComboBox, k::Keystroke) = _handle_input(widget, k)
 
 function redraw(widget::WidgetComboBox)
     @unpack buffer, cur, data, parent, width = widget
@@ -152,10 +171,6 @@ end
 require_cursor(widget::WidgetComboBox) = false
 
 ################################################################################
-#                           Custom widget functions
-################################################################################
-
-################################################################################
 #                              Private functions
 ################################################################################
 
@@ -173,7 +188,7 @@ function _draw_combo_box(widget::WidgetComboBox)
         Δ = width - 5 - length(current)
         str = Δ < 0 ? current[1:width-5] : current * " "^Δ
 
-        mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
+        mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
         mvwprintw(buffer, 1, 0, "│")
 
         wattron(buffer, c)
@@ -181,7 +196,7 @@ function _draw_combo_box(widget::WidgetComboBox)
         wattroff(buffer, c)
 
         wprintw(buffer, "│")
-        mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
+        mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
     else
         current = data[cur]
         Δ = width - 2 - length(current)

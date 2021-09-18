@@ -31,28 +31,36 @@ end
 # Labels cannot accept focus.
 accept_focus(widget::WidgetLabel) = false
 
-function create_widget(::Val{:label},
-                       layout::ObjectLayout;
-                       alignment = :l,
-                       color::Int = _color_default,
-                       fill_color::Bool = false,
-                       text::AbstractString = "Text")
-
+function create_widget(
+    ::Val{:label},
+    layout::ObjectLayout;
+    alignment = :l,
+    color::Int = _color_default,
+    fill_color::Bool = false,
+    text::AbstractString = "Text"
+)
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     horizontal = _process_horizontal_info(layout)
     vertical   = _process_vertical_info(layout)
 
-    vertical   == :unknown && (layout.height = length(split(text, '\n')))
-    horizontal == :unknown && (layout.width  = maximum(length.(split(text, '\n')))+1)
+    if vertical == :unknown
+        layout.height = length(split(text, '\n'))
+    end
+
+    if horizontal == :unknown
+        layout.width = maximum(length.(split(text, '\n'))) + 1
+    end
 
     # Create the widget.
-    widget = WidgetLabel(layout        = layout,
-                         alignment  = alignment,
-                         text₀      = text,
-                         text       = text,
-                         color      = color,
-                         fill_color = fill_color)
+    widget = WidgetLabel(
+        layout     = layout,
+        alignment  = alignment,
+        text₀      = text,
+        text       = text,
+        color      = color,
+        fill_color = fill_color
+    )
 
     @log info "create_widget" """
     Label created:
@@ -73,6 +81,7 @@ function redraw(widget::WidgetLabel)
     color > 0 && wattron(buffer, color)
     mvwprintw(buffer, 0, 0, widget.text)
     color > 0 && wattroff(buffer, color)
+
     return nothing
 end
 
@@ -99,17 +108,19 @@ Change to text of the label widget `widget` to `new_text`.
 The text alignment in the widget can be selected by the keyword `alignment`,
 which can be:
 
-* `:l`: left alignment (**default**);
-* `:c`: Center alignment; or
-* `:r`: Right alignment.
+- `:l`: left alignment (**default**);
+- `:c`: Center alignment; or
+- `:r`: Right alignment.
 
 The text color can be selected by the keyword `color`. It it is negative
 (**default**), then the current color will not be changed.
-
 """
-function change_text(widget::WidgetLabel, new_text::AbstractString;
-                     alignment = :l, color::Int = -1)
-
+function change_text(
+    widget::WidgetLabel,
+    new_text::AbstractString;
+    alignment = :l,
+    color::Int = -1
+)
     widget.text₀ = new_text
     color > 0 && (widget.color = color)
     _align_text!(widget)
@@ -143,10 +154,10 @@ function _align_text!(widget::WidgetLabel)
         # Check the alignment and print accordingly.
         if alignment == :r
             col     = width - length(line) - 1
-            text_i *= " "^col * line
+            text_i *= " " ^ col * line
         elseif alignment == :c
             col     = div(width - length(line), 2)
-            text_i *= " "^col * line
+            text_i *= " " ^ col * line
         else
             text_i *= line
         end
@@ -155,7 +166,7 @@ function _align_text!(widget::WidgetLabel)
         # widget width.
         if fill_color
             rem     = clamp(width - length(text_i), 0, width)
-            text_i *= " "^rem
+            text_i *= " " ^ rem
         end
 
         text *= text_i * "\n"

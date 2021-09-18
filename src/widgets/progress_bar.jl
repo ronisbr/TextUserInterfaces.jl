@@ -27,14 +27,15 @@ end
 # Progress bar cannot accept focus.
 accept_focus(widget::WidgetProgressBar) = false
 
-function create_widget(::Val{:progress_bar},
-                       layout::ObjectLayout;
-                       border::Bool = false,
-                       color::Int = _color_default,
-                       color_highlight::Int = _color_highlight,
-                       style::Symbol = :simple,
-                       value::Int = 0)
-
+function create_widget(
+    ::Val{:progress_bar},
+    layout::ObjectLayout;
+    border::Bool = false,
+    color::Int = _color_default,
+    color_highlight::Int = _color_highlight,
+    style::Symbol = :simple,
+    value::Int = 0
+)
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     horizontal = _process_horizontal_info(layout)
@@ -49,11 +50,13 @@ function create_widget(::Val{:progress_bar},
     end
 
     # Create the widget.
-    widget = WidgetProgressBar(layout    = layout,
-                               border = border,
-                               color  = color,
-                               value  = value,
-                               style  = style)
+    widget = WidgetProgressBar(
+        layout = layout,
+        border = border,
+        color  = color,
+        value  = value,
+        style  = style
+    )
 
     @log info "create_widget" """
     Progress bar created:
@@ -93,7 +96,6 @@ Change the value of the progress bar to `new_value`.
 
 The color can be selected by the keyword `color`. It it is negative
 (**default**), then the current color will not be changed.
-
 """
 function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
 
@@ -140,6 +142,8 @@ function _draw_progress_bar_simple(widget::WidgetProgressBar)
     mvwprintw(buffer, y₀, x₀, "█"^num)
 
     color > 0 && wattroff(buffer, color)
+
+    return nothing
 end
 
 function _draw_progress_bar_complete(widget::WidgetProgressBar)
@@ -172,6 +176,8 @@ function _draw_progress_bar_complete(widget::WidgetProgressBar)
     mvwprintw(buffer, y₀+1, x₀, "█"^num)
 
     color > 0 && wattroff(buffer, color)
+
+    return nothing
 end
 
 function _progress_bar_height(style::Symbol, border::Bool)

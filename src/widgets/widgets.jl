@@ -11,15 +11,14 @@
 #                                API functions
 ################################################################################
 
-export accept_focus, create_widget, destroy_widget!, init_widget_buffer!,
-       process_keystroke, request_update, request_focus, redraw, release_focus,
-       set_widget_color, update
+export accept_focus, create_widget, destroy_widget!, init_widget_buffer!
+export process_keystroke, request_update, request_focus, redraw, release_focus
+export set_widget_color, update
 
 """
     accept_focus(widget)
 
 Return `true` is the widget `widget` accepts focus or `false` otherwise.
-
 """
 accept_focus(widget) = return true
 
@@ -34,15 +33,16 @@ Additional arguments and keywords related to each widget can be passed using
 
 If the second signature is called, then the created widget is added to the
 parent `parent`.
-
 """
 create_widget
 
-function create_widget(T,
-                       parent::WidgetParent,
-                       layout::ObjectLayout,
-                       args...;
-                       kwargs...)
+function create_widget(
+    T,
+    parent::WidgetParent,
+    layout::ObjectLayout,
+    args...;
+    kwargs...
+)
     widget = create_widget(T, layout, args...; kwargs...)
     add_widget!(parent, widget)
     return widget
@@ -55,16 +55,15 @@ Destroy the widget `widget`.
 
 If `refresh` is `true` (**default**), then a full refresh will be performed on
 the parent window. Otherwise, no refresh will be performed.
-
 """
-destroy_widget!(widget; refresh::Bool = true) =
-    _destroy_widget!(widget; refresh = refresh)
+function destroy_widget!(widget; refresh::Bool = true)
+    return _destroy_widget!(widget; refresh = refresh)
+end
 
 """
     destroy_widget_buffer!(widget::Widget)
 
 Destroy the buffer of the widget `widget`.
-
 """
 function destroy_widget_buffer!(widget::Widget)
     if widget.buffer != Ptr{WINDOW}(0)
@@ -79,7 +78,6 @@ end
     get_buffer(widget)
 
 Return the buffer of the widget `widget`.
-
 """
 get_buffer(widget) = widget.buffer
 
@@ -87,7 +85,6 @@ get_buffer(widget) = widget.buffer
     get_parent(widget)
 
 Return the parent of the widget `widget`.
-
 """
 get_parent(widget) = widget.parent
 
@@ -97,7 +94,6 @@ get_parent(widget) = widget.parent
 Initialize the buffer of widget `widget`. The variables `layout` and `parent` must
 be set before calling this function. If the buffer is already initialized, then
 it will be deleted first.
-
 """
 function init_widget_buffer!(widget::Widget)
     destroy_widget_buffer!(widget)
@@ -125,7 +121,6 @@ end
 Process the actions when widget `widget` is in focus and the keystroke `k` is
 pressed. If it returns `false`, then it is means that the widget was not capable
 to process the focus. Otherwise, it must return `true`.
-
 """
 function process_focus(widget, k::Keystroke)
     @log verbose "process_focus" "Focused $(obj_desc(widget)): key pressed."
@@ -151,7 +146,6 @@ Default function of `widget` to process a keystroke. This function is called
 inside `process_focus`. If the widget could process the keystore, then if must
 return `true`. Otherwise, if must return `false`. In this case, the keystroke
 will be passed to the next widget in the focus list.
-
 """
 process_keystroke(widget, k::Keystroke) = false
 
@@ -159,7 +153,6 @@ process_keystroke(widget, k::Keystroke) = false
     request_focus(widget)
 
 Request to focus to the widget `widget`.
-
 """
 function request_focus(widget)
     @unpack parent = widget
@@ -174,7 +167,6 @@ end
     request_update(widget)
 
 Request update of the widget `widget`.
-
 """
 function request_update(widget)
     widget.update_needed = true
@@ -188,7 +180,6 @@ request_update(::Nothing) = return nothing
     redraw(widget)
 
 Redraw the widget inside its content window `cwin`.
-
 """
 redraw
 
@@ -197,7 +188,6 @@ redraw
 
 Request focus to be released. It should return `true` if the focus can be
 released or `false` otherwise.
-
 """
 release_focus(widget) = return true
 
@@ -205,7 +195,6 @@ release_focus(widget) = return true
     set_widget_color(widget, color::Int)
 
 Set the background color of `widget` to `color`.
-
 """
 function set_widget_color(widget, color::Int)
     color >= 0 && (wbkgd(get_buffer(widget), color))
@@ -220,7 +209,6 @@ if the widget needed to be updated of `false` otherwise.
 
 If `force_redraw` is `true`, then the widget will be updated even if it is not
 needed.
-
 """
 function update(widget; force_redraw = false)
     if widget.update_needed || force_redraw
@@ -238,7 +226,6 @@ end
 If `true`, then the physical cursor will be shown and the position will be
 updated according to its position in the widget window. Otherwise, the physical
 cursor will be hidden.
-
 """
 require_cursor(widget) = false
 
@@ -260,7 +247,6 @@ request_prev_widget(widget) = accept_focus(widget)
 
 Private function that destroys a widget. This can be used if a new widget needs
 to reimplement the destroy function.
-
 """
 function _destroy_widget!(widget; refresh::Bool = true)
     @unpack buffer, parent = widget

@@ -61,14 +61,15 @@ function accept_focus(widget::WidgetInputField)
     return true
 end
 
-function create_widget(::Val{:input_field},
-                       layout::ObjectLayout;
-                       border::Bool = false,
-                       color_valid::Int = _color_default,
-                       color_invalid::Int = _color_default,
-                       max_data_size::Int = 0,
-                       validator = nothing)
-
+function create_widget(
+    ::Val{:input_field},
+    layout::ObjectLayout;
+    border::Bool = false,
+    color_valid::Int = _color_default,
+    color_invalid::Int = _color_default,
+    max_data_size::Int = 0,
+    validator = nothing
+)
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     horizontal = _process_horizontal_info(layout)
@@ -98,12 +99,14 @@ function create_widget(::Val{:input_field},
     end
 
     # Create the widget.
-    widget = WidgetInputField(layout              = layout,
-                              border           = border,
-                              color_valid      = color_valid,
-                              color_invalid    = color_invalid,
-                              max_data_size    = max_data_size,
-                              validator        = validator)
+    widget = WidgetInputField(
+        layout        = layout,
+        border        = border,
+        color_valid   = color_valid,
+        color_invalid = color_invalid,
+        max_data_size = max_data_size,
+        validator     = validator
+    )
 
     @connect_signal widget key_pressed process_keystroke
 
@@ -136,8 +139,8 @@ function process_keystroke(widget::WidgetInputField, k::Keystroke)
 end
 
 function redraw(widget::WidgetInputField)
-    @unpack border, buffer, color_invalid, color_valid, curx, cury, data,
-            is_valid, size, view = widget
+    @unpack border, buffer, color_invalid, color_valid, curx, cury = widget
+    @unpack data, is_valid, size, view = widget
 
     wclear(buffer)
 
@@ -162,7 +165,7 @@ function redraw(widget::WidgetInputField)
 
     wattron(buffer, color)
     # First, print spaces to apply the styling.
-    mvwprintw(buffer, y₀, x₀, " "^size)
+    mvwprintw(buffer, y₀, x₀, " " ^ size)
     mvwprintw(buffer, y₀, x₀, str)
     wattroff(buffer, color)
 
@@ -208,7 +211,6 @@ require_cursor(widget::WidgetInputField) = true
     clear_data!(widget::WidgetInputField)
 
 Clear the data in the input field `widget`.
-
 """
 function clear_data!(widget::WidgetInputField)
     empty!(widget.data)
@@ -229,7 +231,6 @@ end
 
 Get the data of `widget` as a string. If the validator is enabled and the data
 is not valid, then return `nothing`.
-
 """
 function get_data(widget::WidgetInputField)
     if !_has_validator(widget) || widget.is_valid
@@ -295,8 +296,9 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     end
 
     # Limit for the cursors in the X-axis.
-    cxlimit = max_data_size > 0 ? min(max_data_size, length(data)+1) :
-                                  length(data) + 1
+    cxlimit = max_data_size > 0 ?
+        min(max_data_size, length(data)+1) :
+        length(data) + 1
 
     # Update the position of the virtual cursor.
     vcurx = clamp(vcurx + Δx, 1, cxlimit)
@@ -311,7 +313,7 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
 
             # If the view reached the most left position, then we must move the
             # cursor.
-            curx += min(0, view-1)
+            curx += min(0, view - 1)
 
             update = true
         end

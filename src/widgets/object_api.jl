@@ -24,8 +24,13 @@ function reposition!(widget::Widget; force::Bool = false)
     widget_resize = false
     widget_move   = false
 
-    ( (height != widget.height) || (width != widget.width) ) && (widget_resize = true)
-    ( (top    != widget.top)    || (left  != widget.left)  ) && (widget_move   = true)
+    if (height != widget.height) || (width != widget.width)
+        widget_resize = true
+    end
+
+    if (top != widget.top) || (left != widget.left)
+        widget_move = true
+    end
 
     # Repack values.
     @pack! widget = height, width, top, left

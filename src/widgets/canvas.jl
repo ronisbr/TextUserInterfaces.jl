@@ -26,10 +26,12 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Val{:canvas},
-                       layout::ObjectLayout;
-                       num_columns = 1,
-                       num_rows = 1)
+function create_widget(
+    ::Val{:canvas},
+    layout::ObjectLayout;
+    num_columns = 1,
+    num_rows = 1
+)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
@@ -44,9 +46,11 @@ function create_widget(::Val{:canvas},
     colors = zeros(Int, num_rows, num_columns)
 
     # Create the widget.
-    widget = WidgetCanvas(layout    = layout,
-                          chars  = chars,
-                          colors = colors)
+    widget = WidgetCanvas(
+        layout = layout,
+        chars  = chars,
+        colors = colors
+    )
 
     @connect_signal widget key_pressed process_keystroke
 
@@ -72,6 +76,7 @@ function redraw(widget::WidgetCanvas)
 
     @inbounds for i = 1:N
         i > height+1 && break
+
         for j = 1:M
             j > width+1 && break
 

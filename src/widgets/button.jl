@@ -25,15 +25,19 @@ export WidgetButton, change_label
 end
 
 # Conversion dictionary between style and height.
-const _button_style_height = Dict(:boxed  => 3,
-                                  :simple => 1,
-                                  :none   => 1)
+const _button_style_height = Dict(
+    :boxed  => 3,
+    :simple => 1,
+    :none   => 1
+)
 
 # Conversion dictionary between style and width that must be added to the label
 # length.
-const _button_style_width = Dict(:boxed  => 4,
-                                 :simple => 4,
-                                 :none   => 0)
+const _button_style_width = Dict(
+    :boxed  => 4,
+    :simple => 4,
+    :none   => 0
+)
 
 ################################################################################
 #                                     API
@@ -44,12 +48,14 @@ function accept_focus(widget::WidgetButton)
     return true
 end
 
-function create_widget(::Val{:button},
-                       layout::ObjectLayout;
-                       label::AbstractString = "Button",
-                       color::Int = _color_default,
-                       color_highlight::Int = _color_highlight,
-                       style::Symbol = :simple)
+function create_widget(
+    ::Val{:button},
+    layout::ObjectLayout;
+    label::AbstractString = "Button",
+    color::Int = _color_default,
+    color_highlight::Int = _color_highlight,
+    style::Symbol = :simple
+)
 
     # Check arguments.
     if !haskey(_button_style_height, style)
@@ -74,11 +80,13 @@ function create_widget(::Val{:button},
     end
 
     # Create the widget.
-    widget = WidgetButton(layout             = layout,
-                          label           = label,
-                          color           = color,
-                          color_highlight = color_highlight,
-                          style           = style)
+    widget = WidgetButton(
+        layout          = layout,
+        label           = label,
+        color           = color,
+        color_highlight = color_highlight,
+        style           = style
+    )
 
     @connect_signal widget key_pressed process_keystroke
 

@@ -31,12 +31,13 @@ end
 # Labels cannot accept focus.
 accept_focus(widget::WidgetANSILabel) = false
 
-function create_widget(::Val{:ansi_label},
-                       layout::ObjectLayout;
-                       alignment = :l,
-                       color::Int = _color_default,
-                       text::AbstractString = "Text")
-
+function create_widget(
+    ::Val{:ansi_label},
+    layout::ObjectLayout;
+    alignment = :l,
+    color::Int = _color_default,
+    text::AbstractString = "Text"
+)
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
     horizontal = _process_horizontal_info(layout)
@@ -45,14 +46,22 @@ function create_widget(::Val{:ansi_label},
     if (vertical == :unknown) || (horizontal == :unknown)
         printable_text = replace(text, r"\e\[[0-9;]*m(?:\e\[K)?" => s"")
         lines          = split(text, '\n')
-        vertical   == :unknown && (layout.height = length(lines))
-        horizontal == :unknown && (layout.width  = maximum(length.(lines)) + 1)
+
+        if vertical   == :unknown
+            layout.height = length(lines)
+        end
+
+        if horizontal == :unknown
+            layout.width  = maximum(length.(lines)) + 1
+        end
     end
 
     # Create the widget.
-    widget = WidgetANSILabel(layout       = layout,
-                             alignment = alignment,
-                             text₀     = text)
+    widget = WidgetANSILabel(
+        layout    = layout,
+        alignment = alignment,
+        text₀     = text
+    )
 
     @log info "create_widget" """
     ANSI label created:
@@ -102,14 +111,15 @@ Change to text of the label widget `widget` to `new_text`.
 The text alignment in the widget can be selected by the keyword `alignment`,
 which can be:
 
-* `:l`: left alignment (**default**);
-* `:c`: Center alignment; or
-* `:r`: Right alignment.
-
+- `:l`: left alignment (**default**);
+- `:c`: Center alignment; or
+- `:r`: Right alignment.
 """
-function change_text(widget::WidgetANSILabel, new_text::AbstractString;
-                     alignment = :l)
-
+function change_text(
+    widget::WidgetANSILabel,
+    new_text::AbstractString;
+    alignment = :l
+)
     widget.text₀ = new_text
     _parse_ansi_text!(widget)
 
@@ -141,7 +151,7 @@ function _parse_ansi_text!(widget::WidgetANSILabel)
         # Notice that if the ANSI escape sequence is not valid, then the
         # alignment will not be correct. This regex remove all ANSI escape
         # sequences to count for the printable characters.
-        if alignment ∈ [:r,:c]
+        if alignment ∈ [:r, :c]
             printable_line = replace(line, r"\e\[[0-9;]*m(?:\e\[K)?" => s"")
             length_line    = length(printable_line)
         else
@@ -161,14 +171,17 @@ function _parse_ansi_text!(widget::WidgetANSILabel)
     end
 
     # Parse the ANSI escape sequences.
-    v_str,v_d = parse_ansi_string(text)
+    v_str, v_d = parse_ansi_string(text)
 
     colors = Vector{Int}(undef,0)
 
     for d in v_d
-        c = ncurses_color(d.foreground, d.background,
-                          bold      = d.bold,
-                          underline = d.underline)
+        c = ncurses_color(
+            d.foreground,
+            d.background;
+            bold      = d.bold,
+            underline = d.underline
+        )
         push!(colors,c)
     end
 
