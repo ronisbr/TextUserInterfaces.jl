@@ -177,7 +177,7 @@ function _select_radio_button(rb::WidgetRadioButton)
     change_label(rb.base, rb.glyph_selected * " " * rb.label)
     rb.selected = true
 
-    return nothing
+    return true
 end
 
 """
