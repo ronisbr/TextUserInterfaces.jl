@@ -13,7 +13,6 @@ export destroy_window!, destroy_all_windows
     destroy_window!(win::Window)
 
 Destroy the window `win`.
-
 """
 function destroy_window!(win::Window)
     @log info "destroy_window!" "$(obj_desc(win)) will be destroyed."
@@ -56,7 +55,6 @@ end
     destroy_all_windows()
 
 Destroy all windows managed by the TUI.
-
 """
 function destroy_all_windows()
     @log info "destroy_all_windows" "All windows will be destroyed."

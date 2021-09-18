@@ -18,42 +18,44 @@ object `layout`.
 
 # Keyword
 
-* `bcols`: Number of columns in the window buffer. This will be automatically
-           increased to, at least, fit the viewable part of the window.
-           (**Default** = 0)
-* `blines`: Number of lines in the window buffer. This will be automatically
-            increased to, at least, fit the viewable part of the window.
-            (**Default** = 0)
-* `border`: If `true`, then the window will have a border.
-            (**Default** = `true`)
-* `border_color`: Color mask that will be used to print the border. See function
-                  `ncurses_color`. If negative, then the color will not be
-                  changed. (**Default** = -1)
-* `focusable`: If `true`, then the window can have focus. Otherwise, all focus
-               request will be rejected. (**Default** = `true`)
-* `title`: The title of the window, which will only be printed if `border` is
-           `true`. (**Default** = "")
-* `title_color`: Color mask that will be used to print the title. See
-                 function `ncurses_color`. If negative, then the color will not
-                 be changed. (**Default** = -1)
-
+- `bcols::Int`: Number of columns in the window buffer. This will be
+    automatically increased to, at least, fit the viewable part of the window.
+    (**Default** = 0)
+* `blines::Int`: Number of lines in the window buffer. This will be
+    automatically increased to, at least, fit the viewable part of the window.
+    (**Default** = 0)
+* `border::Bool`: If `true`, then the window will have a border.
+    (**Default** = `true`)
+* `border_color::Int`: Color mask that will be used to print the border. See
+    function `ncurses_color`. If negative, then the color will not be changed.
+    (**Default** = -1)
+* `focusable::Bool`: If `true`, then the window can have focus. Otherwise, all
+    focus request will be rejected. (**Default** = `true`)
+* `title::String`: The title of the window, which will only be printed if
+    `border` is `true`. (**Default** = "")
+* `title_color::Int`: Color mask that will be used to print the title. See
+    function `ncurses_color`. If negative, then the color will not be changed.
+    (**Default** = -1)
 """
-function create_window(layout::ObjectLayout = ObjectLayout(),
-                       id::String = "";
-                       bcols::Int = 0,
-                       blines::Int = 0,
-                       border::Bool = true,
-                       border_color::Int = -1,
-                       focusable::Bool = true,
-                       title::String = "",
-                       title_color::Int = -1)
-
+function create_window(
+    layout::ObjectLayout = ObjectLayout(),
+    id::String = "";
+    bcols::Int = 0,
+    blines::Int = 0,
+    border::Bool = true,
+    border_color::Int = -1,
+    focusable::Bool = true,
+    title::String = "",
+    title_color::Int = -1
+)
     # Check if the TUI has been initialized.
     !tui.init && error("The text user interface was not initialized.")
 
     # If the user does not specify an `id`, then we choose based on the number
     # of available windows.
-    length(id) == 0 && ( id = string(length(tui.wins)) )
+    if length(id) == 0
+        id = string(length(tui.wins))
+    end
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
@@ -91,8 +93,7 @@ function create_window(layout::ObjectLayout = ObjectLayout(),
 
     # Create the buffer.
     buffer_view_locked = false
-    (blines <= 0 && bcols <= 0) && (buffer_view_locked = true)
-
+    blines <= 0 && bcols <= 0 && (buffer_view_locked = true)
     blines <= 0 && (blines = border ? nlines-2 : nlines)
     bcols  <= 0 && (bcols  = border ? ncols-2  : ncols)
     buffer = newpad(blines, bcols)
@@ -104,11 +105,21 @@ function create_window(layout::ObjectLayout = ObjectLayout(),
     coord = (begin_y, begin_x)
 
     # Create the window object and add to the global list.
-    win = Window(id = id, title = title, title_color = title_color,
-                 coord = coord, has_border = border,
-                 border_color = border_color, layout = layout, view = view,
-                 buffer = buffer, panel = panel, focusable = focusable,
-                 buffer_view_locked = buffer_view_locked)
+    win = Window(
+        border_color       = border_color,
+        buffer             = buffer,
+        buffer_view_locked = buffer_view_locked
+        coord              = coord,
+        focusable          = focusable,
+        has_border         = border,
+        id                 = id,
+        layout             = layout,
+        panel              = panel,
+        title              = title,
+        title_color        = title_color,
+        view               = view,
+    )
+
     border && set_window_title(win, title; title_color = title_color)
     push!(tui.wins, win)
 
@@ -133,9 +144,8 @@ size of the window buffer.
 
 # Return
 
-* The created window.
-* The created container.
-
+- The created window.
+- The created container.
 """
 function create_window_with_container(vargs...; kwargs...)
     win = create_window(vargs...; kwargs...)

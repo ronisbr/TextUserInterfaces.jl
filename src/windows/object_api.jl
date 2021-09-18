@@ -18,12 +18,11 @@ get_height_for_child(win::Window) = win.buffer != C_NULL ? Int(getmaxy(win.buffe
 get_width_for_child(win::Window)  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
 get_top_for_child(win::Window)    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
 
-@inline reposition!(win::Window; force::Bool = false) =
-    reposition!(win, win.layout; force = force)
+@inline function reposition!(win::Window; force::Bool = false)
+    return reposition!(win, win.layout; force = force)
+end
 
-function reposition!(win::Window, layout::ObjectLayout;
-                     force::Bool = false)
-
+function reposition!(win::Window, layout::ObjectLayout; force::Bool = false)
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
     horizontal = _process_horizontal_info(layout)
@@ -102,8 +101,11 @@ function reposition!(win::Window, layout::ObjectLayout;
 
     win_resize && wresize(win.buffer, blines, bcols)
 
-    win.has_border && set_window_title(win, win.title;
-                                       title_color = win.title_color)
+    win.has_border && set_window_title(
+        win,
+        win.title;
+        title_color = win.title_color
+    )
 
     # If the window size has changes, then we must reposition the widget as
     # well.

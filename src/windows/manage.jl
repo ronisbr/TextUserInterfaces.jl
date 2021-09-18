@@ -17,7 +17,6 @@ export hide_window, move_window, move_window_to_top, show_window
     hide_window(win::Window)
 
 Hide the window `win`.
-
 """
 hide_window(win::Window) = hide_panel(win.panel)
 
@@ -25,7 +24,6 @@ hide_window(win::Window) = hide_panel(win.panel)
     move_window(win::Window, starty::Int, startx::Int)
 
 Move the window `win` to the position `(starty, startx`).
-
 """
 move_window(win::Window, starty::Int, startx::Int) =
     move_panel(win.panel, starty, startx)
@@ -34,7 +32,6 @@ move_window(win::Window, starty::Int, startx::Int) =
     move_window_to_top(win::Window)
 
 Move window `win` to the top.
-
 """
 move_window_to_top(win::Window) = top_panel(win.panel)
 
@@ -42,7 +39,6 @@ move_window_to_top(win::Window) = top_panel(win.panel)
     show_window(win::Window)
 
 Show the window `win`.
-
 """
 show_window(win::Window) = show_panel(win.panel)
 
@@ -55,7 +51,6 @@ show_window(win::Window) = show_panel(win.panel)
 
 Add widget `widget` to the window `win`. If the `win` already have a widget,
 then it will be replaced.
-
 """
 function add_widget!(win::Window, widget::Widget)
     !isnothing(widget.parent) && remove_widget!(widget.parent, widget)
@@ -72,7 +67,6 @@ end
 
 Remove the widget `widget` from the window `win`. If `widget` does not belong to
 `win`, then nothing is done.
-
 """
 function remove_widget!(win::Window, widget::Widget)
     if win.widget === widget

@@ -13,7 +13,6 @@ export get_buffer, set_window_title
     get_buffer(win::Window)
 
 Return the buffer of the window `win`.
-
 """
 get_buffer(win::Window) = win.buffer
 
@@ -21,7 +20,6 @@ get_buffer(win::Window) = win.buffer
     get_parent(win::Window)
 
 Return `nothing` since the window has no parent.
-
 """
 get_parent(win::Window) = nothing
 
@@ -32,13 +30,11 @@ Set the title of the window `win` to `title`.
 
 # Keywords
 
-* `title_color`: Color mask that will be used to print the title. See
-                 function `ncurses_color`. If negative, then the color will not
-                 be changed. (**Default** = -1)
-
+- `title_color::Int`: Color mask that will be used to print the title. See
+    function `ncurses_color`. If negative, then the color will not be changed.
+    (**Default** = -1)
 """
-function set_window_title(win::Window, title::AbstractString;
-                         title_color::Int = -1)
+function set_window_title(win::Window, title::AbstractString; title_color::Int = -1)
     win.title = title
 
     if win.has_border
@@ -75,9 +71,9 @@ end
 """
     _get_window_dims(win::Ptr{WINDOW})
 
-Get the dimensions of the window `win` and return it on a tuple `(dim_y,dim_x)`.
-If the window is not initialized, then this function returns `(-1,-1)`.
-
+Get the dimensions of the window `win` and return it on a tuple
+`(dim_y, dim_x)`. If the window is not initialized, then this function returns
+`(-1, -1)`.
 """
 function _get_window_dims(win::Ptr{WINDOW})
     if win != C_NULL
@@ -94,9 +90,8 @@ end
     _get_window_cur_pos(win::Ptr{WINDOW})
 
 Get the cursor position of the window `win` and return it on a tuple
-`(cur_y,cur_x)`.  If the window is not initialized, then this function returns
-`(-1,-1)`.
-
+`(cur_y, cur_x)`.  If the window is not initialized, then this function returns
+`(-1, -1)`.
 """
 function _get_window_cur_pos(win::Ptr{WINDOW})
     if win != C_NULL

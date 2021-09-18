@@ -7,15 +7,14 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export accept_focus, has_focus, focus_on_widget, next_widget, process_focus,
-       previous_widget, sync_cursor
+export accept_focus, has_focus, focus_on_widget, next_widget, process_focus
+export previous_widget, sync_cursor
 
 """
     accept_focus(window::Window)
 
 Check if the window `window` can accept focus and, if it can, then perform the
 actions to change the focus.
-
  """
 function accept_focus(window::Window)
     @unpack widget = window
@@ -48,7 +47,6 @@ end
 
 Return `true` if the widget `widget` is in focus on window `window`, or `false`
 otherwise.
-
 """
 function has_focus(window::Window, widget)
     return window.widget === widget
@@ -58,7 +56,6 @@ end
     process_focus(window::Window, k::Keystroke)
 
 Process the focus on window `window` due to keystroke `k`.
-
 """
 function process_focus(window::Window, k::Keystroke)
     @unpack widget = window
@@ -80,7 +77,6 @@ end
 Synchronize the cursor to the position of the focused widget in window `window`.
 This is necessary because all the operations are done in the buffer and then
 copied to the view.
-
 """
 function sync_cursor(window::Window)
     @unpack widget = window
