@@ -28,13 +28,15 @@ end
 #                                     API
 ################################################################################
 
-function create_widget(::Val{:container},
-                       layout::ObjectLayout;
-                       border::Bool = false,
-                       border_color::Int = -1,
-                       title::AbstractString = "",
-                       title_alignment::Symbol = :l,
-                       title_color::Int = -1)
+function create_widget(
+    ::Val{:container},
+    layout::ObjectLayout;
+    border::Bool = false,
+    border_color::Int = -1,
+    title::AbstractString = "",
+    title_alignment::Symbol = :l,
+    title_color::Int = -1
+)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining some anchors.
@@ -52,12 +54,14 @@ function create_widget(::Val{:container},
     end
 
     # Create the widget.
-    container = WidgetContainer(layout             = layout,
-                                border          = border,
-                                border_color    = border_color,
-                                title           = title,
-                                title_alignment = title_alignment,
-                                title_color     = title_color)
+    container = WidgetContainer(
+        layout          = layout,
+        border          = border,
+        border_color    = border_color,
+        title           = title,
+        title_alignment = title_alignment,
+        title_color     = title_color
+    )
 
     @log info "create_widget" """
     Container created:
@@ -84,7 +88,7 @@ function process_focus(container::WidgetContainer, k::Keystroke)
     @unpack focus_id, parent, widgets = container
 
     # If there is any element in focus, ask to process the focus.
-    if ((focus_id > 0) && (process_focus(widgets[focus_id], k)))
+    if (focus_id > 0) && (process_focus(widgets[focus_id], k))
         sync_cursor(container)
         return true
     else
@@ -98,8 +102,8 @@ function process_focus(container::WidgetContainer, k::Keystroke)
 end
 
 function redraw(container::WidgetContainer)
-    @unpack border, border_color, buffer, parent, update_needed, widgets,
-            title_color = container
+    @unpack border, border_color, buffer, parent, update_needed = container
+    @unpack widgets, title_color = container
 
     wclear(buffer)
 
@@ -136,7 +140,6 @@ end
 
 Request the next widget in `container`. It returns `true` if a widget has get
 the focus or `false` otherwise.
-
 """
 request_next_widget(container::WidgetContainer) = _next_widget(container)
 
@@ -145,7 +148,6 @@ request_next_widget(container::WidgetContainer) = _next_widget(container)
 
 Request the previous widget in `container`. It returns `true` if a widget has
 get the focus or `false` otherwise.
-
 """
 request_prev_widget(container::WidgetContainer) = _previous_widget(container)
 
@@ -168,7 +170,6 @@ end
     add_widget!(container::WidgetContainer, widget::Widget)
 
 Add the widget `widget` to the container `container.
-
 """
 function add_widget!(container::WidgetContainer, widget::Widget)
     # If the widget already has a parent, then we must remove it from there
@@ -200,7 +201,6 @@ end
     remove_widget!(container::WidgetContainer, widget::Widget)
 
 Remove the widget `widget` from the container `container`.
-
 """
 function remove_widget!(container::WidgetContainer, widget::Widget)
     idx = findfirst(x->x == widget, container.widgets)
@@ -239,7 +239,6 @@ end
 
 Return `true` if the widget `widget` is in focus on container `container`, or
 `false` otherwise.
-
 """
 function has_focus(container::WidgetContainer, widget)
     @unpack widgets, focus_id = container
@@ -253,13 +252,12 @@ end
 
 Request the focus to the widget `widget` of the container `container`. It
 returns `true` if the focus could be changed or `false` otherwise.
-
 """
 function request_focus(container::WidgetContainer, widget)
     @unpack widgets, focus_id = container
 
     # Find the widget in the widget list.
-    id = findfirst(x->x == widget, widgets)
+    id = findfirst(x -> x == widget, widgets)
 
     # If `id` is `nothing`, then the `widget` does not belong to the
     # `container`.
@@ -309,10 +307,10 @@ end
 
 Ask the parent widget to refresh the window. If `force_redraw` is `true`, then
 all widgets in the window will be updated.
-
 """
-refresh_window(container::WidgetContainer; force_redraw::Bool = false) =
-    refresh_window(container.parent; force_redraw = force_redraw)
+function refresh_window(container::WidgetContainer; force_redraw::Bool = false)
+    return refresh_window(container.parent; force_redraw = force_redraw)
+end
 
 """
     sync_cursor(widget::WidgetContainer)
@@ -320,7 +318,6 @@ refresh_window(container::WidgetContainer; force_redraw::Bool = false) =
 Synchronize the cursor to the position of the focused widget in container
 `container`. This is necessary because all the operations are done in the
 buffer and then copied to the view.
-
 """
 function sync_cursor(container::WidgetContainer)
     @unpack widgets, focus_id = container

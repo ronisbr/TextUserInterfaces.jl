@@ -11,7 +11,6 @@
     _draw_title(container::WidgetContainer)
 
 Draw the title in the container `container`.
-
 """
 function _draw_title(container::WidgetContainer)
     @unpack buffer, title, title_alignment = container
@@ -44,7 +43,6 @@ end
     _next_widget(container::WidgetContainer)
 
 Move the focus of container `container` to the next widget.
-
 """
 function _next_widget(container::WidgetContainer)
     @unpack parent, widgets, focus_id = container
@@ -102,7 +100,6 @@ end
     _previous_widget(container::WidgetContainer)
 
 Move the focus of container `container` to the previous widget.
-
 """
 function _previous_widget(container::WidgetContainer)
     @unpack parent, widgets, focus_id = container
@@ -117,7 +114,7 @@ function _previous_widget(container::WidgetContainer)
             return true
         end
     else
-        focus_id = length(widgets)+1
+        focus_id = length(widgets) + 1
     end
 
     # We need to mark that currently this container does not have any object
@@ -128,7 +125,7 @@ function _previous_widget(container::WidgetContainer)
     container.focus_id = 0
 
     # Search for the next widget that can handle the focus.
-    for i = focus_id-1:-1:1
+    for i in focus_id-1:-1:1
         if request_prev_widget(widgets[i])
             container.focus_id = i
 
