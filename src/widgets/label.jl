@@ -32,7 +32,7 @@ end
 accept_focus(widget::WidgetLabel) = false
 
 function create_widget(::Val{:label},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        alignment = :l,
                        color::Int = _color_default,
                        fill_color::Bool = false,
@@ -40,14 +40,14 @@ function create_widget(::Val{:label},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
-    vertical   == :unknown && (opc.height = length(split(text, '\n')))
-    horizontal == :unknown && (opc.width  = maximum(length.(split(text, '\n')))+1)
+    vertical   == :unknown && (layout.height = length(split(text, '\n')))
+    horizontal == :unknown && (layout.width  = maximum(length.(split(text, '\n')))+1)
 
     # Create the widget.
-    widget = WidgetLabel(opc        = opc,
+    widget = WidgetLabel(layout        = layout,
                          alignment  = alignment,
                          text₀      = text,
                          text       = text,

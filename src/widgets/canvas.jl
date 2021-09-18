@@ -27,24 +27,24 @@ end
 ################################################################################
 
 function create_widget(::Val{:canvas},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        num_columns = 1,
                        num_rows = 1)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
-    vertical   == :unknown && (opc.height = num_rows)
-    horizontal == :unknown && (opc.width  = num_columns)
+    vertical   == :unknown && (layout.height = num_rows)
+    horizontal == :unknown && (layout.width  = num_columns)
 
     # Create the matrices that will hold the characters and the colors.
     chars  = [" " for i = 1:num_rows, j = 1:num_columns]
     colors = zeros(Int, num_rows, num_columns)
 
     # Create the widget.
-    widget = WidgetCanvas(opc    = opc,
+    widget = WidgetCanvas(layout    = layout,
                           chars  = chars,
                           colors = colors)
 

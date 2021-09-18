@@ -103,31 +103,31 @@ function tictactoe()
            │       │"""
 
     # Create the main window and its container.
-    opc = newopc(height = 18, width = 60, top = 2, left = 2)
-    win, con = create_window_with_container(opc,
+    layout = newlayout(height = 18, width = 60, top = 2, left = 2)
+    win, con = create_window_with_container(layout,
                                             border = true,
                                             title  = " Tic Tac Toe ")
 
 
     # Create the label widget that will display the board.
-    opc   = newopc(top = 2, left = 2, height = 11, width = 24)
-    board = create_widget(Val(:label), con, opc; text = board, color = pb)
+    layout   = newlayout(top = 2, left = 2, height = 11, width = 24)
+    board = create_widget(Val(:label), con, layout; text = board, color = pb)
 
     # Create the label showing the information related to player 1.
-    opc = newopc(top = 2, left = 30, height = 1, width = 18)
-    ~   = create_widget(Val(:label), con, opc; text = "Player 1: $(ticks[1])", color = p1)
+    layout = newlayout(top = 2, left = 30, height = 1, width = 18)
+    ~   = create_widget(Val(:label), con, layout; text = "Player 1: $(ticks[1])", color = p1)
 
     # Create the label showing the information related to player 2.
-    opc = newopc(top = 3, left = 30, height = 1, width = 18)
-    ~   = create_widget(Val(:label), con, opc; text = "Player 2: $(ticks[2])", color = p2)
+    layout = newlayout(top = 3, left = 30, height = 1, width = 18)
+    ~   = create_widget(Val(:label), con, layout; text = "Player 2: $(ticks[2])", color = p2)
 
     # Create the label that will show the end game information.
-    opc    = newopc(top = 5, left = 30, height = 2, width = 27)
-    result = create_widget(Val(:label), con, opc; text = "", color = p0)
+    layout    = newlayout(top = 5, left = 30, height = 2, width = 27)
+    result = create_widget(Val(:label), con, layout; text = "", color = p0)
 
     # Create the label with the information about how exit the TUI.
-    opc = newopc(top = 15, left = 2, height = 1, width = 20)
-    info = create_widget(Val(:label), con, opc; text = "Press F1 to exit.", color = p0)
+    layout = newlayout(top = 15, left = 2, height = 1, width = 20)
+    info = create_widget(Val(:label), con, layout; text = "Press F1 to exit.", color = p0)
 
     # This is a signal handler that will called every time the user press enter
     # in a field.
@@ -171,7 +171,7 @@ function tictactoe()
 
     # Create the fields of the board.
     fields = [create_widget(Val(:canvas), con,
-                            newopc(top  = 2 + 4(i-1),
+                            newlayout(top  = 2 + 4(i-1),
                                    left = 2 + 8(j-1));
                                    num_columns = 7,
                                    num_rows = 3) for i = 1:3,j = 1:3]

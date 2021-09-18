@@ -29,7 +29,7 @@ end
 ################################################################################
 
 function create_widget(::Val{:container},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        border::Bool = false,
                        border_color::Int = -1,
                        title::AbstractString = "",
@@ -38,21 +38,21 @@ function create_widget(::Val{:container},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining some anchors.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.anchor_bottom = Anchor(:parent, :bottom, 0)
-        opc.anchor_top    = Anchor(:parent, :top,    0)
+        layout.anchor_bottom = Anchor(:parent, :bottom, 0)
+        layout.anchor_top    = Anchor(:parent, :top,    0)
     end
 
     if horizontal == :unknown
-        opc.anchor_left   = Anchor(:parent, :left,  0)
-        opc.anchor_right  = Anchor(:parent, :right, 0)
+        layout.anchor_left   = Anchor(:parent, :left,  0)
+        layout.anchor_right  = Anchor(:parent, :right, 0)
     end
 
     # Create the widget.
-    container = WidgetContainer(opc             = opc,
+    container = WidgetContainer(layout             = layout,
                                 border          = border,
                                 border_color    = border_color,
                                 title           = title,

@@ -18,16 +18,16 @@ function create_dialog(::Val{:input_field},
                        validator = nothing,
                        kwargs...)
 
-    opc_msg = newopc(anchor_top  = Anchor(:parent, :top,  0),
+    layout_msg = newlayout(anchor_top  = Anchor(:parent, :top,  0),
                      anchor_left = Anchor(:parent, :left, 0))
-    text = create_widget(Val(:label), opc_msg;
+    text = create_widget(Val(:label), layout_msg;
                          color = color_text,
                          text = msg)
 
-    opc_input = newopc(anchor_top   = Anchor(text,    :bottom, 0),
+    layout_input = newlayout(anchor_top   = Anchor(text,    :bottom, 0),
                        anchor_left  = Anchor(text,    :left,   0),
                        anchor_right = Anchor(:parent, :right,  0))
-    input = create_widget(Val(:input_field), opc_input;
+    input = create_widget(Val(:input_field), layout_input;
                           border = true,
                           color_valid = color_valid,
                           color_invalid = color_invalid,

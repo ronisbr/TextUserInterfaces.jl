@@ -45,7 +45,7 @@ function accept_focus(widget::WidgetComboBox)
 end
 
 function create_widget(::Val{:combo_box},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        data::Vector{String} = String[],
                        color::Int = _color_default,
                        color_highlight::Int = _color_highlight,
@@ -56,19 +56,19 @@ function create_widget(::Val{:combo_box},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.height = style == :boxed ? 3 : 1
+        layout.height = style == :boxed ? 3 : 1
     end
 
     if horizontal == :unknown
-        opc.width = maximum(length.(data)) + 5
+        layout.width = maximum(length.(data)) + 5
     end
 
     # Create the widget.
-    widget = WidgetComboBox(opc                      = opc,
+    widget = WidgetComboBox(layout                      = layout,
                             color                    = color,
                             color_highlight          = color_highlight,
                             list_box_border          = list_box_border,
@@ -80,17 +80,17 @@ function create_widget(::Val{:combo_box},
     # If a border is required, then create a container and add the list box
     # in this container.
     if list_box_border
-        opc = newopc(anchor_top   = (widget, :bottom, 0),
+        layout = newlayout(anchor_top   = (widget, :bottom, 0),
                      anchor_left  = (widget, :left,   0),
                      anchor_right = (widget, :right,  0),
                      height       = 5)
-        con = create_widget(Val(:container), opc; border = true)
+        con = create_widget(Val(:container), layout; border = true)
 
-        opc = newopc(anchor_top    = Anchor(:parent, :top, 0),
+        layout = newlayout(anchor_top    = Anchor(:parent, :top, 0),
                      anchor_left   = Anchor(:parent, :left,   0),
                      anchor_right  = Anchor(:parent, :right,  0),
                      anchor_bottom = Anchor(:parent, :bottom, 0))
-        list_box = create_widget(Val(:list_box), opc;
+        list_box = create_widget(Val(:list_box), layout;
                                  selectable      = false,
                                  data            = data,
                                  color           = list_box_color,
@@ -99,11 +99,11 @@ function create_widget(::Val{:combo_box},
 
         widget._list_box = con
     else
-        opc = newopc(anchor_top   = Anchor(widget, :bottom, 0),
+        layout = newlayout(anchor_top   = Anchor(widget, :bottom, 0),
                      anchor_left  = Anchor(widget, :left,   0),
                      anchor_right = Anchor(widget, :right,  0),
                      height       = 5)
-        list_box = create_widget(Val(:list_box), opc;
+        list_box = create_widget(Val(:list_box), layout;
                                  selectable      = false,
                                  data            = data,
                                  color           = list_box_color,

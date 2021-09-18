@@ -30,7 +30,7 @@ function windows_and_widgets()
     end
 
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
-        w,c  = create_window_with_container(newopc(top = x,
+        w,c  = create_window_with_container(newlayout(top = x,
                                                    left = y,
                                                    height = 10,
                                                    width = 56),

@@ -9,7 +9,7 @@
 
 export @create_widget_helper
 
-const _list_opc_args = (:anchor_bottom,
+const _list_layout_args = (:anchor_bottom,
                         :anchor_left,
                         :anchor_right,
                         :anchor_top,
@@ -20,7 +20,7 @@ const _list_opc_args = (:anchor_bottom,
                         :height,
                         :width)
 
-const _list_opc_anchors = (:anchor_bottom,
+const _list_layout_anchors = (:anchor_bottom,
                            :anchor_left,
                            :anchor_right,
                            :anchor_top,
@@ -65,8 +65,8 @@ any parent.
             expr_kwargs = Expr[]
 
             # List of expressions to be passed to the creation of
-            # `ObjectPositioningConfiguration`.
-            expr_opc = Expr[]
+            # `ObjectLayout`.
+            expr_layout = Expr[]
 
             # List of expressions to connect signals.
             expr_signals = Expr[]
@@ -85,10 +85,10 @@ any parent.
                         has_parent = true
                         parent = a.args[2]
 
-                    elseif a.args[1] ∈ _list_opc_args
+                    elseif a.args[1] ∈ _list_layout_args
                         # In this case, if the parameter is an anchor and value
                         # is a `Tuple`, we should convert to an `Anchor`.
-                        if (a.args[1] ∈ _list_opc_anchors) &&
+                        if (a.args[1] ∈ _list_layout_anchors) &&
                            (a.args[2] isa Expr) &&
                            (a.args[2].head == :tuple)
 
@@ -110,7 +110,7 @@ any parent.
                             v = a.args[2]
                         end
 
-                        push!(expr_opc, Expr(:kw, a.args[1], v))
+                        push!(expr_layout, Expr(:kw, a.args[1], v))
 
                     elseif a.args[1] == :signal
                         # Those statements will be executed after the widget has
@@ -128,16 +128,16 @@ any parent.
             # Assemble the expression that will create the widget.
             if !has_parent
                 create_widget_expr = quote
-                    opc    = newopc($(expr_opc...))
-                    widget = create_widget(Val($ws), opc; $(expr_kwargs...))
+                    layout    = newlayout($(expr_layout...))
+                    widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                     $(expr_signals...)
                     widget
                 end
 
             else
                 create_widget_expr = quote
-                    opc    = newopc($(expr_opc...))
-                    widget = create_widget(Val($ws), opc; $(expr_kwargs...))
+                    layout    = newlayout($(expr_layout...))
+                    widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                     add_widget!($parent, widget)
                     $(expr_signals...)
                     widget

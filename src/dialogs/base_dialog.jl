@@ -19,23 +19,23 @@ function create_dialog(f_widgets::Function,
                        width::Int = 80)
 
     # Create a new window with a container in the middle of the root window.
-    opc = newopc(anchor_center = Anchor(:parent, :center, 0),
+    layout = newlayout(anchor_center = Anchor(:parent, :center, 0),
                  anchor_middle = Anchor(:parent, :middle, 0),
                  height        = height,
                  width         = width)
 
-    w = create_window(opc,
+    w = create_window(layout,
                       border = true,
                       title = title,
                       border_color = border_color,
                       title_color = title_color)
 
-    opc_c = newopc(anchor_top    = Anchor(:parent, :top,    0),
+    layout_c = newlayout(anchor_top    = Anchor(:parent, :top,    0),
                    anchor_left   = Anchor(:parent, :left,   1),
                    anchor_right  = Anchor(:parent, :right, -1),
                    anchor_bottom = Anchor(:parent, :bottom, 0))
 
-    c = create_widget(Val(:container), opc_c)
+    c = create_widget(Val(:container), layout_c)
 
     add_widget!(w, c)
 
@@ -64,10 +64,10 @@ function create_dialog(f_widgets::Function,
     for k = num_buttons:-1:1
         anchor_right = (k == num_buttons) ? Anchor(:parent,     :right,  0) :
                                             Anchor(last_button, :left,  -1)
-        opc_b = newopc(anchor_right  = anchor_right,
+        layout_b = newlayout(anchor_right  = anchor_right,
                        anchor_bottom = Anchor(:parent, :bottom, 0))
 
-        last_button = create_widget(Val(:button), opc_b;
+        last_button = create_widget(Val(:button), layout_b;
                                     color_highlight = c_button,
                                     label = buttons[k])
         add_widget!(c, last_button)

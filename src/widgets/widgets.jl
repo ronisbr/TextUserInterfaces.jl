@@ -24,10 +24,10 @@ Return `true` is the widget `widget` accepts focus or `false` otherwise.
 accept_focus(widget) = return true
 
 """
-    create_widget(T, opc::ObjectPositioningConfiguration, args...; kwargs...)
-    create_widget(T, parent::WidgetParent, opc::ObjectPositioningConfiguration, args...; kwargs)
+    create_widget(T, layout::ObjectLayout, args...; kwargs...)
+    create_widget(T, parent::WidgetParent, layout::ObjectLayout, args...; kwargs)
 
-Create the widget of type `T` using the positioning configuration [`opc`](@ref).
+Create the widget of type `T` using the positioning configuration [`layout`](@ref).
 
 Additional arguments and keywords related to each widget can be passed using
 `args` and `kwargs`, respectively.
@@ -40,10 +40,10 @@ create_widget
 
 function create_widget(T,
                        parent::WidgetParent,
-                       opc::ObjectPositioningConfiguration,
+                       layout::ObjectLayout,
                        args...;
                        kwargs...)
-    widget = create_widget(T, opc, args...; kwargs...)
+    widget = create_widget(T, layout, args...; kwargs...)
     add_widget!(parent, widget)
     return widget
 end
@@ -94,7 +94,7 @@ get_parent(widget) = widget.parent
 """
     init_widget_buffer!(widget::Widget)
 
-Initialize the buffer of widget `widget`. The variables `opc` and `parent` must
+Initialize the buffer of widget `widget`. The variables `layout` and `parent` must
 be set before calling this function. If the buffer is already initialized, then
 it will be deleted first.
 
@@ -103,7 +103,7 @@ function init_widget_buffer!(widget::Widget)
     destroy_widget_buffer!(widget)
 
     # Compute the widget true position based on the configuration.
-    height, width, top, left = compute_object_positioning(widget.opc,
+    height, width, top, left = compute_object_positioning(widget.layout,
                                                           widget.parent)
 
     # Create the buffer that will hold the contents.

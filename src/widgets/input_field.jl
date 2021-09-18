@@ -62,7 +62,7 @@ function accept_focus(widget::WidgetInputField)
 end
 
 function create_widget(::Val{:input_field},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        border::Bool = false,
                        color_valid::Int = _color_default,
                        color_invalid::Int = _color_default,
@@ -71,15 +71,15 @@ function create_widget(::Val{:input_field},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.height = !border ? 1 : 3
+        layout.height = !border ? 1 : 3
     end
 
     if horizontal == :unknown
-        opc.width = 30
+        layout.width = 30
     end
 
     # Validator.
@@ -98,7 +98,7 @@ function create_widget(::Val{:input_field},
     end
 
     # Create the widget.
-    widget = WidgetInputField(opc              = opc,
+    widget = WidgetInputField(layout              = layout,
                               border           = border,
                               color_valid      = color_valid,
                               color_invalid    = color_invalid,

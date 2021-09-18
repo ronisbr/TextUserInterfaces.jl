@@ -28,7 +28,7 @@ end
 accept_focus(widget::WidgetProgressBar) = false
 
 function create_widget(::Val{:progress_bar},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        border::Bool = false,
                        color::Int = _color_default,
                        color_highlight::Int = _color_highlight,
@@ -37,19 +37,19 @@ function create_widget(::Val{:progress_bar},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.height = _progress_bar_height(style, border)
+        layout.height = _progress_bar_height(style, border)
     end
 
     if horizontal == :unknown
-        opc.width = 10
+        layout.width = 10
     end
 
     # Create the widget.
-    widget = WidgetProgressBar(opc    = opc,
+    widget = WidgetProgressBar(layout    = layout,
                                border = border,
                                color  = color,
                                value  = value,

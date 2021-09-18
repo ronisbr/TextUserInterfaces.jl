@@ -10,11 +10,11 @@
 export create_window, create_window_with_container
 
 """
-    function create_window(opc::ObjectPositioningConfiguration = newopc(), id::String = "";  kwargs...)
+    function create_window(layout::ObjectLayout = newlayout(), id::String = "";  kwargs...)
 
 Create a window. The window ID `id` is used to identify the new window in the
 global window list. The size and location of the window is configured by the
-object `opc`.
+object `layout`.
 
 # Keyword
 
@@ -38,7 +38,7 @@ object `opc`.
                  be changed. (**Default** = -1)
 
 """
-function create_window(opc::ObjectPositioningConfiguration = newopc(),
+function create_window(layout::ObjectLayout = newlayout(),
                        id::String = "";
                        bcols::Int = 0,
                        blines::Int = 0,
@@ -57,21 +57,21 @@ function create_window(opc::ObjectPositioningConfiguration = newopc(),
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
-    vertical   = _process_horizontal_info(opc)
-    horizontal = _process_vertical_info(opc)
+    vertical   = _process_horizontal_info(layout)
+    horizontal = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.anchor_bottom = Anchor(:parent, :bottom, 0)
-        opc.anchor_top    = Anchor(:parent, :top,    0)
+        layout.anchor_bottom = Anchor(:parent, :bottom, 0)
+        layout.anchor_top    = Anchor(:parent, :top,    0)
     end
 
     if horizontal == :unknown
-        opc.anchor_left   = Anchor(:parent, :left,  0)
-        opc.anchor_right  = Anchor(:parent, :right, 0)
+        layout.anchor_left   = Anchor(:parent, :left,  0)
+        layout.anchor_right  = Anchor(:parent, :right, 0)
     end
 
     # Get the positioning information of the window.
-    height, width, top, left = compute_object_positioning(opc, rootwin)
+    height, width, top, left = compute_object_positioning(layout, rootwin)
 
     # Assign to the variables that will be used to create the window.
     begin_y = top
@@ -106,7 +106,7 @@ function create_window(opc::ObjectPositioningConfiguration = newopc(),
     # Create the window object and add to the global list.
     win = Window(id = id, title = title, title_color = title_color,
                  coord = coord, has_border = border,
-                 border_color = border_color, opc = opc, view = view,
+                 border_color = border_color, layout = layout, view = view,
                  buffer = buffer, panel = panel, focusable = focusable,
                  buffer_view_locked = buffer_view_locked)
     border && set_window_title(win, title; title_color = title_color)
@@ -139,7 +139,7 @@ size of the window buffer.
 """
 function create_window_with_container(vargs...; kwargs...)
     win = create_window(vargs...; kwargs...)
-    con = create_widget(Val(:container), newopc())
+    con = create_widget(Val(:container), newlayout())
     add_widget!(win, con)
 
     return win, con

@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export Anchor, ObjectPositioningConfiguration, newopc
+export Anchor, ObjectLayout, newlayout
 
 ################################################################################
 #                                   Anchors
@@ -17,7 +17,7 @@ export Anchor, ObjectPositioningConfiguration, newopc
     struct Anchor
 
 This structure defines an anchor to another object. It should be used in one of
-the fields `anchor_*` of `ObjectPositioningConfiguration`.
+the fields `anchor_*` of `ObjectLayout`.
 
 # Fields
 
@@ -41,10 +41,10 @@ end
 const _no_anchor = Anchor(:noobject, :nosize, 0)
 
 """
-    struct ObjectPositioningConfiguration
+    struct ObjectLayout
 
 This structure defines the positioning of an object. It can also be created with
-the function `newopc`.
+the function `newlayout`.
 
 # Fields
 
@@ -66,7 +66,7 @@ the function `newopc`.
     the relative arguments (anchors) must provide the missing information.
 
 """
-@with_kw mutable struct ObjectPositioningConfiguration
+@with_kw mutable struct ObjectLayout
     # Anchors (relative positioning).
     anchor_bottom::Anchor = _no_anchor
     anchor_left::Anchor   = _no_anchor
@@ -83,9 +83,9 @@ the function `newopc`.
 end
 
 """
-    newopc(;kwargs...)
+    newlayout(;kwargs...)
 
-Create an instance of the structure `ObjectPositioningConfiguration`. The
+Create an instance of the structure `ObjectLayout`. The
 following keywords are available to specify the positioning:
 
 * `anchor_bottom`: Bottom anchor specification. (**Default** = `_no_anchor`)
@@ -106,4 +106,4 @@ following keywords are available to specify the positioning:
     the relative arguments (anchors) must provide the missing information.
 
 """
-const newopc = ObjectPositioningConfiguration
+const newlayout = ObjectLayout

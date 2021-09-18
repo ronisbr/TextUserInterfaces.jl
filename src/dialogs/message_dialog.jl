@@ -16,7 +16,7 @@ function create_dialog(::Val{:message},
                        kwargs...)
 
     if show_icon
-        opc_icon = newopc(top = 0, left = 0)
+        layout_icon = newlayout(top = 0, left = 0)
         ic = isnothing(icon_color) ? -1 : icon_color
 
         if icon_type == :error
@@ -58,7 +58,7 @@ function create_dialog(::Val{:message},
             isnothing(icon_color) && (ic = ncurses_color(:green, :black))
         end
 
-        icon = create_widget(Val(:label), opc_icon;
+        icon = create_widget(Val(:label), layout_icon;
                              color = ic,
                              text = icon_text)
     end
@@ -69,10 +69,10 @@ function create_dialog(::Val{:message},
     anchor_top  = show_icon ? Anchor(icon,    :top, 1) :
                               Anchor(:parent, :top, 0)
 
-    opc_msg = newopc(anchor_top  = anchor_top,
+    layout_msg = newlayout(anchor_top  = anchor_top,
                      anchor_left = anchor_left)
 
-    text = create_widget(Val(:label), opc_msg; text = msg)
+    text = create_widget(Val(:label), layout_msg; text = msg)
 
     # Function that create the widgets of the dialog.
     function f_widgets(c)

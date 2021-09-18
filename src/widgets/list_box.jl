@@ -66,7 +66,7 @@ function accept_focus(widget::WidgetListBox)
 end
 
 function create_widget(::Val{:list_box},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        data::Vector{String} = String[],
                        color::Int = _color_default,
                        color_highlight::Int = _color_highlight,
@@ -80,21 +80,21 @@ function create_widget(::Val{:list_box},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.height = length(data)
+        layout.height = length(data)
     end
 
     if horizontal == :unknown
-        opc.width = maximum(length.(data))
-        show_icon && (opc.width += max(length(icon_selected),
+        layout.width = maximum(length.(data))
+        show_icon && (layout.width += max(length(icon_selected),
                                        length(icon_not_selected)) + 1)
     end
 
     # Create the widget.
-    widget = WidgetListBox(opc                = opc,
+    widget = WidgetListBox(layout                = layout,
                            color              = color,
                            color_highlight    = color_highlight,
                            color_selected     = color_selected,

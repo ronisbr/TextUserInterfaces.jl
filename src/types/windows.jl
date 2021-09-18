@@ -23,7 +23,7 @@ export Window
     buffer_view_locked::Bool = true
 
     # Positioning configuration.
-    opc::ObjectPositioningConfiguration
+    layout::ObjectLayout
 
     # Widget of the window.
     widget::Union{Widget,Nothing} = nothing

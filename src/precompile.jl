@@ -37,13 +37,13 @@ function _precompile()
     # Objects
     # ==============================================================================
 
-    @precompile compute_object_positioning (ObjectPositioningConfiguration, Window)
-    @precompile compute_object_positioning (ObjectPositioningConfiguration, WidgetContainer)
+    @precompile compute_object_positioning (ObjectLayout, Window)
+    @precompile compute_object_positioning (ObjectLayout, WidgetContainer)
     @precompile _get_anchor (Anchor, Window)
     @precompile _get_anchor (Anchor, WidgetContainer)
-    @precompile _process_vertical_info ObjectPositioningConfiguration
-    @precompile _process_horizontal_info ObjectPositioningConfiguration
-    @precompile _str ObjectPositioningConfiguration
+    @precompile _process_vertical_info ObjectLayout
+    @precompile _process_horizontal_info ObjectLayout
+    @precompile _str ObjectLayout
 
     # Widgets
     # ==============================================================================
@@ -52,7 +52,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:ansi_label}, ObjectPositioningConfiguration),
+                (Val{:ansi_label}, ObjectLayout),
                 (:alignment, :color, :text),
                 (Symbol, Int, String))
     @precompile(change_text,
@@ -68,7 +68,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:button}, ObjectPositioningConfiguration),
+                (Val{:button}, ObjectLayout),
                 (:label, :color, :color_highlight, :style),
                 (String, Int, Int, Symbol))
     @precompile change_label (WidgetButton, String)
@@ -82,7 +82,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:container}, ObjectPositioningConfiguration),
+                (Val{:container}, ObjectLayout),
                 (:border, :border_color, :title, :title_alignment, :title_color),
                 (Bool, Int, String, Symbol, Int))
     @precompile redraw WidgetContainer
@@ -94,7 +94,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:combo_box}, ObjectPositioningConfiguration),
+                (Val{:combo_box}, ObjectLayout),
                 (:data, :color, :color_highlight, :list_box_border,
                  :list_box_color, :list_box_color_highlight, :style),
                 (Vector{String}, Int, Int, Bool, Int, Int, Symbol))
@@ -109,12 +109,12 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:form}, ObjectPositioningConfiguration),
+                (Val{:form}, ObjectLayout),
                 (:borders, :color_valid, :color_invalid, :field_size, :labels,
                  :validator),
                 (Bool, Int, Int, Int, Vector{String}, Nothing))
     @precompile(create_widget,
-                (Val{:form}, ObjectPositioningConfiguration),
+                (Val{:form}, ObjectLayout),
                 (:borders, :color_valid, :color_invalid, :field_size, :labels,
                  :validator),
                 (Bool, Int, Int, Int, Vector{String}, Vector{DataType}))
@@ -123,17 +123,17 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:input_field}, ObjectPositioningConfiguration),
+                (Val{:input_field}, ObjectLayout),
                 (:border, :color_valid, :color_invalid, :max_data_size,
                  :validator),
                 (Bool, Int, Int, Int, Nothing))
     @precompile(create_widget,
-                (Val{:input_field}, ObjectPositioningConfiguration),
+                (Val{:input_field}, ObjectLayout),
                 (:border, :color_valid, :color_invalid, :max_data_size,
                  :validator),
                 (Bool, Int, Int, Int, Regex))
     @precompile(create_widget,
-                (Val{:input_field}, ObjectPositioningConfiguration),
+                (Val{:input_field}, ObjectLayout),
                 (:border, :color_valid, :color_invalid, :max_data_size,
                  :validator),
                 (Bool, Int, Int, Int, DataType))
@@ -142,7 +142,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:label}, ObjectPositioningConfiguration),
+                (Val{:label}, ObjectLayout),
                 (:alignment, :color, :fill_color, :text),
                 (Symbol, Int, Bool, String))
     @precompile destroy_widget! WidgetLabel :refresh Bool
@@ -154,7 +154,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:list_box}, ObjectPositioningConfiguration),
+                (Val{:list_box}, ObjectLayout),
                 (:data, :color, :color_highlight, :color_selected,
                  :multiple_selection, :numlines, :icon_not_selected,
                  :icon_selected, :selectable, :show_icon),
@@ -170,7 +170,7 @@ function _precompile()
     # ------------------------------------------------------------------------------
 
     @precompile(create_widget,
-                (Val{:progress_bar}, ObjectPositioningConfiguration),
+                (Val{:progress_bar}, ObjectLayout),
                 (:border, :color, :color_highlight, :style, :value),
                 (Bool, Int, Int, Symbol, Int))
     @precompile change_value (WidgetProgressBar, Int) :color Int
@@ -184,11 +184,11 @@ function _precompile()
     # Windows
     # ==============================================================================
 
-    @precompile(create_window, (ObjectPositioningConfiguration, String),
+    @precompile(create_window, (ObjectLayout, String),
                 (:bcols, :blines, :border, :border_color, :focusable, :title,
                  :title_color),
                 (Int, Int, Bool, Int, Bool, String, Int))
     @precompile destroy_window! Window
     @precompile destroy_all_windows
-    @precompile reposition! (Window, ObjectPositioningConfiguration) :force Bool
+    @precompile reposition! (Window, ObjectLayout) :force Bool
 end

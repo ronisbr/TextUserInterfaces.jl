@@ -19,28 +19,28 @@ get_width_for_child(win::Window)  = win.buffer != C_NULL ? Int(getmaxx(win.buffe
 get_top_for_child(win::Window)    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
 
 @inline reposition!(win::Window; force::Bool = false) =
-    reposition!(win, win.opc; force = force)
+    reposition!(win, win.layout; force = force)
 
-function reposition!(win::Window, opc::ObjectPositioningConfiguration;
+function reposition!(win::Window, layout::ObjectLayout;
                      force::Bool = false)
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the anchors.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.anchor_bottom = Anchor(rootwin, :bottom, 0)
-        opc.anchor_top    = Anchor(rootwin, :top,    0)
+        layout.anchor_bottom = Anchor(rootwin, :bottom, 0)
+        layout.anchor_top    = Anchor(rootwin, :top,    0)
     end
 
     if horizontal == :unknown
-        opc.anchor_left   = Anchor(rootwin, :left,  0)
-        opc.anchor_right  = Anchor(rootwin, :right, 0)
+        layout.anchor_left   = Anchor(rootwin, :left,  0)
+        layout.anchor_right  = Anchor(rootwin, :right, 0)
     end
 
     # Get the positioning information of the window.
-    height, width, top, left = compute_object_positioning(opc, rootwin)
+    height, width, top, left = compute_object_positioning(layout, rootwin)
 
     # Assign to the variables that will be used to create the window.
     begin_y = top

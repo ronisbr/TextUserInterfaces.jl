@@ -14,9 +14,9 @@ export compute_object_positioning
 ################################################################################
 
 """
-    compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
+    compute_object_positioning(layout::ObjectLayout, parent)
 
-Compute the object position based on the configuration `opc` and on its
+Compute the object position based on the configuration `layout` and on its
 parent object `parent`.
 
 # Return
@@ -27,20 +27,20 @@ parent object `parent`.
 * The left position w.r.t. the `parent` object.
 
 """
-function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
+function compute_object_positioning(layout::ObjectLayout, parent)
 
     # Process the positioning.
-    horizontal =_process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal =_process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
-    @unpack_ObjectPositioningConfiguration opc
+    @unpack_ObjectLayout layout
 
-    anchor_bottom = opc.anchor_bottom
-    anchor_left   = opc.anchor_left
-    anchor_right  = opc.anchor_right
-    anchor_top    = opc.anchor_top
-    anchor_center = opc.anchor_center
-    anchor_middle = opc.anchor_middle
+    anchor_bottom = layout.anchor_bottom
+    anchor_left   = layout.anchor_left
+    anchor_right  = layout.anchor_right
+    anchor_top    = layout.anchor_top
+    anchor_center = layout.anchor_center
+    anchor_middle = layout.anchor_middle
 
     # Absolute positioning.
     top    = _process_positioning_value(top,    :height, parent)
@@ -79,9 +79,9 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
         @log_pad 4
         $parent
         @log_pad 0
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("It was not possible to guess the vertical positioning of the object.")
     end
@@ -94,9 +94,9 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
         @log_pad 4
         $parent
         @log_pad 0
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to negative top position.")
     end
@@ -109,9 +109,9 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
         @log_pad 4
         $parent
         @log_pad 0
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to negative top position.")
     end
@@ -147,9 +147,9 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
         @log_pad 4
         $parent
         @log_pad 0
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("It was not possible to guess the horizontal positioning of the object.")
     end
@@ -162,9 +162,9 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
         @log_pad 4
         $parent
         @log_pad 0
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to negative left position.")
     end
@@ -177,9 +177,9 @@ function compute_object_positioning(opc::ObjectPositioningConfiguration, parent)
         @log_pad 4
         $parent
         @log_pad 0
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to non-positive width position.")
     end
@@ -268,9 +268,9 @@ function _get_anchor(anchor::Anchor, parent)
 end
 
 """
-    _process_vertical_info(opc::ObjectPositioningConfiguration)
+    _process_vertical_info(layout::ObjectLayout)
 
-Process the vertical positioning information in `opc` and write the variable
+Process the vertical positioning information in `layout` and write the variable
 `vertical` of the same structure. The possible vertical positioning information
 are:
 
@@ -282,9 +282,9 @@ are:
 * `:unknown`: Insufficient information to compute the vertical positioning.
 
 """
-function _process_vertical_info(opc::ObjectPositioningConfiguration)
+function _process_vertical_info(layout::ObjectLayout)
 
-    @unpack anchor_bottom, anchor_top, anchor_middle, top, height = opc
+    @unpack anchor_bottom, anchor_top, anchor_middle, top, height = layout
 
     # Check the input parameters.
     if !_check_vertical_anchor(anchor_bottom) ||
@@ -294,9 +294,9 @@ function _process_vertical_info(opc::ObjectPositioningConfiguration)
         @log critical "_process_vertical_info" """
         Wrong vertical anchor type.
 
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("Wrong vertical anchor type.")
     end
@@ -321,9 +321,9 @@ function _process_vertical_info(opc::ObjectPositioningConfiguration)
 end
 
 """
-    _process_horizontal_info(opc::ObjectPositioningConfiguration)
+    _process_horizontal_info(layout::ObjectLayout)
 
-Process the horizontal positioning information in `opc` and write the variable
+Process the horizontal positioning information in `layout` and write the variable
 `horizontal` of the same structure. The possible horizontal positioning information
 are:
 
@@ -335,9 +335,9 @@ are:
 * `:unknown`: Insufficient information to compute the horizontal positioning.
 
 """
-function _process_horizontal_info(opc::ObjectPositioningConfiguration)
+function _process_horizontal_info(layout::ObjectLayout)
 
-    @unpack anchor_left, anchor_right, anchor_center, left, width = opc
+    @unpack anchor_left, anchor_right, anchor_center, left, width = layout
 
     # Check the input parameters.
     if !_check_horizontal_anchor(anchor_left)   ||
@@ -347,9 +347,9 @@ function _process_horizontal_info(opc::ObjectPositioningConfiguration)
         @log critical "_process_horizontal_info" """
         Wrong horizontal anchor type.
 
-        opc:
+        layout:
         @log_pad 4
-        $(_str(opc))"""
+        $(_str(layout))"""
 
         error("Wrong vertical anchor type.")
     end
@@ -399,18 +399,18 @@ end
 _process_positioning_value(v::Int, ::Symbol, ::WidgetParent) = v
 
 """
-    _str(wpc::ObjectPositioningConfiguration)
+    _str(wpc::ObjectLayout)
 
 Convert the information in `wpc` to a string for debugging purposes.
 
 """
-function _str(opc::ObjectPositioningConfiguration)
-    ab = opc.anchor_bottom
-    al = opc.anchor_left
-    ar = opc.anchor_right
-    at = opc.anchor_top
-    ac = opc.anchor_center
-    am = opc.anchor_middle
+function _str(layout::ObjectLayout)
+    ab = layout.anchor_bottom
+    al = layout.anchor_left
+    ar = layout.anchor_right
+    at = layout.anchor_top
+    ac = layout.anchor_center
+    am = layout.anchor_middle
 
     ab_str = ab == _no_anchor ? "No anchor" : "($(typeof(ab.obj)), $(ab.side), $(ab.pad))"
     al_str = al == _no_anchor ? "No anchor" : "($(typeof(al.obj)), $(al.side), $(al.pad))"
@@ -427,9 +427,9 @@ function _str(opc::ObjectPositioningConfiguration)
     anchor_center = $al_str
     anchor_middle = $ab_str
 
-    top    = $(opc.top)
-    left   = $(opc.left)
-    height = $(opc.height)
-    width  = $(opc.width)
+    top    = $(layout.top)
+    left   = $(layout.left)
+    height = $(layout.height)
+    width  = $(layout.width)
     """
 end

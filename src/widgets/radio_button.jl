@@ -34,7 +34,7 @@ _radio_buttons_groups = Dict{String,Vector{WidgetRadioButton}}()
 accept_focus(widget::WidgetRadioButton) = accept_focus(widget.base)
 
 function create_widget(::Val{:radio_button},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        label::AbstractString = "Button",
                        color::Int = _color_default,
                        color_highlight::Int = _color_highlight,
@@ -43,7 +43,7 @@ function create_widget(::Val{:radio_button},
                        group_name::String = "group")
 
     # Create the button widget.
-    button = create_widget(Val(:button), opc;
+    button = create_widget(Val(:button), layout;
                            label = glyph_deselected * " " * label,
                            color = color, color_highlight = color_highlight,
                            style = :none)

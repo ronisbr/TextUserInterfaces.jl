@@ -14,11 +14,11 @@ get_height(widget::Widget) = widget.height
 get_top(widget::Widget)    = widget.top
 
 function reposition!(widget::Widget; force::Bool = false)
-    @unpack opc, parent = widget
+    @unpack layout, parent = widget
 
     # Compute the widget true position based on the configuration given the new
     # size of the parent.
-    height, width, top, left = compute_object_positioning(opc, parent)
+    height, width, top, left = compute_object_positioning(layout, parent)
 
     # Check if resize or move is required.
     widget_resize = false

@@ -45,7 +45,7 @@ function accept_focus(widget::WidgetButton)
 end
 
 function create_widget(::Val{:button},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        label::AbstractString = "Button",
                        color::Int = _color_default,
                        color_highlight::Int = _color_highlight,
@@ -62,19 +62,19 @@ function create_widget(::Val{:button},
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if vertical == :unknown
-        opc.height = _button_style_height[style]
+        layout.height = _button_style_height[style]
     end
 
     if horizontal == :unknown
-        opc.width = length(label) + _button_style_width[style]
+        layout.width = length(label) + _button_style_width[style]
     end
 
     # Create the widget.
-    widget = WidgetButton(opc             = opc,
+    widget = WidgetButton(layout             = layout,
                           label           = label,
                           color           = color,
                           color_highlight = color_highlight,

@@ -32,25 +32,25 @@ end
 accept_focus(widget::WidgetANSILabel) = false
 
 function create_widget(::Val{:ansi_label},
-                       opc::ObjectPositioningConfiguration;
+                       layout::ObjectLayout;
                        alignment = :l,
                        color::Int = _color_default,
                        text::AbstractString = "Text")
 
     # Check if all positioning is defined and, if not, try to help by
     # automatically defining the height and/or width.
-    horizontal = _process_horizontal_info(opc)
-    vertical   = _process_vertical_info(opc)
+    horizontal = _process_horizontal_info(layout)
+    vertical   = _process_vertical_info(layout)
 
     if (vertical == :unknown) || (horizontal == :unknown)
         printable_text = replace(text, r"\e\[[0-9;]*m(?:\e\[K)?" => s"")
         lines          = split(text, '\n')
-        vertical   == :unknown && (opc.height = length(lines))
-        horizontal == :unknown && (opc.width  = maximum(length.(lines)) + 1)
+        vertical   == :unknown && (layout.height = length(lines))
+        horizontal == :unknown && (layout.width  = maximum(length.(lines)) + 1)
     end
 
     # Create the widget.
-    widget = WidgetANSILabel(opc       = opc,
+    widget = WidgetANSILabel(layout       = layout,
                              alignment = alignment,
                              text₀     = text)
 

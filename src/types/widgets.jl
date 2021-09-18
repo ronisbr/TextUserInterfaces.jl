@@ -38,7 +38,7 @@ macro widget(ex)
         :(buffer::Ptr{WINDOW} = Ptr{WINDOW}(0))
 
         # Configuration related to the size and position of the widget.
-        :(opc::ObjectPositioningConfiguration)
+        :(layout::ObjectLayout)
 
         # Current size and position of the widget.
         :(top::Int    = -1)
@@ -106,8 +106,8 @@ function getproperty(a::ComposedWidget, f::Symbol)
         return a.container.parent
     elseif f == :buffer
         return a.container.buffer
-    elseif f == :opc
-        return a.container.opc
+    elseif f == :layout
+        return a.container.layout
     elseif f == :top
         return a.container.top
     elseif f == :left
@@ -128,8 +128,8 @@ function setproperty!(a::ComposedWidget, f::Symbol, v)
         return (a.container.parent = v)
     elseif f == :buffer
         return (a.container.buffer = v)
-    elseif f == :opc
-        return (a.container.opc = v)
+    elseif f == :layout
+        return (a.container.layout = v)
     elseif f == :top
         return (a.container.top = v)
     elseif f == :left
@@ -189,8 +189,8 @@ function getproperty(a::DerivedWidget, f::Symbol)
         return a.base.parent
     elseif f == :buffer
         return a.base.buffer
-    elseif f == :opc
-        return a.base.opc
+    elseif f == :layout
+        return a.base.layout
     elseif f == :top
         return a.base.top
     elseif f == :left
@@ -211,8 +211,8 @@ function setproperty!(a::DerivedWidget, f::Symbol, v)
         return (a.base.parent = v)
     elseif f == :buffer
         return (a.base.buffer = v)
-    elseif f == :opc
-        return (a.base.opc = v)
+    elseif f == :layout
+        return (a.base.layout = v)
     elseif f == :top
         return (a.base.top = v)
     elseif f == :left
