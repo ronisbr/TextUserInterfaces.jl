@@ -30,20 +30,22 @@ end
 
 # TODO: We must define those functions separately. Otherwise, if a `Union` is
 # used, we get an ambiguity.
-add_widget!(container::WidgetContainer, widget::WidgetForm) =
-    _add_widget_form!(container, widget)
+function add_widget!(container::WidgetContainer, widget::WidgetForm)
+    return _add_widget_form!(container, widget)
+end
 
 add_widget!(win::Window, widget::WidgetForm) = _add_widget_form!(win, widget)
 
-function create_widget(::Val{:form},
-                       layout::ObjectLayout;
-                       borders::Bool = false,
-                       color_valid::Int = 0,
-                       color_invalid::Int = 0,
-                       field_size::Int = 40,
-                       labels::Vector{String} = String[],
-                       validators = nothing)
-
+function create_widget(
+    ::Val{:form},
+    layout::ObjectLayout;
+    borders::Bool = false,
+    color_valid::Int = 0,
+    color_invalid::Int = 0,
+    field_size::Int = 40,
+    labels::Vector{String} = String[],
+    validators = nothing
+)
     # Get the size of the largest label.
     lmax = maximum(length.(labels))
 
@@ -81,18 +83,26 @@ function create_widget(::Val{:form},
         at  = i == 1 ? :parent : widget_inputs[i-1]
         ats = i == 1 ? :top    : :bottom
 
-        layout = ObjectLayout(anchor_top   = Anchor(at, ats, 0),
-                     anchor_left  = Anchor(:parent, :left, lmax+1),
-                     anchor_right = Anchor(:parent, :right, 0))
-        wii = create_widget(Val(:input_field), layout;
-                            color_valid   = color_valid,
-                            color_invalid = color_invalid,
-                            border        = borders,
-                            validator     = validators[i])
+        layout = ObjectLayout(
+            anchor_top   = Anchor(at, ats, 0),
+            anchor_left  = Anchor(:parent, :left, lmax+1),
+            anchor_right = Anchor(:parent, :right, 0)
+        )
 
-        layout = ObjectLayout(anchor_middle = Anchor(wii,     :middle, 0),
-                     anchor_left   = Anchor(:parent, :left,   0),
-                     width         = lmax)
+        wii = create_widget(
+            Val(:input_field), layout;
+            color_valid   = color_valid,
+            color_invalid = color_invalid,
+            border        = borders,
+            validator     = validators[i]
+        )
+
+        layout = ObjectLayout(
+            anchor_middle = Anchor(wii,     :middle, 0),
+            anchor_left   = Anchor(:parent, :left,   0),
+            width         = lmax
+        )
+
         wli = create_widget(Val(:label), layout; text = labels[i])
 
         widget_labels[i] = wli
@@ -103,10 +113,12 @@ function create_widget(::Val{:form},
     _data = Vector{Union{Nothing, String}}(nothing, nfields)
 
     # Create the widget.
-    widget = WidgetForm(container = container,
-                        labels    = widget_labels,
-                        inputs    = widget_inputs,
-                        _data     = _data)
+    widget = WidgetForm(
+        container = container,
+        labels    = widget_labels,
+        inputs    = widget_inputs,
+        _data     = _data
+    )
 
     @log info "create_widget" """
     A form widget was created in $(obj_desc(parent)).
@@ -123,11 +135,11 @@ end
 
 # TODO: We must define those functions separately. Otherwise, if a `Union` is
 # used, we get an ambiguity.
-remove_widget!(container::WidgetContainer, widget::WidgetForm) =
-    _remove_widget_form!(container, widget)
+function remove_widget!(container::WidgetContainer, widget::WidgetForm)
+    return _remove_widget_form!(container, widget)
+end
 
-remove_widget!(win::Window, widget::WidgetForm) =
-    _remove_widget_form!(win, widget)
+remove_widget!(win::Window, widget::WidgetForm) = _remove_widget_form!(win, widget)
 
 ################################################################################
 #                           Custom widget functions
@@ -137,18 +149,18 @@ remove_widget!(win::Window, widget::WidgetForm) =
     clear_data!(widget::WidgetForm)
 
 Clear the data in all the input fields in the form `widget`.
-
 """
 function clear_data!(widget::WidgetForm)
     clear_data!.(widget.inputs)
     request_update(widget)
+
+    return nothing
 end
 
 """
     get_data(widget::WidgetInputField)
 
 Return a vector with the data of all fields.
-
 """
 function get_data(widget::WidgetForm)
     @unpack _data, inputs = widget
@@ -165,9 +177,10 @@ end
 ################################################################################
 
 # Function when the form is added to a parent.
-function _add_widget_form!(parent::Union{Window, WidgetContainer},
-                           widget::WidgetForm)
-
+function _add_widget_form!(
+    parent::Union{Window, WidgetContainer},
+    widget::WidgetForm
+)
     add_widget!(parent, widget.container)
 
     # The labels have anchors that reference the inputs. Hence, the latter must
@@ -179,12 +192,15 @@ function _add_widget_form!(parent::Union{Window, WidgetContainer},
     for l in widget.labels
         add_widget!(widget.container, l)
     end
+
+    return nothing
 end
 
 # Function when the form is removed from its parent.
-function _remove_widget_form!(parent::Union{Window, WidgetContainer},
-                              widget::WidgetForm)
-
+function _remove_widget_form!(
+    parent::Union{Window, WidgetContainer},
+    widget::WidgetForm
+)
     for l in widget.labels
         remove_widget!(widget.container, l)
     end
@@ -194,6 +210,8 @@ function _remove_widget_form!(parent::Union{Window, WidgetContainer},
     end
 
     remove_widget!(parent, widget.container)
+
+    return nothing
 end
 
 ################################################################################
