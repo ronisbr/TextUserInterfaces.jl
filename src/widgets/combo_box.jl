@@ -80,13 +80,13 @@ function create_widget(::Val{:combo_box},
     # If a border is required, then create a container and add the list box
     # in this container.
     if list_box_border
-        layout = newlayout(anchor_top   = (widget, :bottom, 0),
+        layout = ObjectLayout(anchor_top   = (widget, :bottom, 0),
                      anchor_left  = (widget, :left,   0),
                      anchor_right = (widget, :right,  0),
                      height       = 5)
         con = create_widget(Val(:container), layout; border = true)
 
-        layout = newlayout(anchor_top    = Anchor(:parent, :top, 0),
+        layout = ObjectLayout(anchor_top    = Anchor(:parent, :top, 0),
                      anchor_left   = Anchor(:parent, :left,   0),
                      anchor_right  = Anchor(:parent, :right,  0),
                      anchor_bottom = Anchor(:parent, :bottom, 0))
@@ -99,7 +99,7 @@ function create_widget(::Val{:combo_box},
 
         widget._list_box = con
     else
-        layout = newlayout(anchor_top   = Anchor(widget, :bottom, 0),
+        layout = ObjectLayout(anchor_top   = Anchor(widget, :bottom, 0),
                      anchor_left  = Anchor(widget, :left,   0),
                      anchor_right = Anchor(widget, :right,  0),
                      height       = 5)

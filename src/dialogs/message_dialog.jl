@@ -7,16 +7,18 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-function create_dialog(::Val{:message},
-                       msg::AbstractString,
-                       buttons::AbstractVector{String} = ["OK"];
-                       icon_color::Union{Nothing, Int} = nothing,
-                       icon_type::Symbol = :info,
-                       show_icon::Bool = true,
-                       kwargs...)
+function create_dialog(
+    ::Val{:message},
+    msg::AbstractString,
+    buttons::AbstractVector{String} = ["OK"];
+    icon_color::Union{Nothing, Int} = nothing,
+    icon_type::Symbol = :info,
+    show_icon::Bool = true,
+    kwargs...
+)
 
     if show_icon
-        layout_icon = newlayout(top = 0, left = 0)
+        layout_icon = ObjectLayout(top = 0, left = 0)
         ic = isnothing(icon_color) ? -1 : icon_color
 
         if icon_type == :error
@@ -27,7 +29,9 @@ function create_dialog(::Val{:message},
                             │         │
                             ╰─────────╯"""
 
-            isnothing(icon_color) && (ic = ncurses_color(:red, :black, A_BOLD))
+            if isnothing(icon_color)
+                ic = ncurses_color(:red, :black, A_BOLD)
+            end
 
         elseif icon_type == :warning
             icon_text = """
@@ -37,7 +41,10 @@ function create_dialog(::Val{:message},
                             │         │
                             ╰─────────╯"""
 
-            isnothing(icon_color) && (ic = ncurses_color(:yellow, :black))
+            if isnothing(icon_color)
+                ic = ncurses_color(:yellow, :black)
+            end
+
         elseif icon_type == :question
             icon_text = """
                             ╭─────────╮
@@ -46,7 +53,10 @@ function create_dialog(::Val{:message},
                             │         │
                             ╰─────────╯"""
 
-            isnothing(icon_color) && (ic = ncurses_color(:blue, :black, A_BOLD))
+            if isnothing(icon_color)
+                ic = ncurses_color(:blue, :black, A_BOLD)
+            end
+
         else
             icon_text = """
                             ╭─────────╮
@@ -55,22 +65,27 @@ function create_dialog(::Val{:message},
                             │         │
                             ╰─────────╯"""
 
-            isnothing(icon_color) && (ic = ncurses_color(:green, :black))
+            if isnothing(icon_color)
+                ic = ncurses_color(:green, :black)
+            end
+
         end
 
-        icon = create_widget(Val(:label), layout_icon;
-                             color = ic,
-                             text = icon_text)
+        icon = create_widget(
+            Val(:label),
+            layout_icon;
+            color = ic,
+            text  = icon_text
+        )
     end
 
-    anchor_left = show_icon ? Anchor(icon,    :right, 1) :
-                              Anchor(:parent, :left,  0)
+    anchor_left = show_icon ? Anchor(icon, :right, 1) : Anchor(:parent, :left, 0)
+    anchor_top  = show_icon ? Anchor(icon, :top, 1) : Anchor(:parent, :top, 0)
 
-    anchor_top  = show_icon ? Anchor(icon,    :top, 1) :
-                              Anchor(:parent, :top, 0)
-
-    layout_msg = newlayout(anchor_top  = anchor_top,
-                     anchor_left = anchor_left)
+    layout_msg = ObjectLayout(
+        anchor_top  = anchor_top,
+        anchor_left = anchor_left
+    )
 
     text = create_widget(Val(:label), layout_msg; text = msg)
 

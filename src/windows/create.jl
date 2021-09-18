@@ -10,7 +10,7 @@
 export create_window, create_window_with_container
 
 """
-    function create_window(layout::ObjectLayout = newlayout(), id::String = "";  kwargs...)
+    function create_window(layout::ObjectLayout = ObjectLayout(), id::String = "";  kwargs...)
 
 Create a window. The window ID `id` is used to identify the new window in the
 global window list. The size and location of the window is configured by the
@@ -38,7 +38,7 @@ object `layout`.
                  be changed. (**Default** = -1)
 
 """
-function create_window(layout::ObjectLayout = newlayout(),
+function create_window(layout::ObjectLayout = ObjectLayout(),
                        id::String = "";
                        bcols::Int = 0,
                        blines::Int = 0,
@@ -139,7 +139,7 @@ size of the window buffer.
 """
 function create_window_with_container(vargs...; kwargs...)
     win = create_window(vargs...; kwargs...)
-    con = create_widget(Val(:container), newlayout())
+    con = create_widget(Val(:container), ObjectLayout())
     add_widget!(win, con)
 
     return win, con

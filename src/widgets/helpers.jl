@@ -128,7 +128,7 @@ any parent.
             # Assemble the expression that will create the widget.
             if !has_parent
                 create_widget_expr = quote
-                    layout    = newlayout($(expr_layout...))
+                    layout    = ObjectLayout($(expr_layout...))
                     widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                     $(expr_signals...)
                     widget
@@ -136,7 +136,7 @@ any parent.
 
             else
                 create_widget_expr = quote
-                    layout    = newlayout($(expr_layout...))
+                    layout    = ObjectLayout($(expr_layout...))
                     widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                     add_widget!($parent, widget)
                     $(expr_signals...)

@@ -81,7 +81,7 @@ function create_widget(::Val{:form},
         at  = i == 1 ? :parent : widget_inputs[i-1]
         ats = i == 1 ? :top    : :bottom
 
-        layout = newlayout(anchor_top   = Anchor(at, ats, 0),
+        layout = ObjectLayout(anchor_top   = Anchor(at, ats, 0),
                      anchor_left  = Anchor(:parent, :left, lmax+1),
                      anchor_right = Anchor(:parent, :right, 0))
         wii = create_widget(Val(:input_field), layout;
@@ -90,7 +90,7 @@ function create_widget(::Val{:form},
                             border        = borders,
                             validator     = validators[i])
 
-        layout = newlayout(anchor_middle = Anchor(wii,     :middle, 0),
+        layout = ObjectLayout(anchor_middle = Anchor(wii,     :middle, 0),
                      anchor_left   = Anchor(:parent, :left,   0),
                      width         = lmax)
         wli = create_widget(Val(:label), layout; text = labels[i])

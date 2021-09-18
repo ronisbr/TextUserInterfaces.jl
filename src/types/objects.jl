@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export Anchor, ObjectLayout, newlayout
+export Anchor, ObjectLayout, ObjectLayout
 
 ################################################################################
 #                                   Anchors
@@ -43,8 +43,7 @@ const _no_anchor = Anchor(:noobject, :nosize, 0)
 """
     struct ObjectLayout
 
-This structure defines the positioning of an object. It can also be created with
-the function `newlayout`.
+This structure defines the layout of an object.
 
 # Fields
 
@@ -81,29 +80,3 @@ the function `newlayout`.
     height::Union{Int, String} = -1
     width::Union{Int, String}  = -1
 end
-
-"""
-    newlayout(;kwargs...)
-
-Create an instance of the structure `ObjectLayout`. The
-following keywords are available to specify the positioning:
-
-* `anchor_bottom`: Bottom anchor specification. (**Default** = `_no_anchor`)
-* `anchor_left`: Left anchor specification. (**Default** = `_no_anchor`)
-* `anchor_right`: Right anchor specification. (**Default** = `_no_anchor`)
-* `anchor_top`: Top anchor specification. (**Default** = `_no_anchor`)
-* `anchor_center`: Center anchor specification. (**Default** = `_no_anchor`)
-* `anchor_middle`: Middle anchor specification. (**Default** = `_no_anchor`)
-* `top`: Absolute position of the object top side. (**Default** = -1)
-* `left`: Absolute position of the object left side. (**Default** = -1)
-* `height`: Height of the object. (**Default** = -1)
-* `width`: Width of the object. (**Default** = -1)
-
-!!! info
-
-    If the absolute positioning arguments (`top`, `left`, `height`, and `width`)
-    are negative, then it means that there is no information about them. Hence,
-    the relative arguments (anchors) must provide the missing information.
-
-"""
-const newlayout = ObjectLayout
