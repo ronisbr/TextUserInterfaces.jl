@@ -108,7 +108,7 @@ function create_window(
     win = Window(
         border_color       = border_color,
         buffer             = buffer,
-        buffer_view_locked = buffer_view_locked
+        buffer_view_locked = buffer_view_locked,
         coord              = coord,
         focusable          = focusable,
         has_border         = border,
