@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetForm, clear_daat!, get_data
+export WidgetForm, clear_data!, get_data
 
 ################################################################################
 #                                     Type
