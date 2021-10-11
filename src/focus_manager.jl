@@ -46,8 +46,11 @@ function process_focus(k::Keystroke)
             reposition!(win; force = true)
         end
     else
-        if focus_win == nothing
-            length(focus_chain) == 0 && return nothing
+        if focus_win === nothing
+            if length(focus_chain) == 0
+                return nothing
+            end
+
             next_window()
         end
 
@@ -78,7 +81,7 @@ function next_window()
     end
 
     # Loop from the current position until the end of the focus chain.
-    for i in focus_id+1:num_wins
+    @inbounds for i in (focus_id + 1):num_wins
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -88,7 +91,7 @@ function next_window()
     end
 
     # Loop from the beginning of the chain until the current position.
-    for i in 1:tui.focus_id
+    @inbounds for i in 1:tui.focus_id
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -120,7 +123,7 @@ function previous_window()
     end
 
     # Loop from the current position until the beginning of the focus chain.
-    for i in focus_id-1:-1:1
+    @inbounds for i in (focus_id - 1):-1:1
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -130,7 +133,7 @@ function previous_window()
     end
 
     # Loop from the end of the chain until the current position.
-    for i in num_wins:-1:tui.focus_id
+    @inbounds for i in num_wins:-1:tui.focus_id
         if request_focus(focus_chain[i])
             tui.focus_id = i
             tui_update()
@@ -178,9 +181,13 @@ focus. The keyword `new_focus_id` can be set to specify which element is
 currently focused in the new chain.
 """
 function set_focus_chain(wins::Window...; new_focus_id::Int = 1)
-    tui.focus_ptr != nothing && release_focus(tui.focus_ptr)
+    if tui.focus_ptr !== nothing
+        release_focus(tui.focus_ptr)
+    end
+
     tui.focus_ptr = nothing
     tui.focus_chain = [wins...]
     force_focus_change(new_focus_id)
+
     return nothing
 end
