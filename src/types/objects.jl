@@ -46,23 +46,23 @@ This structure defines the layout of an object.
 
 # Fields
 
-* `anchor_bottom::Anchor`: Bottom anchor specification.
+- `anchor_bottom::Anchor`: Bottom anchor specification.
     (**Default** = `_no_anchor`)
-* `anchor_left::Anchor`: Left anchor specification.
+- `anchor_left::Anchor`: Left anchor specification.
     (**Default** = `_no_anchor`)
-* `anchor_right::Anchor`: Right anchor specification.
+- `anchor_right::Anchor`: Right anchor specification.
     (**Default** = `_no_anchor`)
-* `anchor_top::Anchor`: Top anchor specification. (**Default** = `_no_anchor`)
-* `anchor_center::Anchor`: Center anchor specification.
+- `anchor_top::Anchor`: Top anchor specification. (**Default** = `_no_anchor`)
+- `anchor_center::Anchor`: Center anchor specification.
     (**Default** = `_no_anchor`)
-* `anchor_middle::Anchor`: Middle anchor specification.
+- `anchor_middle::Anchor`: Middle anchor specification.
     (**Default** = `_no_anchor`)
-* `top::Union{Int, String}`: Absolute position of the object top side.
+- `top::Union{Int, String}`: Absolute position of the object top side.
     (**Default** = -1)
-* `left::Union{Int, String}`: Absolute position of the object left side.
+- `left::Union{Int, String}`: Absolute position of the object left side.
     (**Default** = -1)
-* `height::Union{Int, String}`: Height of the object. (**Default** = -1)
-* `width::Union{Int, String}`: Width of the object. (**Default** = -1)
+- `height::Union{Int, String}`: Height of the object. (**Default** = -1)
+- `width::Union{Int, String}`: Width of the object. (**Default** = -1)
 
 !!! info
     If the absolute positioning arguments (`top`, `left`, `height`, and `width`)
