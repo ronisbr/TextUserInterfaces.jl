@@ -62,8 +62,8 @@ function process_focus(window::Window, k::Keystroke)
 
     # If there is any element in the window, then it must be the one with active
     # focus.
-    if widget != nothing
-        return process_focus(widget,k)
+    if widget !== nothing
+        return process_focus(widget, k)
     end
 
     curs_set(0)
@@ -81,7 +81,7 @@ copied to the view.
 function sync_cursor(window::Window)
     @unpack widget = window
 
-    if widget != nothing
+    if widget !== nothing
         if require_cursor(widget)
             curs_set(1)
 
