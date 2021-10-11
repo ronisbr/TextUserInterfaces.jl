@@ -25,8 +25,7 @@ hide_window(win::Window) = hide_panel(win.panel)
 
 Move the window `win` to the position `(starty, startx`).
 """
-move_window(win::Window, starty::Int, startx::Int) =
-    move_panel(win.panel, starty, startx)
+move_window(win::Window, starty::Int, startx::Int) = move_panel(win.panel, starty, startx)
 
 """
     move_window_to_top(win::Window)
