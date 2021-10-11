@@ -275,6 +275,12 @@ function request_focus(container::WidgetContainer, widget)
         # function will not change the focus.
         if (focus_id > 0) && !release_focus(widgets[focus_id])
             @log verbose "request_focus" "$(obj_desc(container)): $(obj_desc(widgets[focus_id])) could not handle the focus to $(obj_desc(widget))."
+
+            # We must sync the cursor and update the TUI to make sure that the
+            # cursor is in the right position.
+            tui_update()
+            sync_cursor(container)
+
             return false
         else
             old_focused_widget = focus_id > 0 ? widgets[focus_id] : nothing

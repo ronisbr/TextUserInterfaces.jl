@@ -58,6 +58,10 @@ function _next_widget(container::WidgetContainer)
         if release_focus(widgets[focus_id])
             @emit_signal widgets[focus_id] focus_lost
         else
+            # We must sync the cursor and update the TUI to make sure that the
+            # cursor is in the right position.
+            tui_update()
+            sync_cursor(container)
             return true
         end
     end
@@ -115,6 +119,7 @@ function _previous_widget(container::WidgetContainer)
         if release_focus(widgets[focus_id])
             @emit_signal widgets[focus_id] focus_lost
         else
+            sync_cursor(container)
             return true
         end
     else
