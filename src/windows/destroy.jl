@@ -19,7 +19,7 @@ function destroy_window!(win::Window)
     @log_ident 1
 
     # Destroy the widget.
-    if win.widget != nothing
+    if win.widget !== nothing
         # In this case, we do not need to refresh the window.
         destroy_widget!(win.widget; refresh = false)
         win.widget = nothing
