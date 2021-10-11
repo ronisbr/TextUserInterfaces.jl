@@ -19,11 +19,15 @@ function _draw_title(container::WidgetContainer)
     width = get_width(container)
 
     # If the width is too small, then do nothing.
-    width ≤ 4 && return nothing
+    if width ≤ 4
+        return nothing
+    end
 
     # Check if the entire title cannot be written. In this case, the title will
     # be shrinked.
-    length(title) ≥ width - 4 && (title = title[1:width-4])
+    if length(title) ≥ width - 4
+        title = title[1:width-4]
+    end
 
     # Compute the padding to print the title based on the alignemnt.
     if title_alignment == :r
@@ -66,7 +70,7 @@ function _next_widget(container::WidgetContainer)
     container.focus_id = 0
 
     # Search for the next widget that can handle the focus.
-    for i = (focus_id+1):length(widgets)
+    for i = (focus_id + 1):length(widgets)
         if request_next_widget(widgets[i])
             container.focus_id = i
 
@@ -125,7 +129,7 @@ function _previous_widget(container::WidgetContainer)
     container.focus_id = 0
 
     # Search for the next widget that can handle the focus.
-    for i in focus_id-1:-1:1
+    for i in (focus_id - 1):-1:1
         if request_prev_widget(widgets[i])
             container.focus_id = i
 
