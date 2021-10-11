@@ -60,42 +60,246 @@ end
 # * `j`: Variable type in Julia.
 # * `c`: Variable type in C.
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:can_change_color, Cbool,       [],           [],                     []),
-     (:cbreak,           Cvoid,       [],           [],                     []),
-     (:clear,            Cint,        [],           [],                     []),
-     (:clrtobot,         Cint,        [],           [],                     []),
-     (:clrtoeol,         Cint,        [],           [],                     []),
-     (:delwin,           Cvoid,       ["win",],     ["Ptr{WINDOW}",],       ["Ptr{WINDOW}",]),
-     (:doupdate,         Cvoid,       [],           [],                     []),
-     (:endwin,           Cvoid,       [],           [],                     []),
-     (:erase,            Cint,        [],           [],                     []),
-     (:getch,            Cint,        [],           [],                     []),
-     (:getbegx,          Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW} "]),
-     (:getbegy,          Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW} "]),
-     (:getcurx,          Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW} "]),
-     (:getcury,          Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW} "]),
-     (:getmaxx,          Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW} "]),
-     (:getmaxy,          Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW} "]),
-     (:has_colors,       Cbool,       [],           [],                     []),
-     (:initscr,          Ptr{WINDOW}, [],           [],                     []),
-     (:keypad,           Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
-     (:leaveok,          Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
-     (:scrollok,          Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
-     (:nodelay,          Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
-     (:noecho,           Cvoid,       [],           [],                     []),
-     (:notimeout,        Cvoid,       ["win","bf"], ["Ptr{WINDOW}","Bool"], ["Ptr{WINDOW}","Cuchar"]),
-     (:refresh,          Cvoid,       [],           [],                     []),
-     (:start_color,      Cint,        [],           [],                     []),
-     (:touchwin,         Cvoid,       ["win",],     ["Ptr{WINDOW}",],       ["Ptr{WINDOW}",]),
-     (:wclear,           Cvoid,       ["win",],     ["Ptr{WINDOW}",],       ["Ptr{WINDOW}",]),
-     (:wclrtobot,        Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW}"]),
-     (:wclrtoeol,        Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW}"]),
-     (:werase,           Cvoid,       ["win",],     ["Ptr{WINDOW}",],       ["Ptr{WINDOW}",]),
-     (:wgetch,           Cint,        ["win"],      ["Ptr{WINDOW}"],        ["Ptr{WINDOW}"]),
-     (:wnoutrefresh,     Cvoid,       ["win",],     ["Ptr{WINDOW}",],       ["Ptr{WINDOW}",]),
-     (:wrefresh,         Cvoid,       ["win",],     ["Ptr{WINDOW}",],       ["Ptr{WINDOW}",]),
+        (
+            :can_change_color,
+            Cbool,
+            [],
+            [],
+            []
+        ),
+        (
+            :cbreak,
+            Cvoid,
+            [],
+            [],
+            []
+        ),
+        (
+            :clear,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :clrtobot,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :clrtoeol,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :delwin,
+            Cvoid,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :doupdate,
+            Cvoid,
+            [],
+            [],
+            []
+        ),
+        (
+            :endwin,
+            Cvoid,
+            [],
+            [],
+            []
+        ),
+        (
+            :erase,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :getch,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :getbegx,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :getbegy,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :getcurx,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :getcury,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :getmaxx,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :getmaxy,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :has_colors,
+            Cbool,
+            [],
+            [],
+            []
+        ),
+        (
+            :initscr,
+            Ptr{WINDOW},
+            [],
+            [],
+            []
+        ),
+        (
+            :keypad,
+            Cvoid,
+            ["win", "bf"],
+            ["Ptr{WINDOW}", "Bool"],
+            ["Ptr{WINDOW}", "Cuchar"]
+        ),
+        (
+            :leaveok,
+            Cvoid,
+            ["win", "bf"],
+            ["Ptr{WINDOW}", "Bool"],
+            ["Ptr{WINDOW}", "Cuchar"]
+        ),
+        (
+            :scrollok,
+            Cvoid,
+            ["win", "bf"],
+            ["Ptr{WINDOW}", "Bool"],
+            ["Ptr{WINDOW}", "Cuchar"]
+        ),
+        (
+            :nodelay,
+            Cvoid,
+            ["win", "bf"],
+            ["Ptr{WINDOW}", "Bool"],
+            ["Ptr{WINDOW}", "Cuchar"]
+        ),
+        (
+            :noecho,
+            Cvoid,
+            [],
+            [],
+            []
+        ),
+        (
+            :notimeout,
+            Cvoid,
+            ["win", "bf"],
+            ["Ptr{WINDOW}", "Bool"],
+            ["Ptr{WINDOW}", "Cuchar"]
+        ),
+        (
+            :refresh,
+            Cvoid,
+            [],
+            [],
+            []
+        ),
+        (
+            :start_color,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :touchwin,
+            Cvoid,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wclear,
+            Cvoid,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wclrtobot,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wclrtoeol,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :werase,
+            Cvoid,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wgetch,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wnoutrefresh,
+            Cvoid,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wrefresh,
+            Cvoid,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
     )
 
     fb    = Meta.quot(f)
@@ -130,31 +334,173 @@ end
 # Functions that depends on arguments that must be `Integer`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:attroff,       Cint,        ["attrs"],                                    ["T"],                                  ["Cint"]),
-     (:attron,        Cint,        ["attrs"],                                    ["T"],                                  ["Cint"]),
-     (:bkgd,          Cint,        ["ch"],                                       ["T"],                                  ["Cint"]),
-     (:curs_set,      Cint,        ["visibility"],                               ["T"],                                  ["Cint"]),
-     (:derwin,        Ptr{WINDOW}, ["win","nlines","ncols","begin_y","begin_x"], ["Ptr{WINDOW}",["T" for _ = 1:4]...],   ["Ptr{WINDOW}",["Cint" for _ = 1:4]...]),
-     (:init_color,    Cint,        ["color","r","g","b"],                        ["T","T","T","T"],                      ["Cshort","Cshort","Cshort","Cshort"]),
-     (:init_pair,     Cint,        ["pair","f","b"],                             ["T","T","T"],                          ["Cshort","Cshort","Cshort"]),
-     (:mouseinterval, Cint,        ["n"],                                        ["T"],                                  ["Cint"]),
-     (:mvwin,         Cvoid,       ["win","y","x"],                              ["Ptr{WINDOW}","T","T"],                ["Ptr{WINDOW}","Cint","Cint"]),
-     (:newpad,        Ptr{WINDOW}, ["lines","cols"],                             ["T","T"],                              ["Cint","Cint"]),
-     (:newwin,        Ptr{WINDOW}, ["lines","cols","y","x"],                     ["T" for _ = 1:4],                      ["Cint" for _ = 1:4]),
-     (:resizeterm,    Cint,        ["lines","columns"],                          ["T","T"],                              ["Cint","Cint"]),
-     (:subpad,        Ptr{WINDOW}, ["win","nlines","ncols","begin_y","begin_x"], ["Ptr{WINDOW}",["T" for _ = 1:4]...],   ["Ptr{WINDOW}",["Cint" for _ = 1:4]...]),
-     (:wattroff,      Cint,        ["win","attrs"],                              ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
-     (:wattron,       Cint,        ["win","attrs"],                              ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
-     (:wbkgd,         Cint,        ["win","ch"],                                 ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
-     (:wmove,         Cvoid,       ["win","y","x"],                              ["Ptr{WINDOW}","T","T"],                ["Ptr{WINDOW}","Cint","Cint"]),
-     (:wresize,       Cvoid,       ["win","lines","cols"],                       ["Ptr{WINDOW}","T","T"],                ["Ptr{WINDOW}","Cint","Cint"]),
-     (:wtimeout,      Cvoid,       ["win","delay"],                              ["Ptr{WINDOW}","T"],                    ["Ptr{WINDOW}","Cint"]),
-     # Functions with very long arguments.
-     (:copywin,      Cint, ["scr","dest","sminrow","smincol","dminrow","dmincol","dmaxrow","dmaxcol","overlay"], ["Ptr{WINDOW}","Ptr{WINDOW}",["T" for _ = 1:7]...], ["Ptr{WINDOW}","Ptr{WINDOW}",["Cint" for _ = 1:7]...]),
-     (:prefresh,     Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"],                  ["Ptr{WINDOW}",["T" for _ = 1:6]...],               ["Ptr{WINDOW}",["Cint" for _ = 1:6]...]),
-     (:pnoutrefresh, Cint, ["win","pminrow","pmincol","sminrow","smincol","smaxrow","smaxcol"],                  ["Ptr{WINDOW}",["T" for _ = 1:6]...],               ["Ptr{WINDOW}",["Cint" for _ = 1:6]...])
+        (
+            :attroff,
+            Cint,
+            ["attrs"],
+            ["T"],
+            ["Cint"]
+        ),
+        (
+            :attron,
+            Cint,
+            ["attrs"],
+            ["T"],
+            ["Cint"]
+        ),
+        (
+            :bkgd,
+            Cint,
+            ["ch"],
+            ["T"],
+            ["Cint"]
+        ),
+        (
+            :curs_set,
+            Cint,
+            ["visibility"],
+            ["T"],
+            ["Cint"]
+        ),
+        (
+            :derwin,
+            Ptr{WINDOW},
+            ["win", "nlines", "ncols", "begin_y", "begin_x"],
+            ["Ptr{WINDOW}", ["T" for _ = 1:4]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
+        ),
+        (
+            :init_color,
+            Cint,
+            ["color", "r", "g", "b"],
+            ["T", "T", "T", "T"],
+            ["Cshort", "Cshort", "Cshort", "Cshort"]
+        ),
+        (
+            :init_pair,
+            Cint,
+            ["pair", "f", "b"],
+            ["T", "T", "T"],
+            ["Cshort", "Cshort", "Cshort"]
+        ),
+        (
+            :mouseinterval,
+            Cint,
+            ["n"],
+            ["T"],
+            ["Cint"]
+        ),
+        (
+            :mvwin,
+            Cvoid,
+            ["win", "y", "x"],
+            ["Ptr{WINDOW}", "T", "T"],
+            ["Ptr{WINDOW}", "Cint", "Cint"]
+        ),
+        (
+            :newpad,
+            Ptr{WINDOW},
+            ["lines", "cols"],
+            ["T", "T"],
+            ["Cint", "Cint"]
+        ),
+        (
+            :newwin,
+            Ptr{WINDOW},
+            ["lines", "cols", "y", "x"],
+            ["T" for _ = 1:4],
+            ["Cint" for _ = 1:4]
+        ),
+        (
+            :resizeterm,
+            Cint,
+            ["lines", "columns"],
+            ["T", "T"],
+            ["Cint", "Cint"]
+        ),
+        (
+            :subpad,
+            Ptr{WINDOW},
+            ["win", "nlines", "ncols", "begin_y", "begin_x"],
+            ["Ptr{WINDOW}", ["T" for _ = 1:4]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
+        ),
+        (
+            :wattroff,
+            Cint,
+            ["win", "attrs"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wattron,
+            Cint,
+            ["win", "attrs"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wbkgd,
+            Cint,
+            ["win", "ch"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wmove,
+            Cvoid,
+            ["win", "y", "x"],
+            ["Ptr{WINDOW}", "T", "T"],
+            ["Ptr{WINDOW}", "Cint", "Cint"]
+        ),
+        (
+            :wresize,
+            Cvoid,
+            ["win", "lines", "cols"],
+            ["Ptr{WINDOW}", "T", "T"],
+            ["Ptr{WINDOW}", "Cint", "Cint"]
+        ),
+        (
+            :wtimeout,
+            Cvoid,
+            ["win", "delay"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        # Functions with very long arguments.
+        (
+            :copywin,
+            Cint,
+            [
+                "scr",
+                "dest",
+                "sminrow",
+                "smincol",
+                "dminrow",
+                "dmincol",
+                "dmaxrow",
+                "dmaxcol",
+                "overlay"
+            ],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["T" for _ = 1:7]...],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Cint" for _ = 1:7]...]
+        ),
+        (
+            :prefresh,
+            Cint,
+            ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
+            ["Ptr{WINDOW}", ["T" for _ = 1:6]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
+        ),
+        (
+            :pnoutrefresh,
+            Cint,
+            ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
+            ["Ptr{WINDOW}", ["T" for _ = 1:6]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
+        )
     )
 
     fb    = Meta.quot(f)
@@ -189,11 +535,29 @@ end
 # Functions that depends on arguments that must be `jlchtype`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:box,           Cvoid,       ["win","verch","horch"],                         ["Ptr{WINDOW}","T","T"],              ["Ptr{WINDOW}","chtype","chtype"]),
-     (:waddch,        Cvoid,       ["win","ch"],                                    ["Ptr{WINDOW}","T"],                  ["Ptr{WINDOW}","chtype"]),
-     (:wborder,       Cvoid,       ["win","ls","rs","ts","bs","tl","tr","bl","br"], ["Ptr{WINDOW}",["T" for _ = 1:8]...], ["Ptr{WINDOW}",["chtype" for _ = 1:8]...]),
+        (
+            :box,
+            Cvoid,
+            ["win", "verch", "horch"],
+            ["Ptr{WINDOW}", "T", "T"],
+            ["Ptr{WINDOW}", "chtype", "chtype"]
+        ),
+        (
+            :waddch,
+            Cvoid,
+            ["win", "ch"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "chtype"]
+        ),
+        (
+            :wborder,
+            Cvoid,
+            ["win", "ls", "rs", "ts", "bs", "tl", "tr", "bl", "br"],
+            ["Ptr{WINDOW}", ["T" for _ = 1:8]...],
+            ["Ptr{WINDOW}", ["chtype" for _ = 1:8]...]
+        ),
     )
 
     fb     = Meta.quot(f)
@@ -230,16 +594,64 @@ end
 # Functions that depends on arguments that must be `Integer` and `jlchtype`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:hline,    Cint, ["ch","n"],               ["Tc","Ti"],                         ["chtype","Cint"]),
-     (:mvhline,  Cint, ["y","x","ch","n"],       ["Ti","Ti","Tc","Ti"],               ["Cint","Cint","chtype","Cint"]),
-     (:mvvline,  Cint, ["y","x","ch","n"],       ["Ti","Ti","Tc","Ti"],               ["Cint","Cint","chtype","Cint"]),
-     (:mvwhline, Cint, ["win","y","x","ch","n"], ["Ptr{WINDOW}","Ti","Ti","Tc","Ti"], ["Ptr{WINDOW}","Cint","Cint","chtype","Cint"]),
-     (:mvwvline, Cint, ["win","y","x","ch","n"], ["Ptr{WINDOW}","Ti","Ti","Tc","Ti"], ["Ptr{WINDOW}","Cint","Cint","chtype","Cint"]),
-     (:vline,    Cint, ["ch","n"],               ["Tc","Ti"],                         ["chtype","Cint"]),
-     (:whline,   Cint, ["win","ch","n"],         ["Ptr{WINDOW}","Tc","Ti"],           ["Ptr{WINDOW}","chtype","Cint"]),
-     (:wvline,   Cint, ["win","ch","n"],         ["Ptr{WINDOW}","Tc","Ti"],           ["Ptr{WINDOW}","chtype","Cint"]),
+        (
+            :hline,
+            Cint,
+            ["ch", "n"],
+            ["Tc", "Ti"],
+            ["chtype", "Cint"]
+        ),
+        (
+            :mvhline,
+            Cint,
+            ["y", "x", "ch", "n"],
+            ["Ti", "Ti", "Tc", "Ti"],
+            ["Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvvline,
+            Cint,
+            ["y", "x", "ch", "n"],
+            ["Ti", "Ti", "Tc", "Ti"],
+            ["Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvwhline,
+            Cint,
+            ["win", "y", "x", "ch", "n"],
+            ["Ptr{WINDOW}", "Ti", "Ti", "Tc", "Ti"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvwvline,
+            Cint,
+            ["win", "y", "x", "ch", "n"],
+            ["Ptr{WINDOW}", "Ti", "Ti", "Tc", "Ti"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :vline,
+            Cint,
+            ["ch", "n"],
+            ["Tc", "Ti"],
+            ["chtype", "Cint"]
+        ),
+        (
+            :whline,
+            Cint,
+            ["win", "ch", "n"],
+            ["Ptr{WINDOW}", "Tc", "Ti"],
+            ["Ptr{WINDOW}", "chtype", "Cint"]
+        ),
+        (
+            :wvline,
+            Cint,
+            ["win", "ch", "n"],
+            ["Ptr{WINDOW}", "Tc", "Ti"],
+            ["Ptr{WINDOW}", "chtype", "Cint"]
+        ),
     )
 
     fb     = Meta.quot(f)
@@ -276,10 +688,22 @@ end
 # Functions that depends on arguments that must be `AbstractString`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:wprintw, Cvoid, ["win","str"], ["Ptr{WINDOW}","T"], ["Ptr{WINDOW}","Cstring"]),
-     (:printw,  Cvoid, ["str"],       ["T"],               ["Cstring"]),
+        (
+            :wprintw,
+            Cvoid,
+            ["win", "str"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "Cstring"]
+        ),
+        (
+            :printw,
+            Cvoid,
+            ["str"],
+            ["T"],
+            ["Cstring"]
+        ),
     )
 
     fb    = Meta.quot(f)
@@ -314,10 +738,22 @@ end
 # Functions that arguments must be `AbstractString` and `Integer`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:mvprintw,  Cvoid, ["y","x","str"],       ["Ti","Ti","Ts"],               ["Cint","Cint","Cstring"]),
-     (:mvwprintw, Cvoid, ["win","y","x","str"], ["Ptr{WINDOW}","Ti","Ti","Ts"], ["Ptr{WINDOW}","Cint","Cint","Cstring"]),
+        (
+            :mvprintw,
+            Cvoid,
+            ["y", "x", "str"],
+            ["Ti", "Ti", "Ts"],
+            ["Cint", "Cint", "Cstring"]
+        ),
+        (
+            :mvwprintw,
+            Cvoid,
+            ["win", "y", "x", "str"],
+            ["Ptr{WINDOW}", "Ti", "Ti", "Ts"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "Cstring"]
+        ),
     )
 
     fb    = Meta.quot(f)
