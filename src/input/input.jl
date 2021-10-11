@@ -28,8 +28,7 @@ Wait for an keystroke in the window `win` and return it (see
 instead of `wgetch(win)` to listen for the keystroke.
 """
 function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
-
-    win_ptr = win == nothing ? tui.stdscr : win
+    win_ptr = win === nothing ? tui.stdscr : win
     nodelay(win_ptr, true)
     c_raw = wgetch(win_ptr)
 
@@ -49,7 +48,7 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
 
         # Here, we need to read a sequence of characters that is already in the
         # buffer. Thus, we will disable the delay.
-        win_ptr = (win == nothing) ? tui.stdscr : win
+        win_ptr = win === nothing ? tui.stdscr : win
         #nodelay(win_ptr, true)
 
         # Read the entire sequence limited to 10 characters.
@@ -96,20 +95,20 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
         end
     elseif 192 <= c <= 223 # utf8 based logic starts here
         bs1 = UInt8(c)
-        bs2 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
         return Keystroke(raw = c, value = String([bs1, bs2]), ktype = :utf8)
 
     elseif  224 <= c <= 239
         bs1 = UInt8(c)
-        bs2 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
         return Keystroke(raw = c, value = String([bs1, bs2, bs3]), ktype = :utf8)
 
     elseif  240 <= c <= 247
         bs1 = UInt8(c)
-        bs2 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs4 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs4 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
         return Keystroke(
             raw = c,
             value = String([bs1, bs2, bs3, bs4]),
@@ -118,10 +117,10 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
 
     elseif  248 <= c <= 251
         bs1 = UInt8(c)
-        bs2 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs4 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs5 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs4 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs5 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
         return Keystroke(
             raw = c,
             value = String([bs1, bs2, bs3, bs4, bs5]),
@@ -130,11 +129,11 @@ function jlgetch(win::Union{Ptr{WINDOW},Nothing} = nothing)
 
     elseif  252 <= c <= 253
         bs1 = UInt8(c)
-        bs2 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs4 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs5 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
-        bs6 = (win == nothing) ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs4 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs5 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs6 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
         return Keystroke(
             raw = c,
             value = String([bs1, bs2, bs3, bs4, bs5, bs6]),

@@ -18,7 +18,7 @@ window.
 """
 function refresh_window(id::String)
     idx = findfirst(x -> x.id == id, tui.wins)
-    (idx == nothing) && error("The window id `$id` was not found.")
+    idx === nothing && error("The window id `$id` was not found.")
     return refresh_window(tui.wins[idx])
 end
 
@@ -35,7 +35,7 @@ function refresh_window(win::Window; force_redraw = false)
     force_redraw && wclear(win.buffer)
 
     # Update the widget.
-    if widget != nothing
+    if widget !== nothing
         if update(widget; force_redraw = force_redraw)
             win.view_needs_update = true
         end
@@ -76,7 +76,7 @@ Request to update the view of window `win`. Notice that this must also request
 update on all parent windows until the root window.
 """
 function request_view_update(win::Window)
-    win.parent != nothing && request_view_update(win.parent)
+    win.parent !== nothing && request_view_update(win.parent)
     win.view_needs_update = true
 
     return nothing
