@@ -240,9 +240,9 @@ function create_plot(z, xmin, xmax, ymin, ymax, colormap = :viridis)
         ylabel = "y",
         zlabel = "f(x, y)",
         xoffset = xmin,
-        xscale = (xmax - xmin) / (numx - 1),
+        xfact = (xmax - xmin) / (numx - 1),
         yoffset = ymin,
-        yscale = (ymax - ymin) / (numy - 1),
+        yfact = (ymax - ymin) / (numy - 1),
         colormap = colormap
     ))
     return String(take!(io))
