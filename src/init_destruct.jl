@@ -78,7 +78,7 @@ function destroy_tui()
     )
 
     # Close log.
-    if logger.file != nothing
+    if logger.file !== nothing
         close(logger.file)
         logger.file = nothing
     end

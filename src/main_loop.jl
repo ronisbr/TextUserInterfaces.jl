@@ -34,16 +34,16 @@ Otherwise, the loop is terminated.
 
 - `destroy_on_exit::Bool`: If `true`, then `destroy_tui()` is called when we
     exit from the loop.
-* `manage_window_switch::Bool`: If `true`, then `F2` and `F3` move to next and
+- `manage_window_switch::Bool`: If `true`, then `F2` and `F3` move to next and
     previous windows.
 """
 function app_main_loop(
-        ;
-        fprev::Function = (k) -> true,
-        fpost::Function = (k) -> true,
-        confirm_exit::Bool = true,
-        destroy_on_exit::Bool = true,
-        manage_window_switch::Bool = true
+    ;
+    fprev::Function = (k) -> true,
+    fpost::Function = (k) -> true,
+    confirm_exit::Bool = true,
+    destroy_on_exit::Bool = true,
+    manage_window_switch::Bool = true
 )
     # If the user did not defined a focus chain, then set it with all available
     # windows.
@@ -77,7 +77,6 @@ function app_main_loop(
             else
                 break
             end
-
         elseif manage_window_switch && (k.ktype == :F2)
             next_window()
         elseif manage_window_switch && (k.ktype == :F3)

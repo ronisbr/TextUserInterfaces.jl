@@ -57,13 +57,19 @@ If a line is `@log_pad X`, then the following lines will have a padding of X.
 """
 function log_message(level::LogLevels, msg::AbstractString, id::AbstractString = "")
     # Check if logging is enabled.
-    !logger.enabled && return nothing
+    if !logger.enabled
+        return nothing
+    end
 
     # Check if the level is equal or below the desired logging level.
-    Int(level) > Int(logger.level) && return nothing
+    if Int(level) > Int(logger.level)
+        return nothing
+    end
 
     # Check if the file is opened. If not, then open.
-    logger.file == nothing && (logger.file = open(logger.logfile, "w"))
+    if logger.file === nothing
+        logger.file = open(logger.logfile, "w")
+    end
 
     io = logger.file
 
@@ -84,7 +90,7 @@ function log_message(level::LogLevels, msg::AbstractString, id::AbstractString =
     @inbounds for i = 1:length(lines)
         # Check if the line is a command to change the logging pad.
         aux = match(r"^@log_pad [0-9]+", lines[i])
-        if aux != nothing
+        if aux !== nothing
             Δ_pad = parse(Int64, aux.match[10:end])
         else
             i_output  = ""
