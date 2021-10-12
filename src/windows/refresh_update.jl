@@ -70,13 +70,13 @@ function request_update(win::Window)
 end
 
 """
-    request_view_update(win::Window)
+    request_view_update!(win::Window)
 
 Request to update the view of window `win`. Notice that this must also request
 update on all parent windows until the root window.
 """
-function request_view_update(win::Window)
-    win.parent !== nothing && request_view_update(win.parent)
+function request_view_update!(win::Window)
+    win.parent !== nothing && request_view_update!(win.parent)
     win.view_needs_update = true
 
     return nothing
