@@ -27,7 +27,7 @@ using `Int`.
 
 - `bold::Boolean`: If `true`, then apply bold format mask to `attrs`.
     (**Default** = `false`)
-* `underline::Boolean`: If `true`, then apply underline format mask to `attrs`.
+- `underline::Boolean`: If `true`, then apply underline format mask to `attrs`.
     (**Default** = `false`)
 """
 function ncurses_color(
