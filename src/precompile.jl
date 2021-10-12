@@ -59,16 +59,16 @@ function _precompile()
     )
 
     @precompile(
-        change_text,
-        (WidgetANSILabel, String),
+        change_text!,
+        (WidgetAnsiLabel, String),
         (:alignment,),
         (Symbol,)
     )
 
-    @precompile destroy_widget! WidgetANSILabel :refresh Bool
-    # @precompile init_widget! WidgetANSILabel
-    @precompile redraw WidgetANSILabel
-    @precompile _destroy_widget! WidgetANSILabel :refresh Bool
+    @precompile destroy_widget! WidgetAnsiLabel :refresh Bool
+    # @precompile init_widget! WidgetAnsiLabel
+    @precompile redraw WidgetAnsiLabel
+    @precompile _destroy_widget! WidgetAnsiLabel :refresh Bool
 
     # Button
     # ------------------------------------------------------------------------------

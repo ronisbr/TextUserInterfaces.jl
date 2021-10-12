@@ -7,13 +7,13 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetANSILabel, change_text!
+export WidgetAnsiLabel, change_text!
 
 ################################################################################
 #                                     Type
 ################################################################################
 
-@widget mutable struct WidgetANSILabel
+@widget mutable struct WidgetAnsiLabel
     # Input label data from the user.
     alignment::Symbol
     text₀::AbstractString
@@ -29,7 +29,7 @@ end
 ################################################################################
 
 # Labels cannot accept focus.
-accept_focus(widget::WidgetANSILabel) = false
+accept_focus(widget::WidgetAnsiLabel) = false
 
 function create_widget(
     ::Val{:ansi_label},
@@ -57,7 +57,7 @@ function create_widget(
     end
 
     # Create the widget.
-    widget = WidgetANSILabel(
+    widget = WidgetAnsiLabel(
         layout    = layout,
         alignment = alignment,
         text₀     = text
@@ -73,7 +73,7 @@ function create_widget(
     return widget
 end
 
-function redraw(widget::WidgetANSILabel)
+function redraw(widget::WidgetAnsiLabel)
     @unpack buffer, colors, text = widget
 
     wclear(buffer)
@@ -89,7 +89,7 @@ function redraw(widget::WidgetANSILabel)
     return nothing
 end
 
-function reposition!(widget::WidgetANSILabel; force::Bool = false)
+function reposition!(widget::WidgetAnsiLabel; force::Bool = false)
     # Call the default repositioning function.
     if invoke(reposition!, Tuple{Widget}, widget; force = force)
         _parse_ansi_text!(widget)
@@ -104,7 +104,7 @@ end
 ################################################################################
 
 """
-    change_text!(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l)
+    change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment = :l)
 
 Change to text of the label widget `widget` to `new_text`.
 
@@ -116,7 +116,7 @@ which can be:
 - `:r`: Right alignment.
 """
 function change_text!(
-    widget::WidgetANSILabel,
+    widget::WidgetAnsiLabel,
     new_text::AbstractString;
     alignment = :l
 )
@@ -139,7 +139,7 @@ end
 # This function gets the text in the variable `text₀`, and converts the ANSI
 # escape sequences to NCurse colors. It is only called when the widget is
 # repositioned.
-function _parse_ansi_text!(widget::WidgetANSILabel)
+function _parse_ansi_text!(widget::WidgetAnsiLabel)
     # If the widget does not has a parent, then we cannot align the text.
     isnothing(widget.parent) && return nothing
 
