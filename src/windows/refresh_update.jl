@@ -8,7 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export refresh_window, refresh_all_windows, move_view!, move_view_inc!
-export update_view
+export update_view!
 
 """
     refresh_window(id::String)
@@ -41,7 +41,7 @@ function refresh_window(win::Window; force_redraw = false)
         end
     end
 
-    update_view(win)
+    update_view!(win)
 
     return nothing
 end
@@ -113,9 +113,7 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     win.view_needs_update = true
 
     # Update the view if required.
-    if update
-        update_view(win)
-    end
+    update && update_view!(win)
 
     return nothing
 end
@@ -131,7 +129,7 @@ function move_view_inc!(win::Window, Δy::Int, Δx::Int; kwargs...)
 end
 
 """
-    update_view(win::Window; force::Bool = false)
+    update_view!(win::Window; force::Bool = false)
 
 Update the view of window `win` by copying the contents from the buffer. If the
 view does not need to be updated (see `view_needs_update`), then nothing is
@@ -141,12 +139,12 @@ done. If the keyword `force` is `true`, then the copy will always happen.
 
 It returns `true` if the view has been updated and `false` otherwise.
 """
-function update_view(win::Window; force::Bool = false)
+function update_view!(win::Window; force::Bool = false)
     @unpack has_border, buffer, view, orig = win
 
     if win.view_needs_update || force
         # We need to save the cursor position to restore later.
-        cy,cx = _get_window_cur_pos(view)
+        cy, cx = _get_window_cur_pos(view)
 
         # Get view dimensions.
         maxy, maxx = _get_window_dims(win.view)
@@ -155,10 +153,10 @@ function update_view(win::Window; force::Bool = false)
         #
         # Notice that position of the copied rectangle depends on whether or not
         # the window has a border.
-        dminrow = has_border ? 1      : 0
-        dmincol = has_border ? 1      : 0
-        dmaxrow = has_border ? maxy-2 : maxy-1
-        dmaxcol = has_border ? maxx-2 : maxx-1
+        dminrow = has_border ? 1        : 0
+        dmincol = has_border ? 1        : 0
+        dmaxrow = has_border ? maxy - 2 : maxy - 1
+        dmaxcol = has_border ? maxx - 2 : maxx - 1
         copywin(buffer, view, orig..., dminrow, dmincol, dmaxrow, dmaxcol, 0)
 
         # Tell ncurses to update the entire window.
@@ -170,7 +168,7 @@ function update_view(win::Window; force::Bool = false)
         # Move the cursor back to the original position.
         wmove(view, cy, cx)
 
-        @log verbose "update_view" "Window $(win.id): Buffer was copied to the view."
+        @log verbose "update_view!" "Window $(win.id): Buffer was copied to the view."
 
         return true
     else
