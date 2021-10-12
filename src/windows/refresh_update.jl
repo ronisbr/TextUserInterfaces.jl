@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export refresh_window, refresh_all_windows, move_view, move_view_inc
+export refresh_window, refresh_all_windows, move_view!, move_view_inc
 export update_view
 
 """
@@ -86,12 +86,12 @@ end
 # ==============================================================================
 
 """
-    move_view(win::Window, y::Int, x::Int; update::Bool = true)
+    move_view!(win::Window, y::Int, x::Int; update::Bool = true)
 
 Move the origin of the view of window `win` to the position `(y,x)`. This
 routine makes sure that the view will never reach positions outside the buffer.
 """
-function move_view(win::Window, y::Int, x::Int; update::Bool = true)
+function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     # This function only makes sense if the window has a buffer.
     win.buffer == C_NULL && return nothing
 
@@ -99,10 +99,15 @@ function move_view(win::Window, y::Int, x::Int; update::Bool = true)
     blines, bcols = _get_window_dims(win.buffer)
     vlines, vcols = _get_window_dims(win.view)
 
-    y + vlines >= blines && (y = blines - vlines)
-    x + vcols  >= bcols  && (x = bcols  - vcols)
+    if y + vlines >= blines
+        y = blines - vlines
+    end
 
-    win.orig = (y,x)
+    if x + vcols  >= bcols
+        x = bcols  - vcols
+    end
+
+    win.orig = (y, x)
 
     # Since the origin has moved, then the view must be updated.
     win.view_needs_update = true
