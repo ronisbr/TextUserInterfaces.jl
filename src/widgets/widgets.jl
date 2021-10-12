@@ -259,7 +259,7 @@ function _destroy_widget!(widget; refresh::Bool = true)
     destroy_widget_buffer!(widget)
 
     # Remove the widget from the parent.
-    remove_widget!(parent, widget)
+    parent !== nothing && remove_widget!(parent, widget)
 
     @log info "destroy_widget" "Widget destroyed: $widget_desc"
 

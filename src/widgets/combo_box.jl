@@ -143,15 +143,15 @@ function create_widget(
     return widget
 end
 
-function destroy_widget(widget::WidgetComboBox; refresh::Bool = true)
+function destroy_widget!(widget::WidgetComboBox; refresh::Bool = true)
     @unpack _list_box = widget
     # Destroy the list box and the widget.
-    (_list_box != nothing) && destroy_widget!(widget._list_box; refresh = false)
+    _list_box !== nothing && destroy_widget!(widget._list_box; refresh = false)
     _destroy_widget!(widget; refresh = refresh)
     return nothing
 end
 
-process_keystroke(widget::WidgetComboBox, k::Keystroke) = _handle_input(widget, k)
+process_keystroke(widget::WidgetComboBox, k::Keystroke) = _handle_input!(widget, k)
 
 function redraw(widget::WidgetComboBox)
     @unpack buffer, cur, data, parent, width = widget
@@ -175,8 +175,8 @@ require_cursor(widget::WidgetComboBox) = false
 ################################################################################
 
 function _draw_combo_box(widget::WidgetComboBox)
-    @unpack parent, buffer, width, color, color_highlight, cur, data, style,
-            _list_box_opened = widget
+    @unpack parent, buffer, width, color, color_highlight, cur, data = widget
+    @unpack style, _list_box_opened = widget
 
     # Get the background color depending on the focus.
     c = (has_focus(parent, widget) || _list_box_opened) ? color_highlight : color
@@ -210,7 +210,7 @@ function _draw_combo_box(widget::WidgetComboBox)
     return nothing
 end
 
-function _handle_input(widget::WidgetComboBox, k::Keystroke)
+function _handle_input!(widget::WidgetComboBox, k::Keystroke)
     @unpack data, parent, _list_box = widget
 
     # If `enter` is pressed, then create a list box that contains all the data,

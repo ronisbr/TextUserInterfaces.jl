@@ -16,7 +16,7 @@
 #                                     API
 ################################################################################
 
-function destroy_widget(widget::ComposedWidget; refresh::Bool = true)
+function destroy_widget!(widget::ComposedWidget; refresh::Bool = true)
     @unpack buffer, container, parent = widget
 
     widget_desc = obj_desc(widget)

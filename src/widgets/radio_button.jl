@@ -174,7 +174,7 @@ function _select_radio_button(rb::WidgetRadioButton)
         end
     end
 
-    change_label(rb.base, rb.glyph_selected * " " * rb.label)
+    change_label!(rb.base, rb.glyph_selected * " " * rb.label)
     rb.selected = true
 
     return true
@@ -187,7 +187,7 @@ Deselect the radio button `rb` in its group name.
 """
 function _deselect_radio_button(rb::WidgetRadioButton)
     if rb.selected
-        change_label(rb.base, rb.glyph_deselected * " " * rb.label)
+        change_label!(rb.base, rb.glyph_deselected * " " * rb.label)
         rb.selected = false
     end
 

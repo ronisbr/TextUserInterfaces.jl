@@ -124,7 +124,7 @@ function _precompile()
     # @precompile init_widget! WidgetComboBox
     @precompile _destroy_widget! WidgetComboBox :refresh Bool
     @precompile _draw_combo_box WidgetComboBox
-    @precompile _handle_input (WidgetComboBox, Keystroke)
+    @precompile _handle_input! (WidgetComboBox, Keystroke)
 
     # Form
     # ------------------------------------------------------------------------------
