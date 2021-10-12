@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export refresh_window, refresh_all_windows, move_view!, move_view_inc
+export refresh_window, refresh_all_windows, move_view!, move_view_inc!
 export update_view
 
 """
@@ -121,13 +121,13 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
 end
 
 """
-    move_view_inc(win::Window; Δy::Int, Δx::Int; kwargs...)
+    move_view_inc!(win::Window; Δy::Int, Δx::Int; kwargs...)
 
 Move the view of the window `win` to the position `(y+Δy, x+Δx)`. This function
 has the same set of keywords of the function `move_view`.
 """
-function move_view_inc(win::Window, Δy::Int, Δx::Int; kwargs...)
-    return move_view(win, win.orig[1] + Δy, win.orig[2] + Δx; kwargs...)
+function move_view_inc!(win::Window, Δy::Int, Δx::Int; kwargs...)
+    return move_view!(win, win.orig[1] + Δy, win.orig[2] + Δx; kwargs...)
 end
 
 """
