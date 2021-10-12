@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export get_buffer, set_window_title
+export get_buffer, set_window_title!
 
 """
     get_buffer(win::Window)
@@ -24,7 +24,7 @@ Return `nothing` since the window has no parent.
 get_parent(win::Window) = nothing
 
 """
-    set_window_title(win::Window, title::AbstractString; ...)
+    set_window_title!(win::Window, title::AbstractString; ...)
 
 Set the title of the window `win` to `title`.
 
@@ -34,7 +34,7 @@ Set the title of the window `win` to `title`.
     function `ncurses_color`. If negative, then the color will not be changed.
     (**Default** = -1)
 """
-function set_window_title(win::Window, title::AbstractString; title_color::Int = -1)
+function set_window_title!(win::Window, title::AbstractString; title_color::Int = -1)
     win.title = title
 
     if win.has_border

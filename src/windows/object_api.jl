@@ -101,7 +101,7 @@ function reposition!(win::Window, layout::ObjectLayout; force::Bool = false)
 
     win_resize && wresize(win.buffer, blines, bcols)
 
-    win.has_border && set_window_title(
+    win.has_border && set_window_title!(
         win,
         win.title;
         title_color = win.title_color

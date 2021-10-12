@@ -120,7 +120,7 @@ function create_window(
         view               = view,
     )
 
-    border && set_window_title(win, title; title_color = title_color)
+    border && set_window_title!(win, title; title_color = title_color)
     push!(tui.wins, win)
 
     @log info "create_window" """
