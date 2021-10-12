@@ -54,8 +54,8 @@ function _precompile()
     @precompile(
         create_widget,
         (Val{:ansi_label}, ObjectLayout),
-        (:alignment, :color, :text),
-        (Symbol, Int, String)
+        (:alignment, :text),
+        (Symbol, String)
     )
 
     @precompile(

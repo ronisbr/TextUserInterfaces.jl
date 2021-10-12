@@ -35,7 +35,6 @@ function create_widget(
     ::Val{:ansi_label},
     layout::ObjectLayout;
     alignment = :l,
-    color::Int = _color_default,
     text::AbstractString = "Text"
 )
     # Check if all positioning is defined and, if not, try to help by
