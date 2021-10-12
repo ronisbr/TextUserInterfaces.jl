@@ -174,7 +174,7 @@ function _align_text!(widget::WidgetLabel)
 
     widget.text = text
 
-    request_update(widget)
+    request_update!(widget)
 
     return nothing
 end

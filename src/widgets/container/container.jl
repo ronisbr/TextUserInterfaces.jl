@@ -184,7 +184,7 @@ function add_widget!(container::WidgetContainer, widget::Widget)
     # call the repositioning algorithm.
     reposition!(widget; force = true)
 
-    request_update(container)
+    request_update!(container)
 
     @log info "add_widget!" """
     Add widget $(obj_desc(widget)) => $(obj_desc(container)):
@@ -229,7 +229,7 @@ function remove_widget!(container::WidgetContainer, widget::Widget)
     widget.parent = nothing
     destroy_widget_buffer!(widget)
 
-    request_update(container)
+    request_update!(container)
 
     return nothing
 end

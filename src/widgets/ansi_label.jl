@@ -192,7 +192,7 @@ function _parse_ansi_text!(widget::WidgetANSILabel)
     widget.text   = v_str
     widget.colors = colors
 
-    request_update(widget)
+    request_update!(widget)
 
     return nothing
 end

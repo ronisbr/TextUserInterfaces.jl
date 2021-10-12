@@ -40,7 +40,7 @@ end
 ################################################################################
 
 function accept_focus(widget::WidgetComboBox)
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -164,7 +164,7 @@ function redraw(widget::WidgetComboBox)
 end
 
 function release_focus(widget::WidgetComboBox)
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -288,7 +288,7 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         # If no movement key was pressed, then just release the focus.
         if Δx != 0
             widget.cur = clamp(widget.cur + Δx, 1, length(data))
-            request_update(widget)
+            request_update!(widget)
             return true
         else
             return false

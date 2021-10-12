@@ -144,7 +144,7 @@ function tictactoe()
 
                 change_player()
                 widget.colors .= field_highlight_colors[current_player[1]]
-                request_update(widget)
+                request_update!(widget)
             end
         end
 
@@ -158,7 +158,7 @@ function tictactoe()
     # It changes the background color to that of the current player.
     field_focus_acquired(widget) = begin
         widget.colors .= field_highlight_colors[current_player[1]]
-        request_update(widget)
+        request_update!(widget)
     end
 
     # This is a signal handler that will called every time the field loses
@@ -167,7 +167,7 @@ function tictactoe()
     # It removes the background color.
     field_focus_lost(widget) = begin
         widget.colors .= p0
-        request_update(widget)
+        request_update!(widget)
     end
 
     # Create the fields of the board.

@@ -152,7 +152,7 @@ Clear the data in all the input fields in the form `widget`.
 """
 function clear_data!(widget::WidgetForm)
     clear_data!.(widget.inputs)
-    request_update(widget)
+    request_update!(widget)
 
     return nothing
 end

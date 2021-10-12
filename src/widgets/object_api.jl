@@ -44,7 +44,7 @@ function reposition!(widget::Widget; force::Bool = false)
         delwin(widget.buffer)
         widget.buffer = Ptr{WINDOW}(0)
         widget.buffer = subpad(get_buffer(parent), height, width, top, left)
-        request_update(widget)
+        request_update!(widget)
     end
 
     return repos

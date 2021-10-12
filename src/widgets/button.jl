@@ -44,7 +44,7 @@ const _button_style_width = Dict(
 ################################################################################
 
 function accept_focus(widget::WidgetButton)
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -117,7 +117,7 @@ function redraw(widget::WidgetButton, focused::Bool)
 end
 
 function release_focus(widget::WidgetButton)
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -133,7 +133,7 @@ Change the label of button `button` to `label`.
 """
 function change_label(button::WidgetButton, label::AbstractString)
     button.label = label
-    request_update(button)
+    request_update!(button)
     return nothing
 end
 

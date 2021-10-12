@@ -107,7 +107,7 @@ function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1
 
     @log verbose "change_value" "$(obj_to_ptr(widget)): Progress bar value changed to $new_value."
 
-    request_update(widget)
+    request_update!(widget)
 
     return nothing
 end

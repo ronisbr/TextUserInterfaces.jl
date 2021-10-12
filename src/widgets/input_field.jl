@@ -57,7 +57,7 @@ function accept_focus(widget::WidgetInputField)
     # positioned in the position it was when the focus was released.
     _update_cursor(widget)
 
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -184,7 +184,7 @@ function release_focus(widget::WidgetInputField)
         return false
     end
 
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -221,7 +221,7 @@ function clear_data!(widget::WidgetInputField)
     widget.vcurx = 1
     widget.view  = 1
 
-    request_update(widget)
+    request_update!(widget)
 
     return nothing
 end
@@ -340,7 +340,7 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     view = clamp(view, 1, max(1, max_view))
 
     # Request update if necessary.
-    update && request_update(widget)
+    update && request_update!(widget)
 
     # Repack values that were modified.
     @pack! widget = cury, curx, vcury, vcurx, view

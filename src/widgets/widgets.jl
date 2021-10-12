@@ -12,7 +12,7 @@
 ################################################################################
 
 export accept_focus, create_widget, destroy_widget!, init_widget_buffer!
-export process_keystroke, request_update, request_focus, redraw, release_focus
+export process_keystroke, request_update!, request_focus, redraw, release_focus
 export set_widget_color, update
 
 """
@@ -166,17 +166,17 @@ function request_focus(widget)
 end
 
 """
-    request_update(widget)
+    request_update!(widget)
 
 Request update of the widget `widget`.
 """
-function request_update(widget)
+function request_update!(widget)
     widget.update_needed = true
-    request_update(widget.parent)
+    request_update!(widget.parent)
     return nothing
 end
 
-request_update(::Nothing) = return nothing
+request_update!(::Nothing) = return nothing
 
 """
     redraw(widget)

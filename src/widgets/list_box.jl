@@ -61,7 +61,7 @@ function accept_focus(widget::WidgetListBox)
     # Make sure that the highlighted item is on view.
     _move_view(widget, 0)
 
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 
@@ -139,7 +139,7 @@ function process_keystroke(widget::WidgetListBox, k::Keystroke)
         @emit_signal widget esc_pressed
         return true
     elseif _handle_input(widget, k)
-        request_update(widget)
+        request_update!(widget)
         return true
     else
         return false
@@ -189,7 +189,7 @@ function redraw(widget::WidgetListBox)
 end
 
 function release_focus(widget::WidgetListBox)
-    request_update(widget)
+    request_update!(widget)
     return true
 end
 

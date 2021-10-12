@@ -60,11 +60,11 @@ function refresh_all_windows()
 end
 
 """
-    request_update(win::Window)
+    request_update!(win::Window)
 
 Request update of the window `win` because its widget was updated.
 """
-function request_update(win::Window)
+function request_update!(win::Window)
     # TODO: This can be used to call refresh on demand!
     return nothing
 end
