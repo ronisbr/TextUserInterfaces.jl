@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetButton, change_label
+export WidgetButton, change_label!
 
 ################################################################################
 #                                     Type
@@ -126,12 +126,11 @@ end
 ################################################################################
 
 """
-    change_label(button::WidgetButton, label::AbstractString)
+    change_label!(button::WidgetButton, label::AbstractString)
 
 Change the label of button `button` to `label`.
-
 """
-function change_label(button::WidgetButton, label::AbstractString)
+function change_label!(button::WidgetButton, label::AbstractString)
     button.label = label
     request_update!(button)
     return nothing

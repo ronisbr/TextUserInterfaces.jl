@@ -80,7 +80,7 @@ function _precompile()
         (String, Int, Int, Symbol)
     )
 
-    @precompile change_label (WidgetButton, String)
+    @precompile change_label! (WidgetButton, String)
     @precompile destroy_widget! WidgetButton :refresh Bool
     # @precompile init_widget! WidgetButton
     @precompile redraw WidgetButton
