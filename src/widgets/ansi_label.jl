@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetANSILabel, change_text
+export WidgetANSILabel, change_text!
 
 ################################################################################
 #                                     Type
@@ -45,7 +45,7 @@ function create_widget(
 
     if (vertical == :unknown) || (horizontal == :unknown)
         printable_text = replace(text, r"\e\[[0-9;]*m(?:\e\[K)?" => s"")
-        lines          = split(text, '\n')
+        lines          = split(printable_text, '\n')
 
         if vertical   == :unknown
             layout.height = length(lines)
@@ -104,7 +104,7 @@ end
 ################################################################################
 
 """
-    change_text(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l)
+    change_text!(widget::WidgetANSILabel, new_text::AbstractString; alignment = :l)
 
 Change to text of the label widget `widget` to `new_text`.
 
@@ -115,15 +115,19 @@ which can be:
 - `:c`: Center alignment; or
 - `:r`: Right alignment.
 """
-function change_text(
+function change_text!(
     widget::WidgetANSILabel,
     new_text::AbstractString;
     alignment = :l
 )
+    # Update the input text and alignment.
+    widget.alignment = alignment
     widget.text₀ = new_text
+
+    # Parse the text.
     _parse_ansi_text!(widget)
 
-    @log verbose "change_text" "$(obj_desc(widget)): ANSI Label text changed to \"$new_text\"."
+    @log verbose "change_text!" "$(obj_desc(widget)): ANSI Label text changed to \"$new_text\"."
 
     return nothing
 end
