@@ -99,8 +99,10 @@ function init_widget_buffer!(widget::Widget)
     destroy_widget_buffer!(widget)
 
     # Compute the widget true position based on the configuration.
-    height, width, top, left = compute_object_layout(widget.layout,
-                                                          widget.parent)
+    height, width, top, left = compute_object_layout(
+        widget.layout,
+        widget.parent
+    )
 
     # Create the buffer that will hold the contents.
     buffer = subpad(get_buffer(widget.parent), height, width, top, left)
@@ -197,7 +199,7 @@ release_focus(widget) = return true
 Set the background color of `widget` to `color`.
 """
 function set_widget_color(widget, color::Int)
-    color >= 0 && (wbkgd(get_buffer(widget), color))
+    color >= 0 && wbkgd(get_buffer(widget), color)
     return nothing
 end
 
