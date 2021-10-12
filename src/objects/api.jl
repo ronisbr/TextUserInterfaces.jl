@@ -7,8 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export get_left, get_height, get_width, get_top, get_visible_height
-export get_visible_width, reposition!
+export get_left, get_height, get_width, get_top, reposition!
 
 """
     get_bottom(object)
