@@ -160,7 +160,7 @@ function request_focus(widget)
     @unpack parent = widget
 
     # Only request focus if the widget can accept the focus.
-    request_focus(parent, widget)
+    request_focus!(parent, widget)
 
     return nothing
 end

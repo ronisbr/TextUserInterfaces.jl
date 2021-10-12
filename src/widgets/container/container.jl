@@ -248,12 +248,12 @@ function has_focus(container::WidgetContainer, widget)
 end
 
 """
-    request_focus(container::WidgetContainer, widget)
+    request_focus!(container::WidgetContainer, widget)
 
 Request the focus to the widget `widget` of the container `container`. It
 returns `true` if the focus could be changed or `false` otherwise.
 """
-function request_focus(container::WidgetContainer, widget)
+function request_focus!(container::WidgetContainer, widget)
     @unpack widgets, focus_id = container
 
     # Find the widget in the widget list.
@@ -261,8 +261,8 @@ function request_focus(container::WidgetContainer, widget)
 
     # If `id` is `nothing`, then the `widget` does not belong to the
     # `container`.
-    if id == nothing
-        @log warning "request_focus" "$(obj_desc(widget)) does not belong to $(obj_desc(container))."
+    if id === nothing
+        @log warning "request_focus!" "$(obj_desc(widget)) does not belong to $(obj_desc(container))."
         return false
     else
         # If the widget is already in focus, then do nothing.
@@ -274,7 +274,7 @@ function request_focus(container::WidgetContainer, widget)
         # the next one. If the element cannot release the focus, then this
         # function will not change the focus.
         if (focus_id > 0) && !release_focus(widgets[focus_id])
-            @log verbose "request_focus" "$(obj_desc(container)): $(obj_desc(widgets[focus_id])) could not handle the focus to $(obj_desc(widget))."
+            @log verbose "request_focus!" "$(obj_desc(container)): $(obj_desc(widgets[focus_id])) could not handle the focus to $(obj_desc(widget))."
 
             # We must sync the cursor and update the TUI to make sure that the
             # cursor is in the right position.
@@ -287,7 +287,7 @@ function request_focus(container::WidgetContainer, widget)
             new_focused_widget = widgets[id]
             container.focus_id = id
 
-            if old_focused_widget != nothing
+            if old_focused_widget !== nothing
                 @emit_signal old_focused_widget focus_lost
             end
 
@@ -295,7 +295,7 @@ function request_focus(container::WidgetContainer, widget)
                 @emit_signal new_focused_widget focus_acquired
             end
 
-            @log verbose "request_focus" "$(obj_desc(container)): Focus was handled to widget #$(container.focus_id) -> $(obj_desc(widgets[container.focus_id]))."
+            @log verbose "request_focus!" "$(obj_desc(container)): Focus was handled to widget #$(container.focus_id) -> $(obj_desc(widgets[container.focus_id]))."
 
             # We need to update the TUI, now that the new widget has the focus,
             # and then synchronize the cursors.

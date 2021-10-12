@@ -227,7 +227,7 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         select_item(_list_box, widget.cur)
 
         # Pass the focus to the newly created list box.
-        request_focus(parent, _list_box)
+        request_focus!(parent, _list_box)
 
         # Set the function called when a key is pressed inside the list box.
         #
@@ -239,7 +239,7 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
             widget.cur = cur
             widget._list_box_opened = false
             remove_widget!(parent, list_box)
-            request_focus(parent, widget)
+            request_focus!(parent, widget)
         end
 
         # If `esc` is pressed, then this function just destroys the list box,
@@ -247,7 +247,7 @@ function _handle_input(widget::WidgetComboBox, k::Keystroke)
         function _handler_esc_pressed(list_box)
             widget._list_box_opened = false
             remove_widget!(parent, list_box)
-            request_focus(parent, widget)
+            request_focus!(parent, widget)
         end
 
         # If the list box for any reason lost focus, then it must be closed.
