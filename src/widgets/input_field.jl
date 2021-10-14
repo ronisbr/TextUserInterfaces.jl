@@ -84,15 +84,15 @@ function create_widget(
     end
 
     # Validator.
-    if validator != nothing
+    if validator !== nothing
         # Check if the user wants a `Regex`. In this case, the parsed data will
         # be a string.
         if typeof(validator) <: Regex
             regex = validator
-            validator = (str)->occursin(regex,str)
+            validator = (str) -> occursin(regex,str)
         elseif typeof(validator) <: DataType
             field_type = validator
-            validator = (str)->tryparse(field_type, str) != nothing
+            validator = (str) -> tryparse(field_type, str) !== nothing
         elseif !(typeof(validator) <: Function)
             error("`validator` must be a regex, a data type, or a function.")
         end
@@ -115,7 +115,7 @@ function create_widget(
         Reference  = $(obj_to_ptr(widget))
         Border     = $border
         Max. size  = $max_data_size
-        Validator? = $(validator != nothing)"""
+        Validator? = $(validator !== nothing)"""
 
     # Return the created widget.
     return widget
@@ -125,12 +125,12 @@ function process_keystroke(widget::WidgetInputField, k::Keystroke)
     @unpack border = widget
 
     # Handle the input.
-    if _handle_input(widget, k)
+    if _handle_input!(widget, k)
         # Update the cursor position.
         _update_cursor(widget)
 
         # Validate the input.
-        _validator(widget)
+        _validator!(widget)
 
         return true
     else
@@ -244,7 +244,7 @@ end
 #                              Private functions
 ################################################################################
 
-function _handle_input(widget::WidgetInputField, k::Keystroke)
+function _handle_input!(widget::WidgetInputField, k::Keystroke)
     @unpack data, max_data_size, view, curx, cury, size, vcury, vcurx = widget
 
     # We do not support multiple lines yet.
@@ -265,13 +265,13 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
         Δx = +1
     # Go to the beginning of the data.
     elseif k.ktype == :home
-        Δx = -(vcurx-1)
+        Δx = -(vcurx - 1)
     # Go to the end of the data.
     elseif k.ktype == :end
-        Δx = length(data)-vcurx+1
+        Δx = length(data) - vcurx + 1
     # Delete the previous character.
     elseif k.ktype == :backspace
-        vcurx > 1 && deleteat!(data, vcurx-1)
+        vcurx > 1 && deleteat!(data, vcurx - 1)
         Δx = -1
         update = true
     # Delete the next character.
@@ -284,7 +284,7 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
             if isempty(data)
                 push!(data, k.value[1])
             else
-                pos = clamp(vcurx, 1, length(data)+1)
+                pos = clamp(vcurx, 1, length(data) + 1)
                 insert!(data, pos, k.value[1])
             end
             Δx = +1
@@ -297,7 +297,7 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
 
     # Limit for the cursors in the X-axis.
     cxlimit = max_data_size > 0 ?
-        min(max_data_size, length(data)+1) :
+        min(max_data_size, length(data) + 1) :
         length(data) + 1
 
     # Update the position of the virtual cursor.
@@ -335,7 +335,10 @@ function _handle_input(widget::WidgetInputField, k::Keystroke)
     # If the field is completely filled, than we would not allow an additional
     # space for the cursor at the position a character would be added.
     max_view = length(data) - size + 2
-    length(data) == max_data_size && (max_view -= 1)
+
+    if length(data) == max_data_size
+        max_view -= 1
+    end
 
     view = clamp(view, 1, max(1, max_view))
 
@@ -361,9 +364,9 @@ function _update_cursor(widget::WidgetInputField)
     return nothing
 end
 
-_has_validator(widget::WidgetInputField) = widget.validator != nothing
+_has_validator(widget::WidgetInputField) = widget.validator !== nothing
 
-function _validator(widget::WidgetInputField)
+function _validator!(widget::WidgetInputField)
     if _has_validator(widget)
         @unpack data, validator = widget
         data_str = String(data)
