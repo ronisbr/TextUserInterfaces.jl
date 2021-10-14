@@ -207,7 +207,7 @@ function _precompile()
     # @precompile init_widget! WidgetListBox
     @precompile redraw WidgetListBox
     @precompile _destroy_widget! WidgetListBox :refresh Bool
-    @precompile _handle_input (WidgetListBox, Keystroke)
+    @precompile _handle_input! (WidgetListBox, Keystroke)
 
     # Progress bar
     # ------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ function _precompile()
         (Bool, Int, Int, Symbol, Int)
     )
 
-    @precompile change_value (WidgetProgressBar, Int) :color Int
+    @precompile change_value! (WidgetProgressBar, Int) :color Int
     @precompile destroy_widget! WidgetProgressBar :refresh Bool
     # @precompile init_widget! WidgetProgressBar
     @precompile redraw WidgetProgressBar

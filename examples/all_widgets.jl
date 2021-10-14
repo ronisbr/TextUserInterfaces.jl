@@ -121,7 +121,7 @@ function windows_and_widgets()
 
     function update_progress_bar(radio_button)
         v = parse(Int, radio_button.label)
-        change_value(progress_bar, v)
+        change_value!(progress_bar, v)
     end
 
     radio_i = nothing

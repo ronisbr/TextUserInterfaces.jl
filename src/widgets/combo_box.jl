@@ -224,7 +224,7 @@ function _handle_input!(widget::WidgetComboBox, k::Keystroke)
 
         # Make the selected item in the list box equal to the current item of
         # the combo box.
-        select_item(_list_box, widget.cur)
+        select_item!(_list_box, widget.cur)
 
         # Pass the focus to the newly created list box.
         request_focus!(parent, _list_box)
