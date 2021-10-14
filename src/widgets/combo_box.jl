@@ -229,38 +229,9 @@ function _handle_input!(widget::WidgetComboBox, k::Keystroke)
         # Pass the focus to the newly created list box.
         request_focus!(parent, _list_box)
 
-        # Set the function called when a key is pressed inside the list box.
-        #
-        # If `return` is pressed, then this function need to update the combo
-        # box current item, destroy the created widgets, and return the focus to
-        # the combo box.
-        function _handler_return_pressed(list_box)
-            cur, ~ = get_current_item(list_box)
-            widget.cur = cur
-            widget._list_box_opened = false
-            remove_widget!(parent, list_box)
-            request_focus!(parent, widget)
-        end
-
-        # If `esc` is pressed, then this function just destroys the list box,
-        # ignoring the selection.
-        function _handler_esc_pressed(list_box)
-            widget._list_box_opened = false
-            remove_widget!(parent, list_box)
-            request_focus!(parent, widget)
-        end
-
-        # If the list box for any reason lost focus, then it must be closed.
-        function _handler_focus_lost(list_box)
-            if widget._list_box_opened
-                widget._list_box_opened = false
-                remove_widget!(parent, list_box)
-            end
-        end
-
-        @connect_signal _list_box return_pressed _handler_return_pressed
-        @connect_signal _list_box esc_pressed _handler_esc_pressed
-        @connect_signal _list_box focus_lost _handler_focus_lost
+        @connect_signal _list_box return_pressed _handler_return_pressed! widget
+        @connect_signal _list_box esc_pressed _handler_esc_pressed! widget
+        @connect_signal _list_box focus_lost _handler_focus_lost! widget
 
         return true
     else
@@ -296,6 +267,44 @@ function _handle_input!(widget::WidgetComboBox, k::Keystroke)
     end
 
     return false
+end
+
+# Signal handlers
+# ==============================================================================
+
+# Set the function called when a key is pressed inside the list box.
+#
+# If `return` is pressed, then this function need to update the combo box
+# current item, destroy the created widgets, and return the focus to the combo
+# box.
+function _handler_return_pressed!(list_box::WidgetListBox, combo_box::WidgetComboBox)
+    cur, ~ = get_current_item(list_box)
+    combo_box.cur = cur
+    combo_box._list_box_opened = false
+    remove_widget!(parent, list_box)
+    request_focus!(parent, combo_box)
+
+    return nothing
+end
+
+# If `esc` is pressed, then this function just destroys the list box,
+# ignoring the selection.
+function _handler_esc_pressed!(list_box::WidgetListBox, combo_box::WidgetComboBox)
+    combo_box._list_box_opened = false
+    remove_widget!(parent, list_box)
+    request_focus!(parent, combo_box)
+
+    return nothing
+end
+
+# If the list box for any reason lost focus, then it must be closed.
+function _handler_focus_lost!(list_box::WidgetListBox, combo_box::WidgetComboBox)
+    if combo_box._list_box_opened
+        combo_box._list_box_opened = false
+        remove_widget!(parent, list_box)
+    end
+
+    return nothing
 end
 
 ################################################################################

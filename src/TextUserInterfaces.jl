@@ -90,12 +90,13 @@ include("./widgets/ansi_label.jl")
 include("./widgets/button.jl")
 include("./widgets/canvas.jl")
 include("./widgets/composed_widgets.jl")
-include("./widgets/combo_box.jl")
 include("./widgets/label.jl")
 include("./widgets/list_box.jl")
 include("./widgets/input_field.jl")
 include("./widgets/object_api.jl")
 include("./widgets/progress_bar.jl")
+
+include("./widgets/combo_box.jl")
 
 include("./widgets/composed/form.jl")
 
