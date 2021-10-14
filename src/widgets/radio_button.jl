@@ -87,24 +87,24 @@ function create_widget(
     return widget
 end
 
-# We must override the function `destroy_widget` function because we need to
+# We must override the function `destroy_widget!` function because we need to
 # remove the radio button from the global list.
-function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
+function destroy_widget!(rb::WidgetRadioButton; refresh::Bool = true)
     @unpack buffer, parent = rb
 
     if haskey(_radio_buttons_groups, rb.group_name)
         v  = _radio_buttons_groups[rb.group_name]
         id = findfirst(x->x === rb, v)
 
-        if id != nothing
+        if id !== nothing
             deleteat!(v,id)
 
-            @log info "destroy_widget" "$(obj_desc(rb)) removed from group \"$(rb.group_name)\"."
+            @log info "destroy_widget!" "$(obj_desc(rb)) removed from group \"$(rb.group_name)\"."
 
             if isempty(v)
                 pop!(_radio_buttons_groups, rb.group_name)
 
-                @log info "destroy_widget" "Radio group name \"$(rb.group_name)\" deleted."
+                @log info "destroy_widget!" "Radio group name \"$(rb.group_name)\" deleted."
             else
                 # If the deleted button was selected, then we must select
                 # another one.
@@ -113,7 +113,7 @@ function destroy_widget(rb::WidgetRadioButton; refresh::Bool = true)
         end
     end
 
-    _destroy_widget(rb; refresh = refresh)
+    _destroy_widget!(rb; refresh = refresh)
 
     return nothing
 end
