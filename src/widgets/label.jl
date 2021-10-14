@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetLabel, change_text
+export WidgetLabel, change_text!
 
 ################################################################################
 #                                     Type
@@ -101,7 +101,7 @@ end
 ################################################################################
 
 """
-    change_text(widget::WidgetLabel, new_text::AbstractString; alignment = :l, color::Int = -1)
+    change_text!(widget::WidgetLabel, new_text::AbstractString; alignment = :l, color::Int = -1)
 
 Change to text of the label widget `widget` to `new_text`.
 
@@ -115,17 +115,19 @@ which can be:
 The text color can be selected by the keyword `color`. It it is negative
 (**default**), then the current color will not be changed.
 """
-function change_text(
+function change_text!(
     widget::WidgetLabel,
     new_text::AbstractString;
     alignment = :l,
     color::Int = -1
 )
     widget.text₀ = new_text
+    widget.alignment = alignment
+
     color > 0 && (widget.color = color)
     _align_text!(widget)
 
-    @log verbose "change_text" "$(obj_desc(widget)): Label text changed to \"$new_text\"."
+    @log verbose "change_text!" "$(obj_desc(widget)): Label text changed to \"$new_text\"."
 
     return nothing
 end
