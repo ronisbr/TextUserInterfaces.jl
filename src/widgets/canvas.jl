@@ -74,16 +74,16 @@ function redraw(widget::WidgetCanvas)
     height = get_height(widget)
     width  = get_width(widget)
 
-    @inbounds for i = 1:N
-        i > height+1 && break
+    @inbounds for i in 1:N
+        i > height + 1 && break
 
-        for j = 1:M
-            j > width+1 && break
+        for j in 1:M
+            j > width + 1 && break
 
             color_ij = colors[i,j]
 
             color_ij > 0 && wattron(buffer, color_ij)
-            mvwprintw(buffer, i-1, j-1, first(chars[i,j],1))
+            mvwprintw(buffer, i - 1, j - 1, first(chars[i,j], 1))
             color_ij > 0 && wattroff(buffer, color_ij)
         end
     end
