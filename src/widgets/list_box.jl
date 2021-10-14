@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetListBox, get_data, get_selected, select_item
+export WidgetListBox, get_data, get_selected, select_item!
 
 ################################################################################
 #                                     Type
@@ -138,7 +138,7 @@ function process_keystroke(widget::WidgetListBox, k::Keystroke)
     elseif k.ktype == :esc
         @emit_signal widget esc_pressed
         return true
-    elseif _handle_input(widget, k)
+    elseif _handle_input!(widget, k)
         request_update!(widget)
         return true
     else
@@ -243,7 +243,6 @@ require_cursor(widget::WidgetListBox) = false
     get_data(widget::WidgetListBox)
 
 Return the data of the list box `widget`.
-
 """
 get_data(widget::WidgetListBox) = widget.data
 
@@ -252,7 +251,6 @@ get_data(widget::WidgetListBox) = widget.data
 
 Return an array of `Bool` indicating which elements of the list box `widget` are
 selected.
-
 """
 get_selected(widget::WidgetListBox) = widget.selected
 
@@ -261,7 +259,6 @@ get_selected(widget::WidgetListBox) = widget.selected
 
 Return the ID of the current item of the list box `widget` and the data
 associated with it.
-
 """
 function get_current_item(widget::WidgetListBox)
     id = widget.curh + 1
@@ -269,13 +266,12 @@ function get_current_item(widget::WidgetListBox)
 end
 
 """
-    select_item(widget::WidgetListBox, id::Int)
+    select_item!(widget::WidgetListBox, id::Int)
 
 Select the item `id` in the list box `widget`. Notice that `id` refers to the
 position of the item in the array `data`.
-
 """
-function select_item(widget::WidgetListBox, id::Int)
+function select_item!(widget::WidgetListBox, id::Int)
     @unpack data = widget
 
     if 0 < id ≤ length(data)
@@ -290,7 +286,7 @@ end
 #                              Private functions
 ################################################################################
 
-function _handle_input(widget::WidgetListBox, k::Keystroke)
+function _handle_input!(widget::WidgetListBox, k::Keystroke)
     @unpack data, begview, curh, multiple_selection, numlines = widget
     @unpack selectable, selected = widget
 
