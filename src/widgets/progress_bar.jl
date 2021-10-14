@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export WidgetProgressBar, change_value
+export WidgetProgressBar, change_value!
 
 ################################################################################
 #                                     Type
@@ -90,14 +90,14 @@ end
 # ==============================================================================
 
 """
-    change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
+    change_value!(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
 
 Change the value of the progress bar to `new_value`.
 
 The color can be selected by the keyword `color`. It it is negative
 (**default**), then the current color will not be changed.
 """
-function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
+function change_value!(widget::WidgetProgressBar, new_value::Int; color::Int = -1)
 
     # Set the new value.
     widget.value = new_value
@@ -105,7 +105,7 @@ function change_value(widget::WidgetProgressBar, new_value::Int; color::Int = -1
     # Set the color.
     color >= 0 && (widget.color = color)
 
-    @log verbose "change_value" "$(obj_to_ptr(widget)): Progress bar value changed to $new_value."
+    @log verbose "change_value!" "$(obj_to_ptr(widget)): Progress bar value changed to $new_value."
 
     request_update!(widget)
 
