@@ -14,7 +14,6 @@ function create_dialog(
     buttons::AbstractVector{String};
     title::AbstractString = " Dialog ",
     border_color::Int = -1,
-    text_color::Int = -1,
     title_color::Int = -1,
     height::Int = 10,
     width::Int = 80
@@ -68,7 +67,7 @@ function create_dialog(
 
     c_button = ncurses_color(NCurses.A_REVERSE)
 
-    for k = num_buttons:-1:1
+    for k in num_buttons:-1:1
         anchor_right = k == num_buttons ?
             Anchor(:parent,     :right,  0) :
             Anchor(last_button, :left,  -1)
