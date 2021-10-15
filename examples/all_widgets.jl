@@ -119,6 +119,13 @@ function windows_and_widgets()
         anchor_right = (:parent, :right)
     )
 
+    @tui_horizontal_line(
+        parent = c,
+        anchor_left = (:parent, :left),
+        anchor_right = (:parent, :right),
+        anchor_top = (progress_bar, :bottom),
+    )
+
     function update_progress_bar(radio_button)
         v = parse(Int, radio_button.label)
         change_value!(progress_bar, v)
