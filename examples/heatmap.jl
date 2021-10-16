@@ -165,7 +165,7 @@ function plots()
             try
                 z = [Base.invokelatest(f, i, j) for i in x, j in y]
                 str = create_plot(z, xmin, xmax, ymin, ymax, colormap)
-                change_text(canvas, str)
+                change_text!(canvas, str)
             catch
             end
         end
@@ -186,7 +186,7 @@ function plots()
     function clear_plot(w,k)
         if k.ktype == :enter
             str = create_plot(zeros(40,40), get_limits(xlim,ylim)...)
-            change_text(canvas, str)
+            change_text!(canvas, str)
         end
 
         return true

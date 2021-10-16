@@ -175,7 +175,7 @@ function plots()
             try
                 y = Base.invokelatest(f, t)
                 str = create_plot(t, y, color, tmin, tmax, ymin, ymax)
-                change_text(canvas, str)
+                change_text!(canvas, str)
             catch
             end
         end
@@ -195,7 +195,7 @@ function plots()
     function clear_plot(w, k)
         if k.ktype == :enter
             str = create_plot([0], [0], :red, get_limits(tlim,ylim)...)
-            change_text(canvas, str)
+            change_text!(canvas, str)
         end
         return true
     end
