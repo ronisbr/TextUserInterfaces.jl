@@ -63,7 +63,7 @@ function create_widget(
     )
 
     # Function to be executed on return pressed.
-    @connect_signal button key_pressed _handler_key_pressed widget
+    @connect_signal widget key_pressed process_keystroke
 
     @log info "create_widget" """
     Radio button created:
@@ -118,9 +118,13 @@ function destroy_widget!(rb::WidgetRadioButton; refresh::Bool = true)
     return nothing
 end
 
-function process_focus(widget::WidgetRadioButton, k::Keystroke)
-    k.ktype == :enter && (@emit_signal widget return_pressed)
-    return process_focus(widget.base, k)
+function process_keystroke(widget::WidgetRadioButton, k::Keystroke)
+    if k.ktype == :enter
+        _select_radio_button(widget)
+        @emit_signal widget return_pressed
+    end
+
+    return true
 end
 
 redraw(widget::WidgetRadioButton) = redraw(widget.base, has_focus(widget.parent, widget))
@@ -154,9 +158,6 @@ end
 ################################################################################
 #                              Private functions
 ################################################################################
-
-# Signal handler.
-_handler_key_pressed(w, k, rb) = k.ktype == :enter && _select_radio_button(rb)
 
 """
     _select_radio_button(rb::WidgetRadioButton)
