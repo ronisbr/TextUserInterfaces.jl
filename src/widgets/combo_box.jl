@@ -281,8 +281,8 @@ function _handler_return_pressed!(list_box::WidgetListBox, combo_box::WidgetComb
     cur, ~ = get_current_item(list_box)
     combo_box.cur = cur
     combo_box._list_box_opened = false
-    remove_widget!(parent, list_box)
-    request_focus!(parent, combo_box)
+    remove_widget!(combo_box.parent, list_box)
+    request_focus!(combo_box.parent, combo_box)
 
     return nothing
 end
@@ -291,8 +291,8 @@ end
 # ignoring the selection.
 function _handler_esc_pressed!(list_box::WidgetListBox, combo_box::WidgetComboBox)
     combo_box._list_box_opened = false
-    remove_widget!(parent, list_box)
-    request_focus!(parent, combo_box)
+    remove_widget!(combo_box.parent, list_box)
+    request_focus!(combo_box.parent, combo_box)
 
     return nothing
 end
@@ -301,7 +301,7 @@ end
 function _handler_focus_lost!(list_box::WidgetListBox, combo_box::WidgetComboBox)
     if combo_box._list_box_opened
         combo_box._list_box_opened = false
-        remove_widget!(parent, list_box)
+        remove_widget!(combo_box.parent, list_box)
     end
 
     return nothing
