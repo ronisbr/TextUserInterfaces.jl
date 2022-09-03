@@ -31,25 +31,3 @@ end
 
     destroy_tui()
 end
-
-# Check if terminal resizing is working
-# ==============================================================================
-
-@testset "Terminal resizing..." begin
-    init_tui()
-
-    resizeterm(25,80)
-
-    @test LINES() == 25
-    @test COLS()  == 80
-
-    destroy_tui()
-end
-
-# Log test
-# ==============================================================================
-
-# Check some functionalities using logs.
-cd("./log_test/")
-include("./log_test/log_test.jl")
-cd("../")
