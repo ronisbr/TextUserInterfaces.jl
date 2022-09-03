@@ -1,4 +1,4 @@
-module ParseANSIColors
+module ParseAnsiColors
 
 using Parameters
 

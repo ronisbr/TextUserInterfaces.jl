@@ -22,98 +22,16 @@ include("submodules/NCurses/NCurses.jl")
 using .NCurses
 export NCurses
 
-include("./submodules/ParseANSIColors/ParseANSIColors.jl")
-using .ParseANSIColors
-export ParseANSIColors
+include("./submodules/ParseAnsiColors/ParseAnsiColors.jl")
+using .ParseAnsiColors
+export ParseAnsiColors
 
 ################################################################################
 #                                    Types
 ################################################################################
 
-include("./types/types.jl")
-
 ################################################################################
 #                                   Includes
 ################################################################################
-
-# Logger
-# ==============================================================================
-
-include("logger.jl")
-
-# Other includes
-# ==============================================================================
-
-include("colors.jl")
-include("focus_manager.jl")
-include("init_destruct.jl")
-include("main_loop.jl")
-include("misc.jl")
-include("signals.jl")
-include("update.jl")
-include("validators.jl")
-
-# Input
-# ==============================================================================
-
-include("./input/input.jl")
-
-# Objects
-# ==============================================================================
-
-include("./objects/api.jl")
-include("./objects/anchors.jl")
-
-# Windows
-# ==============================================================================
-
-include("./windows/create.jl")
-include("./windows/destroy.jl")
-include("./windows/focus.jl")
-include("./windows/manage.jl")
-include("./windows/misc.jl")
-include("./windows/object_api.jl")
-include("./windows/refresh_update.jl")
-include("./windows/rootwin.jl")
-
-# Widgets
-# ==============================================================================
-
-include("./widgets/helpers.jl")
-
-include("./widgets/container/container.jl")
-include("./widgets/container/object_api.jl")
-include("./widgets/container/private.jl")
-
-include("./widgets/widgets.jl")
-include("./widgets/ansi_label.jl")
-include("./widgets/button.jl")
-include("./widgets/canvas.jl")
-include("./widgets/composed_widgets.jl")
-include("./widgets/horizontal_line.jl")
-include("./widgets/label.jl")
-include("./widgets/list_box.jl")
-include("./widgets/input_field.jl")
-include("./widgets/object_api.jl")
-include("./widgets/progress_bar.jl")
-
-include("./widgets/combo_box.jl")
-
-include("./widgets/composed/form.jl")
-
-# Dialogs
-# ==============================================================================
-
-include("./dialogs/base_dialog.jl")
-include("./dialogs/input_dialog.jl")
-include("./dialogs/message_dialog.jl")
-
-# Precompile
-# ==============================================================================
-
-include("precompile_helpers.jl")
-include("precompile.jl")
-
-_precompile()
 
 end # module

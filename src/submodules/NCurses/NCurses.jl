@@ -126,7 +126,7 @@ function load_ncurses(dir::String)
         "libformw.so.6",
         "libform.so.6",
         "libformw.so.5",
-        "libform.so.5"a
+        "libform.so.5"
     )
 
     load_ncurses_library(dir, :libform, candidates)

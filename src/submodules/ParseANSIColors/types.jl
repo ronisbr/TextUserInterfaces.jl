@@ -3,7 +3,7 @@
 # Description
 # ==============================================================================
 #
-#   Types.
+#   Definition of types for ParseAnsiColor.jl.
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -15,4 +15,3 @@
     underline::Bool = false
     reversed::Bool  = false
 end
-

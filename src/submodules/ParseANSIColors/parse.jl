@@ -15,20 +15,19 @@ export parse_ansi_string
 Parse the string `str` that can contain ANSI color escape sequences. This
 function returns two vectors:
 
-* A vector with the strings;
-* A vector with objects of type `Decoration` describing the decoration of each
-  string.
-
+- A vector with the strings;
+- A vector with objects of type `Decoration` describing the decoration of each
+    string.
 """
 function parse_ansi_string(str::AbstractString)
     # Current state.
     decoration = Decoration()
 
     # Vector containing the decorations.
-    d = Vector{Decoration}(undef,0)
+    d = Vector{Decoration}(undef, 0)
 
     # Vetor containing the strings.
-    s = Vector{String}(undef,0)
+    s = Vector{String}(undef, 0)
 
     # Parse each character.
     state = :string
@@ -40,7 +39,7 @@ function parse_ansi_string(str::AbstractString)
     code = ""
 
     for c in str
-        # Check if we have a escape charater. In this case, change the state to
+        # Check if we have a escape character. In this case, change the state to
         # `:escape_seq`. We also need to add the string assembled so far to the
         # output vector.
         if c == '\e'
