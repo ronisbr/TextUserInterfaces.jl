@@ -1,9 +1,16 @@
-"""
-Dictionary defining values of the menu commands.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Description
+# ==============================================================================
+#
+#   This file contains the definition of types related to libmenu.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-const menucmd =
-Dict{Symbol,Int}(
+Dictionary defining values of the menu commands.
+"""
+const menucmd = Dict{Symbol, Int}(
     :req_left_item     => (KEY_MAX + 1),
     :req_right_item    => (KEY_MAX + 2),
     :req_up_item       => (KEY_MAX + 3),
@@ -23,11 +30,10 @@ Dict{Symbol,Int}(
     :req_prev_match    => (KEY_MAX + 17),
     :min_menu_command  => (KEY_MAX + 1),
     :max_menu_command  => (KEY_MAX + 17),
-   )
+)
 export menucmd
 
-const menuopts =
-Dict{Symbol,Int}(
+const menuopts = Dict{Symbol, Int}(
     :o_onevalue   => 0x01,
     :o_showdesc   => 0x02,
     :o_rowmajor   => 0x04,

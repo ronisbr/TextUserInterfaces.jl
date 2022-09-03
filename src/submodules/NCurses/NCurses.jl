@@ -57,8 +57,11 @@ function load_ncurses()
     # TODO: Maybe we can set this directory locally. As pointed out by
     # @giordano, this can break other packages that uses they own ncurses
     # instances.
-    ENV["TERMINFO_DIRS"] = joinpath(Ncurses_jll.artifact_dir,
-                                    "share", "terminfo")
+    ENV["TERMINFO_DIRS"] = joinpath(
+        Ncurses_jll.artifact_dir,
+        "share",
+        "terminfo"
+    )
 
     return nothing
 end
@@ -68,9 +71,10 @@ function load_ncurses_library(dir::AbstractString, key::Symbol, candidates)
         l = dlopen(joinpath(dir, lib); throw_error=false)
         if l !== nothing
             setfield!(ncurses, key, l)
-            return
+            return nothing
         end
     end
+
     error("Could not load $key. Check your installation.")
 end
 
@@ -78,38 +82,66 @@ function load_ncurses(dir::String)
     # Load the libraries
     # ==========================================================================
 
-    if isempty(dir)
-        return load_ncurses()
-    end
+    isempty(dir) && return load_ncurses()
 
     # libncurses
     # --------------------------------------------------------------------------
     candidates = (
-        "libncursesw", "libncursesw.so.6", "libncursesw.so.5", "libncurses",
-        "libncursesw", "libncurses.so.6", "libncurses.so.5",
+        "libncursesw",
+        "libncursesw.so.6",
+        "libncursesw.so.5",
+        "libncurses",
+        "libncursesw",
+        "libncurses.so.6",
+        "libncurses.so.5",
     )
+
     load_ncurses_library(dir, :libncurses, candidates)
 
     # Find if ncurses was compiled with `NCURSES_REENTRANT` option.
     try
-        cglobal( dlsym(ncurses.libncurses, :stdscr) )
+        cglobal(dlsym(ncurses.libncurses, :stdscr))
     catch
         ncurses.NCURSES_REENTRANT = true
     end
 
     # libpanel
     # --------------------------------------------------------------------------
-    candidates = ("libpanelw", "libpanel", "libpanelw.so.6", "libpanel.so.6", "libpanelw.so.5", "libpanel.so.5")
+    candidates = (
+        "libpanelw",
+        "libpanel",
+        "libpanelw.so.6",
+        "libpanel.so.6",
+        "libpanelw.so.5",
+        "libpanel.so.5"
+    )
+
     load_ncurses_library(dir, :libpanel, candidates)
 
     # libform
     # --------------------------------------------------------------------------
-    candidates = ("libformw", "libform", "libformw.so.6", "libform.so.6", "libformw.so.5", "libform.so.5")
+    candidates = (
+        "libformw",
+        "libform",
+        "libformw.so.6",
+        "libform.so.6",
+        "libformw.so.5",
+        "libform.so.5"a
+    )
+
     load_ncurses_library(dir, :libform, candidates)
 
     # libmenu
     # --------------------------------------------------------------------------
-    candidates = ("libmenuw", "libmenu", "libmenuw.so.6", "libmenu.so.6", "libmenuw.so.5", "libmenu.so.5")
+    candidates = (
+        "libmenuw",
+        "libmenu",
+        "libmenuw.so.6",
+        "libmenu.so.6",
+        "libmenuw.so.5",
+        "libmenu.so.5"
+    )
+
     load_ncurses_library(dir, :libmenu, candidates)
 
     return nothing

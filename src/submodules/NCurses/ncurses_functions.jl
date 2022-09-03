@@ -21,7 +21,6 @@ Make a `ccall` to a `libncurses` function. The usage should be:
 
 It uses the global constant structure `ncurses` to call the function. Hence, it
 must be initialized.
-
 """
 macro _ccalln(expr)
     !( expr.head == :(::) && expr.args[1].head == :call ) &&
@@ -323,7 +322,7 @@ for (f, r, v, j, c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libncurses` documentation.
+        For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
         export $f
@@ -524,7 +523,7 @@ for (f, r, v, j, c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libncurses` documentation.
+        For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where T<:Integer = @_ccalln $f($(argsc...))::$r
         export $f
@@ -582,7 +581,7 @@ for (f, r, v, j, c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libncurses` documentation.
+        For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where T<:jlchtype = @_ccalln $f($(argsc...))::$r
         export $f
@@ -676,7 +675,7 @@ for (f, r, v, j, c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libncurses` documentation.
+        For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where {Tc<:jlchtype,Ti<:Integer} = @_ccalln $f($(argsc...))::$r
         export $f
@@ -727,7 +726,7 @@ for (f, r, v, j, c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libncurses` documentation.
+        For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where T<:AbstractString = @_ccalln $f($(argsc...))::$r
         export $f
@@ -777,7 +776,7 @@ for (f, r, v, j, c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libncurses` documentation.
+        For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccalln $f($(argsc...))::$r
         export $f
@@ -819,7 +818,7 @@ export ACS_
 Return the number of columns in the root window. It must be called after
 `initscr()`.
 
-For more information, consult `libncurses` documentation.
+For more information, see `libncurses` documentation.
 
 """
 function COLS()
@@ -838,7 +837,7 @@ export COLS
 Return the number of lines in the root window. It must be called after
 `initscr()`.
 
-For more information, consult `libncurses` documentation.
+For more information, see `libncurses` documentation.
 
 """
 function LINES()
@@ -891,4 +890,5 @@ function curses_version()
         error("Could not obtain the NCurses version. Returned string: $(tokens[2])")
     end
 end
+
 export curses_version
