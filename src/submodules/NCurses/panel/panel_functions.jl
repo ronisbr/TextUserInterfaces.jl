@@ -21,7 +21,6 @@ Make a `ccall` to a `libpanel` function. The usage should be:
 
 It uses the global constant structure `ncurses` to call the function. Hence, it
 must be initialized.
-
 """
 macro _ccallp(expr)
     !( expr.head == :(::) && expr.args[1].head == :call ) &&
@@ -60,23 +59,69 @@ end
 # * `j`: Variable type in Julia.
 # * `c`: Variable type in C.
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:bottom_panel,      Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:del_panel,         Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:hide_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:new_panel,         Ptr{Cvoid}, ["win"],       ["Ptr{WINDOW}"],             ["Ptr{WINDOW}"]),
-     (:panel_userptr,     Ptr{Cvoid}, ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:set_panel_userptr, Cint,       ["pan","ptr"], ["Ptr{Cvoid}","Ptr{Cvoid}"], ["Ptr{Cvoid}","Ptr{Cvoid}"]),
-     (:show_panel,        Ptr{Cvoid}, ["panel"],     ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:top_panel,         Cint,       ["pan"],       ["Ptr{Cvoid}"],              ["Ptr{Cvoid}"]),
-     (:update_panels,     Cvoid,      [],            [],                          []),
+        (
+            :bottom_panel,
+            Cint,
+            ["pan"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :del_panel,
+            Ptr{Cvoid},
+            ["panel"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :hide_panel,
+            Ptr{Cvoid},
+            ["panel"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :new_panel,
+            Ptr{Cvoid},
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]),
+        (
+            :panel_userptr,
+            Ptr{Cvoid},
+            ["pan"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :set_panel_userptr,
+            Cint,
+            ["pan", "ptr"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}"]),
+        (
+            :show_panel,
+            Ptr{Cvoid},
+            ["panel"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :top_panel,
+            Cint,
+            ["pan"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :update_panels,
+            Cvoid,
+            [],
+            [],
+            []
+        ),
     )
 
-    fb    = Meta.quot(f)
+    fb = Meta.quot(f)
     argst = Meta.parse("(" * ([s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
+    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -94,7 +139,7 @@ for (f,r,v,j,c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libmenu` documentation.
+        For more information, see `libmenu` documentation.
         """
         $f($(argsj...)) = @_ccallp $f($(argsc...))::$r
         export $f
@@ -105,15 +150,21 @@ end
 # Functions that depends on arguments that must be `Integer`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:move_panel, Cint, ["panel","starty","startx"], ["Ptr{Cvoid}","T","T"], ["Ptr{Cvoid}","Cint","Cint"]),
+        (
+            :move_panel,
+            Cint,
+            ["panel", "starty", "startx"],
+            ["Ptr{Cvoid}", "T", "T"],
+            ["Ptr{Cvoid}", "Cint", "Cint"]
+        ),
     )
 
-    fb    = Meta.quot(f)
+    fb = Meta.quot(f)
     argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
+    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -131,9 +182,9 @@ for (f,r,v,j,c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libmenu` documentation.
+        For more information, see `libmenu` documentation.
         """
-        $f($(argsj...)) where T<:Integer = @_ccallp $f($(argsc...))::$r
+        $f($(argsj...)) where {T<:Integer} = @_ccallp $f($(argsc...))::$r
         export $f
         _precompile_func($f, $argst)
     end

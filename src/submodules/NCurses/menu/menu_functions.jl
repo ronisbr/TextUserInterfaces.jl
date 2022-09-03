@@ -21,7 +21,6 @@ Make a `ccall` to a `libmenu` function. The usage should be:
 
 It uses the global constant structure `ncurses` to call the function. Hence, it
 must be initialized.
-
 """
 macro _ccallm(expr)
     !( expr.head == :(::) && expr.args[1].head == :call ) &&
@@ -60,27 +59,93 @@ end
 # * `j`: Variable type in Julia.
 # * `c`: Variable type in C.
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:current_item,     Ptr{Cvoid}, ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:free_item,        Cint,       ["item"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:free_menu,        Cint,       ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:item_description, Cstring,    ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:item_index,       Cint,       ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:item_name,        Cstring,    ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:item_value,       Cint,       ["item"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:new_menu,         Ptr{Cvoid}, ["items"],      ["Vector{Ptr{Cvoid}}"],       ["Ptr{Ptr{Cvoid}}"]),
-     (:pos_menu_cursor,  Cint,       ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:post_menu,        Cint,       ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
-     (:set_menu_sub,     Cint,       ["menu","win"], ["Ptr{Cvoid}","Ptr{WINDOW}"], ["Ptr{Cvoid}","Ptr{WINDOW}"]),
-     (:set_menu_win,     Cint,       ["menu","win"], ["Ptr{Cvoid}","Ptr{WINDOW}"], ["Ptr{Cvoid}","Ptr{WINDOW}"]),
-     (:unpost_menu,      Cint,       ["menu"],       ["Ptr{Cvoid}"],               ["Ptr{Cvoid}"]),
+        (
+            :current_item,
+            Ptr{Cvoid},
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :free_item,
+            Cint,
+            ["item"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :free_menu,
+            Cint,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :item_description,
+            Cstring,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :item_index,
+            Cint,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :item_name,
+            Cstring,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :item_value,
+            Cint,
+            ["item"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :new_menu,
+            Ptr{Cvoid},
+            ["items"],
+            ["Vector{Ptr{Cvoid}}"],
+            ["Ptr{Ptr{Cvoid}}"]),
+        (
+            :pos_menu_cursor,
+            Cint,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :post_menu,
+            Cint,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]),
+        (
+            :set_menu_sub,
+            Cint,
+            ["menu", "win"],
+            ["Ptr{Cvoid}", "Ptr{WINDOW}"],
+            ["Ptr{Cvoid}", "Ptr{WINDOW}"]),
+        (
+            :set_menu_win,
+            Cint,
+            ["menu", "win"],
+            ["Ptr{Cvoid}", "Ptr{WINDOW}"],
+            ["Ptr{Cvoid}", "Ptr{WINDOW}"]),
+        (
+            :unpost_menu,
+            Cint,
+            ["menu"],
+            ["Ptr{Cvoid}"],
+            ["Ptr{Cvoid}"]
+        ),
     )
 
-    fb    = Meta.quot(f)
+    fb = Meta.quot(f)
     argst = Meta.parse("(" * ([s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
+    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -98,7 +163,7 @@ for (f,r,v,j,c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libmenu` documentation.
+        For more information, see `libmenu` documentation.
         """
         $f($(argsj...)) = @_ccallm $f($(argsc...))::$r
         export $f
@@ -109,17 +174,33 @@ end
 # Functions that depends on arguments that must be `Integer`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:menu_driver,     Cint, ["menu","c"],           ["Ptr{Cvoid}","T"],     ["Ptr{Cvoid}","Cint"]),
-     (:set_menu_format, Cint, ["menu","rows","cols"], ["Ptr{Cvoid}","T","T"], ["Ptr{Cvoid}","Cint","Cint"]),
-     (:set_menu_opts,   Cint, ["menu","opts"],        ["Ptr{Cvoid}","T"],     ["Ptr{Cvoid}","Cint"]),
+        (
+            :menu_driver,
+            Cint,
+            ["menu", "c"],
+            ["Ptr{Cvoid}", "T"],
+            ["Ptr{Cvoid}", "Cint"]),
+        (
+            :set_menu_format,
+            Cint,
+            ["menu", "rows", "cols"],
+            ["Ptr{Cvoid}", "T", "T"],
+            ["Ptr{Cvoid}", "Cint", "Cint"]),
+        (
+            :set_menu_opts,
+            Cint,
+            ["menu", "opts"],
+            ["Ptr{Cvoid}", "T"],
+            ["Ptr{Cvoid}", "Cint"]
+        ),
     )
 
-    fb    = Meta.quot(f)
+    fb = Meta.quot(f)
     argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
+    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -137,9 +218,9 @@ for (f,r,v,j,c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libmenu` documentation.
+        For more information, see `libmenu` documentation.
         """
-        $f($(argsj...)) where T<:Integer = @_ccallm $f($(argsc...))::$r
+        $f($(argsj...)) where {T<:Integer} = @_ccallm $f($(argsc...))::$r
         export $f
         _precompile_func($f, $argst)
     end
@@ -148,16 +229,27 @@ end
 # Functions that depends on arguments that must be `AbstractString`
 # ==============================================================================
 
-for (f,r,v,j,c) in
+for (f, r, v, j, c) in
     (
-     (:new_item,      Ptr{Cvoid}, ["name","description"], ["T","T"],          ["Cstring","Cstring"]),
-     (:set_menu_mark, Cint,       ["menu","mark"],        ["Ptr{Cvoid}","T"], ["Ptr{Cvoid}","Cstring"]),
+        (
+            :new_item,
+            Ptr{Cvoid},
+            ["name", "description"],
+            ["T", "T"],
+            ["Cstring", "Cstring"]),
+        (
+            :set_menu_mark,
+            Cint,
+            ["menu", "mark"],
+            ["Ptr{Cvoid}", "T"],
+            ["Ptr{Cvoid}", "Cstring"]
+        ),
     )
 
-    fb    = Meta.quot(f)
+    fb = Meta.quot(f)
     argst = Meta.parse("(" * ([s == "T" ? "String," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
+    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
+    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
@@ -175,9 +267,9 @@ for (f,r,v,j,c) in
 
         **Return type**: `$($r)`
 
-        For more information, consult `libmenu` documentation.
+        For more information, see `libmenu` documentation.
         """
-        $f($(argsj...)) where T<:AbstractString = @_ccallm $f($(argsc...))::$r
+        $f($(argsj...)) where {T<:AbstractString} = @_ccallm $f($(argsc...))::$r
         export $f
         _precompile_func($f, $argst)
     end

@@ -1,9 +1,16 @@
-"""
-Dictionary defining values of the field justification.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Description
+# ==============================================================================
+#
+#   This file contains the definition of types related to libform.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-const fieldjust =
-Dict{Symbol,Int}(
+Dictionary defining values of the field justification.
+"""
+const fieldjust = Dict{Symbol, Int}(
     :no_justification => 0,
     :justify_left     => 1,
     :justify_center   => 2,
@@ -13,10 +20,8 @@ export fieldjust
 
 """
 Dictionary defining values of the field options.
-
 """
-const fieldopts =
-Dict{Symbol,Int}(
+const fieldopts = Dict{Symbol, Int}(
     :o_visible  => 0x001,   # Field is visible.
     :o_active   => 0x002,   # Field is active in the form.
     :o_public   => 0x004,   # The contents entered into the field is echoed.
@@ -28,21 +33,19 @@ Dict{Symbol,Int}(
     :o_static   => 0x100,   # Field is not dynamic.
     :o_passok   => 0x200,   # An umodified field is OK.
     :o_reformat => 0x400,   # Insert newlines at linebreaks on buffer get.
-   )
+)
 export fieldopts
 
-const formopts =
-Dict{Symbol,Int}(
+const formopts = Dict{Symbol,Int}(
     :o_nl_overload => 0x001,  # Enable overloading of `REQ_NEW_LINE`.
     :o_bs_overload => 0x002,  # Enable overloading of `REQ_DEL_PREV`.
-   )
+)
+export formopts
 
 """
 Dictionary defining values of the form commands.
-
 """
-const formcmd =
-Dict{Symbol,Int}(
+const formcmd = Dict{Symbol, Int}(
     :req_next_page    => KEY_MAX + 1,    # Move to next page.
     :req_prev_page    => KEY_MAX + 2,    # Move to previous page.
     :req_first_page   => KEY_MAX + 3,    # Move to first page.
@@ -100,5 +103,5 @@ Dict{Symbol,Int}(
     :req_validation   => KEY_MAX + 55,   # Validate field.
     :req_next_choice  => KEY_MAX + 56,   # Display next field choice.
     :req_prev_choice  => KEY_MAX + 57,   # Display prev field choice.
-   )
+)
 export formcmd
