@@ -200,25 +200,30 @@ function unset_color(win::Window, color::Int)
 end
 
 ################################################################################
-#                                Default colors
-################################################################################
-
-const _color_default   = ncurses_color()
-const _color_highlight = ncurses_color(A_REVERSE)
-
-################################################################################
 #                              Private functions
 ################################################################################
 
-"""
-    _get_color_index(color::Symbol)
-
-Return the index related to the color `color`.
-"""
+# Return the index related to the color `color`.
 function _get_color_index(color::Symbol)
     if haskey(_ncurses_colors, color)
         return _ncurses_colors[color]
     else
         error("Unknown color :$color.")
     end
+end
+
+# Reset the color dictionary.
+function _reset_color_dict()
+    empty!(_ncurses_colors)
+    push!(
+        _ncurses_colors,
+        :black   => COLOR_BLACK,
+        :red     => COLOR_RED,
+        :green   => COLOR_GREEN,
+        :yellow  => COLOR_YELLOW,
+        :blue    => COLOR_BLUE,
+        :magenta => COLOR_MAGENTA,
+        :cyan    => COLOR_CYAN,
+        :white   => COLOR_WHITE
+    )
 end
