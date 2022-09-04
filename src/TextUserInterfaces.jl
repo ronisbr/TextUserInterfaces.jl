@@ -41,17 +41,23 @@ include("./logger.jl")
 include("./colors.jl")
 include("./destruction.jl")
 include("./initialization.jl")
+include("./main_loop.jl")
 include("./misc.jl")
+include("./update.jl")
+
 include("./input/keyboard.jl")
 include("./input/keycodes.jl")
 
 include("./objects/anchors.jl")
 include("./objects/api.jl")
 
+include("./windows/constants.jl")
 include("./windows/create.jl")
 include("./windows/destroy.jl")
+include("./windows/misc.jl")
 include("./windows/object_api.jl")
 include("./windows/root_window.jl")
+include("./windows/update.jl")
 
 ################################################################################
 #                               Global variables

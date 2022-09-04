@@ -31,6 +31,9 @@ function initialize_tui(dir::String = "")
     tui.initialized = true
     has_colors() == 1 && start_color()
 
+    # Do not echo keystrokes.
+    noecho()
+
     @log INFO "initialize_tui" """
     TUI initialized.
     Terminal $(has_colors() == 1 ? "" : "does not ")have colors."""

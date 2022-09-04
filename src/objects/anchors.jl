@@ -25,17 +25,25 @@ Process the object `layout` considering its `parent`.
 - The top position with respect to the parent object.
 - The left position with respect to the parent object.
 """
-function process_object_layout(layout::ObjectLayout, parent::Object; hints = (;))
+function process_object_layout(
+    layout::ObjectLayout,
+    parent::Object;
+    horizontal_hints = (;),
+    vertical_hints = (;)
+)
     # Process the horizontal and vertical layout information.
     horizontal = _process_horizontal_info(layout)
     vertical   = _process_vertical_info(layout)
 
     # If we have undefined information, try using the hints.
-    if (horizontal == :undefined) || (vertical == :undefined)
-        layout = ObjectLayout(layout; hints)
-
+    if horizontal == :unknown
+        layout     = ObjectLayout(layout; horizontal_hints...)
         horizontal = _process_horizontal_info(layout)
-        vertical   = _process_vertical_info(layout)
+    end
+
+    if vertical == :unknown
+        layout   = ObjectLayout(layout; vertical_hints...)
+        vertical = _process_vertical_info(layout)
     end
 
     anchor_bottom = layout.anchor_bottom
@@ -81,7 +89,7 @@ function process_object_layout(layout::ObjectLayout, parent::Object; hints = (;)
 
     elseif vertical == :unknown
         @log CRITICAL "process_object_layout" """
-        It was not possible to guess the vertical positioning of the object.
+        It was not possible to guess the vertical layout of the object.
 
         parent:
         @log_pad 4
@@ -91,7 +99,7 @@ function process_object_layout(layout::ObjectLayout, parent::Object; hints = (;)
         @log_pad 4
         $(_str(layout))"""
 
-        error("It was not possible to guess the vertical positioning of the object.")
+        error("It was not possible to guess the vertical layout of the object.")
     end
 
     if top < 0
@@ -149,7 +157,7 @@ function process_object_layout(layout::ObjectLayout, parent::Object; hints = (;)
 
     elseif horizontal == :unknown
         @log CRITICAL "process_object_layout" """
-        It was not possible to guess the horizontal positioning of the object.
+        It was not possible to guess the horizontal layout of the object.
 
         parent:
         @log_pad 4
@@ -159,7 +167,7 @@ function process_object_layout(layout::ObjectLayout, parent::Object; hints = (;)
         @log_pad 4
         $(_str(layout))"""
 
-        error("It was not possible to guess the horizontal positioning of the object.")
+        error("It was not possible to guess the horizontal layout of the object.")
     end
 
     if left < 0
