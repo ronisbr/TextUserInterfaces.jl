@@ -7,8 +7,10 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+include("./abstract.jl")
 include("./colors.jl")
 include("./logger.jl")
+include("./objects.jl")
 include("./themes.jl")
 include("./windows.jl")
 
