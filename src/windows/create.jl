@@ -9,6 +9,35 @@
 
 export create_window
 
+"""
+    function create_window(id::String = "";  kwargs...)
+
+Create a window. The window ID `id` is used to identify the new window in the
+global window list.
+
+# Keyword
+
+- `bcols::Int`: Number of columns in the window buffer. This will be
+    automatically increased to, at least, fit the viewable part of the window.
+    (**Default** = 0)
+- `blines::Int`: Number of lines in the window buffer. This will be
+    automatically increased to, at least, fit the viewable part of the window.
+    (**Default** = 0)
+- `border::Bool`: If `true`, then the window will have a border.
+    (**Default** = `true`)
+- `border_color::Int`: Color mask that will be used to print the border. See
+    function `ncurses_color`. If negative, then the color will not be changed.
+    (**Default** = -1)
+- `focusable::Bool`: If `true`, then the window can have focus. Otherwise, all
+    focus request will be rejected. (**Default** = `true`)
+- `layout::ObjectLayout`: The layout configuration of the window.
+    (**Default** = `ObjectLayout()`)
+- `title::String`: The title of the window, which will only be printed if
+    `border` is `true`. (**Default** = "")
+- `title_color::Int`: Color mask that will be used to print the title. See
+    function `ncurses_color`. If negative, then the color will not be changed.
+    (**Default** = -1)
+"""
 function create_window(
     id::String = "";
     border::Bool = true,
@@ -28,16 +57,12 @@ function create_window(
         id = string(length(tui.windows))
     end
 
-    # Get the positioning information of the window.
+    # Get the layout information of the window.
     height, width, top, left = process_object_layout(
         layout,
         ROOT_WINDOW;
-        hints = (
-            anchor_bottom = Anchor(:parent, :bottom, 0),
-            anchor_left   = Anchor(:parent, :left,   0),
-            anchor_right  = Anchor(:parent, :right,  0),
-            anchor_top    = Anchor(:parent, :top,    0),
-        )
+        horizontal_hints = _WINDOW_HORIZONTAL_LAYOUT_HINTS,
+        vertical_hints = _WINDOW_VERTICAL_LAYOUT_HINTS
     )
 
     # Assign to the variables that will be used to create the window.
@@ -80,6 +105,7 @@ function create_window(
         focusable          = focusable,
         has_border         = border,
         id                 = id,
+        layout             = layout,
         panel              = panel,
         position           = position,
         title              = title,
@@ -87,6 +113,7 @@ function create_window(
         view               = view,
     )
 
+    border && set_window_title!(win, title; title_color = title_color)
     push!(tui.windows, win)
 
     @log INFO "create_window" """

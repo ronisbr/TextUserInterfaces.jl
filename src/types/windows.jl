@@ -22,6 +22,9 @@ export Window
     # locked. This is useful when resizing the window.
     buffer_view_locked::Bool = true
 
+    # Object layout configuration.
+    layout::ObjectLayout
+
     # Buffer
     # ==========================================================================
 

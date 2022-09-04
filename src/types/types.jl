@@ -9,6 +9,7 @@
 
 include("./abstract.jl")
 include("./colors.jl")
+include("./input.jl")
 include("./logger.jl")
 include("./objects.jl")
 include("./themes.jl")
@@ -24,7 +25,7 @@ include("./windows.jl")
 
     # Colors
     # ==========================================================================
-    initialized_color_pair::Vector{Tuple{Int, Int}} = Tuple{Int, Int}[]
+    initialized_color_pairs::Vector{Tuple{Int, Int}} = Tuple{Int, Int}[]
 
     # Default theme
     # ==========================================================================
