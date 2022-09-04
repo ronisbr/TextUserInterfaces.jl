@@ -42,6 +42,8 @@ include("./colors.jl")
 include("./destruction.jl")
 include("./initialization.jl")
 include("./misc.jl")
+include("./input/keyboard.jl")
+include("./input/keycodes.jl")
 
 include("./objects/anchors.jl")
 include("./objects/api.jl")
