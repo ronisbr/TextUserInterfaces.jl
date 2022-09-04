@@ -39,7 +39,17 @@ include("./types/types.jl")
 include("./logger.jl")
 
 include("./colors.jl")
+include("./destruction.jl")
 include("./initialization.jl")
+include("./misc.jl")
+
+include("./objects/anchors.jl")
+include("./objects/api.jl")
+
+include("./windows/create.jl")
+include("./windows/destroy.jl")
+include("./windows/object_api.jl")
+include("./windows/root_window.jl")
 
 ################################################################################
 #                               Global variables
@@ -47,5 +57,9 @@ include("./initialization.jl")
 
 # Global instance to store the text user interface configurations.
 const tui = TextUserInterface()
+
+# Global object to reference the root window.
+export ROOT_WINDOW
+const ROOT_WINDOW = RootWindow()
 
 end # module
