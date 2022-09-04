@@ -37,6 +37,15 @@ include("./types/types.jl")
 ################################################################################
 
 include("./logger.jl")
+
+include("./colors.jl")
 include("./initialization.jl")
+
+################################################################################
+#                               Global variables
+################################################################################
+
+# Global instance to store the text user interface configurations.
+const tui = TextUserInterface()
 
 end # module
