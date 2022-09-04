@@ -3,7 +3,7 @@
 # Description
 # ==============================================================================
 #
-#   Function related to initialization and destructions of the TUI.
+#   Function related to the initialization of TUI.
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
