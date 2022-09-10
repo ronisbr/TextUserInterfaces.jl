@@ -13,6 +13,7 @@ include("./input.jl")
 include("./logger.jl")
 include("./objects.jl")
 include("./themes.jl")
+include("./signals.jl")
 include("./windows.jl")
 
 @with_kw mutable struct TextUserInterface
@@ -31,4 +32,9 @@ include("./windows.jl")
     # ==========================================================================
 
     default_theme::Theme = Theme()
+
+    # Signals
+    # ==========================================================================
+
+    @signal keypressed
 end

@@ -17,7 +17,8 @@ can be specified by `dir`. If it is empty or omitted, then it will look on the
 default library directories.
 """
 function initialize_tui(dir::String = "")
-    tui.initialized && error("The text user interface was already initialized.")
+    # If the TUI is already initialized, we must destroy it first.
+    tui.initialized && destroy_tui()
 
     # Load the libraries
     # ==========================================================================

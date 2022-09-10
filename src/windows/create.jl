@@ -28,6 +28,9 @@ global window list.
 - `border_color::Int`: Color mask that will be used to print the border. See
     function `ncurses_color`. If negative, then the color will not be changed.
     (**Default** = -1)
+- `buffer_size::Tuple{Int, Int}`: Number of rows and columns in the window
+    buffer. This will be automatically increased to, at least, fit the viewable
+    part of the window. (**Default** = `(0, 0)`)
 - `focusable::Bool`: If `true`, then the window can have focus. Otherwise, all
     focus request will be rejected. (**Default** = `true`)
 - `layout::ObjectLayout`: The layout configuration of the window.
@@ -118,11 +121,11 @@ function create_window(
 
     @log INFO "create_window" """
     Window created:
-       ID            = $id
-       Physical size = ($nlines, $ncols)
-       Buffer size   = ($blines, $bcols)
-       Coordinate    = ($begin_y, $begin_x)
-       Title         = \"$title\" """
+      ID            = $id
+      Physical size = ($nlines, $ncols)
+      Buffer size   = ($blines, $bcols)
+      Coordinate    = ($begin_y, $begin_x)
+      Title         = \"$title\" """
 
     # Return the pointer to the window.
     return win

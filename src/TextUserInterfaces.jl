@@ -26,6 +26,8 @@ include("./submodules/ParseAnsiColors/ParseAnsiColors.jl")
 using .ParseAnsiColors
 export ParseAnsiColors
 
+include("./signals.jl")
+
 ################################################################################
 #                                    Types
 ################################################################################
@@ -62,6 +64,8 @@ include("./windows/update.jl")
 ################################################################################
 #                               Global variables
 ################################################################################
+
+export tui
 
 # Global instance to store the text user interface configurations.
 const tui = TextUserInterface()

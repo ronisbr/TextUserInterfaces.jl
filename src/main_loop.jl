@@ -16,6 +16,7 @@ function app_main_loop()
     # Main application loop.
     while true
         k = getkey()
+        @emit tui keypressed (; keystroke = k)
 
         if k.ktype == :resize
             for win in tui.windows
@@ -27,7 +28,7 @@ function app_main_loop()
                 # resized. This is not the fastest algorithm, but since resize
                 # events tends to be sparse, there will not be noticeable
                 # impact.
-                update_layout!(win; force=true)
+                update_layout!(win; force = true)
             end
 
         elseif k.ktype == :F1
