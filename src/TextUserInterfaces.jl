@@ -60,6 +60,7 @@ include("./windows/misc.jl")
 include("./windows/object_api.jl")
 include("./windows/root_window.jl")
 include("./windows/update.jl")
+include("./windows/theme.jl")
 
 ################################################################################
 #                               Global variables
