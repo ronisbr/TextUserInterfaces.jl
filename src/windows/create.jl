@@ -48,6 +48,7 @@ function create_window(
     buffer_size::Tuple{Int, Int} = (0, 0),
     focusable::Bool = true,
     layout::ObjectLayout = ObjectLayout(),
+    theme::Theme = tui.default_theme,
     title::String = "",
     title_color::Int = -1
 )
@@ -94,6 +95,9 @@ function create_window(
     bcols  <= 0 && (bcols  = border ? ncols - 2  : ncols)
     buffer = newpad(blines, bcols)
 
+    # Set the window theme.
+    wbkgd(buffer, theme.default)
+
     # Create the panel.
     panel = new_panel(view)
 
@@ -113,6 +117,7 @@ function create_window(
         position           = position,
         title              = title,
         title_color        = title_color,
+        theme              = theme,
         view               = view,
     )
 

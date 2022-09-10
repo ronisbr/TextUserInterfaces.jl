@@ -25,6 +25,9 @@ export Window
     # Object layout configuration.
     layout::ObjectLayout
 
+    # Window theme.
+    theme::Theme
+
     # Buffer
     # ==========================================================================
 

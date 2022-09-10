@@ -21,11 +21,13 @@ include("./windows.jl")
 
     # Windows
     # ==========================================================================
+
     stdscr::Ptr{WINDOW} = Ptr{WINDOW}(0)
     windows::Vector{Window} = Window[]
 
     # Colors
     # ==========================================================================
+
     initialized_color_pairs::Vector{Tuple{Int, Int}} = Tuple{Int, Int}[]
 
     # Default theme
