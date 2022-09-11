@@ -18,21 +18,10 @@ function app_main_loop()
         k = getkey()
         @emit tui keypressed (; keystroke = k)
 
-        if k.ktype == :resize
-            for win in tui.windows
-                # Here, we need to force the layout update. For some reason, if
-                # a window occupies the entire screen, then NCurses
-                # automatically change the value returned by `getmaxx` and
-                # `getmaxy`. Thus, the repositioning algorithm thinks we do not
-                # need to resize the window and then the buffers are not
-                # resized. This is not the fastest algorithm, but since resize
-                # events tends to be sparse, there will not be noticeable
-                # impact.
-                update_layout!(win; force = true)
-            end
-
-        elseif k.ktype == :F1
+        if k.ktype == :F1
             break
+        else
+            process_keystroke(k)
         end
 
         tui_update()

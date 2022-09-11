@@ -42,6 +42,7 @@ include("./logger.jl")
 
 include("./colors.jl")
 include("./destruction.jl")
+include("./focus.jl")
 include("./initialization.jl")
 include("./main_loop.jl")
 include("./misc.jl")
