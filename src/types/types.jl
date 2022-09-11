@@ -25,6 +25,11 @@ include("./windows.jl")
     stdscr::Ptr{WINDOW} = Ptr{WINDOW}(0)
     windows::Vector{Window} = Window[]
 
+    # Focus manager
+    # --------------------------------------------------------------------------
+
+    focused_window_id::Int = 0
+
     # Colors
     # ==========================================================================
 

@@ -7,13 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export @connect, @emit, @signal
-
-#                                  Constants
-# ==============================================================================
-
-# Global constants related to signals.
-_NO_CONNECTION = (obj; kwargs...) -> return nothing
+export @connect, @disconnect, @emit, @signal
 
 #                                    Macros
 # ==============================================================================
@@ -29,8 +23,25 @@ macro connect(object::Symbol, signal::Symbol, f, kwargs = (;))
     var = Symbol("_signal_", signal)
 
     ex = quote
-        $object.$var.connection = $f
-        $object.$var.kwargs = $kwargs
+        push!($object.$var.connections, $f)
+        $object.$var.kwargs[$f] = $kwargs
+    end
+
+    return esc(ex)
+end
+
+"""
+    @disconnect(object::Symbol, signal::Symbol, f)
+
+Disconnect `f` from `signal` in `object`.
+"""
+macro disconnect(object::Symbol, signal::Symbol, f)
+    var = Symbol("_signal_", signal)
+
+    ex = quote
+        id = findfirst(==($f), $object.$var.connections)
+        !isnothing(id) && deleteat!($object.$var.connections, id)
+        delete!($object.$var.kwargs, $f)
     end
 
     return esc(ex)
@@ -46,7 +57,10 @@ macro emit(object::Symbol, signal::Symbol, signal_kwargs = (;))
     var = Symbol("_signal_", signal)
 
     ex = quote
-        $object.$var.connection($object; $signal_kwargs..., $object.$var.kwargs...)
+        for f in $object.$var.connections
+            kwargs = get($object.$var.kwargs, f, (;))
+            f($object; $signal_kwargs..., kwargs...)
+        end
     end
 
     return esc(ex)

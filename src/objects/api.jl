@@ -66,6 +66,26 @@ Return the top position in the inner container of the `object`.
 get_inner_top
 
 """
+    process_keystroke(object, keystroke)::Symbol
+
+Process the `keystroke` in the `object`. This function must return a `Symbol`
+according to the following description:
+
+- `:keystroke_processed`: The object processed the focus and nothing more should
+    be done.
+- `:next_object`: Pass the focus to the next object in the chain.
+- `:previous_object`: Pass the focus to the previous object in the chain.
+"""
+process_keystroke(object, keystroke)
+
+"""
+    request_focus(object)
+
+Return `true` if the object can accept the focus. `false` otherwise.
+"""
+request_focus(object)
+
+"""
     update_layout!(object)
 
 Update the layout of the object based on the stored configuration.

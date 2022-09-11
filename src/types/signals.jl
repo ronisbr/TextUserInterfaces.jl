@@ -22,6 +22,6 @@ Defines a signal.
     function together with those native to the signal.
 """
 Base.@kwdef mutable struct Signal
-    connection::Function = _NO_CONNECTION
-    kwargs::NamedTuple = (;)
+    connections::Vector{Function} = Function[]
+    kwargs::Dict{Function, NamedTuple} = Dict{Function, NamedTuple}()
 end
