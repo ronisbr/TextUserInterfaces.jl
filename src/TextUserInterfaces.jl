@@ -26,7 +26,13 @@ include("./submodules/ParseAnsiColors/ParseAnsiColors.jl")
 using .ParseAnsiColors
 export ParseAnsiColors
 
-include("./signals.jl")
+################################################################################
+#                                    Macros
+################################################################################
+
+include("./macros/signals.jl")
+include("./macros/colors.jl")
+include("./macros/widgets.jl")
 
 ################################################################################
 #                                    Types

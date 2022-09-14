@@ -80,7 +80,7 @@ function update!(win::Window; force::Bool = false)
 end
 
 function update_layout!(win::Window; force::Bool = false)
-    @unpack layout = win
+    @unpack layout, theme = win
 
     # Get the layout information of the window.
     height, width, top, left = process_object_layout(
@@ -131,10 +131,8 @@ function update_layout!(win::Window; force::Bool = false)
     end
 
     # Check if the user wants a border.
-    if win.has_border
-        win.border_color >= 0 && wattron(win.view, win.border_color)
+    win.has_border && @ncolor theme.border win.view begin
         wborder(win.view)
-        win.border_color >= 0 && wattroff(win.view, win.border_color)
     end
 
     # Recompute the required buffer size if the user wants a border in the
@@ -156,11 +154,7 @@ function update_layout!(win::Window; force::Bool = false)
 
     win_resize && wresize(win.buffer, blines, bcols)
 
-    win.has_border && set_window_title!(
-        win,
-        win.title;
-        title_color = win.title_color
-    )
+    win.has_border && set_window_title!(win, win.title)
 
     if win_resize || win_move || force
         # Here, we need to update the layout of the container because the window
