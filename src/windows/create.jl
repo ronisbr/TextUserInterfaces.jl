@@ -24,9 +24,6 @@ Create a window.
     (**Default** = 0)
 - `border::Bool`: If `true`, then the window will have a border.
     (**Default** = `true`)
-- `border_color::Int`: Color mask that will be used to print the border. See
-    function `ncurses_color`. If negative, then the color will not be changed.
-    (**Default** = -1)
 - `buffer_size::Tuple{Int, Int}`: Number of rows and columns in the window
     buffer. This will be automatically increased to, at least, fit the viewable
     part of the window. (**Default** = `(0, 0)`)
@@ -36,19 +33,14 @@ Create a window.
     (**Default** = `ObjectLayout()`)
 - `title::String`: The title of the window, which will only be printed if
     `border` is `true`. (**Default** = "")
-- `title_color::Int`: Color mask that will be used to print the title. See
-    function `ncurses_color`. If negative, then the color will not be changed.
-    (**Default** = -1)
 """
 function create_window(;
     border::Bool = true,
-    border_color::Int = -1,
     buffer_size::Tuple{Int, Int} = (0, 0),
     focusable::Bool = true,
     layout::ObjectLayout = ObjectLayout(),
     theme::Theme = tui.default_theme,
     title::String = "",
-    title_color::Int = -1
 )
     # Check if the TUI has been initialized.
     !tui.initialized && error("The text user interface was not initialized.")
@@ -71,10 +63,8 @@ function create_window(;
     view = newwin(nlines, ncols, begin_y, begin_x)
 
     # Check if the user wants a border.
-    if border
-        border_color >= 0 && wattron(view, border_color)
+    border && @ncolor theme.border view begin
         wborder(view)
-        border_color >= 0 && wattroff(view, border_color)
     end
 
     # Create the buffer.
@@ -82,9 +72,18 @@ function create_window(;
     blines = buffer_size[1]
     bcols = buffer_size[2]
 
-    blines <= 0 && bcols <= 0 && (buffer_view_locked = true)
-    blines <= 0 && (blines = border ? nlines - 2 : nlines)
-    bcols  <= 0 && (bcols  = border ? ncols - 2  : ncols)
+    if (blines <= 0) && (bcols <= 0)
+        buffer_view_locked = true
+    end
+
+    if blines <= 0
+        blines = border ? nlines - 2 : nlines
+    end
+
+    if bcols <= 0
+        bcols  = border ? ncols - 2  : ncols
+    end
+
     buffer = newpad(blines, bcols)
 
     # Set the window theme.
@@ -106,7 +105,6 @@ function create_window(;
 
     # Create the window object and add to the global list.
     win = Window(
-        border_color       = border_color,
         buffer             = buffer,
         buffer_view_locked = buffer_view_locked,
         focusable          = focusable,
@@ -116,7 +114,6 @@ function create_window(;
         panel              = panel,
         position           = position,
         title              = title,
-        title_color        = title_color,
         theme              = theme,
         widget_container   = widget_container,
         view               = view,
@@ -126,7 +123,7 @@ function create_window(;
     widget_container.window = win
     update_layout!(widget_container)
 
-    border && set_window_title!(win, title; title_color = title_color)
+    border && set_window_title!(win, title)
     push!(tui.windows, win)
 
     # We need to update the window to update the container.

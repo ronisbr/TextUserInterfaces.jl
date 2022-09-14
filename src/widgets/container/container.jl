@@ -56,21 +56,19 @@ function create_widget(
     ::Val{:container},
     layout::ObjectLayout;
     border::Bool = false,
-    border_color::Int = -1,
+    theme::Theme = tui.default_theme,
     title::AbstractString = "",
     title_alignment::Symbol = :l,
-    title_color::Int = -1
 )
     # Create the widget.
     container = WidgetContainer(
         layout           = layout,
         border           = border,
-        border_color     = border_color,
         horizontal_hints = _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS,
         id               = reserve_object_id(),
+        theme            = theme,
         title            = title,
         title_alignment  = title_alignment,
-        title_color      = title_color,
         vertical_hints   = _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS,
     )
 
@@ -78,11 +76,9 @@ function create_widget(
     Container created:
       ID               = $(container.id)
       border           = $(container.border),
-      border_color     = $(container.border_color),
       horizontal_hints = $(container.horizontal_hints)
       title            = $(container.title),
       title_alignment  = $(container.title_alignment),
-      title_color      = $(container.title_color),
       vertical_hints   = $(container.vertical_hints)"""
 
     # Return the created container.
@@ -94,19 +90,18 @@ function process_keystroke(container::WidgetContainer, k::Keystroke)
 end
 
 function redraw!(container::WidgetContainer)
-    @unpack border, border_color, buffer, update_needed = container
-    @unpack widgets, title_color = container
+    @unpack border, buffer, update_needed, widgets, theme = container
 
     wclear(buffer)
 
     if border
-        border_color > 0 && wattron(buffer, border_color)
-        wborder(buffer)
-        border_color > 0 && wattroff(buffer, border_color)
+        @ncolor theme.border buffer begin
+            wborder(buffer)
+        end
 
-        title_color  > 0 && wattron(buffer, title_color)
-        _draw_title!(container)
-        title_color  > 0 && wattroff(buffer, title_color)
+        @ncolor theme.title buffer begin
+            _draw_title!(container)
+        end
     end
 
     # Check if any widget must be redrawn.

@@ -8,20 +8,16 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-    set_window_title!(win::Window, title::AbstractString; ...)
+    set_window_title!(win::Window, title::AbstractString)
 
 Set the title of the window `win` to `title`.
-
-# Keywords
-
-- `title_color::Int`: Color mask that will be used to print the title. See
-    function `ncurses_color`. If negative, then the color will not be changed.
-    (**Default** = -1)
 """
-function set_window_title!(win::Window, title::AbstractString; title_color::Int = -1)
+function set_window_title!(win::Window, title::AbstractString)
     win.title = title
 
     if win.has_border
+        theme = win.theme
+
         # Save the current cursor position.
         cury, curx = _get_window_cursor_position(win.view)
 
@@ -36,9 +32,10 @@ function set_window_title!(win::Window, title::AbstractString; title_color::Int 
 
         if length_title_esc > 0
             col = div(wsx - length(title_esc), 2)
-            title_color > 0 && wattron(win.view, title_color)
-            mvwprintw(win.view, 0, col, title_esc)
-            title_color > 0 && wattroff(win.view, title_color)
+
+            @ncolor theme.title win.view begin
+                mvwprintw(win.view, 0, col, title_esc)
+            end
         end
 
         # Move the cursor to the original position.
