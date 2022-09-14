@@ -9,6 +9,39 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+function destroy!(win::Window)
+    @log INFO "destroy!" "$(obj_desc(win)) will be destroyed."
+    @log_ident 1
+
+    # Destroy the widget container.
+    destroy!(win.widget_container)
+
+    # Delete everything.
+    if win.panel != C_NULL
+        del_panel(win.panel)
+        win.panel = Ptr{Cvoid}(0)
+    end
+
+    if win.buffer != C_NULL
+        delwin(win.buffer)
+        win.buffer = Ptr{WINDOW}(0)
+    end
+
+    if win.view != C_NULL
+        delwin(win.view)
+        win.view = Ptr{WINDOW}(0)
+    end
+
+    # Remove the window from the global list.
+    idx = findall(x->x === win, tui.windows)
+    deleteat!(tui.windows, idx)
+
+    @log_ident 0
+    @log INFO "destroy!" "Window destroyed: $(win.id)."
+
+    return nothing
+end
+
 get_left(win::Window)   = win.view != C_NULL ? Int(getbegx(win.view)) : -1
 get_height(win::Window) = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
 get_width(win::Window)  = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
@@ -25,11 +58,30 @@ function process_keystroke(win::Window, k::Keystroke)
     return :keystroke_processed
 end
 
-@inline function update_layout!(win::Window; force::Bool = false)
-    return update_layout!(win, win.layout; force = force)
+function request_update!(win::Window)
+    win.view_needs_update = true
+    return nothing
 end
 
-function update_layout!(win::Window, layout::ObjectLayout; force::Bool = false)
+function update!(win::Window; force::Bool = false)
+    @unpack widget_container = win
+
+    force && wclear(win.buffer)
+
+    # Update the widget container. If it was updated, then we must mark that the
+    # view in this window needs update.
+    if update!(widget_container; force = force)
+        request_update!(win)
+    end
+
+    _update_view!(win)
+
+    return nothing
+end
+
+function update_layout!(win::Window; force::Bool = false)
+    @unpack layout = win
+
     # Get the layout information of the window.
     height, width, top, left = process_object_layout(
         layout,
@@ -111,7 +163,12 @@ function update_layout!(win::Window, layout::ObjectLayout; force::Bool = false)
     )
 
     if win_resize || win_move || force
-        refresh_window(win, force_redraw = true)
+        # Here, we need to update the layout of the container because the window
+        # changed.
+        update_layout!(win.widget_container; force = true)
+
+        # Now, we update the window.
+        update!(win, force = true)
         return true
     else
         return false

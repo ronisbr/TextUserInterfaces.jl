@@ -54,6 +54,10 @@ include("./input/keycodes.jl")
 include("./objects/anchors.jl")
 include("./objects/api.jl")
 
+include("./widgets/container/container.jl")
+include("./widgets/object_api.jl")
+include("./widgets/widgets.jl")
+
 include("./windows/constants.jl")
 include("./windows/create.jl")
 include("./windows/destroy.jl")

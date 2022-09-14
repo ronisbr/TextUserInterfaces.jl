@@ -10,10 +10,9 @@
 export create_window
 
 """
-    function create_window(id::String = "";  kwargs...)
+    function create_window(;  kwargs...)
 
-Create a window. The window ID `id` is used to identify the new window in the
-global window list.
+Create a window.
 
 # Keyword
 
@@ -41,8 +40,7 @@ global window list.
     function `ncurses_color`. If negative, then the color will not be changed.
     (**Default** = -1)
 """
-function create_window(
-    id::String = "";
+function create_window(;
     border::Bool = true,
     border_color::Int = -1,
     buffer_size::Tuple{Int, Int} = (0, 0),
@@ -54,12 +52,6 @@ function create_window(
 )
     # Check if the TUI has been initialized.
     !tui.initialized && error("The text user interface was not initialized.")
-
-    # If the user does not specify an `id`, then we choose based on the number
-    # of available windows.
-    if length(id) == 0
-        id = string(length(tui.windows))
-    end
 
     # Get the layout information of the window.
     height, width, top, left = process_object_layout(
@@ -104,6 +96,14 @@ function create_window(
     # Compute the window coordinate with respect to the screen.
     position = (begin_y, begin_x)
 
+    # Create the widget container.
+    widget_container = create_widget(
+        Val(:container),
+        _WINDOW_CONTAINER_OBJECT_LAYOUT,
+        border = true,
+        title = "TITLE"
+    )
+
     # Create the window object and add to the global list.
     win = Window(
         border_color       = border_color,
@@ -111,26 +111,38 @@ function create_window(
         buffer_view_locked = buffer_view_locked,
         focusable          = focusable,
         has_border         = border,
-        id                 = id,
+        id                 = reserve_object_id(),
         layout             = layout,
         panel              = panel,
         position           = position,
         title              = title,
         title_color        = title_color,
         theme              = theme,
+        widget_container   = widget_container,
         view               = view,
     )
+
+    # Update the widget container layout.
+    widget_container.window = win
+    update_layout!(widget_container)
 
     border && set_window_title!(win, title; title_color = title_color)
     push!(tui.windows, win)
 
+    # We need to update the window to update the container.
+    update!(win)
+
     @log INFO "create_window" """
     Window created:
-      ID            = $id
-      Physical size = ($nlines, $ncols)
-      Buffer size   = ($blines, $bcols)
-      Coordinate    = ($begin_y, $begin_x)
-      Title         = \"$title\" """
+      ID                 = $(win.id)
+      Buffer size        = ($blines, $bcols)
+      Buffer view locked = $(win.buffer_view_locked)
+      Coordinate         = ($begin_y, $begin_x)
+      Focusable          = $(win.focusable)
+      Has border         = $(win.has_border)
+      Physical size      = ($nlines, $ncols)
+      Title              = \"$(win.title)\"
+      Title color        = $(win.title_color)"""
 
     # Return the pointer to the window.
     return win

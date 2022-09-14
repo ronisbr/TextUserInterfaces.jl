@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export @connect, @disconnect, @emit, @signal
+export @connect, @disconnect, @disconnect_all, @emit, @signal
 
 #                                    Macros
 # ==============================================================================
@@ -42,6 +42,22 @@ macro disconnect(object::Symbol, signal::Symbol, f)
         id = findfirst(==($f), $object.$var.connections)
         !isnothing(id) && deleteat!($object.$var.connections, id)
         delete!($object.$var.kwargs, $f)
+    end
+
+    return esc(ex)
+end
+
+"""
+    @disconnect_all(object::Symbol, signal::Symbol)
+
+Disconnect all connections of `signal` in `object`.
+"""
+macro disconnect_all(object::Symbol, signal::Symbol)
+    var = Symbol("_signal_", signal)
+
+    ex = quote
+        empty!($object.$var.connections)
+        empty!($object.$var.kwargs)
     end
 
     return esc(ex)

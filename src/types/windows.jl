@@ -10,7 +10,7 @@
 export Window
 
 @with_kw mutable struct Window <: Object
-    id::String = ""
+    id::Int = 0
     title::String = ""
     title_color::Int = 0
     position::Tuple{Int, Int} = (0, 0)
@@ -56,6 +56,11 @@ export Window
 
     # Panel of the window.
     panel::Ptr{Cvoid} = Ptr{Cvoid}(0)
+
+    # Widget container
+    # ==========================================================================
+
+    widget_container::WidgetContainer
 end
 
 # Object to reference the root window.

@@ -14,6 +14,7 @@ include("./logger.jl")
 include("./objects.jl")
 include("./themes.jl")
 include("./signals.jl")
+include("./widgets.jl")
 include("./windows.jl")
 
 @with_kw mutable struct TextUserInterface
@@ -44,4 +45,10 @@ include("./windows.jl")
     # ==========================================================================
 
     @signal keypressed
+
+    # Private variables
+    # ============================================================================
+
+    # Internal variable to obtain an unique object ID.
+    _num_of_created_objects::Int = 0
 end

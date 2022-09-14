@@ -17,3 +17,11 @@ const _WINDOW_VERTICAL_LAYOUT_HINTS = (
     anchor_bottom = Anchor(:parent, :bottom, 0),
     anchor_top    = Anchor(:parent, :top,    0),
 )
+
+# Object layout for the window's widget container.
+const _WINDOW_CONTAINER_OBJECT_LAYOUT = ObjectLayout(
+    anchor_top    = Anchor(:parent, :top,    0),
+    anchor_left   = Anchor(:parent, :left,   0),
+    anchor_right  = Anchor(:parent, :right,  0),
+    anchor_bottom = Anchor(:parent, :bottom, 0)
+)
