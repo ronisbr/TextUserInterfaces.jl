@@ -15,7 +15,7 @@ export tui_update
 Update the entire TUI.
 """
 function tui_update()
-    refresh_all_windows()
+    update_all_windows()
     update_panels()
     doupdate()
 

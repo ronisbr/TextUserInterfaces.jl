@@ -7,54 +7,29 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export refresh_window, refresh_all_windows, move_view!, move_view_inc!
-export update_view!
+export update_window, refresh_all_windows, move_view!, move_view_inc!
 
 """
-    refresh_window(id::String)
+    update_window(id::String)
 
-Refresh the window with `id`.
+Update the window with `id`.
 """
-function refresh_window(id::String)
+function update_window(id::String)
     idx = findfirst(x -> x.id == id, tui.windows)
     idx === nothing && error("The window `$id` was not found.")
-    return refresh_window(tui.windows[idx])
+    return update!(tui.windows[idx])
 end
 
 """
-    refresh_window(win::Window; force_redraw = false)
+    update_all_windows()
 
-Refresh the window `win`. If the view needs to be updated (see
-`view_needs_update`) or if `force_redraw` is `true`, then the content of the
-buffer will be copied to the view before updating.
+Update all the windows.
 """
-function refresh_window(win::Window; force_redraw::Bool = false)
-    force_redraw && wclear(win.buffer)
-    update_view!(win)
-
-    return nothing
-end
-
-"""
-    refresh_all_windows()
-
-Refresh all the windows.
-"""
-function refresh_all_windows()
+function update_all_windows()
     for win in tui.windows
-        refresh_window(win)
+        update!(win)
     end
 
-    return nothing
-end
-
-"""
-    request_view_update!(win::Window)
-
-Request to update the view of window `win`.
-"""
-function request_view_update!(win::Window)
-    win.view_needs_update = true
     return nothing
 end
 
@@ -86,7 +61,7 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     win.origin = (y, x)
 
     # Since the origin has moved, then the view must be updated.
-    win.view_needs_update = true
+    request_update!(win)
 
     # Update the view if required.
     update && update_view!(win)
@@ -94,18 +69,16 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     return nothing
 end
 
-"""
-    update_view!(win::Window; force::Bool = false)
+#                              Private functions
+# ==============================================================================
 
-Update the view of window `win` by copying the contents from the buffer. If the
-view does not need to be updated (see `view_needs_update`), then nothing is
-done. If the keyword `force` is `true`, then the copy will always happen.
 
-# Return
-
-It returns `true` if the view has been updated and `false` otherwise.
-"""
-function update_view!(win::Window; force::Bool = false)
+# Update the view of window `win` by copying the contents from the buffer. If
+# the view does not need to be updated (see `view_needs_update`), then nothing
+# is done. If the keyword `force` is `true`, then the copy will always happen.
+#
+# It returns `true` if the view has been updated or `false` otherwise.
+function _update_view!(win::Window; force::Bool = false)
     @unpack has_border, buffer, view, origin = win
 
     if win.view_needs_update || force
@@ -134,7 +107,7 @@ function update_view!(win::Window; force::Bool = false)
         # Move the cursor back to the original position.
         wmove(view, cy, cx)
 
-        @log VERBOSE "update_view!" "Window $(win.id): Buffer was copied to the view."
+        @log VERBOSE "_update_view!" "Window $(win.id): Buffer was copied to the view."
 
         return true
     else

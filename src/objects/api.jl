@@ -7,66 +7,81 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export get_left, get_height, get_width, get_top, reposition!
+export get_left, get_height, get_width, get_top, get_id, reserve_object_id
+export update_layout!
 
 """
-    get_left(object)
+    destroy!(object::Object)
+
+Destroy the `object`.
+"""
+destroy!
+
+"""
+    get_left(object::Object::Object)
 
 Return the left of the `object` with respect to its parent.
 """
 get_left
 
 """
-    get_height(object)
+    get_height(object::Object)
 
 Return the height of `object`.
 """
 get_height
 
 """
-    get_width(object)
+    get_width(object::Object)
 
 Return the width of `object`.
 """
 get_width
 
 """
-    get_top(object)
+    get_top(object::Object)
 
 Return the top of the `object` with respect to its parent.
 """
 get_top
 
 """
-    get_inner_left(object)
+    get_inner_left(object::Object)
 
 Return the left position in the inner container of the `object`.
 """
 get_inner_left
 
 """
-    get_inner_height(object)
+    get_inner_height(object::Object)
 
 Return the height in the inner container of the `object`.
 """
 get_inner_height
 
 """
-    get_inner_width(object)
+    get_inner_width(object::Object)
 
 Return the width in the inner container of the `object`.
 """
 get_inner_width
 
 """
-    get_inner_top(object)
+    get_inner_top(object::Object)
 
 Return the top position in the inner container of the `object`.
 """
 get_inner_top
 
 """
-    process_keystroke(object, keystroke)::Symbol
+    get_id(object::Object)
+
+Return the global ID of `object`.
+"""
+get_id(object::Object) = object.id
+
+"""
+    process_keystroke(object::Object, keystroke)::Symbol
 
 Process the `keystroke` in the `object`. This function must return a `Symbol`
 according to the following description:
@@ -76,17 +91,42 @@ according to the following description:
 - `:next_object`: Pass the focus to the next object in the chain.
 - `:previous_object`: Pass the focus to the previous object in the chain.
 """
-process_keystroke(object, keystroke)
+process_keystroke
 
 """
-    request_focus(object)
+    reserve_object_id()
+
+Reserve and return an unique object ID.
+"""
+function reserve_object_id()
+    tui._num_of_created_objects += 1
+    return tui._num_of_created_objects
+end
+
+"""
+    request_focus(object::Object)
 
 Return `true` if the object can accept the focus. `false` otherwise.
 """
-request_focus(object)
+request_focus
 
 """
-    update_layout!(object)
+    request_update!(object::Object::Object)
+
+Request update for `object`.
+"""
+request_update!(object::Object) = return nothing
+
+"""
+    update!(object::Object; force::Bool = true)
+
+Update the `object` and return `true` it an updated was needed, or `false`
+otherwise. If the keyword `force` is `true`, the `object` must be updated.
+"""
+update!(object::Object; force::Bool = true) = return false
+
+"""
+    update_layout!(object::Object)
 
 Update the layout of the object based on the stored configuration.
 """

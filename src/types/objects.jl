@@ -40,6 +40,9 @@ end
 # Singleton that indicates that no anchor is available.
 const _NO_ANCHOR = Anchor(:noobject, :noside, 0)
 
+# Construct to the cases in which a padding is not required.
+Anchor(obj::Union{Object, Symbol}, side::Symbol) = Anchor(obj, side, 0)
+
 """
     struct ObjectLayout
 
