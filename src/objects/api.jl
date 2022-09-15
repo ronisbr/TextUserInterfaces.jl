@@ -81,17 +81,18 @@ Return the global ID of `object`.
 get_id(object::Object) = object.id
 
 """
-    process_keystroke(object::Object, keystroke)::Symbol
+    process_keystroke!(object::Object, keystroke)::Symbol
 
 Process the `keystroke` in the `object`. This function must return a `Symbol`
 according to the following description:
 
 - `:keystroke_processed`: The object processed the focus and nothing more should
     be done.
+- `:keystroke_not_processed`: The object could not process the keystroke.
 - `:next_object`: Pass the focus to the next object in the chain.
 - `:previous_object`: Pass the focus to the previous object in the chain.
 """
-process_keystroke
+process_keystroke!
 
 """
     reserve_object_id()
@@ -104,11 +105,19 @@ function reserve_object_id()
 end
 
 """
-    request_focus(object::Object)
+    release_focus!(object::Object)
+
+Release the focus from `object`. It must return `true` if the focus was
+released, or `false` otherwise.
+"""
+release_focus!(object::Object)
+
+"""
+    request_focus!(object::Object)
 
 Return `true` if the object can accept the focus. `false` otherwise.
 """
-request_focus
+request_focus!
 
 """
     request_update!(object::Object::Object)

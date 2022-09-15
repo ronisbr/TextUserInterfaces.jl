@@ -23,7 +23,12 @@ function create_widget_buffer!(widget::Widget)
     parent = get_parent(widget)
 
     # Compute the widget true position based on the configuration.
-    height, width, top, left = process_object_layout(widget.layout, parent)
+    height, width, top, left = process_object_layout(
+        widget.layout,
+        parent;
+        horizontal_hints = widget.horizontal_hints,
+        vertical_hints = widget.vertical_hints
+    )
 
     # Create the buffer that will hold the contents.
     buffer = subpad(get_buffer(parent), height, width, top, left)
@@ -70,6 +75,25 @@ function get_parent(widget::Widget)
         return widget.window
     else
         return widget.container
+    end
+end
+
+function has_focus(widget::Widget)
+    container = widget.container
+    if !isnothing(container)
+        widget_has_focus = widget == get_focused_widget(container)
+        container_has_focus = has_focus(container)
+        return widget_has_focus && container_has_focus
+    else
+        # If the widget does not have a container, then it is added to a window.
+        # In this case, we need to check if the window has the focus.
+        window = widget.window
+
+        if !isnothing(window)
+            return window == get_focused_window()
+        else
+            return false
+        end
     end
 end
 

@@ -17,8 +17,8 @@ Destroy all windows managed by the TUI.
 function destroy_all_windows()
     @log INFO "destroy_all_windows" "All windows will be destroyed."
 
-    for w in tui.windows
-        destroy!(w)
+    while !isempty(tui.windows)
+        destroy!(tui.windows |> first)
     end
 
     return nothing

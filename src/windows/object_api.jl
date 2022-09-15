@@ -33,7 +33,7 @@ function destroy!(win::Window)
     end
 
     # Remove the window from the global list.
-    idx = findall(x->x === win, tui.windows)
+    idx = findall(x -> x === win, tui.windows)
     deleteat!(tui.windows, idx)
 
     @log_ident 0
@@ -52,9 +52,10 @@ get_inner_height(win::Window) = win.buffer != C_NULL ? Int(getmaxy(win.buffer)) 
 get_inner_width(win::Window)  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
 get_inner_top(win::Window)    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
 
-request_focus(win::Window) = win.focusable
+request_focus!(win::Window) = win.focusable
 
-function process_keystroke(win::Window, k::Keystroke)
+function process_keystroke!(win::Window, k::Keystroke)
+    process_keystroke!(win.widget_container, k)
     return :keystroke_processed
 end
 

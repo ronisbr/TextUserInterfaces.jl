@@ -9,6 +9,18 @@
 
 export focus_next_window, focus_previous_window, process_keystroke
 
+function check_global_command(k::Keystroke)
+    if k.ktype == :tab
+        if !k.shift
+            return :next_object
+        else
+            return :previous_object
+        end
+    end
+
+    return nothing
+end
+
 """
     process_keystroke(k::Keystroke)
 
@@ -35,12 +47,12 @@ function process_keystroke(k::Keystroke)
             focused_window = get_focused_window()
 
             if !isnothing(focused_window)
-                r = process_keystroke(focused_window, k)
+                r = process_keystroke!(focused_window, k)
 
                 if r === :keystroke_processed
                     break
 
-                elseif r === :next_window
+                elseif r === :next_object
                     focus_next_window()
                     new_focused_window = get_focused_window()
 
@@ -48,7 +60,7 @@ function process_keystroke(k::Keystroke)
                     # only focusable window is it, do nothing.
                     new_focused_window === focused_window && break
 
-                elseif r === :previous_window
+                elseif r === :previous_object
                     focus_previous_window()
                     new_focused_window = get_focused_window()
 
@@ -139,7 +151,7 @@ function _change_focused_window(advance::Function)
 
         num_tries += 1
 
-        if request_focus(tui.windows[focus_candidate])
+        if request_focus!(tui.windows[focus_candidate])
             tui.focused_window_id = focus_candidate
             return nothing
         end

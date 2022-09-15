@@ -28,10 +28,43 @@ const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = (
 #                                  Object API
 ################################################################################
 
+function destroy!(container::WidgetContainer)
+    while length(container.widgets) > 0
+        destroy!(container.widgets |> first)
+    end
+
+    invoke(destroy!, Tuple{Widget}, container)
+
+    return nothing
+end
+
 get_inner_height(c::WidgetContainer) = c.height + (c.border ? -2 : 0)
 get_inner_left(c::WidgetContainer)   = c.border ?  1 : 0
 get_inner_top(c::WidgetContainer)    = c.border ?  1 : 0
 get_inner_width(c::WidgetContainer)  = c.width  + (c.border ? -2 : 0)
+
+function request_focus!(container::WidgetContainer; direction::Symbol = :next)
+    # First, check if we have an object in focus.
+    focused_widget = get_focused_widget(container)
+
+    if !isnothing(focused_widget)
+        request_focus!(focused_widget) && return true
+    end
+
+    # If no object is in focus or if the current one did not accept the focus,
+    # search for another widget to receive the focus.
+    if direction === :next
+        focus_next_widget!(container)
+    else
+        focus_previous_widget!(container)
+    end
+
+    if !isnothing(get_focused_widget(container))
+        return true
+    else
+        return false
+    end
+end
 
 function update_layout!(container::WidgetContainer; force::Bool = false)
     # Update the layout of the container as if it is a generic widget.
@@ -85,8 +118,30 @@ function create_widget(
     return container
 end
 
-function process_keystroke(container::WidgetContainer, k::Keystroke)
-    return :keystroke_processed
+function process_keystroke!(container::WidgetContainer, k::Keystroke)
+    focused_widget = get_focused_widget(container)
+
+    # If we do not have a focused widget, try to focus one first.
+    if isnothing(focused_widget)
+        cmd = check_global_command(k)
+
+        if isnothing(cmd)
+            focus_next_widget!(container) || return :next_widget
+        else
+            if _process_command!(container, cmd) == :keystroke_processed
+                return :keystroke_processed
+            end
+        end
+
+        focused_widget = get_focused_widget(container)
+    end
+
+    if !isnothing(focused_widget)
+        r = process_keystroke!(focused_widget, k)
+        return _process_command!(container, r)
+    end
+
+    return :keystroke_not_processed
 end
 
 function redraw!(container::WidgetContainer)
@@ -158,6 +213,143 @@ function add_widget!(container::WidgetContainer, widget::Widget)
     return nothing
 end
 
+function focus_next_widget!(container::WidgetContainer; cyclic::Bool = false)
+    num_widgets = length(container.widgets)
+    num_widgets == 0 && return nothing
+
+    # Number of tries to request the focus.
+    num_tries = 0
+
+    if container.focused_widget_id == 0
+        focus_candidate = 1
+    else
+        focus_candidate = container.focused_widget_id + 1
+    end
+
+    while true
+        if !cyclic
+            if (focus_candidate > num_widgets) && (container.focused_widget_id == num_widgets)
+                container.focused_widget_id = 0
+                return false
+            end
+        else
+            if focus_candidate > num_widgets
+                focus_candidate = 1
+            elseif focus_candidate <= 0
+                focus_candidate = num_widgets
+            end
+        end
+
+        if container.widgets[focus_candidate] isa WidgetContainer
+            if request_focus!(container.widgets[focus_candidate]; direction = :next)
+                container.focused_widget_id = focus_candidate
+                return true
+            end
+        else
+            if request_focus!(container.widgets[focus_candidate])
+                container.focused_widget_id = focus_candidate
+                return true
+            end
+        end
+
+        num_tries += 1
+
+        # If the number of tries is equal the number of widgets, no widget can
+        # accept the focus.
+        if num_tries == num_widgets
+            container.focused_widget_id = 0
+            return false
+        end
+
+        focus_candidate = focus_candidate + 1
+    end
+
+    return false
+end
+
+function focus_previous_widget!(container::WidgetContainer; cyclic::Bool = false)
+    num_widgets = length(container.widgets)
+    num_widgets == 0 && return nothing
+
+    # Number of tries to request the focus.
+    num_tries = 0
+
+    if container.focused_widget_id == 0
+        focus_candidate = num_widgets
+    else
+        focus_candidate = container.focused_widget_id - 1
+    end
+
+    while true
+        if !cyclic
+            if (focus_candidate <= 0) && (container.focused_widget_id == 1)
+                container.focused_widget_id = 0
+                return false
+            end
+        else
+            if focus_candidate > num_widgets
+                focus_candidate = 1
+            elseif focus_candidate <= 0
+                focus_candidate = num_widgets
+            end
+        end
+
+        if container.focused_widget_id == 0
+            focus_candidate = num_widgets
+        else
+            if focus_candidate <= 0
+                focus_candidate = num_widgets
+            end
+        end
+
+        if container.widgets[focus_candidate] isa WidgetContainer
+            if request_focus!(container.widgets[focus_candidate]; direction = :previous)
+                container.focused_widget_id = focus_candidate
+                return true
+            end
+        else
+            if request_focus!(container.widgets[focus_candidate])
+                container.focused_widget_id = focus_candidate
+                return true
+            end
+        end
+
+        num_tries += 1
+
+        # If the number of tries is equal the number of widgets, no widget can
+        # accept the focus.
+        if num_tries == num_widgets
+            container.focused_widget_id = 0
+            return false
+        end
+
+        focus_candidate = focus_candidate - 1
+    end
+
+    return false
+end
+
+"""
+    get_focused_widget(container::WidgetContainer)
+
+Return the current widget in focus. If no widget is in focus, return `nothing`.
+"""
+function get_focused_widget(container::WidgetContainer)
+    @unpack focused_widget_id, widgets = container
+
+    @inbounds if focused_widget_id == 0
+        return nothing
+    else
+        if focused_widget_id > length(widgets)
+            @log CRITICAL "get_focused_widget" """
+            The focused widget ID is outside the allowed range."""
+            return nothing
+        end
+
+        return widgets[focused_widget_id]
+    end
+end
+
 """
     remove_widget!(container::WidgetContainer, widget::Widget)
 
@@ -221,6 +413,26 @@ function _draw_title!(container::WidgetContainer)
     mvwprintw(buffer, 0, pad, title)
 
     return nothing
+end
+
+function _process_command!(container::WidgetContainer, cmd::Symbol)
+    # If this container does not have a parent, it means it is a top-most
+    # container. Thus, we need to change the widgets in a cyclic manner.
+    cyclic = isnothing(container.container)
+
+    if cmd === :keystroke_processed
+        return cmd
+
+    elseif cmd === :next_object
+        focus_next_widget!(container; cyclic) || return :next_object
+        return :keystroke_processed
+
+    elseif cmd === :previous_object
+        focus_previous_widget!(container; cyclic) || return :previous_object
+        return :keystroke_processed
+    end
+
+    return cmd
 end
 
 ################################################################################
