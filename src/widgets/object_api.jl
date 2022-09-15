@@ -12,6 +12,9 @@
 function destroy!(widget::Widget)
     @unpack buffer, container = widget
 
+    # Before destroying the object, get its parent.
+    parent = get_parent(widget)
+
     # Get the object description for logging purposes.
     widget_desc = obj_desc(widget)
 
@@ -24,7 +27,7 @@ function destroy!(widget::Widget)
     @log INFO "destroy!" "Widget destroyed: $widget_desc"
 
     # Now update the parent, which can be a container or a window.
-    update!(get_parent(widget); force = true)
+    update!(parent; force = true)
 
     return nothing
 end

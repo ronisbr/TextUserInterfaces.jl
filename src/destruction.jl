@@ -30,6 +30,7 @@ function destroy_tui()
 
         # Reset internal variables.
         tui._num_of_created_objects = 0
+        tui.focused_window_id = 0
     end
 
     @log INFO "destroy_tui" "TUI has been destroyed."
