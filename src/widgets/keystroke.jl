@@ -19,6 +19,8 @@ end
 #                                  Widget API
 ################################################################################
 
+can_accept_focus(::WidgetKeystroke) = true
+
 function create_widget(
     ::Val{:keystroke},
     layout::ObjectLayout;
@@ -35,6 +37,11 @@ function create_widget(
 
     # Return the created container.
     return keystroke
+end
+
+function release_focus!(widget::WidgetKeystroke)
+    request_update!(widget)
+    return nothing
 end
 
 function request_focus!(widget::WidgetKeystroke)
