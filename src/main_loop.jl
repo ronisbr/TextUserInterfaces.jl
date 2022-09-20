@@ -11,7 +11,7 @@ export app_main_loop
 
 function app_main_loop()
     # If there is no window in focus, try to acquire it.
-    isnothing(get_focused_window()) && focus_next_window()
+    isnothing(get_focused_window()) && move_focus_to_next_window()
 
     # Update everything before starting the loop.
     tui_update()

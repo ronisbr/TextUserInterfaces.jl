@@ -188,7 +188,6 @@ macro widget(ex)
         # Default signals.
         :(@signal focus_acquired)
         :(@signal focus_lost)
-        :(@signal key_pressed)
     ]...)
 
     ret = quote

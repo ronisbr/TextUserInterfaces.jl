@@ -11,6 +11,20 @@ export get_left, get_height, get_width, get_top, get_id, reserve_object_id
 export update_layout!
 
 """
+    can_accept_focus(object::Object)
+
+Return `true` if `object` can accept focus. `false` otherwise.
+"""
+can_accept_focus
+
+"""
+    can_release_focus(object::Object)
+
+Return `true` if `object` can release focus. `false` otherwise.
+"""
+can_release_focus
+
+"""
     destroy!(object::Object)
 
 Destroy the `object`.
@@ -18,7 +32,7 @@ Destroy the `object`.
 destroy!
 
 """
-    get_left(object::Object::Object)
+    get_left(object::Object)
 
 Return the left of the `object` with respect to its parent.
 """
@@ -81,7 +95,7 @@ Return the global ID of `object`.
 get_id(object::Object) = object.id
 
 """
-    process_keystroke!(object::Object, keystroke)::Symbol
+    process_keystroke!(object::Object, keystroke::Keystroke)::Symbol
 
 Process the `keystroke` in the `object`. This function must return a `Symbol`
 according to the following description:
@@ -107,17 +121,10 @@ end
 """
     release_focus!(object::Object)
 
-Release the focus from `object`. It must return `true` if the focus was
-released, or `false` otherwise.
+Release the focus from `object`. If this function is called, the object **must**
+release the focus.
 """
-release_focus!(object::Object)
-
-"""
-    request_focus!(object::Object)
-
-Return `true` if the object can accept the focus. `false` otherwise.
-"""
-request_focus!
+release_focus!(object::Object) = return nothing
 
 """
     request_update!(object::Object::Object)

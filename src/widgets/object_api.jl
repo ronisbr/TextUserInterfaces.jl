@@ -9,6 +9,9 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+can_accept_focus(widget::Widget) = false
+can_release_focus(widget::Widget) = true
+
 function destroy!(widget::Widget)
     @unpack buffer, container = widget
 

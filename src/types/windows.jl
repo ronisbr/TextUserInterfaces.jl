@@ -61,6 +61,12 @@ export Window
     # ==========================================================================
 
     widget_container::WidgetContainer
+
+    # Signals
+    # ==========================================================================
+
+    @signal focus_acquired
+    @signal focus_lost
 end
 
 # Object to reference the root window.

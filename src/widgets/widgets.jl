@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export create_widget, destroy_widget_buffer!, get_buffer, get_parent, request_update!
+export create_widget, destroy_widget_buffer!, get_buffer, get_parent, request_update!, move_focus_to_widget
 
 """
     create_widget_buffer!(widget::Widget)
@@ -95,6 +95,18 @@ function has_focus(widget::Widget)
             return false
         end
     end
+end
+
+"""
+    move_focus_to_widget(widget::Widget)
+
+Move the focus to the `widget`, meaning that all parent chain will get focused
+up to the window.
+"""
+function move_focus_to_widget(widget::Widget)
+    container = widget.container
+    !isnothing(container) && move_focus_to_widget!(container, widget)
+    return nothing
 end
 
 """
