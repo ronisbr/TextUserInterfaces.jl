@@ -78,9 +78,9 @@ function request_update!(win::Window)
 end
 
 function update!(win::Window; force::Bool = false)
-    @unpack widget_container = win
+    @unpack buffer, has_border, widget_container, view, theme, title = win
 
-    force && wclear(win.buffer)
+    force && wclear(buffer)
 
     # Update the widget container. If it was updated, then we must mark that the
     # view in this window needs update.
@@ -89,6 +89,12 @@ function update!(win::Window; force::Bool = false)
     end
 
     _update_view!(win)
+
+    # Update the border and the title since the theme might change.
+    has_border && @ncolor theme.border view begin
+        wborder(view)
+        set_window_title!(win, title)
+    end
 
     return nothing
 end
