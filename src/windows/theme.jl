@@ -18,6 +18,6 @@ needs update, but it does not perform an update.
 function set_window_theme!(window::Window, theme::Theme)
     window.theme = theme
     wbkgd(window.buffer, theme.default)
-    request_view_update!(window)
+    request_update!(window)
     return nothing
 end

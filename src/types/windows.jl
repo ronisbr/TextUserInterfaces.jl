@@ -15,7 +15,6 @@ export Window
     title_color::Int = 0
     position::Tuple{Int, Int} = (0, 0)
     has_border::Bool = false
-    border_color::Int = 0
     focusable::Bool = true
 
     # This variable stores if the user wants the buffer and view size to be
