@@ -60,7 +60,7 @@ include("./input/keycodes.jl")
 include("./objects/anchors.jl")
 include("./objects/api.jl")
 
-include("./widgets/container/container.jl")
+include("./widgets/container.jl")
 include("./widgets/keystroke.jl")
 include("./widgets/label.jl")
 include("./widgets/object_api.jl")
