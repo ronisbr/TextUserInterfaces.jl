@@ -143,8 +143,11 @@ function _change_focused_window(window_id::Int)
     tui.focused_window_id = window_id
 
     if window_id > 0
-        new_focused_window = tui.windows[window_id]
-        request_focus!(new_focused_window)
+        new_focused_window = get_focused_window()
+
+        # We need to update the container because the focus has changed.
+        request_update!(new_focused_window.widget_container)
+
         @emit new_focused_window focus_acquired
     end
 
