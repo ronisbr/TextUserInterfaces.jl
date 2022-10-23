@@ -9,9 +9,6 @@
 
 export @connect, @disconnect, @disconnect_all, @emit, @signal
 
-#                                    Macros
-# ==============================================================================
-
 """
     @connect(object, signal::Symbol, f, kwargs)
 
@@ -92,6 +89,61 @@ macro signal(name)
     var = Symbol("_signal_", name)
     ex = quote
         $var::Signal = Signal()
+    end
+
+    return esc(ex)
+end
+
+# Signal properties
+# ------------------------------------------------------------------------------
+
+export @delete_signal_property, @get_signal_property, @set_signal_property
+
+"""
+    @delete_signal_property(object::Symbol, signal::Symbol, property::Symbol)
+
+Delete the `property` of `signal` in `object`, meaning that the default value
+will be used.
+"""
+macro delete_signal_property(object::Symbol, signal::Symbol, property::Symbol)
+    var = Symbol("_signal_", signal)
+    p = Meta.quot(property)
+
+    ex = quote
+        delete!($object.$var.properties, $p)
+    end
+
+    return esc(ex)
+end
+
+"""
+    @get_signal_property(object::Symbol, signal::Symbol, property::Symbol, default)
+
+Get the `property` of the `signal` in `object`, returning the `default` value it
+the property is not set.
+"""
+macro get_signal_property(object::Symbol, signal::Symbol, property::Symbol, default)
+    var = Symbol("_signal_", signal)
+    p = Meta.quot(property)
+
+    ex = quote
+        get($object.$var.properties, $p, $default)
+    end
+
+    return esc(ex)
+end
+
+"""
+    @set_signal_property(object::Symbol, signal::Symbol, property::Symbol, value)
+
+Set the `property` of the `signal` in `object` to `value`.
+"""
+macro set_signal_property(object::Symbol, signal::Symbol, property::Symbol, value)
+    var = Symbol("_signal_", signal)
+    p = Meta.quot(property)
+
+    ex = quote
+        $object.$var.properties[$p] = $value
     end
 
     return esc(ex)
