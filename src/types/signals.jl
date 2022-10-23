@@ -8,7 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-    mutable struct Signal
+    struct Signal
 
 Defines a signal.
 
@@ -21,7 +21,8 @@ Defines a signal.
 - `kwargs::NamedTuple`: Additional keyword arguments passed to the connection
     function together with those native to the signal.
 """
-Base.@kwdef mutable struct Signal
+Base.@kwdef struct Signal
     connections::Vector{Function} = Function[]
     kwargs::Dict{Function, NamedTuple} = Dict{Function, NamedTuple}()
+    properties::Dict{Symbol, Any} = Dict{Symbol, Any}()
 end

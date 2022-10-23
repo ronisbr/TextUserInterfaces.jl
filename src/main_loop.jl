@@ -21,11 +21,16 @@ function app_main_loop()
         k = getkey()
         @emit tui keypressed (; keystroke = k)
 
-        if k.ktype == :F1
-            break
-        else
-            process_keystroke(k)
+        # Check if the keystroke must be passed or if the signal hijacked it.
+        if !@get_signal_property(tui, keypressed, block, false)
+            if k.ktype == :F1
+                break
+            else
+                process_keystroke(k)
+            end
         end
+
+        @delete_signal_property tui keypressed block
 
         tui_update()
     end
