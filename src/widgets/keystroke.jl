@@ -50,6 +50,12 @@ function request_focus!(widget::WidgetKeystroke)
 end
 
 function process_keystroke!(widget::WidgetKeystroke, k::Keystroke)
+    global_cmd = check_global_command(k)
+
+    if !isnothing(global_cmd)
+        return global_cmd
+    end
+
     widget.k = k
     request_update!(widget)
     return :keystroke_processed
