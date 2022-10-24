@@ -157,6 +157,17 @@ function process_keystroke!(container::WidgetContainer, k::Keystroke)
 
     if !isnothing(focused_widget)
         r = process_keystroke!(focused_widget, k)
+
+        # If the command was not processed by the widget, we need to check if
+        # there is a global action that must be performed.
+        if r === :keystroke_not_processed
+            gc = check_global_command(k)
+
+            if !isnothing(gc)
+                r = gc
+            end
+        end
+
         return _process_command!(container, r)
     end
 

@@ -9,6 +9,7 @@
 
 export move_focus_to_next_window, move_focus_to_previous_window, process_keystroke
 
+# TODO: Improve this function. Is the name "global command" good?
 function check_global_command(k::Keystroke)
     if k.ktype == :tab
         if !k.shift
