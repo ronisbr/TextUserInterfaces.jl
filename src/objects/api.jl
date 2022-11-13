@@ -119,6 +119,15 @@ function reserve_object_id()
 end
 
 """
+    request_cursor(object::Object)
+
+If `true`, then the physical cursor will be shown and the position will be
+updated according to its position in the object window. Otherwise, the physical
+cursor will be hidden.
+"""
+request_cursor(object::Object) = false
+
+"""
     release_focus!(object::Object)
 
 Release the focus from `object`. If this function is called, the object **must**
@@ -132,6 +141,15 @@ release_focus!(object::Object) = return nothing
 Request update for `object`.
 """
 request_update!(object::Object) = return nothing
+
+"""
+    sync_cursor(object::Object)
+
+Synchronize the cursor considering the focused object inside `object` with the
+physical cursor. This function must be implemented only the `object` is a
+container.
+"""
+sync_cursor
 
 """
     update!(object::Object; force::Bool = true)

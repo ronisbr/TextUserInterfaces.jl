@@ -74,6 +74,8 @@ function redraw!(widget::WidgetKeystroke)
     return nothing
 end
 
+request_cursor(widget::WidgetKeystroke) = true
+
 ################################################################################
 #                                   Helpers
 ################################################################################

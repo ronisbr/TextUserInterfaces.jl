@@ -75,6 +75,48 @@ function request_update!(win::Window)
     return nothing
 end
 
+function request_cursor(win::Window)
+    return request_cursor(win.widget_container)
+end
+
+# Synchronize the cursor to the position of the focused widget in `window`. This
+# is necessary because all the operations are done in the buffer and then copied
+# to the view.
+function sync_cursor(window::Window)
+    @unpack widget_container = window
+
+    # This is the top most function that synchronize the cursor. Hence, we must
+    # check if the focused widget request the cursor to show or hide it.
+    if !isnothing(widget_container) && request_cursor(widget_container)
+        curs_set(1)
+
+        # Get the cursor position on the `buffer` of the widget.
+        cy, cx = _get_window_cursor_position(get_buffer(widget_container))
+        by, bx = _get_window_coordinates(get_buffer(widget_container))
+
+        # Compute the coordinates of the cursor with respect to the window.
+        y = by + cy
+        x = bx + cx
+
+        # If the window has a border, then we must take this into account
+        # when updating the cursor coordinates.
+        if window.has_border
+            y += 1
+            x += 1
+        end
+
+        # Move the cursor.
+        wmove(window.view, y, x)
+        wrefresh(window.view)
+
+        # TODO: Limit the cursor position to the edge of the screen.
+    else
+        curs_set(0)
+    end
+
+    return nothing
+end
+
 function update!(win::Window; force::Bool = false)
     @unpack buffer, has_border, widget_container, view, theme, title = win
 

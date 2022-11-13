@@ -83,6 +83,39 @@ function request_focus!(container::WidgetContainer; direction::Symbol = :next)
     end
 end
 
+function sync_cursor(container::WidgetContainer)
+    focused_widget = get_focused_widget(container)
+
+    # If the container has a focused widget, move the cursor in the container
+    # buffer according the position of the widget.
+    if !isnothing(focused_widget)
+        # Get the cursor position on the `buffer` of the widget.
+        cy, cx = _get_window_cursor_position(get_buffer(focused_widget))
+        by, bx = _get_window_coordinates(get_buffer(focused_widget))
+
+        # Get the position of the container window.
+        #
+        # This algorithm assumes that the cursor position after `wmove` is
+        # relative to the beginning of the container window. However, since
+        # everything is a `subpad`, the window coordinate (by,bx) is relative to
+        # the pad. Thus, we must subtract the `subpad` position so that the
+        # algorithm is consistent.
+        wy, wx = _get_window_coordinates(get_buffer(container))
+
+        # Compute the coordinates of the cursor with respect to the window.
+        y = by + cy - wy
+        x = bx + cx - wx
+
+        # Move the cursor.
+        wmove(get_buffer(container), y, x)
+    end
+
+    # We must sync the cursor in the parent as well.
+    sync_cursor(get_parent(container))
+
+    return nothing
+end
+
 function update_layout!(container::WidgetContainer; force::Bool = false)
     # Update the layout of the container as if it is a generic widget.
     if invoke(update_layout!, Tuple{Widget}, container; force = force)
@@ -158,9 +191,13 @@ function process_keystroke!(container::WidgetContainer, k::Keystroke)
     if !isnothing(focused_widget)
         r = process_keystroke!(focused_widget, k)
 
+        if r === :keystroke_processed
+            sync_cursor(container)
+            return :keystroke_processed
+
         # If the command was not processed by the widget, we need to check if
         # there is a global action that must be performed.
-        if r === :keystroke_not_processed
+        else
             gc = check_global_command(k)
 
             if !isnothing(gc)
@@ -205,6 +242,16 @@ function redraw!(container::WidgetContainer)
     end
 
     return nothing
+end
+
+function request_cursor(container::WidgetContainer)
+    focused_widget = get_focused_widget(container)
+
+    if !isnothing(focused_widget)
+        return request_cursor(focused_widget)
+    else
+        return false
+    end
 end
 
 ################################################################################
@@ -392,6 +439,8 @@ function _change_focused_widget!(
         else
             request_focus!(new_focused_widget)
         end
+
+        sync_cursor(container)
 
         @emit new_focused_widget focus_acquired
     end
