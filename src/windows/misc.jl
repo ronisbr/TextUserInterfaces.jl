@@ -50,6 +50,24 @@ end
 ################################################################################
 
 """
+    _get_window_coordinates(win::Ptr{WINDOW})
+
+Get the coordinates of the window `win` and return it on a tuple
+`(begy, begx)`. If the window is not initialized, then this function returns
+`(-1, -1)`.
+"""
+function _get_window_coordinates(win::Ptr{WINDOW})
+    if win != C_NULL
+        begy = Int(getbegy(win))
+        begx = Int(getbegx(win))
+
+        return begy, begx
+    else
+        return -1, -1
+    end
+end
+
+"""
     _get_window_dimensions(win::Ptr{WINDOW})
 
 Get the dimensions of the window `win` and return it on a tuple

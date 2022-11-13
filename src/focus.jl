@@ -149,6 +149,9 @@ function _change_focused_window(window_id::Int)
         # We need to update the container because the focus has changed.
         request_update!(new_focused_window.widget_container)
 
+        # Hide the cursor until a widget request it.
+        curs_set(0)
+
         @emit new_focused_window focus_acquired
     end
 
