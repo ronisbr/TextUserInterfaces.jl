@@ -99,8 +99,8 @@ function create_window(;
     widget_container = create_widget(
         Val(:container),
         _WINDOW_CONTAINER_OBJECT_LAYOUT,
-        border = true,
-        title = "TITLE"
+        border = false,
+        title = ""
     )
 
     # Create the window object and add to the global list.
