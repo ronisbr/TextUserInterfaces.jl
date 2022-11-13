@@ -24,7 +24,7 @@ export WidgetButton
 end
 
 # Conversion dictionary between style and height.
-const _button_style_height = Dict(
+const _BUTTON_STYLE_HEIGHT = Dict(
     :boxed  => 3,
     :simple => 1,
     :none   => 1
@@ -32,7 +32,7 @@ const _button_style_height = Dict(
 
 # Conversion dictionary between style and width that must be added to the label
 # length.
-const _button_style_width = Dict(
+const _BUTTON_STYLE_WIDTH = Dict(
     :boxed  => 4,
     :simple => 4,
     :none   => 0
@@ -56,7 +56,7 @@ function create_widget(
     theme::Theme = tui.default_theme
 )
     # Check arguments.
-    if !haskey(_button_style_height, style)
+    if !haskey(_BUTTON_STYLE_HEIGHT, style)
         @log WARNING "create_widget" """
         The button style :$style is not known.
         The style :simple will be used."""
@@ -70,8 +70,8 @@ function create_widget(
         layout           = layout,
         style            = style,
         theme            = theme,
-        horizontal_hints = (; width = textwidth(label) + _button_style_width[style]),
-        vertical_hints   = (; height = _button_style_height[style])
+        horizontal_hints = (; width = textwidth(label) + _BUTTON_STYLE_WIDTH[style]),
+        vertical_hints   = (; height = _BUTTON_STYLE_HEIGHT[style])
     )
 
     @log INFO "create_widget" """
