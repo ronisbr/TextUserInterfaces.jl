@@ -155,7 +155,7 @@ for (f, r, v, j, c) in
 
         For more information, see `libform` documentation.
         """
-        $f($(argsj...)) where {T<:Integer} = @_ccallf $f($(argsc...))::$r
+        $f($(argsj...)) = @_ccallf $f($(argsc...))::$r
         export $f
         _precompile_func($f, $argst)
     end
