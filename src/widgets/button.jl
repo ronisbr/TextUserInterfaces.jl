@@ -70,7 +70,7 @@ function create_widget(
         layout           = layout,
         style            = style,
         theme            = theme,
-        horizontal_hints = (; width = _button_style_width[style]),
+        horizontal_hints = (; width = textwidth(label) + _button_style_width[style]),
         vertical_hints   = (; height = _button_style_height[style])
     )
 
@@ -140,16 +140,15 @@ function _draw_button!(widget::WidgetButton, focused::Bool = false)
         str = " "^pad * label * " "^(Δ - pad)
 
         if style == :boxed
-            mvwprintw(buffer, 0, 0, "┌" * "─"^(w-2) * "┐")
+            mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
             mvwprintw(buffer, 1, 0, "│")
 
-            wattron(buffer, c)
             @ncolor c buffer begin
                 wprintw(buffer, " " * str * " ")
             end
 
             wprintw(buffer, "│")
-            mvwprintw(buffer, 2, 0, "└" * "─"^(w-2) * "┘")
+            mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
         else
             @ncolor c buffer begin
                 mvwprintw(buffer, 0, 0, "[ " * str * " ]")
