@@ -62,6 +62,7 @@ include("./objects/api.jl")
 
 include("./widgets/button.jl")
 include("./widgets/container.jl")
+include("./widgets/input_field.jl")
 include("./widgets/keystroke.jl")
 include("./widgets/label.jl")
 include("./widgets/object_api.jl")
