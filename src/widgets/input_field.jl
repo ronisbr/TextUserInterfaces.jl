@@ -50,12 +50,12 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
         @unpack curx, data, style, vbegx, vcurx, width = widget
         # Since the widget could have changed its size, we need to compute the
         # usable size to display the text.
-        if style === :simple
-            size = width - 2
+        size = if style === :simple
+            width - 2
         elseif style === :boxed
-            size = width - 2
+            width - 2
         else
-            size = width
+            width
         end
 
         num_chars = length(data)
@@ -83,8 +83,9 @@ can_accept_focus(::WidgetInputField) = true
 function create_widget(
     ::Val{:input_field},
     layout::ObjectLayout;
+    max_data_size::Int = 0,
     style::Symbol = :simple,
-    max_data_size::Int = 0
+    theme::Theme = tui.default_theme
 )
     # Check arguments.
     if !haskey(_INPUT_FIELD_STYLE_HEIGHT, style)
@@ -100,6 +101,7 @@ function create_widget(
         layout           = layout,
         max_data_size    = max_data_size,
         style            = style,
+        theme            = theme,
         horizontal_hints = (; width = 30),
         vertical_hints   = (; height = _INPUT_FIELD_STYLE_HEIGHT[style])
     )
@@ -142,9 +144,12 @@ end
 request_cursor(::WidgetInputField) = true
 
 function redraw!(widget::WidgetInputField)
-    @unpack buffer, data, size, style, vbegx = widget
+    @unpack buffer, data, size, style, vbegx, theme = widget
 
     wclear(buffer)
+
+    # Check which color to apply to the widget
+    c = has_focus(widget) ? theme.input_field_focused : theme.default
 
     # Convert the data to string.
     if isempty(data)
@@ -155,19 +160,28 @@ function redraw!(widget::WidgetInputField)
     end
 
     if style === :simple
-        mvwprintw(buffer, 0, 0, "[" * " " ^ size * "]")
-        mvwprintw(buffer, 0, 1, str)
+        mvwprintw(buffer, 0, 0, "[")
+
+        @ncolor c buffer begin
+            mvwprintw(buffer, 0, 1, " " ^ size)
+            mvwprintw(buffer, 0, 1, str)
+        end
+
+        mvwprintw(buffer, 0, size + 1, "]")
 
     elseif style === :boxed
         wborder(buffer)
-        mvwprintw(buffer, 1, 1, " " ^ size)
-        mvwprintw(buffer, 1, 1, str)
+
+        @ncolor c buffer begin
+            mvwprintw(buffer, 1, 1, " " ^ size)
+            mvwprintw(buffer, 1, 1, str)
+        end
 
     else
-        # First, print spaces to apply the styling.
-        mvwprintw(buffer, 0, 0, " " ^ size)
-        mvwprintw(buffer, 0, 0, str)
-
+        @ncolor c buffer begin
+            mvwprintw(buffer, 0, 0, " " ^ size)
+            mvwprintw(buffer, 0, 0, str)
+        end
     end
 
     # We need to update the cursor after every redraw.
