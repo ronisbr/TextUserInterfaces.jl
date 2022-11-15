@@ -17,22 +17,16 @@ export WidgetInputField
     # Data array that contains the input to the field.
     data::Vector{Char} = Char[]
 
-    # Position of the physical cursor in the field.
-    cury::Int = 1
-    curx::Int = 1
-
     # Maximum allowed data size.
     max_data_size::Int = 0
 
     # Field usable size in screen.
     size::Int = 0
 
-    # Position of the virtual cursor in the data array.
-    vcury::Int = 1
+    # State of the input field.
+    curx::Int = 1
+    vbegx::Int = 1
     vcurx::Int = 1
-
-    # Index of the first character in the data vector to be printed.
-    view::Int = 1
 
     # Styling
     # =======
@@ -46,9 +40,20 @@ end
 
 function update_layout!(widget::WidgetInputField; force::Bool = false)
     if invoke(update_layout!, Tuple{Widget}, widget; force = force)
+        @unpack border, curx, data, vbegx, vcurx, width = widget
         # Since the widget could have changed its size, we need to compute the
         # usable size to display the text.
-        widget.size = widget.border ? widget.width - 2 : widget.width
+        size = border ? width - 2 : width
+
+        num_chars = length(data)
+
+        # Make the position of the physical cursor valid.
+        if curx > size
+            curx  = max(size, 1)
+            vbegx = vcurx - size + 1
+        end
+
+        @pack! widget = size, curx, vbegx
 
         return true
     else
@@ -119,8 +124,8 @@ end
 request_cursor(::WidgetInputField) = true
 
 function redraw!(widget::WidgetInputField)
-    @unpack border, buffer, curx, cury = widget
-    @unpack data, size, view = widget
+    @unpack border, buffer, curx = widget
+    @unpack data, size, vbegx = widget
 
     wclear(buffer)
 
@@ -128,8 +133,8 @@ function redraw!(widget::WidgetInputField)
     if isempty(data)
         str = ""
     else
-        aux = clamp(view + size - 1, 1, length(data))
-        str = String(@view data[view:aux])
+        aux = clamp(vbegx + size - 1, 1, length(data))
+        str = String(@view data[vbegx:aux])
     end
 
     # Check if a border must be drawn.
@@ -160,135 +165,142 @@ end
 #                              Private functions
 ################################################################################
 
+# Handle the input `k` to the input field `widget`.
 function _handle_input!(widget::WidgetInputField, k::Keystroke)
-    @unpack data, max_data_size, view, curx, cury, size, vcury, vcurx = widget
+    @unpack data, max_data_size, size = widget
+    @unpack curx, vbegx, vcurx = widget
 
-    # We do not support multiple lines yet.
-    vcury = 1
-    cury  = 1
+    # Number of characters in the data array.
+    num_chars = length(data)
 
-    # Number of spaces the virtual cursor must move.
-    Δx = 0
-
-    # Flag to inform if the widget must be updated.
+    # Flag to indicate if the field must be updated.
     update = false
 
-    # Move cursor to the left.
-    if k.ktype == :left
-        Δx = -1
+    # Get the action.
+    action = _get_input_field_action(k)
 
-    # Move cursor to the right.
-    elseif k.ktype == :right
-        Δx = +1
+    # Translate the action and update the field state.
+    if action === :add_character
+        # Check if we can add a new character.
+        if (max_data_size <= 0) || (num_chars < max_data_size)
+            c = k.value |> first
+            insert!(data, vcurx, c)
 
-    # Go to the beginning of the data.
-    elseif k.ktype == :home
-        Δx = -(vcurx - 1)
+            vcurx += 1
+            curx  += textwidth(c)
 
-    # Go to the end of the data.
-    elseif k.ktype == :end
-        Δx = length(data) - vcurx + 1
-
-    # Delete the previous character.
-    elseif k.ktype == :backspace
-        if vcurx > 1
-            deleteat!(data, vcurx - 1)
-
-            # We should only move the cursor if the view is at the beginning of
-            # the string.
-            if view == 1
-                Δx = -1
+            if curx > size
+                vbegx += curx - size
+                curx   = size
             end
 
             update = true
         end
 
-    # Delete the next character.
-    elseif k.ktype == :delete
-        vcurx ≤ length(data) && deleteat!(data, vcurx)
+    elseif action === :delete_forward_character
+        if vcurx <= num_chars
+            deleteat!(data, vcurx)
+            update = true
+        end
+
+    elseif action === :delete_previous_character
+        if vcurx > 1
+            c = data[vcurx - 1]
+            deleteat!(data, vcurx - 1)
+            vcurx -= 1
+
+            if vbegx > 1
+                vbegx -= 1
+            elseif curx > 1
+                curx -= 1
+            end
+
+            update = true
+        end
+
+    elseif action === :goto_beginning
+        curx   = 1
+        vbegx  = 1
+        vcurx  = 1
         update = true
 
-    # Insert the character in the position of the virtual cursor.
-    elseif k.ktype ∈ [:char, :utf8]
-        if (max_data_size ≤ 0) || (length(data) < max_data_size)
-            if isempty(data)
-                push!(data, k.value[1])
-            else
-                pos = clamp(vcurx, 1, length(data) + 1)
-                insert!(data, pos, k.value[1])
+    elseif action === :goto_end
+        curx   = min(num_chars + 1, size)
+        vcurx  = num_chars + 1
+        vbegx  = max(vcurx - size + 1, 1)
+        update = true
+
+    elseif action === :move_cursor_to_left
+        if vcurx > 1
+            curx  -= 1
+            vcurx -= 1
+
+            if curx < 1
+                curx = 1
+                vbegx = max(vbegx - 1, 1)
             end
-            Δx = +1
-            update = true
-        end
-
-    # Unsupported key -- we do not pass the focus.
-    else
-        return true
-    end
-
-    # Limit for the cursors in the X-axis.
-    cxlimit = max_data_size > 0 ?
-        min(max_data_size, length(data) + 1) :
-        length(data) + 1
-
-    # Update the position of the virtual cursor.
-    vcurx = clamp(vcurx + Δx, 1, cxlimit)
-
-    # Check if we must change the view of the field.
-    curx += Δx
-
-    if Δx < 0
-        # Otherwise, move the view.
-        if (curx ≤ 0) && (view > 1)
-            view += Δx
-
-            # If the view reached the most left position, then we must move the
-            # cursor.
-            curx += min(0, view - 1)
 
             update = true
         end
-    elseif Δx > 0
 
-        # If the cursor is at the right edge, then just move the view.
-        if curx > size
-            curx = size
-            view += Δx
+    elseif action === :move_cursor_to_right
+        if vcurx <= num_chars
+            curx  += 1
+            vcurx += 1
+
+            if curx > size
+                vbegx += curx - size
+                curx   = size
+            end
+
             update = true
         end
     end
 
-    # The cursor position must not pass the data.
-    curx = clamp(curx, 1, cxlimit)
-
-    # Make sure that view is in the acceptable interval.
-    #
-    # If the field is completely filled, than we would not allow an additional
-    # space for the cursor at the position a character would be added.
-    max_view = length(data) - size + 2
-
-    if length(data) == max_data_size
-        max_view -= 1
-    end
-
-    view = clamp(view, 1, max(1, max_view))
-
-    # Request update if necessary.
     update && request_update!(widget)
 
-    # Repack values that were modified.
-    @pack! widget = cury, curx, vcury, vcurx, view
+    @pack! widget = curx, vbegx, vcurx
 
     return true
 end
 
+# Obtain the action that the user wants by hitting the keystroke `k`.
+function _get_input_field_action(k::Keystroke)
+    action = :none
+
+    if k.ktype === :left
+        action = :move_cursor_to_left
+
+    elseif k.ktype === :right
+        action = :move_cursor_to_right
+
+    elseif k.ktype === :home
+        action = :goto_beginning
+
+    elseif k.ktype === :end
+        action = :goto_end
+
+    elseif k.ktype === :backspace
+        action = :delete_previous_character
+
+    elseif k.ktype === :delete
+        action = :delete_forward_character
+
+    elseif (k.ktype === :char) || (k.ktype === :utf8)
+        action = :add_character
+    end
+
+    return action
+end
+
+# Update the physical cursor in the `widget`.
 function _update_cursor(widget::WidgetInputField)
     # Move the physical cursor to the correct position considering the border if
     # present.
     #
     # NOTE: The initial position here starts at 1, but in NCurses it starts in
     # 0.
-    py = widget.border ? widget.cury : widget.cury - 1
+    py = widget.border ? 1 : 0
     px = widget.border ? widget.curx : widget.curx - 1
     wmove(widget.buffer, py, px)
 
