@@ -24,4 +24,5 @@ Defines a theme in the text user interface.
     highlight::Int = ncurses_color(A_REVERSE)
     border::Int = default
     title::Int = default
+    input_field_focused::Int = ncurses_color(A_UNDERLINE)
 end
