@@ -28,6 +28,9 @@ export WidgetInputField
     vbegx::Int = 1
     vcurx::Int = 1
 
+    # Internal buffer to avoid output flickering when drawing.
+    internal_buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
+
     # Styling
     # ==========================================================================
 
@@ -45,9 +48,23 @@ const _INPUT_FIELD_STYLE_HEIGHT = Dict(
 #                                  Object API
 ################################################################################
 
+function destroy!(widget::WidgetInputField)
+    @unpack internal_buffer = widget
+
+    # We must destroy the internal buffer.
+    if widget.internal_buffer !== Ptr{WINDOW}(0)
+        delwin(internal_buffer)
+        widget.internal_buffer = Ptr{WINDOW}(0)
+    end
+
+    # Call the general function to destroy a widget.
+    return invoke(destroy!, Tuple{Widget}, widget)
+end
+
 function update_layout!(widget::WidgetInputField; force::Bool = false)
     if invoke(update_layout!, Tuple{Widget}, widget; force = force)
-        @unpack curx, data, style, vbegx, vcurx, width = widget
+        @unpack curx, data, internal_buffer, height, style, vbegx, vcurx = widget
+        @unpack width = widget
         # Since the widget could have changed its size, we need to compute the
         # usable size to display the text.
         size = if style === :simple
@@ -66,7 +83,12 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
             vbegx = vcurx - size + 1
         end
 
-        @pack! widget = size, curx, vbegx
+        # Recreate the internal buffer considering the new size.
+        internal_buffer !== Ptr{WINDOW}(0) && delwin(internal_buffer)
+        internal_buffer = newwin(height, width, 0, 0)
+
+        @log INFO "AQUI" "$height, $width"
+        @pack! widget = internal_buffer, size, curx, vbegx
 
         return true
     else
@@ -144,9 +166,17 @@ end
 request_cursor(::WidgetInputField) = true
 
 function redraw!(widget::WidgetInputField)
-    @unpack buffer, data, size, style, vbegx, theme = widget
+    @unpack buffer, data, height, internal_buffer, size, style, vbegx = widget
+    @unpack theme, width = widget
 
-    wclear(buffer)
+    if internal_buffer === Ptr{WINDOW}(0)
+        @log ERROR "redraw!" """
+        Internal buffer of input field ($(widget.id)) was not created."""
+        return nothing
+    end
+
+    # Clear the internal buffer.
+    wclear(internal_buffer)
 
     # Check which color to apply to the widget
     c = has_focus(widget) ? theme.input_field_focused : theme.default
@@ -160,29 +190,29 @@ function redraw!(widget::WidgetInputField)
     end
 
     if style === :simple
-        mvwprintw(buffer, 0, 0, "[")
+        mvwprintw(internal_buffer, 0, 0, "[")
 
-        @ncolor c buffer begin
-            mvwprintw(buffer, 0, 1, " " ^ size)
-            mvwprintw(buffer, 0, 1, str)
+        @ncolor c internal_buffer begin
+            mvwprintw(internal_buffer, 0, 1, str)
         end
 
-        mvwprintw(buffer, 0, size + 1, "]")
+        mvwprintw(internal_buffer, 0, size + 1, "]")
 
     elseif style === :boxed
-        wborder(buffer)
+        wborder(internal_buffer)
 
-        @ncolor c buffer begin
-            mvwprintw(buffer, 1, 1, " " ^ size)
-            mvwprintw(buffer, 1, 1, str)
+        @ncolor c internal_buffer begin
+            mvwprintw(internal_buffer, 1, 1, str)
         end
 
     else
-        @ncolor c buffer begin
-            mvwprintw(buffer, 0, 0, " " ^ size)
-            mvwprintw(buffer, 0, 0, str)
+        @ncolor c internal_buffer begin
+            mvwprintw(internal_buffer, 0, 0, str)
         end
     end
+
+    # Copy the internal buffer to the output buffer.
+    copywin(internal_buffer, buffer, 0, 0, 0, 0, height - 1, width - 1, 0)
 
     # We need to update the cursor after every redraw.
     _update_cursor(widget)
