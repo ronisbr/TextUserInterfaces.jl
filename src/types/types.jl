@@ -39,7 +39,12 @@ include("./windows.jl")
     # Default theme
     # ==========================================================================
 
-    default_theme::Theme = Theme()
+    # The default theme must only be initialized after the global `tui`
+    # structure is created. Otherwise, it will not be possible to create custom
+    # colors since they need the `initialized_color_pair`. Hence, this variable
+    # is defined as `nothing`, but changed to the default theme when TUI is
+    # initialized.
+    default_theme::Union{Nothing, Theme} = nothing
 
     # Signals
     # ==========================================================================
