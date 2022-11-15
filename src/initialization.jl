@@ -39,5 +39,8 @@ function initialize_tui(dir::String = "")
     TUI initialized.
     Terminal $(has_colors() == 1 ? "" : "does not ")have colors."""
 
+    # Set the default theme.
+    tui.default_theme = Theme()
+
     return tui
 end
