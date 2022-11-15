@@ -29,10 +29,17 @@ export WidgetInputField
     vcurx::Int = 1
 
     # Styling
-    # =======
+    # ==========================================================================
 
-    border::Bool = false
+    style::Symbol = :simple
 end
+
+# Conversion dictionary between style and height.
+const _INPUT_FIELD_STYLE_HEIGHT = Dict(
+    :boxed  => 3,
+    :simple => 1,
+    :none   => 1
+)
 
 ################################################################################
 #                                  Object API
@@ -40,10 +47,16 @@ end
 
 function update_layout!(widget::WidgetInputField; force::Bool = false)
     if invoke(update_layout!, Tuple{Widget}, widget; force = force)
-        @unpack border, curx, data, vbegx, vcurx, width = widget
+        @unpack curx, data, style, vbegx, vcurx, width = widget
         # Since the widget could have changed its size, we need to compute the
         # usable size to display the text.
-        size = border ? width - 2 : width
+        if style === :simple
+            size = width - 2
+        elseif style === :boxed
+            size = width - 2
+        else
+            size = width
+        end
 
         num_chars = length(data)
 
@@ -70,33 +83,38 @@ can_accept_focus(::WidgetInputField) = true
 function create_widget(
     ::Val{:input_field},
     layout::ObjectLayout;
-    border::Bool = false,
+    style::Symbol = :simple,
     max_data_size::Int = 0
 )
+    # Check arguments.
+    if !haskey(_INPUT_FIELD_STYLE_HEIGHT, style)
+        @log WARNING "create_widget" """
+        The input field style :$style is not known.
+        The style :simple will be used."""
+        style = :simple
+    end
 
     # Create the widget.
     input_field = WidgetInputField(
         id               = reserve_object_id(),
-        border           = border,
         layout           = layout,
         max_data_size    = max_data_size,
+        style            = style,
         horizontal_hints = (; width = 30),
-        vertical_hints   = (; height = !border ? 1 : 3)
+        vertical_hints   = (; height = _INPUT_FIELD_STYLE_HEIGHT[style])
     )
 
     @log INFO "create_widget" """
     WidgetInputField created:
         ID             = $(input_field.id)
-        Border         = $(border)
-        Max. data size = $(max_data_size)"""
+        Max. data size = $(max_data_size)
+        Style          = $(style)"""
 
     # Return the created container.
     return input_field
 end
 
 function process_keystroke!(widget::WidgetInputField, k::Keystroke)
-    @unpack border = widget
-
     # In this case, if we have a global command, we must not process the
     # keystroke.
     cmd = check_global_command(k)
@@ -124,8 +142,7 @@ end
 request_cursor(::WidgetInputField) = true
 
 function redraw!(widget::WidgetInputField)
-    @unpack border, buffer, curx = widget
-    @unpack data, size, vbegx = widget
+    @unpack buffer, data, size, style, vbegx = widget
 
     wclear(buffer)
 
@@ -137,17 +154,21 @@ function redraw!(widget::WidgetInputField)
         str = String(@view data[vbegx:aux])
     end
 
-    # Check if a border must be drawn.
-    if border
-        wborder(buffer)
-        y₀ = x₀ = 1
-    else
-        y₀ = x₀ = 0
-    end
+    if style === :simple
+        mvwprintw(buffer, 0, 0, "[" * " " ^ size * "]")
+        mvwprintw(buffer, 0, 1, str)
 
-    # First, print spaces to apply the styling.
-    mvwprintw(buffer, y₀, x₀, " " ^ size)
-    mvwprintw(buffer, y₀, x₀, str)
+    elseif style === :boxed
+        wborder(buffer)
+        mvwprintw(buffer, 1, 1, " " ^ size)
+        mvwprintw(buffer, 1, 1, str)
+
+    else
+        # First, print spaces to apply the styling.
+        mvwprintw(buffer, 0, 0, " " ^ size)
+        mvwprintw(buffer, 0, 0, str)
+
+    end
 
     # We need to update the cursor after every redraw.
     _update_cursor(widget)
@@ -295,14 +316,29 @@ end
 
 # Update the physical cursor in the `widget`.
 function _update_cursor(widget::WidgetInputField)
+    @unpack buffer, curx, style = widget
+
     # Move the physical cursor to the correct position considering the border if
     # present.
     #
     # NOTE: The initial position here starts at 1, but in NCurses it starts in
     # 0.
-    py = widget.border ? 1 : 0
-    px = widget.border ? widget.curx : widget.curx - 1
-    wmove(widget.buffer, py, px)
+
+    if style === :simple
+        px = curx
+        py = 0
+
+    elseif style === :boxed
+        px = curx
+        py = 1
+
+    else
+        px = curx - 1
+        py = 0
+
+    end
+
+    wmove(buffer, py, px)
 
     return nothing
 end
