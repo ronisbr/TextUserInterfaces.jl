@@ -21,8 +21,8 @@ Defines a theme in the text user interface.
 """
 @with_kw struct Theme
     default::Int = ncurses_color()
+    error::Int = ncurses_color(:red, 0)
     highlight::Int = ncurses_color(A_REVERSE)
     border::Int = default
     title::Int = default
-    input_field_focused::Int = ncurses_color(A_UNDERLINE)
 end
