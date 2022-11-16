@@ -31,10 +31,12 @@ export WidgetInputField
     # Internal buffer to avoid output flickering when drawing.
     internal_buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
 
-    # Styling
-    # ==========================================================================
-
+    # Style.
     style::Symbol = :simple
+
+    # Validator.
+    validator::Function = _INPUT_FIELD_DEFAULT_VALIDATOR
+    is_valid::Bool = true
 end
 
 # Conversion dictionary between style and height.
@@ -43,6 +45,8 @@ const _INPUT_FIELD_STYLE_HEIGHT = Dict(
     :simple => 1,
     :none   => 1
 )
+
+_INPUT_FIELD_DEFAULT_VALIDATOR(str::String) = true
 
 ################################################################################
 #                                  Object API
@@ -107,6 +111,7 @@ function create_widget(
     layout::ObjectLayout;
     max_data_size::Int = 0,
     style::Symbol = :simple,
+    validator::Function = _INPUT_FIELD_DEFAULT_VALIDATOR,
     theme::Theme = tui.default_theme
 )
     # Check arguments.
@@ -124,6 +129,7 @@ function create_widget(
         max_data_size    = max_data_size,
         style            = style,
         theme            = theme,
+        validator        = validator,
         horizontal_hints = (; width = 30),
         vertical_hints   = (; height = _INPUT_FIELD_STYLE_HEIGHT[style])
     )
@@ -166,8 +172,8 @@ end
 request_cursor(::WidgetInputField) = true
 
 function redraw!(widget::WidgetInputField)
-    @unpack buffer, data, height, internal_buffer, size, style, vbegx = widget
-    @unpack theme, width = widget
+    @unpack buffer, data, height, internal_buffer, is_valid, size = widget
+    @unpack style, vbegx, theme, width = widget
 
     if internal_buffer === Ptr{WINDOW}(0)
         @log ERROR "redraw!" """
@@ -175,24 +181,32 @@ function redraw!(widget::WidgetInputField)
         return nothing
     end
 
+    # Check which color to apply to the widget
+    c = is_valid ? theme.default : theme.error
+
+    if has_focus(widget)
+        c |= A_UNDERLINE
+    end
+
     # Clear the internal buffer.
     wclear(internal_buffer)
 
-    # Check which color to apply to the widget
-    c = has_focus(widget) ? theme.input_field_focused : theme.default
-
     # Convert the data to string.
-    if isempty(data)
-        str = ""
-    else
+    if !isempty(data)
         aux = clamp(vbegx + size - 1, 1, length(data))
         str = String(@view data[vbegx:aux])
+    else
+        str = ""
     end
+
+    # String to clear the entire field.
+    clear_str = " " ^ size
 
     if style === :simple
         mvwprintw(internal_buffer, 0, 0, "[")
 
         @ncolor c internal_buffer begin
+            mvwprintw(internal_buffer, 0, 1, clear_str)
             mvwprintw(internal_buffer, 0, 1, str)
         end
 
@@ -202,11 +216,13 @@ function redraw!(widget::WidgetInputField)
         wborder(internal_buffer)
 
         @ncolor c internal_buffer begin
+            mvwprintw(internal_buffer, 1, 1, clear_str)
             mvwprintw(internal_buffer, 1, 1, str)
         end
 
     else
         @ncolor c internal_buffer begin
+            mvwprintw(internal_buffer, 0, 0, clear_str)
             mvwprintw(internal_buffer, 0, 0, str)
         end
     end
@@ -232,17 +248,17 @@ end
 
 # Handle the input `k` to the input field `widget`.
 function _handle_input!(widget::WidgetInputField, k::Keystroke)
-    @unpack data, max_data_size, size = widget
+    @unpack data, max_data_size, size, validator = widget
     @unpack curx, vbegx, vcurx = widget
 
     # Number of characters in the data array.
     num_chars = length(data)
 
-    # Flag to indicate if the field must be updated.
-    update = false
-
     # Get the action.
     action = _get_input_field_action(k)
+
+    # Check if the text has changed.
+    text_changed = false
 
     # Translate the action and update the field state.
     if action === :add_character
@@ -259,13 +275,13 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
                 curx   = size
             end
 
-            update = true
+            text_changed = true
         end
 
     elseif action === :delete_forward_character
         if vcurx <= num_chars
             deleteat!(data, vcurx)
-            update = true
+            text_changed = true
         end
 
     elseif action === :delete_previous_character
@@ -280,20 +296,18 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
                 curx -= 1
             end
 
-            update = true
+            text_changed = true
         end
 
     elseif action === :goto_beginning
         curx   = 1
         vbegx  = 1
         vcurx  = 1
-        update = true
 
     elseif action === :goto_end
         curx   = min(num_chars + 1, size)
         vcurx  = num_chars + 1
         vbegx  = max(vcurx - size + 1, 1)
-        update = true
 
     elseif action === :move_cursor_to_left
         if vcurx > 1
@@ -304,8 +318,6 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
                 curx = 1
                 vbegx = max(vbegx - 1, 1)
             end
-
-            update = true
         end
 
     elseif action === :move_cursor_to_right
@@ -317,12 +329,15 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
                 vbegx += curx - size
                 curx   = size
             end
-
-            update = true
         end
     end
 
-    update && request_update!(widget)
+    if text_changed
+        is_valid = validator(String(data))
+        @pack! widget = is_valid
+    end
+
+    (action !== :none) && request_update!(widget)
 
     @pack! widget = curx, vbegx, vcurx
 
