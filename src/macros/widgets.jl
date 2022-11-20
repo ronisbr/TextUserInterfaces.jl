@@ -101,7 +101,7 @@ any parent.
 
                         push!(expr_layout, Expr(:kw, a.args[1], v))
 
-                    elseif a.args[1] == :signal
+                    elseif a.args[1] === :signal
                         # Those statements will be executed after the widget has
                         # been created. The widget variable name in the
                         # following code is `widget`.
@@ -152,7 +152,7 @@ Declare a structure of a widget.
 """
 macro widget(ex)
     # Expression must be a structure definition.
-    if !(typeof(ex) <: Expr) || (ex.head != :struct)
+    if !(typeof(ex) <: Expr) || (ex.head !== :struct)
         error("@widget must be used only with a structure definition.")
     end
 
