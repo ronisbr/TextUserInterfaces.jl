@@ -35,7 +35,7 @@ function can_accept_focus(container::WidgetContainer)
 end
 
 function destroy!(container::WidgetContainer)
-    while length(container.widgets) > 0
+    while !isempty(container.widgets)
         destroy!(container.widgets |> first)
     end
 
@@ -111,7 +111,8 @@ function sync_cursor(container::WidgetContainer)
     end
 
     # We must sync the cursor in the parent as well.
-    sync_cursor(get_parent(container))
+    parent = get_parent(container)
+    !isnothing(parent) && sync_cursor(parent)
 
     return nothing
 end
@@ -266,7 +267,8 @@ Add the `widget` to the `container`.
 function add_widget!(container::WidgetContainer, widget::Widget)
     # If the widget already has a container, remove it before adding to this
     # container.
-    !isnothing(widget.container) && remove_widget!(widget.container, widget)
+    wcontainer = container
+    !isnothing(wcontainer) && remove_widget!(wcontainer, widget)
 
     # Add the widget to the container.
     widget.container = container

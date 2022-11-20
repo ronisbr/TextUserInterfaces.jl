@@ -28,3 +28,14 @@ const _ncurses_colors = Dict(
     :cyan    => COLOR_CYAN,
     :white   => COLOR_WHITE
 )
+
+const _default_ncurses_colors = Dict(
+    :black   => COLOR_BLACK,
+    :red     => COLOR_RED,
+    :green   => COLOR_GREEN,
+    :yellow  => COLOR_YELLOW,
+    :blue    => COLOR_BLUE,
+    :magenta => COLOR_MAGENTA,
+    :cyan    => COLOR_CYAN,
+    :white   => COLOR_WHITE
+)

@@ -36,12 +36,12 @@ function process_object_layout(
     vertical   = _process_vertical_info(layout)
 
     # If we have undefined information, try using the hints.
-    if horizontal == :unknown
+    if horizontal === :unknown
         layout     = ObjectLayout(layout; horizontal_hints...)
         horizontal = _process_horizontal_info(layout)
     end
 
-    if vertical == :unknown
+    if vertical === :unknown
         layout   = ObjectLayout(layout; vertical_hints...)
         vertical = _process_vertical_info(layout)
     end
@@ -53,47 +53,47 @@ function process_object_layout(
     anchor_center = layout.anchor_center
     anchor_middle = layout.anchor_middle
 
-    height = layout.height
-    left   = layout.left
-    top    = layout.top
-    width  = layout.width
+    layout_height = layout.height
+    layout_left   = layout.left
+    layout_top    = layout.top
+    layout_width  = layout.width
 
     # Absolute positioning.
-    top    = _process_layout_property(top,    :height, parent)
-    left   = _process_layout_property(left,   :width,  parent)
-    height = _process_layout_property(height, :height, parent)
-    width  = _process_layout_property(width,  :width,  parent)
+    top    = _process_layout_property(layout_top,    :height, parent)
+    left   = _process_layout_property(layout_left,   :width,  parent)
+    height = _process_layout_property(layout_height, :height, parent)
+    width  = _process_layout_property(layout_width,  :width,  parent)
 
     # Vertical
     # ==========================================================================
 
-    if vertical == :abottom_atop
+    if vertical === :abottom_atop
         bottom = _get_anchor(anchor_bottom, parent)
         top    = _get_anchor(anchor_top, parent)
         height = bottom - top
 
-    elseif vertical == :abottom_top
+    elseif vertical === :abottom_top
         bottom = _get_anchor(anchor_bottom, parent)
         height = bottom - top
 
-    elseif vertical == :abottom_height
+    elseif vertical === :abottom_height
         bottom = _get_anchor(anchor_bottom, parent)
         top    = bottom - height
 
-    elseif vertical == :atop_height
+    elseif vertical === :atop_height
         top = _get_anchor(anchor_top, parent)
 
-    elseif vertical == :amiddle_height
+    elseif vertical === :amiddle_height
         middle = _get_anchor(anchor_middle, parent)
         top    = middle - div(height, 2)
 
-    elseif vertical == :unknown
+    elseif vertical === :unknown
         @log CRITICAL "process_object_layout" """
         It was not possible to guess the vertical layout of the object.
 
         parent:
         @log_pad 4
-        $parent
+        $(string(parent))
         @log_pad 0
         layout:
         @log_pad 4
@@ -108,7 +108,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $parent
+        $(string(parent))
         @log_pad 0
         layout:
         @log_pad 4
@@ -123,7 +123,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $parent
+        $(string(parent))
         @log_pad 0
         layout:
         @log_pad 4
@@ -133,35 +133,35 @@ function process_object_layout(
     end
 
     # Horizontal
-    # ==========================================================================
+    # ===============================================================================================================
 
-    if horizontal == :aleft_aright
+    if horizontal === :aleft_aright
         left  = _get_anchor(anchor_left, parent)
         right = _get_anchor(anchor_right, parent)
         width = right - left
 
-    elseif horizontal == :aleft_width
+    elseif horizontal === :aleft_width
         left = _get_anchor(anchor_left, parent)
 
-    elseif horizontal == :aright_width
+    elseif horizontal === :aright_width
         right = _get_anchor(anchor_right, parent)
         left  = right - width
 
-    elseif horizontal == :aright_left
+    elseif horizontal === :aright_left
         right = _get_anchor(anchor_right, parent)
         width = right - left
 
-    elseif horizontal == :acenter_width
+    elseif horizontal === :acenter_width
         center = _get_anchor(anchor_center, parent)
         left   = center - div(width,2)
 
-    elseif horizontal == :unknown
+    elseif horizontal === :unknown
         @log CRITICAL "process_object_layout" """
         It was not possible to guess the horizontal layout of the object.
 
         parent:
         @log_pad 4
-        $parent
+        $(string(parent))
         @log_pad 0
         layout:
         @log_pad 4
@@ -176,7 +176,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $parent
+        $(string(parent))
         @log_pad 0
         layout:
         @log_pad 4
@@ -191,7 +191,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $parent
+        $(string(parent))
         @log_pad 0
         layout:
         @log_pad 4
@@ -228,29 +228,31 @@ function _get_anchor(anchor::Anchor, parent)
 
     # If `obj` is the parent of the object we want to anchor, then the layout
     # computation must be performed differently.
-    if obj == :parent
-        height = get_inner_height(parent)
-        width  = get_inner_width(parent)
-        top    = get_inner_top(parent)
-        left   = get_inner_left(parent)
+    if !(obj isa Symbol)
+        height = get_height(obj)::Int
+        left   = get_left(obj)::Int
+        top    = get_top(obj)::Int
+        width  = get_width(obj)::Int
+    elseif obj === :parent
+        height = get_inner_height(parent)::Int
+        width  = get_inner_width(parent)::Int
+        top    = get_inner_top(parent)::Int
+        left   = get_inner_left(parent)::Int
     else
-        height = get_height(obj)
-        left   = get_left(obj)
-        top    = get_top(obj)
-        width  = get_width(obj)
+        error("Symbol $obj is not a valid source for anchors.")
     end
 
-    if anchor.side == :bottom
+    if anchor.side === :bottom
         return top + height + pad
-    elseif anchor.side == :top
+    elseif anchor.side === :top
         return top + pad
-    elseif anchor.side == :left
+    elseif anchor.side === :left
         return left + pad
-    elseif anchor.side == :right
+    elseif anchor.side === :right
         return left + width + pad
-    elseif anchor.side == :center
+    elseif anchor.side === :center
         return left + div(width, 2) + pad
-    elseif anchor.side == :middle
+    elseif anchor.side === :middle
         return top + div(height, 2) + pad
     else
         error("Unknown side in anchor.")
@@ -285,15 +287,15 @@ function _process_vertical_info(layout::ObjectLayout)
         error("Wrong vertical anchor type.")
     end
 
-    if (anchor_bottom != _NO_ANCHOR) && (anchor_top != _NO_ANCHOR)
+    if (anchor_bottom !== _NO_ANCHOR) && (anchor_top != _NO_ANCHOR)
         vertical = :abottom_atop
-    elseif (anchor_bottom != _NO_ANCHOR) && ((top isa String) || (top >= 0))
+    elseif (anchor_bottom !== _NO_ANCHOR) && ((top isa String) || (top >= 0))
         vertical = :abottom_top
-    elseif (anchor_bottom != _NO_ANCHOR) && ((height isa String) || (height > 0))
+    elseif (anchor_bottom !== _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :abottom_height
-    elseif (anchor_top != _NO_ANCHOR) && ((height isa String) || (height > 0))
+    elseif (anchor_top !== _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :atop_height
-    elseif (anchor_middle != _NO_ANCHOR) && ((height isa String) || (height > 0))
+    elseif (anchor_middle !== _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :amiddle_height
     elseif ((top isa String) || (top >= 0)) && ((height isa String) || (height > 0))
         vertical = :top_height
@@ -332,15 +334,15 @@ function _process_horizontal_info(layout::ObjectLayout)
         error("Wrong vertical anchor type.")
     end
 
-    if (anchor_left != _NO_ANCHOR) && (anchor_right != _NO_ANCHOR)
+    if (anchor_left !== _NO_ANCHOR) && (anchor_right != _NO_ANCHOR)
         horizontal = :aleft_aright
-    elseif (anchor_left != _NO_ANCHOR) && ((width isa String) || (width > 0))
+    elseif (anchor_left !== _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :aleft_width
-    elseif (anchor_right != _NO_ANCHOR) && ((width isa String) || (width > 0))
+    elseif (anchor_right !== _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :aright_width
-    elseif (anchor_right != _NO_ANCHOR) && ((left isa String) || (left ≥ 0))
+    elseif (anchor_right !== _NO_ANCHOR) && ((left isa String) || (left ≥ 0))
         horizontal = :aright_left
-    elseif (anchor_center != _NO_ANCHOR) && ((width isa String) || (width > 0))
+    elseif (anchor_center !== _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :acenter_width
     elseif ((left isa String) || (left >= 0)) && ((width isa String) || (width > 0))
         horizontal = :left_width
@@ -365,8 +367,9 @@ function _process_layout_property(v::String, dim::Symbol, parent::Object)
     end
 
     perc = parse(Int, v[ids][1:end - 1])
+    size = getproperty(parent, dim)::Int
 
-    return floor(Int, getfield(parent, dim) * perc / 100)
+    return floor(Int, size * perc / 100)
 end
 
 _process_layout_property(v::Int, ::Symbol, ::Object) = v
@@ -380,12 +383,12 @@ function _str(layout::ObjectLayout)
     ac = layout.anchor_center
     am = layout.anchor_middle
 
-    ab_str = ab == _NO_ANCHOR ? "No anchor" : "($(typeof(ab.obj)), $(ab.side), $(ab.pad))"
-    al_str = al == _NO_ANCHOR ? "No anchor" : "($(typeof(al.obj)), $(al.side), $(al.pad))"
-    ar_str = ar == _NO_ANCHOR ? "No anchor" : "($(typeof(ar.obj)), $(ar.side), $(ar.pad))"
-    at_str = at == _NO_ANCHOR ? "No anchor" : "($(typeof(at.obj)), $(at.side), $(at.pad))"
-    ac_str = ac == _NO_ANCHOR ? "No anchor" : "($(typeof(ac.obj)), $(ac.side), $(ac.pad))"
-    am_str = am == _NO_ANCHOR ? "No anchor" : "($(typeof(am.obj)), $(am.side), $(am.pad))"
+    ab_str = ab === _NO_ANCHOR ? "No anchor" : "($(typeof(ab.obj)), $(ab.side), $(ab.pad))"
+    al_str = al === _NO_ANCHOR ? "No anchor" : "($(typeof(al.obj)), $(al.side), $(al.pad))"
+    ar_str = ar === _NO_ANCHOR ? "No anchor" : "($(typeof(ar.obj)), $(ar.side), $(ar.pad))"
+    at_str = at === _NO_ANCHOR ? "No anchor" : "($(typeof(at.obj)), $(at.side), $(at.pad))"
+    ac_str = ac === _NO_ANCHOR ? "No anchor" : "($(typeof(ac.obj)), $(ac.side), $(ac.pad))"
+    am_str = am === _NO_ANCHOR ? "No anchor" : "($(typeof(am.obj)), $(am.side), $(am.pad))"
 
     return str = """
     anchor_bottom = $am_str

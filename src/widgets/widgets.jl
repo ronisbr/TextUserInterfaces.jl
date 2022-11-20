@@ -19,19 +19,27 @@ it will be deleted first.
 function create_widget_buffer!(widget::Widget)
     destroy_widget_buffer!(widget)
 
-    # Get the widget parent.
-    parent = get_parent(widget)
+    # This function is only called for objects that must be inside containers.
+    # Hence, it is safe to assume that the parent is the container instead of
+    # the window.
+    parent = widget.container
 
     # Compute the widget true position based on the configuration.
-    height, width, top, left = process_object_layout(
-        widget.layout,
-        parent;
-        horizontal_hints = widget.horizontal_hints,
-        vertical_hints = widget.vertical_hints
-    )
+    if !isnothing(parent)
+        height, width, top, left = process_object_layout(
+            widget.layout,
+            parent;
+            horizontal_hints = widget.horizontal_hints,
+            vertical_hints = widget.vertical_hints
+        )
 
-    # Create the buffer that will hold the contents.
-    buffer = subpad(get_buffer(parent), height, width, top, left)
+        # Create the buffer that will hold the contents.
+        parent_buffer = get_buffer(parent)
+        buffer = subpad(parent_buffer, height, width, top, left)
+    else
+        # TODO: Should this be an error?
+        buffer = Ptr{WINDOW}(0)
+    end
 
     # Update the variables in the widget.
     widget.buffer = buffer
@@ -116,7 +124,8 @@ Request update of the widget `widget`.
 """
 function request_update!(widget::Widget)
     widget.update_needed = true
-    request_update!(get_parent(widget))
+    parent = get_parent(widget)
+    !isnothing(parent) && request_update!(parent)
     return nothing
 end
 

@@ -215,15 +215,6 @@ end
 # Reset the color dictionary.
 function _reset_color_dict()
     empty!(_ncurses_colors)
-    push!(
-        _ncurses_colors,
-        :black   => COLOR_BLACK,
-        :red     => COLOR_RED,
-        :green   => COLOR_GREEN,
-        :yellow  => COLOR_YELLOW,
-        :blue    => COLOR_BLUE,
-        :magenta => COLOR_MAGENTA,
-        :cyan    => COLOR_CYAN,
-        :white   => COLOR_WHITE
-    )
+    merge!(_ncurses_colors, _default_ncurses_colors)
+    return nothing
 end
