@@ -20,9 +20,9 @@ Defines a theme in the text user interface.
 - `highlight::Int`: The NCurses color used for highlighted elements.
 """
 @with_kw struct Theme
-    default::Int = ncurses_color()
-    error::Int = ncurses_color(:red, 0)
-    highlight::Int = ncurses_color(A_REVERSE)
-    border::Int = default
-    title::Int = default
+    default::Int = 0
+    error::Int = 0
+    highlight::Int = 0
+    border::Int = 0
+    title::Int = 0
 end

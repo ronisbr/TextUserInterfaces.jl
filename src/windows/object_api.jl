@@ -20,30 +20,32 @@ function destroy!(win::Window)
     destroy!(win.widget_container)
 
     # Delete everything.
-    if win.panel != C_NULL
+    if win.panel !== Ptr{Cvoid}(0)
         del_panel(win.panel)
         win.panel = Ptr{Cvoid}(0)
     end
 
-    if win.buffer != C_NULL
+    if win.buffer !== Ptr{WINDOW}(0)
         delwin(win.buffer)
         win.buffer = Ptr{WINDOW}(0)
     end
 
-    if win.view != C_NULL
+    if win.view !== Ptr{WINDOW}(0)
         delwin(win.view)
         win.view = Ptr{WINDOW}(0)
     end
 
     # Remove the window from the global list.
-    idx = findall(x -> x === win, tui.windows)
-    deleteat!(tui.windows, idx)
+    idx = findfirst(x -> x === win, tui.windows)
+    !isnothing(idx) && deleteat!(tui.windows, idx)
 
     @log_ident 0
     @log INFO "destroy!" "Window destroyed: $(win.id)."
 
     return nothing
 end
+
+get_buffer(win::Window) = win.buffer
 
 get_left(win::Window)   = win.view != C_NULL ? Int(getbegx(win.view)) : -1
 get_height(win::Window) = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
@@ -208,8 +210,8 @@ function update_layout!(win::Window; force::Bool = false)
         blines = nlines
         bcols  = ncols
     else
-        blines = maximum(nlines, get_height(win))
-        bcols  = maximum(ncols,  get_width(win))
+        blines = max(nlines, get_height(win))
+        bcols  = max(ncols,  get_width(win))
     end
 
     win_resize && wresize(win.buffer, blines, bcols)

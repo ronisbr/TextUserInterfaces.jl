@@ -39,11 +39,10 @@ function destroy_tui()
     _reset_color_dict()
 
     # Reset the default theme.
-    tui.default_theme = nothing
+    tui.default_theme = Theme()
 
-    # Close log.
-    if logger.file !== nothing
-        close(logger.file)
-        logger.file = nothing
-    end
+    # # Close log.
+    file = logger.file
+    !isnothing(file) && close(file)
+    logger.file = nothing
 end

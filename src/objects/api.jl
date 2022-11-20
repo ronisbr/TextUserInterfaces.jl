@@ -32,6 +32,13 @@ Destroy the `object`.
 destroy!
 
 """
+    get_buffer(object::Object)
+
+Return the buffer of the `object`.
+"""
+get_buffer
+
+"""
     get_left(object::Object)
 
 Return the left of the `object` with respect to its parent.
@@ -165,3 +172,7 @@ update!(object::Object; force::Bool = true) = return false
 Update the layout of the object based on the stored configuration.
 """
 update_layout!
+
+# This helps to increase the performance due to the many conversions from object
+# to string for debugging purposes.
+Base.string(obj::Object) = sprint(print, obj)

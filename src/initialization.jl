@@ -10,20 +10,13 @@
 export initialize_tui
 
 """
-    initialize_tui(dir::String = "")
+    initialize_tui()
 
-Initialize the text user interface (TUI). The full-path of the ncurses directory
-can be specified by `dir`. If it is empty or omitted, then it will look on the
-default library directories.
+Initialize the text user interface (TUI).
 """
-function initialize_tui(dir::String = "")
+function initialize_tui()
     # If the TUI is already initialized, we must destroy it first.
     tui.initialized && destroy_tui()
-
-    # Load the libraries
-    # ==========================================================================
-
-    load_ncurses(dir)
 
     # Initialize ncurses
     # ==========================================================================
@@ -40,7 +33,7 @@ function initialize_tui(dir::String = "")
     Terminal $(has_colors() == 1 ? "" : "does not ")have colors."""
 
     # Set the default theme.
-    tui.default_theme = Theme()
+    tui.default_theme = _create_default_theme()
 
     return tui
 end
