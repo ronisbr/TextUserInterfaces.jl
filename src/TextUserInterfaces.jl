@@ -4,6 +4,7 @@ using Dates
 using FileWatching
 using LinearAlgebra
 using Parameters
+using SnoopPrecompile
 
 import Base: getproperty, setproperty!
 
@@ -52,6 +53,7 @@ include("./focus.jl")
 include("./initialization.jl")
 include("./main_loop.jl")
 include("./misc.jl")
+include("./themes.jl")
 include("./update.jl")
 
 include("./input/keyboard.jl")
@@ -89,5 +91,19 @@ const tui = TextUserInterface()
 # Global object to reference the root window.
 export ROOT_WINDOW
 const ROOT_WINDOW = RootWindow()
+
+################################################################################
+#                                Initialization
+################################################################################
+
+function __init__()
+    load_ncurses()
+end
+
+################################################################################
+#                                Precompilation
+################################################################################
+
+include("./precompilation.jl")
 
 end # module
