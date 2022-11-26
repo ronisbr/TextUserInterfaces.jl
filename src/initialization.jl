@@ -28,6 +28,9 @@ function initialize_tui()
     # Do not echo keystrokes.
     noecho()
 
+    # Open the log file.
+    logger.file = open(logger.logfile, "w")
+
     @log INFO "initialize_tui" """
     TUI initialized.
     Terminal $(has_colors() == 1 ? "" : "does not ")have colors."""
