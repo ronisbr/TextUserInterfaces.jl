@@ -17,7 +17,7 @@ const VERBOSE  = 3
 @with_kw mutable struct Logger
     enabled::Bool = false
     level::Int = CRITICAL
-    logfile::AbstractString = "./tui.log"
+    logfile::String = "./tui.log"
     timestamp::Bool = true
 
     # Internals

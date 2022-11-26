@@ -56,16 +56,12 @@ by `id`.
 If a line is `@log_pad X`, then the following lines will have a padding of X.
 """
 function log_message(level::Int, msg::String, id::String = "")
-    # Check if logging is enabled.
+    # Check if logging is enabled and if the log file is opened.
     logger.enabled || return nothing
+    isnothing(logger.file) && return nothing
 
     # Check if the level is equal or below the desired logging level.
     Int(level) > Int(logger.level) && return nothing
-
-    # Check if the file is opened. If not, then open.
-    if logger.file === nothing
-        logger.file = open(logger.logfile, "w")
-    end
 
     io = logger.file
 
@@ -77,7 +73,7 @@ function log_message(level::Int, msg::String, id::String = "")
     time_pad = logger.timestamp ? " "^(length(time_str) - 3) * " │ " : ""
 
     # Split the message by each line.
-    lines = split(msg,'\n')
+    lines = split(msg, '\n')
 
     output = ""
 
