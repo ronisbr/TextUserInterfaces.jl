@@ -96,7 +96,17 @@ function _update_view!(win::Window; force::Bool = false)
         dmincol = has_border ? 1        : 0
         dmaxrow = has_border ? maxy - 2 : maxy - 1
         dmaxcol = has_border ? maxx - 2 : maxx - 1
-        copywin(buffer, view, origin..., dminrow, dmincol, dmaxrow, dmaxcol, 0)
+        copywin(
+            buffer,
+            view,
+            origin[1],
+            origin[2],
+            dminrow,
+            dmincol,
+            dmaxrow,
+            dmaxcol,
+            0
+        )
 
         # Tell ncurses to update the entire window.
         # touchwin(win.view)
