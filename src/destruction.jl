@@ -41,7 +41,7 @@ function destroy_tui()
     # Reset the default theme.
     tui.default_theme = Theme()
 
-    # # Close log.
+    # Close log.
     file = logger.file
     !isnothing(file) && close(file)
     logger.file = nothing
