@@ -64,14 +64,14 @@ function create_widget(
     end
 
     # Create the widget.
-    button = WidgetButton(
+    button = WidgetButton(;
         id               = reserve_object_id(),
         label            = label,
         layout           = layout,
         style            = style,
         theme            = theme,
-        horizontal_hints = (; width = textwidth(label) + _BUTTON_STYLE_WIDTH[style]),
-        vertical_hints   = (; height = _BUTTON_STYLE_HEIGHT[style])
+        horizontal_hints = Dict(:width => textwidth(label) + _BUTTON_STYLE_WIDTH[style]),
+        vertical_hints   = Dict(:height => _BUTTON_STYLE_HEIGHT[style])
     )
 
     @log INFO "create_widget" """
@@ -122,7 +122,7 @@ end
 #                              Private functions
 ################################################################################
 
-function _draw_button!(widget::WidgetButton, focused::Bool = false)
+function _draw_button!(widget::WidgetButton, focused::Bool)
     @unpack buffer, width, label, style, theme = widget
 
     # Get the background color depending on the focus.

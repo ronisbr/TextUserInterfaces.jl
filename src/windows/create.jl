@@ -98,13 +98,13 @@ function create_window(;
     # Create the widget container.
     widget_container = create_widget(
         Val(:container),
-        _WINDOW_CONTAINER_OBJECT_LAYOUT,
+        _WINDOW_CONTAINER_OBJECT_LAYOUT;
         border = false,
         title = ""
     )
 
-    # Create the window object and add to the global list.
-    win = Window(
+    # # Create the window object and add to the global list.
+    win = Window(;
         buffer             = buffer,
         buffer_view_locked = buffer_view_locked,
         focusable          = focusable,
@@ -119,7 +119,7 @@ function create_window(;
         view               = view,
     )
 
-    # Update the widget container layout.
+    # # Update the widget container layout.
     widget_container.window = win
     update_layout!(widget_container)
 

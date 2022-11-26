@@ -18,10 +18,10 @@ export change_text!
     # Input label data from the user.
     alignment::Symbol
     fill::Bool
-    text::AbstractString
+    text::String
 
     # Variable to store the aligned text to save computational burden.
-    _text::AbstractString
+    _text::String
 end
 
 ################################################################################
@@ -29,7 +29,7 @@ end
 ################################################################################
 
 function update_layout!(label::WidgetLabel; force::Bool = false)
-    if invoke(update_layout!, Tuple{Widget}, label; force = force)
+    if update_widget_layout!(label; force = force)
         _align_text!(label)
         return true
     else
@@ -49,7 +49,7 @@ function create_widget(
     alignment = :l,
     fill::Bool = false,
     theme::Theme = tui.default_theme,
-    text::AbstractString = "Label"
+    text::String = "Label"
 )
     # Check the text to create the layout hints.
     tokens = split(text, '\n')
@@ -57,7 +57,7 @@ function create_widget(
     width  = maximum(length.(tokens)) + 1
 
     # Create the widget.
-    label = WidgetLabel(
+    label = WidgetLabel(;
         id               = reserve_object_id(),
         alignment        = alignment,
         fill             = fill,
@@ -65,8 +65,8 @@ function create_widget(
         text             = text,
         theme            = theme,
         _text            = text,
-        horizontal_hints = (; width = width),
-        vertical_hints   = (; height = height)
+        horizontal_hints = Dict(:width => width),
+        vertical_hints   = Dict(:height => height)
     )
 
     @log INFO "create_widget" """

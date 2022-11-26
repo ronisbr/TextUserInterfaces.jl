@@ -27,9 +27,9 @@ Process the object `layout` considering its `parent`.
 """
 function process_object_layout(
     layout::ObjectLayout,
-    parent::Object;
-    horizontal_hints = (;),
-    vertical_hints = (;)
+    (@nospecialize parent::Object);
+    horizontal_hints::Dict{Symbol, Any} = Dict{Symbol, Any}(),
+    vertical_hints::Dict{Symbol, Any} = Dict{Symbol, Any}()
 )
     # Process the horizontal and vertical layout information.
     horizontal = _process_horizontal_info(layout)
@@ -37,12 +37,48 @@ function process_object_layout(
 
     # If we have undefined information, try using the hints.
     if horizontal === :unknown
-        layout     = ObjectLayout(layout; horizontal_hints...)
+        # Previously, we used the helper from Parameters.jl:
+        #
+        #    layout = ObjectLayout(layout; horizontal_hints...)
+        #
+        # However, it was leading to a huge number of runtime dispatches. Hence,
+        # we selected this verbose way to improve the performance.
+        layout = ObjectLayout(
+            layout.anchor_bottom,
+            get(horizontal_hints, :anchor_left, layout.anchor_left)::Anchor,
+            get(horizontal_hints, :anchor_right, layout.anchor_right)::Anchor,
+            layout.anchor_top,
+            get(horizontal_hints, :anchor_center, layout.anchor_center)::Anchor,
+            layout.anchor_middle,
+            layout.top,
+            get(horizontal_hints, :left, layout.left)::Union{Int, String},
+            layout.height,
+            get(horizontal_hints, :width, layout.width)::Union{Int, String}
+        )
+
         horizontal = _process_horizontal_info(layout)
     end
 
     if vertical === :unknown
-        layout   = ObjectLayout(layout; vertical_hints...)
+        # Previously, we used the helper from Parameters.jl:
+        #
+        #    layout = ObjectLayout(layout; vertical_hints...)
+        #
+        # However, it was leading to a huge number of runtime dispatches. Hence,
+        # we selected this verbose way to improve the performance.
+        layout = ObjectLayout(
+            get(vertical_hints, :anchor_bottom, layout.anchor_bottom)::Anchor,
+            layout.anchor_left,
+            layout.anchor_right,
+            get(vertical_hints, :anchor_top, layout.anchor_top)::Anchor,
+            layout.anchor_center,
+            get(vertical_hints, :anchor_middle, layout.anchor_middle)::Anchor,
+            get(vertical_hints, :top, layout.top)::Union{Int, String},
+            layout.left,
+            get(vertical_hints, :height, layout.height)::Union{Int, String},
+            layout.width
+        )
+
         vertical = _process_vertical_info(layout)
     end
 
@@ -210,19 +246,19 @@ end
 # Check if the `side` parameter of `anchor` is valid for vertical layout
 # information. If `anchor` is `_NO_ANCHOR`, then `true` is always returned.
 function _check_vertical_anchor(anchor::Anchor)
-    return (anchor == _NO_ANCHOR) || (anchor.side ∈ [:bottom, :middle, :top])
+    return (anchor === _NO_ANCHOR) || (anchor.side ∈ (:bottom, :middle, :top))
 end
 
 # Check if the `side` parameter of `anchor` is valid for horizontal layout
 # information. If `anchor` is `_NO_ANCHOR`, then `true` is always returned.
 function _check_horizontal_anchor(anchor::Anchor)
-    return (anchor == _NO_ANCHOR) || (anchor.side ∈ [:left, :center, :right])
+    return (anchor === _NO_ANCHOR) || (anchor.side ∈ (:left, :center, :right))
 end
 
 # Return the line or column related to the anchor `anchor`. If the object in
 # `anchor` is the `parent`, then the layout will be computed relative to the
 # `parent`.
-function _get_anchor(anchor::Anchor, parent)
+function _get_anchor(anchor::Anchor, (@nospecialize parent::Object))
     obj = anchor.obj
     pad = anchor.pad
 
@@ -357,7 +393,7 @@ end
 # widget `parent`. `dim` can be `:height` or `:width`.
 #
 # If `v` is an `Int`, then it return  `v`.
-function _process_layout_property(v::String, dim::Symbol, parent::Object)
+function _process_layout_property(v::String, dim::Symbol, (@nospecialize parent::Object))
     # Check if the format is correct.
     ids = findfirst(r"^[0-9]+%", v)
 
@@ -372,7 +408,7 @@ function _process_layout_property(v::String, dim::Symbol, parent::Object)
     return floor(Int, size * perc / 100)
 end
 
-_process_layout_property(v::Int, ::Symbol, ::Object) = v
+_process_layout_property(v::Int, ::Symbol, (@nospecialize parent::Object)) = v
 
 # Convert the information in `layout` to a string for debugging purposes.
 function _str(layout::ObjectLayout)
