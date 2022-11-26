@@ -36,9 +36,11 @@ macro disconnect(object::Symbol, signal::Symbol, f)
     var = Symbol("_signal_", signal)
 
     ex = quote
-        id = findfirst(==($f), $object.$var.connections)
-        !isnothing(id) && deleteat!($object.$var.connections, id)
-        delete!($object.$var.kwargs, $f)
+        let id
+            id = findfirst(==($f), $object.$var.connections)
+            !isnothing(id) && deleteat!($object.$var.connections, id)
+            delete!($object.$var.kwargs, $f)
+        end
     end
 
     return esc(ex)

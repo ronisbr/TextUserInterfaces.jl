@@ -13,15 +13,20 @@ SnoopPrecompile.@precompile_setup begin
     # We must load the NCurses libraries first.
     __init__()
 
-    new_stdout = IOContext(IOBuffer(), IOContext(stdout))
+    logger.enabled = true
+    logger.level = INFO
+    logger.logfile = mktemp() |> first
 
     old_stdout = stdout
-    in, out = redirect_stdout()
+    old_stdin  = stdin
+    new_stdout = redirect_stdout()
+    new_stdin  = redirect_stdin()
 
     SnoopPrecompile.@precompile_all_calls begin
-        initialize_tui()
+        # Precompile initializaion functions
+        # ======================================================================
 
-        logger.enabled = false
+        initialize_tui()
 
         win = create_window(title = "Window")
 
@@ -55,9 +60,12 @@ SnoopPrecompile.@precompile_setup begin
             parent = con
         )
 
+        # Precompile functions related to TUI update
+        # ======================================================================
+
         # Create the keycodes to process the information.
         k_tab = Keystroke(9, string(Char(9)), :tab, false, false, false)
-        k_a   = Keystroke(0x61, "a", :char, false, false, false)
+        k_a = Keystroke(0x61, "a", :char, false, false, false)
 
         # Call the important functions in the main loop.
         isnothing(get_focused_window()) && move_focus_to_next_window()
@@ -74,6 +82,23 @@ SnoopPrecompile.@precompile_setup begin
 
         process_keystroke(k_a)
         tui_update()
+
+        # Precompile input related functions
+        # ======================================================================
+
+        write(new_stdin, 'A')
+        getkey()
+        write(new_stdin, 'A')
+        getkey(tui.stdscr)
+
+        # Precompile all functions related to TUI desctruction
+        # ======================================================================
+
         destroy_tui()
     end
+
+    # Restore the default log file.
+    logger.logfile = "./tui.log"
+
+    redirect_stdout(old_stdout)
 end

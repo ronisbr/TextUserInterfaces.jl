@@ -62,11 +62,11 @@ function destroy!(widget::WidgetInputField)
     end
 
     # Call the general function to destroy a widget.
-    return invoke(destroy!, Tuple{Widget}, widget)
+    return destroy_widget!(widget)
 end
 
 function update_layout!(widget::WidgetInputField; force::Bool = false)
-    if invoke(update_layout!, Tuple{Widget}, widget; force = force)
+    if update_widget_layout!(widget; force = force)
         @unpack curx, data, internal_buffer, height, style, vbegx, vcurx = widget
         @unpack width = widget
         # Since the widget could have changed its size, we need to compute the
@@ -91,7 +91,6 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
         internal_buffer !== Ptr{WINDOW}(0) && delwin(internal_buffer)
         internal_buffer = newwin(height, width, 0, 0)
 
-        @log INFO "AQUI" "$height, $width"
         @pack! widget = internal_buffer, size, curx, vbegx
 
         return true
@@ -123,15 +122,15 @@ function create_widget(
     end
 
     # Create the widget.
-    input_field = WidgetInputField(
+    input_field = WidgetInputField(;
         id               = reserve_object_id(),
         layout           = layout,
         max_data_size    = max_data_size,
         style            = style,
         theme            = theme,
         validator        = validator,
-        horizontal_hints = (; width = 30),
-        vertical_hints   = (; height = _INPUT_FIELD_STYLE_HEIGHT[style])
+        horizontal_hints = Dict(:width  => 30),
+        vertical_hints   = Dict(:height => _INPUT_FIELD_STYLE_HEIGHT[style])
     )
 
     @log INFO "create_widget" """

@@ -14,14 +14,14 @@ export add_widget!, remove_widget!
 ################################################################################
 
 # Hints for the widget container layout.
-const _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS = (
-    anchor_left  = Anchor(:parent, :left,   0),
-    anchor_right = Anchor(:parent, :right,  0),
+const _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS = Dict(
+    :anchor_left  => Anchor(:parent, :left,   0),
+    :anchor_right => Anchor(:parent, :right,  0),
 )
 
-const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = (
-    anchor_bottom = Anchor(:parent, :bottom, 0),
-    anchor_top    = Anchor(:parent, :top,    0),
+const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = Dict(
+    :anchor_bottom => Anchor(:parent, :bottom, 0),
+    :anchor_top    => Anchor(:parent, :top,    0),
 )
 
 ################################################################################
@@ -39,7 +39,7 @@ function destroy!(container::WidgetContainer)
         destroy!(container.widgets |> first)
     end
 
-    invoke(destroy!, Tuple{Widget}, container)
+    destroy_widget!(container)
 
     return nothing
 end
@@ -119,7 +119,7 @@ end
 
 function update_layout!(container::WidgetContainer; force::Bool = false)
     # Update the layout of the container as if it is a generic widget.
-    if invoke(update_layout!, Tuple{Widget}, container; force = force)
+    if update_widget_layout!(container; force = force)
         for widget in container.widgets
             # In this case, we must force all the children to update their
             # layout because the container buffer has been recreated.
@@ -141,11 +141,11 @@ function create_widget(
     layout::ObjectLayout;
     border::Bool = false,
     theme::Theme = tui.default_theme,
-    title::AbstractString = "",
+    title::String = "",
     title_alignment::Symbol = :l,
 )
     # Create the widget.
-    container = WidgetContainer(
+    container = WidgetContainer(;
         layout           = layout,
         border           = border,
         horizontal_hints = _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS,
@@ -153,7 +153,7 @@ function create_widget(
         theme            = theme,
         title            = title,
         title_alignment  = title_alignment,
-        vertical_hints   = _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS,
+        vertical_hints   = _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS
     )
 
     @log INFO "create_widget" """
@@ -274,6 +274,8 @@ function add_widget!(container::WidgetContainer, widget::Widget)
     widget.container = container
     widget.window = container.window
     create_widget_buffer!(widget)
+
+    # TODO: This line is generating a lot of allocations.
     push!(container.widgets, widget)
 
     # Since adding a widget into a container can change its size, we need to

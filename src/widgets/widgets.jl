@@ -53,6 +53,34 @@ function create_widget_buffer!(widget::Widget)
 end
 
 """
+    destroy_widget!(widget::Widget)
+
+Default function to destroy `widget`.
+"""
+function destroy_widget!(widget::Widget)
+    @unpack buffer, container = widget
+
+    # Before destroying the object, get its parent.
+    parent = get_parent(widget)
+
+    # Get the object description for logging purposes.
+    widget_desc = obj_desc(widget)
+
+    # Destroy the widget buffer.
+    destroy_widget_buffer!(widget)
+
+    # If the widget is added to a container, remove it.
+    !isnothing(container) && remove_widget!(container, widget)
+
+    @log INFO "destroy_widget!" "Widget destroyed: $widget_desc"
+
+    # Now request to update the parent, which can be a container or a window.
+    !isnothing(parent) && request_update!(parent)
+
+    return nothing
+end
+
+"""
     destroy_widget_buffer!(widget::Widget)
 
 Destroy the buffer of the `widget`.
@@ -86,10 +114,15 @@ function get_parent(widget::Widget)
     end
 end
 
+"""
+    has_focus(widget::Widget)
+
+Return `true` if `widget` has the focus, or `false` otherwise.
+"""
 function has_focus(widget::Widget)
     container = widget.container
     if !isnothing(container)
-        widget_has_focus = widget == get_focused_widget(container)
+        widget_has_focus = widget === get_focused_widget(container)
         container_has_focus = has_focus(container)
         return widget_has_focus && container_has_focus
     else
@@ -98,7 +131,7 @@ function has_focus(widget::Widget)
         window = widget.window
 
         if !isnothing(window)
-            return window == get_focused_window()
+            return window === get_focused_window()
         else
             return false
         end
@@ -142,6 +175,59 @@ function update!(widget::Widget; force::Bool = false)
         redraw!(widget)
         widget.update_needed = false
         return true
+    else
+        return false
+    end
+end
+
+"""
+    update_widget_layout!(widget::Widget; force::Bool=true)
+
+Default function to update the `widget` layout. If `force` is set to true, the
+widget will be refreshed even if it is not needed.
+"""
+function update_widget_layout!(widget::Widget; force::Bool=true)
+    @unpack layout, horizontal_hints, vertical_hints = widget
+
+    parent = get_parent(widget)
+
+    if !isnothing(parent)
+        # # Get the layout information of the window.
+        height, width, top, left = process_object_layout(
+            layout,
+            parent;
+            horizontal_hints = horizontal_hints,
+            vertical_hints = vertical_hints
+        )
+
+        # Check if resize or move is required.
+        widget_resize = false
+        widget_move = false
+
+        if (height != widget.height) || (width != widget.width)
+            widget_resize = true
+        end
+
+        if (top != widget.top) || (left != widget.left)
+            widget_move = true
+        end
+
+        # Repack values.
+        @pack! widget = height, width, top, left
+
+        # Check if we need to recreate the widget.
+        update_needed = widget_resize || widget_move || force
+
+        # TODO: Calling `mvwin` on subpad does not work. Hence, we destroy and
+        # recreate the subpad. We must check if there is a better way.
+        if update_needed
+            delwin(widget.buffer)
+            widget.buffer = Ptr{WINDOW}(0)
+            widget.buffer = subpad(get_buffer(parent), height, width, top, left)
+            request_update!(widget)
+        end
+
+        return update_needed
     else
         return false
     end
