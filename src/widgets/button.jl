@@ -76,9 +76,9 @@ function create_widget(
 
     @log INFO "create_widget" """
     WidgetButton created:
-        ID    = $(button.id)
-        Label = $(button.label)
-        Style = $(button.style)"""
+      ID    = $(button.id)
+      Label = $(button.label)
+      Style = $(button.style)"""
 
     # Return the created container.
     return button

@@ -135,9 +135,9 @@ function create_widget(
 
     @log INFO "create_widget" """
     WidgetInputField created:
-        ID             = $(input_field.id)
-        Max. data size = $(max_data_size)
-        Style          = $(style)"""
+      ID             = $(input_field.id)
+      Max. data size = $(max_data_size)
+      Style          = $(style)"""
 
     # Return the created container.
     return input_field
