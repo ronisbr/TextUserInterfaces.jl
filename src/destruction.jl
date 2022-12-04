@@ -37,6 +37,7 @@ function destroy_tui()
 
     # Reset all colors definitions.
     _reset_color_dict()
+    empty!(tui.initialized_color_pairs)
 
     # Reset the default theme.
     tui.default_theme = Theme()
