@@ -8,6 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export add_widget!, remove_widget!
+export move_focus_to_next_widget!, move_focus_to_previous_widget!
 
 ################################################################################
 #                                  Constants
@@ -65,7 +66,10 @@ function request_focus!(container::WidgetContainer; direction::Symbol = :next)
     focused_widget = get_focused_widget(container)
 
     if !isnothing(focused_widget)
-        request_focus!(focused_widget) && return true
+        if request_focus!(focused_widget)
+            sync_cursor(container)
+            return true
+        end
     end
 
     # If no object is in focus or if the current one did not accept the focus,
@@ -77,6 +81,7 @@ function request_focus!(container::WidgetContainer; direction::Symbol = :next)
     end
 
     if !isnothing(get_focused_widget(container))
+        sync_cursor(container)
         return true
     else
         return false
