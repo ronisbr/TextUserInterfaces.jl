@@ -8,6 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetInputField
+export get_text
 
 ################################################################################
 #                                  Structure
@@ -37,6 +38,12 @@ export WidgetInputField
     # Validator.
     validator::Function = _INPUT_FIELD_DEFAULT_VALIDATOR
     is_valid::Bool = true
+
+    # Signals
+    # ==========================================================================
+
+    @signal return_pressed
+    @signal text_changed
 end
 
 # Conversion dictionary between style and height.
@@ -149,14 +156,20 @@ function process_keystroke!(widget::WidgetInputField, k::Keystroke)
     cmd = check_global_command(k)
     isnothing(cmd) || return :keystorke_not_processed
 
+    # If the keystroke is `enter`, just emit the signal.
+    if k.ktype === :enter
+        @log INFO "PROCESS" "RETURN"
+        @emit widget return_pressed
+        return :keystroke_processed
+
     # Handle the input.
-    if _handle_input!(widget, k)
+    else
+        _handle_input!(widget, k) && @emit widget text_changed
+
         # Update the cursor position.
         _update_cursor(widget)
 
         return :keystroke_processed
-    else
-        return :keystroke_not_processed
     end
 end
 
@@ -240,6 +253,19 @@ end
 ################################################################################
 
 @create_widget_helper input_field
+
+################################################################################
+#                               Public functions
+################################################################################
+
+"""
+    get_text(widget::WidgetInputField)
+
+Return a string with the text in the field.
+"""
+function get_text(widget::WidgetInputField)
+    return String(widget.data)
+end
 
 ################################################################################
 #                              Private functions
@@ -340,7 +366,7 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
 
     @pack! widget = curx, vbegx, vcurx
 
-    return true
+    return text_changed
 end
 
 # Obtain the action that the user wants by hitting the keystroke `k`.
