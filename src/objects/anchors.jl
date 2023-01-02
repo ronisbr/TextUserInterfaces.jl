@@ -27,10 +27,12 @@ Process the object `layout` considering its `parent`.
 """
 function process_object_layout(
     layout::ObjectLayout,
-    (@nospecialize parent::Object);
+    parent::Object;
     horizontal_hints::Dict{Symbol, Any} = Dict{Symbol, Any}(),
     vertical_hints::Dict{Symbol, Any} = Dict{Symbol, Any}()
 )
+    @nospecialize parent
+
     # Process the horizontal and vertical layout information.
     horizontal = _process_horizontal_info(layout)
     vertical   = _process_vertical_info(layout)
@@ -258,7 +260,9 @@ end
 # Return the line or column related to the anchor `anchor`. If the object in
 # `anchor` is the `parent`, then the layout will be computed relative to the
 # `parent`.
-function _get_anchor(anchor::Anchor, (@nospecialize parent::Object))
+function _get_anchor(anchor::Anchor, parent::Object)
+    @nospecialize parent
+
     obj = anchor.obj
     pad = anchor.pad
 
@@ -393,7 +397,9 @@ end
 # widget `parent`. `dim` can be `:height` or `:width`.
 #
 # If `v` is an `Int`, then it return  `v`.
-function _process_layout_property(v::String, dim::Symbol, (@nospecialize parent::Object))
+function _process_layout_property(v::String, dim::Symbol, parent::Object)
+    @nospecialize parent
+
     # Check if the format is correct.
     ids = findfirst(r"^[0-9]+%", v)
 
@@ -408,7 +414,10 @@ function _process_layout_property(v::String, dim::Symbol, (@nospecialize parent:
     return floor(Int, size * perc / 100)
 end
 
-_process_layout_property(v::Int, ::Symbol, (@nospecialize parent::Object)) = v
+function _process_layout_property(v::Int, ::Symbol, parent::Object)
+    @nospecialize parent
+    return v
+end
 
 # Convert the information in `layout` to a string for debugging purposes.
 function _str(layout::ObjectLayout)
