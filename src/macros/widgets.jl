@@ -10,12 +10,12 @@
 export @create_widget_helper, @widget
 
 const _list_layout_args = (
-    :anchor_bottom,
-    :anchor_left,
-    :anchor_right,
-    :anchor_top,
-    :anchor_center,
-    :anchor_middle,
+    :bottom_anchor,
+    :left_anchor,
+    :right_anchor,
+    :top_anchor,
+    :center_anchor,
+    :middle_anchor,
     :top,
     :left,
     :height,
@@ -23,12 +23,12 @@ const _list_layout_args = (
 )
 
 const _list_layout_anchors = (
-    :anchor_bottom,
-    :anchor_left,
-    :anchor_right,
-    :anchor_top,
-    :anchor_center,
-    :anchor_middle
+    :bottom_anchor,
+    :left_anchor,
+    :right_anchor,
+    :top_anchor,
+    :center_anchor,
+    :middle_anchor
 )
 
 """
