@@ -16,13 +16,13 @@ export move_focus_to_next_widget!, move_focus_to_previous_widget!
 
 # Hints for the widget container layout.
 const _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS = Dict(
-    :anchor_left  => Anchor(:parent, :left,   0),
-    :anchor_right => Anchor(:parent, :right,  0),
+    :left_anchor  => Anchor(:parent, :left,   0),
+    :right_anchor => Anchor(:parent, :right,  0),
 )
 
 const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = Dict(
-    :anchor_bottom => Anchor(:parent, :bottom, 0),
-    :anchor_top    => Anchor(:parent, :top,    0),
+    :bottom_anchor => Anchor(:parent, :bottom, 0),
+    :top_anchor    => Anchor(:parent, :top,    0),
 )
 
 ################################################################################

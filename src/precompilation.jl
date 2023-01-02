@@ -33,30 +33,30 @@ SnoopPrecompile.@precompile_setup begin
         con = @tui_container(
             parent = win.widget_container,
             border = true,
-            anchor_top = (:parent, :top),
-            anchor_bottom = (:parent, :bottom),
-            anchor_left = (:parent, :left),
-            anchor_right = (:parent, :center)
+            bottom_anchor = (:parent, :bottom),
+            left_anchor = (:parent, :left),
+            right_anchor = (:parent, :center),
+            top_anchor = (:parent, :top),
         )
 
         label = @tui_label(
             text = "This is a label",
-            anchor_top = (:parent, :top),
-            anchor_left = (:parent, :left),
+            left_anchor = (:parent, :left),
+            top_anchor = (:parent, :top),
             parent = con
         )
 
         button = @tui_button(
             label = "Button",
-            anchor_top = (label, :bottom),
-            anchor_left = (:parent, :left),
+            left_anchor = (:parent, :left),
+            top_anchor = (label, :bottom),
             parent = con
         )
 
         input = @tui_input_field(
-            anchor_top = (button, :bottom),
-            anchor_left = (:parent, :left),
-            anchor_right = (:parent, :right),
+            top_anchor = (button, :bottom),
+            left_anchor = (:parent, :left),
+            right_anchor = (:parent, :right),
             parent = con
         )
 

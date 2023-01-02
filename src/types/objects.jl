@@ -18,7 +18,7 @@ export Anchor, ObjectLayout
     struct Anchor
 
 This structure defines an anchor to another object. It should be used in one of
-the fields `anchor_*` of `ObjectLayout`.
+the fields `*`_anchor of `ObjectLayout`.
 
 # Fields
 
@@ -50,16 +50,16 @@ This structure defines the layout of an object.
 
 # Fields
 
-- `anchor_bottom::Anchor`: Bottom anchor specification.
+- `bottom_anchor::Anchor`: Bottom anchor specification.
     (**Default** = `_NO_ANCHOR`)
-- `anchor_left::Anchor`: Left anchor specification.
+- `left_anchor::Anchor`: Left anchor specification.
     (**Default** = `_NO_ANCHOR`)
-- `anchor_right::Anchor`: Right anchor specification.
+- `right_anchor::Anchor`: Right anchor specification.
     (**Default** = `_NO_ANCHOR`)
-- `anchor_top::Anchor`: Top anchor specification. (**Default** = `_NO_ANCHOR`)
-- `anchor_center::Anchor`: Center anchor specification.
+- `top_anchor::Anchor`: Top anchor specification. (**Default** = `_NO_ANCHOR`)
+- `center_anchor::Anchor`: Center anchor specification.
     (**Default** = `_NO_ANCHOR`)
-- `anchor_middle::Anchor`: Middle anchor specification.
+- `middle_anchor::Anchor`: Middle anchor specification.
     (**Default** = `_NO_ANCHOR`)
 - `top::Union{Int, String}`: Absolute position of the object top side.
     (**Default** = -1)
@@ -75,12 +75,12 @@ This structure defines the layout of an object.
 """
 @with_kw struct ObjectLayout
     # Anchors (relative positioning).
-    anchor_bottom::Anchor = _NO_ANCHOR
-    anchor_left::Anchor   = _NO_ANCHOR
-    anchor_right::Anchor  = _NO_ANCHOR
-    anchor_top::Anchor    = _NO_ANCHOR
-    anchor_center::Anchor = _NO_ANCHOR
-    anchor_middle::Anchor = _NO_ANCHOR
+    bottom_anchor::Anchor = _NO_ANCHOR
+    left_anchor::Anchor   = _NO_ANCHOR
+    right_anchor::Anchor  = _NO_ANCHOR
+    top_anchor::Anchor    = _NO_ANCHOR
+    center_anchor::Anchor = _NO_ANCHOR
+    middle_anchor::Anchor = _NO_ANCHOR
 
     # Absolute positioning.
     top::Union{Int, String}    = -1

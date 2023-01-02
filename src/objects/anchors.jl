@@ -44,12 +44,12 @@ function process_object_layout(
         # However, it was leading to a huge number of runtime dispatches. Hence,
         # we selected this verbose way to improve the performance.
         layout = ObjectLayout(
-            layout.anchor_bottom,
-            get(horizontal_hints, :anchor_left, layout.anchor_left)::Anchor,
-            get(horizontal_hints, :anchor_right, layout.anchor_right)::Anchor,
-            layout.anchor_top,
-            get(horizontal_hints, :anchor_center, layout.anchor_center)::Anchor,
-            layout.anchor_middle,
+            layout.bottom_anchor,
+            get(horizontal_hints, :left_anchor, layout.left_anchor)::Anchor,
+            get(horizontal_hints, :right_anchor, layout.right_anchor)::Anchor,
+            layout.top_anchor,
+            get(horizontal_hints, :center_anchor, layout.center_anchor)::Anchor,
+            layout.middle_anchor,
             layout.top,
             get(horizontal_hints, :left, layout.left)::Union{Int, String},
             layout.height,
@@ -67,12 +67,12 @@ function process_object_layout(
         # However, it was leading to a huge number of runtime dispatches. Hence,
         # we selected this verbose way to improve the performance.
         layout = ObjectLayout(
-            get(vertical_hints, :anchor_bottom, layout.anchor_bottom)::Anchor,
-            layout.anchor_left,
-            layout.anchor_right,
-            get(vertical_hints, :anchor_top, layout.anchor_top)::Anchor,
-            layout.anchor_center,
-            get(vertical_hints, :anchor_middle, layout.anchor_middle)::Anchor,
+            get(vertical_hints, :bottom_anchor, layout.bottom_anchor)::Anchor,
+            layout.left_anchor,
+            layout.right_anchor,
+            get(vertical_hints, :top_anchor, layout.top_anchor)::Anchor,
+            layout.center_anchor,
+            get(vertical_hints, :middle_anchor, layout.middle_anchor)::Anchor,
             get(vertical_hints, :top, layout.top)::Union{Int, String},
             layout.left,
             get(vertical_hints, :height, layout.height)::Union{Int, String},
@@ -82,12 +82,12 @@ function process_object_layout(
         vertical = _process_vertical_info(layout)
     end
 
-    anchor_bottom = layout.anchor_bottom
-    anchor_left   = layout.anchor_left
-    anchor_right  = layout.anchor_right
-    anchor_top    = layout.anchor_top
-    anchor_center = layout.anchor_center
-    anchor_middle = layout.anchor_middle
+    bottom_anchor = layout.bottom_anchor
+    left_anchor   = layout.left_anchor
+    right_anchor  = layout.right_anchor
+    top_anchor    = layout.top_anchor
+    center_anchor = layout.center_anchor
+    middle_anchor = layout.middle_anchor
 
     layout_height = layout.height
     layout_left   = layout.left
@@ -104,23 +104,23 @@ function process_object_layout(
     # ==========================================================================
 
     if vertical === :abottom_atop
-        bottom = _get_anchor(anchor_bottom, parent)
-        top    = _get_anchor(anchor_top, parent)
+        bottom = _get_anchor(bottom_anchor, parent)
+        top    = _get_anchor(top_anchor, parent)
         height = bottom - top
 
     elseif vertical === :abottom_top
-        bottom = _get_anchor(anchor_bottom, parent)
+        bottom = _get_anchor(bottom_anchor, parent)
         height = bottom - top
 
     elseif vertical === :abottom_height
-        bottom = _get_anchor(anchor_bottom, parent)
+        bottom = _get_anchor(bottom_anchor, parent)
         top    = bottom - height
 
     elseif vertical === :atop_height
-        top = _get_anchor(anchor_top, parent)
+        top = _get_anchor(top_anchor, parent)
 
     elseif vertical === :amiddle_height
-        middle = _get_anchor(anchor_middle, parent)
+        middle = _get_anchor(middle_anchor, parent)
         top    = middle - div(height, 2)
 
     elseif vertical === :unknown
@@ -172,23 +172,23 @@ function process_object_layout(
     # ===============================================================================================================
 
     if horizontal === :aleft_aright
-        left  = _get_anchor(anchor_left, parent)
-        right = _get_anchor(anchor_right, parent)
+        left  = _get_anchor(left_anchor, parent)
+        right = _get_anchor(right_anchor, parent)
         width = right - left
 
     elseif horizontal === :aleft_width
-        left = _get_anchor(anchor_left, parent)
+        left = _get_anchor(left_anchor, parent)
 
     elseif horizontal === :aright_width
-        right = _get_anchor(anchor_right, parent)
+        right = _get_anchor(right_anchor, parent)
         left  = right - width
 
     elseif horizontal === :aright_left
-        right = _get_anchor(anchor_right, parent)
+        right = _get_anchor(right_anchor, parent)
         width = right - left
 
     elseif horizontal === :acenter_width
-        center = _get_anchor(anchor_center, parent)
+        center = _get_anchor(center_anchor, parent)
         left   = center - div(width,2)
 
     elseif horizontal === :unknown
@@ -306,12 +306,12 @@ end
 # - `:top_height`: Top and height were specified.
 # - `:unknown`: Insufficient information to compute the vertical positioning.
 function _process_vertical_info(layout::ObjectLayout)
-    @unpack anchor_bottom, anchor_top, anchor_middle, top, height = layout
+    @unpack bottom_anchor, top_anchor, middle_anchor, top, height = layout
 
     # Check the input parameters.
-    if !_check_vertical_anchor(anchor_bottom) ||
-       !_check_vertical_anchor(anchor_middle) ||
-       !_check_vertical_anchor(anchor_top)
+    if !_check_vertical_anchor(bottom_anchor) ||
+       !_check_vertical_anchor(middle_anchor) ||
+       !_check_vertical_anchor(top_anchor)
 
         @log CRITICAL "_process_vertical_info" """
         Wrong vertical anchor type.
@@ -323,15 +323,15 @@ function _process_vertical_info(layout::ObjectLayout)
         error("Wrong vertical anchor type.")
     end
 
-    if (anchor_bottom !== _NO_ANCHOR) && (anchor_top != _NO_ANCHOR)
+    if (bottom_anchor !== _NO_ANCHOR) && (top_anchor != _NO_ANCHOR)
         vertical = :abottom_atop
-    elseif (anchor_bottom !== _NO_ANCHOR) && ((top isa String) || (top >= 0))
+    elseif (bottom_anchor !== _NO_ANCHOR) && ((top isa String) || (top >= 0))
         vertical = :abottom_top
-    elseif (anchor_bottom !== _NO_ANCHOR) && ((height isa String) || (height > 0))
+    elseif (bottom_anchor !== _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :abottom_height
-    elseif (anchor_top !== _NO_ANCHOR) && ((height isa String) || (height > 0))
+    elseif (top_anchor !== _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :atop_height
-    elseif (anchor_middle !== _NO_ANCHOR) && ((height isa String) || (height > 0))
+    elseif (middle_anchor !== _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :amiddle_height
     elseif ((top isa String) || (top >= 0)) && ((height isa String) || (height > 0))
         vertical = :top_height
@@ -353,12 +353,12 @@ end
 # - `:left_height`: Left and height were specified.
 # - `:unknown`: Insufficient information to compute the horizontal positioning.
 function _process_horizontal_info(layout::ObjectLayout)
-    @unpack anchor_left, anchor_right, anchor_center, left, width = layout
+    @unpack left_anchor, right_anchor, center_anchor, left, width = layout
 
     # Check the input parameters.
-    if !_check_horizontal_anchor(anchor_left)   ||
-       !_check_horizontal_anchor(anchor_center) ||
-       !_check_horizontal_anchor(anchor_right)
+    if !_check_horizontal_anchor(left_anchor)   ||
+       !_check_horizontal_anchor(center_anchor) ||
+       !_check_horizontal_anchor(right_anchor)
 
         @log CRITICAL "_PROCESS_HORIZONTAL_INFO" """
         Wrong horizontal anchor type.
@@ -370,15 +370,15 @@ function _process_horizontal_info(layout::ObjectLayout)
         error("Wrong vertical anchor type.")
     end
 
-    if (anchor_left !== _NO_ANCHOR) && (anchor_right != _NO_ANCHOR)
+    if (left_anchor !== _NO_ANCHOR) && (right_anchor != _NO_ANCHOR)
         horizontal = :aleft_aright
-    elseif (anchor_left !== _NO_ANCHOR) && ((width isa String) || (width > 0))
+    elseif (left_anchor !== _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :aleft_width
-    elseif (anchor_right !== _NO_ANCHOR) && ((width isa String) || (width > 0))
+    elseif (right_anchor !== _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :aright_width
-    elseif (anchor_right !== _NO_ANCHOR) && ((left isa String) || (left ≥ 0))
+    elseif (right_anchor !== _NO_ANCHOR) && ((left isa String) || (left ≥ 0))
         horizontal = :aright_left
-    elseif (anchor_center !== _NO_ANCHOR) && ((width isa String) || (width > 0))
+    elseif (center_anchor !== _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :acenter_width
     elseif ((left isa String) || (left >= 0)) && ((width isa String) || (width > 0))
         horizontal = :left_width
@@ -412,12 +412,12 @@ _process_layout_property(v::Int, ::Symbol, (@nospecialize parent::Object)) = v
 
 # Convert the information in `layout` to a string for debugging purposes.
 function _str(layout::ObjectLayout)
-    ab = layout.anchor_bottom
-    al = layout.anchor_left
-    ar = layout.anchor_right
-    at = layout.anchor_top
-    ac = layout.anchor_center
-    am = layout.anchor_middle
+    ab = layout.bottom_anchor
+    al = layout.left_anchor
+    ar = layout.right_anchor
+    at = layout.top_anchor
+    ac = layout.center_anchor
+    am = layout.middle_anchor
 
     ab_str = ab === _NO_ANCHOR ? "No anchor" : "($(typeof(ab.obj)), $(ab.side), $(ab.pad))"
     al_str = al === _NO_ANCHOR ? "No anchor" : "($(typeof(al.obj)), $(al.side), $(al.pad))"
@@ -427,12 +427,12 @@ function _str(layout::ObjectLayout)
     am_str = am === _NO_ANCHOR ? "No anchor" : "($(typeof(am.obj)), $(am.side), $(am.pad))"
 
     return str = """
-    anchor_bottom = $am_str
-    anchor_left   = $ac_str
-    anchor_right  = $at_str
-    anchor_top    = $ar_str
-    anchor_center = $al_str
-    anchor_middle = $ab_str
+    bottom_anchor = $am_str
+    left_anchor   = $ac_str
+    right_anchor  = $at_str
+    top_anchor    = $ar_str
+    center_anchor = $al_str
+    middle_anchor = $ab_str
 
     top    = $(layout.top)
     left   = $(layout.left)
