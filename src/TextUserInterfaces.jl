@@ -4,6 +4,7 @@ using Dates
 using FileWatching
 using LinearAlgebra
 using Parameters
+using StringManipulation
 using SnoopPrecompile
 
 import Base: getproperty, setproperty!
@@ -62,6 +63,7 @@ include("./input/keycodes.jl")
 include("./objects/anchors.jl")
 include("./objects/api.jl")
 
+include("./widgets/ansi_label.jl")
 include("./widgets/button.jl")
 include("./widgets/container.jl")
 include("./widgets/input_field.jl")

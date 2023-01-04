@@ -11,6 +11,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Ncurses_jll = "68e3532b-a499-55ff-9963-d1c0c0748b3a"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 SnoopPrecompile = "66db9d55-30c0-4569-8b51-7e840670fc0c"
+StringManipulation = "892a3eda-7b42-436c-8928-eab12a02cf0e"
 
 [compat]
 julia = "≥ 1.0.0"
