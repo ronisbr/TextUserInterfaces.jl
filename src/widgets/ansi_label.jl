@@ -1,33 +1,32 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Widget: ANSI label.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetAnsiLabel
 export change_text!
 
-################################################################################
-#                                  Structure
-################################################################################
+############################################################################################
+#                                        Structure
+############################################################################################
 
 @widget mutable struct WidgetAnsiLabel
     # Input label data from the user.
     alignment::Symbol
     text::String
 
-    # Variables to store the parsed text and color to reduce the computational
-    # burden.
+    # Variables to store the parsed text and color to reduce the computational burden.
     _text::Vector{String} = String[]
     _colors::Vector{Int} = Int[]
 end
 
-################################################################################
-#                                  Object API
-################################################################################
+############################################################################################
+#                                        Object API
+############################################################################################
 
 function update_layout!(label::WidgetAnsiLabel; force::Bool = false)
     if update_widget_layout!(label; force = force)
@@ -38,9 +37,9 @@ function update_layout!(label::WidgetAnsiLabel; force::Bool = false)
     end
 end
 
-################################################################################
-#                                  Widget API
-################################################################################
+############################################################################################
+#                                        Widget API
+############################################################################################
 
 can_accept_focus(::WidgetAnsiLabel) = false
 
@@ -93,21 +92,21 @@ function redraw!(widget::WidgetAnsiLabel)
     return nothing
 end
 
-################################################################################
-#                                   Helpers
-################################################################################
+############################################################################################
+#                                         Helpers
+############################################################################################
 
 @create_widget_helper ansi_label
 
-################################################################################
-#                               Public functions
-################################################################################
+############################################################################################
+#                                     Public Functions
+############################################################################################
 
 """
-    change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment = :l)
+    change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment = :l) -> Nothing
 
-Change to text of the ANSI label `widget` to `new_text`. The text alignment in
-the widget can be selected by the keyword `alignment`, which can be:
+Change to text of the ANSI label `widget` to `new_text`. The text alignment in the widget
+can be selected by the keyword `alignment`, which can be:
 
 - `:l`: left alignment (**default**);
 - `:c`: Center alignment; or
@@ -126,13 +125,12 @@ function change_text!(
     return nothing
 end
 
-################################################################################
-#                              Private functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
-# This function gets the text in the variable `text`, and converts the ANSI
-# escape sequences to NCurse colors. It is only called when the widget layout is
-# updated.
+# This function gets the text in the variable `text`, and converts the ANSI escape sequences
+# to NCurse colors. It is only called when the widget layout is updated.
 function _parse_ansi_text!(widget::WidgetAnsiLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing
@@ -146,9 +144,9 @@ function _parse_ansi_text!(widget::WidgetAnsiLabel)
     text = ""
 
     for line in tokens
-        # Notice that if the ANSI escape sequence is not valid, then the
-        # alignment will not be correct. This regex remove all ANSI escape
-        # sequences to count for the printable characters.
+        # Notice that if the ANSI escape sequence is not valid, then the alignment will not
+        # be correct. This regex remove all ANSI escape sequences to count for the printable
+        # characters.
         if alignment ∈ [:r, :c]
             printable_line = remove_decorations(line)
             line_width     = textwidth(printable_line)

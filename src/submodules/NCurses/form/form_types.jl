@@ -1,27 +1,31 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains the definition of types related to libform.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-Dictionary defining values of the field justification.
+    const FIELDJUST
+
+Dictionary with field justification.
 """
-const fieldjust = Dict{Symbol, Int}(
+const FIELDJUST = Dict{Symbol, Int}(
     :no_justification => 0,
     :justify_left     => 1,
     :justify_center   => 2,
     :justify_right    => 3,
 )
-export fieldjust
+export FIELDJUST
 
 """
-Dictionary defining values of the field options.
+    const FIELDOPTS
+
+Dictionary with field options.
 """
-const fieldopts = Dict{Symbol, Int}(
+const FIELDOPTS = Dict{Symbol, Int}(
     :o_visible  => 0x001,   # Field is visible.
     :o_active   => 0x002,   # Field is active in the form.
     :o_public   => 0x004,   # The contents entered into the field is echoed.
@@ -34,18 +38,20 @@ const fieldopts = Dict{Symbol, Int}(
     :o_passok   => 0x200,   # An umodified field is OK.
     :o_reformat => 0x400,   # Insert newlines at linebreaks on buffer get.
 )
-export fieldopts
+export FIELDOPTS
 
-const formopts = Dict{Symbol,Int}(
+const FORMOPTS = Dict{Symbol,Int}(
     :o_nl_overload => 0x001,  # Enable overloading of `REQ_NEW_LINE`.
     :o_bs_overload => 0x002,  # Enable overloading of `REQ_DEL_PREV`.
 )
-export formopts
+export FORMOPTS
 
 """
-Dictionary defining values of the form commands.
+    const FORMCMD
+
+Dictionary with form commands.
 """
-const formcmd = Dict{Symbol, Int}(
+const FORMCMD = Dict{Symbol, Int}(
     :req_next_page    => KEY_MAX + 1,    # Move to next page.
     :req_prev_page    => KEY_MAX + 2,    # Move to previous page.
     :req_first_page   => KEY_MAX + 3,    # Move to first page.
@@ -92,8 +98,8 @@ const formcmd = Dict{Symbol, Int}(
     :req_scr_bline    => KEY_MAX + 44,   # Scroll field backward a line.
     :req_scr_fpage    => KEY_MAX + 45,   # Scroll field forward a page.
     :req_scr_bpage    => KEY_MAX + 46,   # Scroll field backward a page.
-    :req_scr_fhpage   => KEY_MAX + 47,   # Scroll field forward	 half page..
-    :req_scr_bhpage   => KEY_MAX + 48,   # Scroll field backward half page..
+    :req_scr_fhpage   => KEY_MAX + 47,   # Scroll field forward half page.
+    :req_scr_bhpage   => KEY_MAX + 48,   # Scroll field backward half page.
     :req_scr_fchar    => KEY_MAX + 49,   # Horizontal scroll char.
     :req_scr_bchar    => KEY_MAX + 50,   # Horizontal scroll char.
     :req_scr_hfline   => KEY_MAX + 51,   # Horizontal scroll line.
@@ -104,4 +110,4 @@ const formcmd = Dict{Symbol, Int}(
     :req_next_choice  => KEY_MAX + 56,   # Display next field choice.
     :req_prev_choice  => KEY_MAX + 57,   # Display prev field choice.
 )
-export formcmd
+export FORMCMD

@@ -1,17 +1,17 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Functions related to the global focus manager.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export move_focus_to_next_window, move_focus_to_previous_window, process_keystroke
 
 # TODO: Improve this function. Is the name "global command" good?
 function check_global_command(k::Keystroke)
-    if k.ktype === :tab
+    if k.ktype == :tab
         if !k.shift
             return :next_object
         else
@@ -23,7 +23,7 @@ function check_global_command(k::Keystroke)
 end
 
 """
-    get_focused_window()
+    get_focused_window() -> Union{Nothing, Window}
 
 Return the current window in focus. If no window is in focus, return `nothing`.
 """
@@ -45,7 +45,7 @@ function get_focused_window()
 end
 
 """
-    move_focus_to_next_window()
+    move_focus_to_next_window() -> Nothing
 
 Move the focus to the next window.
 """
@@ -56,7 +56,7 @@ function move_focus_to_next_window()
 end
 
 """
-    move_focus_to_previous_window()
+    move_focus_to_previous_window() -> Nothing
 
 Move the focus to the previous window.
 """
@@ -67,10 +67,10 @@ function move_focus_to_previous_window()
 end
 
 """
-    process_keystroke(k::Keystroke)
+    process_keystroke(k::Keystroke) -> Nothing
 
-Process the keystroke `k` in the application level. This function finds the
-current window in focus and send the keystroke to it.
+Process the keystroke `k` in the application level. This function finds the current window
+in focus and send the keystroke to it.
 """
 function process_keystroke(k::Keystroke)
     # The only activity we need to perform in the global focus manager is to
@@ -94,10 +94,10 @@ function process_keystroke(k::Keystroke)
             if !isnothing(focused_window)
                 r = process_keystroke!(focused_window, k)
 
-                if r === :keystroke_processed
+                if r == :keystroke_processed
                     break
 
-                elseif r === :next_object
+                elseif r == :next_object
                     move_focus_to_next_window()
                     new_focused_window = get_focused_window()
 
@@ -105,7 +105,7 @@ function process_keystroke(k::Keystroke)
                     # only focusable window is it, do nothing.
                     new_focused_window === focused_window && break
 
-                elseif r === :previous_object
+                elseif r == :previous_object
                     move_focus_to_previous_window()
                     new_focused_window = get_focused_window()
 
@@ -127,10 +127,13 @@ function process_keystroke(k::Keystroke)
             end
         end
     end
+
+    return nothing
 end
 
-#                              Private functions
-# ==============================================================================
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
 # Change the focused window to the window with ID `window_id`.
 function _change_focused_window(window_id::Int)
@@ -158,8 +161,8 @@ function _change_focused_window(window_id::Int)
     return nothing
 end
 
-# Search the next window that can accept focus in the list. It returns the
-# window ID of `nothing` if no window can accept the focus.
+# Search the next window that can accept focus in the list. It returns the window ID of
+# `nothing` if no window can accept the focus.
 function _search_next_window_to_focus()
     @unpack windows, focused_window_id = tui
 
@@ -193,8 +196,8 @@ function _search_next_window_to_focus()
     return nothing
 end
 
-# Search the previous window that can accept focus in the list. It returns the
-# window ID of `nothing` if no window can accept the focus.
+# Search the previous window that can accept focus in the list. It returns the window ID of
+# `nothing` if no window can accept the focus.
 function _search_previous_window_to_focus()
     @unpack windows, focused_window_id = tui
 

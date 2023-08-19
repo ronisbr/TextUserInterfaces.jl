@@ -1,16 +1,18 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains the definition of types related to libmenu.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-Dictionary defining values of the menu commands.
+    const MENUCMD
+
+Dictionary with menu commands.
 """
-const menucmd = Dict{Symbol, Int}(
+const MENUCMD = Dict{Symbol, Int}(
     :req_left_item     => (KEY_MAX + 1),
     :req_right_item    => (KEY_MAX + 2),
     :req_up_item       => (KEY_MAX + 3),
@@ -31,9 +33,14 @@ const menucmd = Dict{Symbol, Int}(
     :min_menu_command  => (KEY_MAX + 1),
     :max_menu_command  => (KEY_MAX + 17),
 )
-export menucmd
+export MENUCMD
 
-const menuopts = Dict{Symbol, Int}(
+"""
+    const MENUOPTS
+
+Dictionary with menu options.
+"""
+const MENUOPTS = Dict{Symbol, Int}(
     :o_onevalue   => 0x01,
     :o_showdesc   => 0x02,
     :o_rowmajor   => 0x04,
@@ -41,4 +48,4 @@ const menuopts = Dict{Symbol, Int}(
     :o_showmatch  => 0x10,
     :o_noncyclic  => 0x20,
 )
-export menuopts
+export MENUOPTS

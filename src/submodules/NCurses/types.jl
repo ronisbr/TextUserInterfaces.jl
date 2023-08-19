@@ -1,20 +1,18 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Types related to NCurses.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export ncurses
 
 """
     struct NCURSES
 
-This private structure handles some global variables that are used in the
-ncurses wrapper.
-
+This private structure handles some global variables that are used in the ncurses wrapper.
 """
 @with_kw mutable struct NCURSES
 

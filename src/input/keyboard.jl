@@ -1,24 +1,23 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains functions related to keyboard input handling.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export getkey
 
-################################################################################
-#                                  Functions
-################################################################################
+############################################################################################
+#                                        Functions
+############################################################################################
 
 """
-    getkey(win::Union{Ptr{WINDOW},Nothing} = nothing)
+    getkey(win::Union{Ptr{WINDOW},Nothing} = nothing) -> Keystroke
 
-Wait for an keystroke in the window `win` and return it (see
-[`Keystroke`](@ref)).  If `win` is `nothing`, then `getch()` will be used
-instead of `wgetch(win)` to listen for the keystroke.
+Wait for a keystroke in the window `win` and return it (see [`Keystroke`](@ref)).  If `win`
+is `nothing`, `getch()` will be used instead of `wgetch(win)` to listen for the keystroke.
 """
 function getkey(win::Union{Ptr{WINDOW}, Nothing} = nothing)
     win_ptr = win === nothing ? tui.stdscr : win

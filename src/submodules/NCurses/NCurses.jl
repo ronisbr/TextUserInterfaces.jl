@@ -4,15 +4,15 @@ using Libdl
 using Ncurses_jll
 using Parameters
 
-################################################################################
-#                                    Types
-################################################################################
+############################################################################################
+#                                          Types
+############################################################################################
 
 include("./types.jl")
 
-################################################################################
-#                                Precompilation
-################################################################################
+############################################################################################
+#                                      Precompilation
+############################################################################################
 
 # Precompile the NCurses exported functions.
 @inline function _precompile_func(func, args)
@@ -20,27 +20,26 @@ include("./types.jl")
     return precompile(func, args)
 end
 
-################################################################################
-#                                   Includes
-################################################################################
+############################################################################################
+#                                         Includes
+############################################################################################
 
 include("./ncurses_functions.jl")
 include("./form/form_functions.jl")
 include("./menu/menu_functions.jl")
 include("./panel/panel_functions.jl")
 
-################################################################################
-#                                Initialization
-################################################################################
+############################################################################################
+#                                      Initialization
+############################################################################################
 
 export load_ncurses, init_ncurses
 
 """
-    load_ncurses([dir::String])
+    load_ncurses([dir::String]) -> Nothing
 
-Load ncurses libraries at directory `dir`. If it is omitted or if it is empty,
-then the bundled Ncurses version in the package `Ncurses_jll` will be used.
-
+Load ncurses libraries at directory `dir`. If it is omitted or if it is empty, then the
+bundled Ncurses version in the package `Ncurses_jll` will be used.
 """
 function load_ncurses()
     ncurses.libncurses        = Ncurses_jll.libncurses_handle
@@ -79,13 +78,14 @@ function load_ncurses_library(dir::AbstractString, key::Symbol, candidates)
 end
 
 function load_ncurses(dir::String)
-    # Load the libraries
-    # ==========================================================================
+    # Load the Libraries
+    # ======================================================================================
 
     isempty(dir) && return load_ncurses()
 
     # libncurses
-    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+
     candidates = (
         "libncursesw",
         "libncursesw.so.6",
@@ -106,7 +106,8 @@ function load_ncurses(dir::String)
     end
 
     # libpanel
-    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+
     candidates = (
         "libpanelw",
         "libpanel",
@@ -119,7 +120,8 @@ function load_ncurses(dir::String)
     load_ncurses_library(dir, :libpanel, candidates)
 
     # libform
-    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+
     candidates = (
         "libformw",
         "libform",
@@ -132,7 +134,8 @@ function load_ncurses(dir::String)
     load_ncurses_library(dir, :libform, candidates)
 
     # libmenu
-    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+
     candidates = (
         "libmenuw",
         "libmenu",

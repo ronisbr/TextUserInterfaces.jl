@@ -1,18 +1,18 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Widget: Input field.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetInputField
 export get_text
 
-################################################################################
-#                                  Structure
-################################################################################
+############################################################################################
+#                                        Structure
+############################################################################################
 
 @widget mutable struct WidgetInputField
     # Data array that contains the input to the field.
@@ -40,7 +40,7 @@ export get_text
     is_valid::Bool = true
 
     # Signals
-    # ==========================================================================
+    # ======================================================================================
 
     @signal return_pressed
     @signal text_changed
@@ -55,9 +55,9 @@ const _INPUT_FIELD_STYLE_HEIGHT = Dict(
 
 _INPUT_FIELD_DEFAULT_VALIDATOR(str::String) = true
 
-################################################################################
-#                                  Object API
-################################################################################
+############################################################################################
+#                                        Object API
+############################################################################################
 
 function destroy!(widget::WidgetInputField)
     @unpack internal_buffer = widget
@@ -76,11 +76,12 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
     if update_widget_layout!(widget; force = force)
         @unpack curx, data, internal_buffer, height, style, vbegx, vcurx = widget
         @unpack width = widget
-        # Since the widget could have changed its size, we need to compute the
-        # usable size to display the text.
-        size = if style === :simple
+
+        # Since the widget could have changed its size, we need to compute the usable size
+        # to display the text.
+        size = if style == :simple
             width - 2
-        elseif style === :boxed
+        elseif style == :boxed
             width - 2
         else
             width
@@ -106,9 +107,9 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
     end
 end
 
-################################################################################
-#                                  Widget API
-################################################################################
+############################################################################################
+#                                        Widget API
+############################################################################################
 
 can_accept_focus(::WidgetInputField) = true
 
@@ -151,13 +152,12 @@ function create_widget(
 end
 
 function process_keystroke!(widget::WidgetInputField, k::Keystroke)
-    # In this case, if we have a global command, we must not process the
-    # keystroke.
+    # In this case, if we have a global command, we must not process the keystroke.
     cmd = check_global_command(k)
     isnothing(cmd) || return :keystorke_not_processed
 
     # If the keystroke is `enter`, just emit the signal.
-    if k.ktype === :enter
+    if k.ktype == :enter
         @log INFO "PROCESS" "RETURN"
         @emit widget return_pressed
         return :keystroke_processed
@@ -174,8 +174,8 @@ function process_keystroke!(widget::WidgetInputField, k::Keystroke)
 end
 
 function request_focus!(widget::WidgetInputField)
-    # When accepting focus we must update the cursor position so that it can be
-    # positioned in the position it was when the focus was released.
+    # When accepting focus we must update the cursor position so that it can be positioned
+    # in the position it was when the focus was released.
     _update_cursor(widget)
     request_update!(widget)
     return true
@@ -214,7 +214,7 @@ function redraw!(widget::WidgetInputField)
     # String to clear the entire field.
     clear_str = " " ^ size
 
-    if style === :simple
+    if style == :simple
         mvwprintw(internal_buffer, 0, 0, "[")
 
         @ncolor c internal_buffer begin
@@ -224,7 +224,7 @@ function redraw!(widget::WidgetInputField)
 
         mvwprintw(internal_buffer, 0, size + 1, "]")
 
-    elseif style === :boxed
+    elseif style == :boxed
         wborder(internal_buffer)
 
         @ncolor c internal_buffer begin
@@ -248,18 +248,18 @@ function redraw!(widget::WidgetInputField)
     return nothing
 end
 
-################################################################################
-#                                   Helpers
-################################################################################
+############################################################################################
+#                                         Helpers
+############################################################################################
 
 @create_widget_helper input_field
 
-################################################################################
-#                               Public functions
-################################################################################
+############################################################################################
+#                                     Public Functions
+############################################################################################
 
 """
-    get_text(widget::WidgetInputField)
+    get_text(widget::WidgetInputField) -> String
 
 Return a string with the text in the field.
 """
@@ -267,9 +267,9 @@ function get_text(widget::WidgetInputField)
     return String(widget.data)
 end
 
-################################################################################
-#                              Private functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
 # Handle the input `k` to the input field `widget`.
 function _handle_input!(widget::WidgetInputField, k::Keystroke)
@@ -373,25 +373,25 @@ end
 function _get_input_field_action(k::Keystroke)
     action = :none
 
-    if k.ktype === :left
+    if k.ktype == :left
         action = :move_cursor_to_left
 
-    elseif k.ktype === :right
+    elseif k.ktype == :right
         action = :move_cursor_to_right
 
-    elseif k.ktype === :home
+    elseif k.ktype == :home
         action = :goto_beginning
 
-    elseif k.ktype === :end
+    elseif k.ktype == :end
         action = :goto_end
 
-    elseif k.ktype === :backspace
+    elseif k.ktype == :backspace
         action = :delete_previous_character
 
-    elseif k.ktype === :delete
+    elseif k.ktype == :delete
         action = :delete_forward_character
 
-    elseif (k.ktype === :char) || (k.ktype === :utf8)
+    elseif (k.ktype == :char) || (k.ktype == :utf8)
         action = :add_character
     end
 
@@ -405,14 +405,13 @@ function _update_cursor(widget::WidgetInputField)
     # Move the physical cursor to the correct position considering the border if
     # present.
     #
-    # NOTE: The initial position here starts at 1, but in NCurses it starts in
-    # 0.
+    # NOTE: The initial position here starts at 1, but in NCurses it starts in 0.
 
-    if style === :simple
+    if style == :simple
         px = curx
         py = 0
 
-    elseif style === :boxed
+    elseif style == :boxed
         px = curx
         py = 1
 

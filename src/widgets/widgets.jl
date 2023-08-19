@@ -1,20 +1,20 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file defines the widget API.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export create_widget, destroy_widget_buffer!, get_buffer, get_parent, request_update!, move_focus_to_widget
 
 """
-    create_widget_buffer!(widget::Widget)
+    create_widget_buffer!(widget::Widget) -> Nothing
 
-Create the buffer of `widget`. The variables `layout`, `container`, and `window`
-must be set before calling this function. If the buffer is already created, then
-it will be deleted first.
+Create the buffer of `widget`. The variables `layout`, `container`, and `window` must be set
+before calling this function. If the buffer is already created, then it will be deleted
+first.
 """
 function create_widget_buffer!(widget::Widget)
     destroy_widget_buffer!(widget)
@@ -53,7 +53,7 @@ function create_widget_buffer!(widget::Widget)
 end
 
 """
-    destroy_widget!(widget::Widget)
+    destroy_widget!(widget::Widget) -> Nothing
 
 Default function to destroy `widget`.
 """
@@ -81,7 +81,7 @@ function destroy_widget!(widget::Widget)
 end
 
 """
-    destroy_widget_buffer!(widget::Widget)
+    destroy_widget_buffer!(widget::Widget) -> Nothing
 
 Destroy the buffer of the `widget`.
 """
@@ -95,14 +95,14 @@ function destroy_widget_buffer!(widget::Widget)
 end
 
 """
-    get_buffer(widget::Widget)
+    get_buffer(widget::Widget) -> Ptr{WINDOW}
 
 Return the buffer of the `widget`.
 """
 get_buffer(widget::Widget) = widget.buffer
 
 """
-    get_parent(widget::Widget)
+    get_parent(widget::Widget) -> Union{Window, WidgetContainer}
 
 Return the parent of the `widget`.
 """
@@ -115,7 +115,7 @@ function get_parent(widget::Widget)
 end
 
 """
-    has_focus(widget::Widget)
+    has_focus(widget::Widget) -> Bool
 
 Return `true` if `widget` has the focus, or `false` otherwise.
 """
@@ -139,10 +139,10 @@ function has_focus(widget::Widget)
 end
 
 """
-    move_focus_to_widget(widget::Widget)
+    move_focus_to_widget(widget::Widget) -> Nothing
 
-Move the focus to the `widget`, meaning that all parent chain will get focused
-up to the window.
+Move the focus to the `widget`, meaning that all parent chain will get focused up to the
+window.
 """
 function move_focus_to_widget(widget::Widget)
     container = widget.container
@@ -151,7 +151,7 @@ function move_focus_to_widget(widget::Widget)
 end
 
 """
-    request_update!(widget::Widget)
+    request_update!(widget::Widget) -> Nothing
 
 Request update of the widget `widget`.
 """
@@ -163,10 +163,10 @@ function request_update!(widget::Widget)
 end
 
 """
-    update(widget::Widget; force::Bool = false)
+    update(widget::Widget; force::Bool = false) -> Bool
 
-Update the `widget` by calling the function `redraw!`. This function returns
-`true` if the widget was updates, and `false` otherwise.
+Update the `widget` by calling the function `redraw!`. This function returns `true` if the
+widget was updates, and `false` otherwise.
 
 If `force` is `true`, then the widget will be updated even if it is not needed.
 """
@@ -181,10 +181,10 @@ function update!(widget::Widget; force::Bool = false)
 end
 
 """
-    update_widget_layout!(widget::Widget; force::Bool=true)
+    update_widget_layout!(widget::Widget; force::Bool = true) -> Nothing
 
-Default function to update the `widget` layout. If `force` is set to true, the
-widget will be refreshed even if it is not needed.
+Default function to update the `widget` layout. If `force` is set to true, the widget will
+be refreshed even if it is not needed.
 """
 function update_widget_layout!(widget::Widget; force::Bool=true)
     @unpack layout, horizontal_hints, vertical_hints = widget

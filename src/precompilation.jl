@@ -1,11 +1,11 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Precompilation.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import SnoopPrecompile
 
@@ -23,8 +23,9 @@ SnoopPrecompile.@precompile_setup begin
     new_stdin  = redirect_stdin()
 
     SnoopPrecompile.@precompile_all_calls begin
-        # Precompile initializaion functions
-        # ======================================================================
+
+        # Precompile Initializaion Functions
+        # ==================================================================================
 
         initialize_tui()
 
@@ -60,8 +61,8 @@ SnoopPrecompile.@precompile_setup begin
             parent = con
         )
 
-        # Precompile functions related to TUI update
-        # ======================================================================
+        # Precompile Functions Related to TUI Update
+        # ==================================================================================
 
         # Create the keycodes to process the information.
         k_tab = Keystroke(9, string(Char(9)), :tab, false, false, false)
@@ -83,16 +84,16 @@ SnoopPrecompile.@precompile_setup begin
         process_keystroke(k_a)
         tui_update()
 
-        # Precompile input related functions
-        # ======================================================================
+        # Precompile Input Related to Functions
+        # ==================================================================================
 
         write(new_stdin, 'A')
         getkey()
         write(new_stdin, 'A')
         getkey(tui.stdscr)
 
-        # Precompile all functions related to TUI desctruction
-        # ======================================================================
+        # Precompile All Functions Related to TUI Desctruction
+        # ==================================================================================
 
         destroy_tui()
     end

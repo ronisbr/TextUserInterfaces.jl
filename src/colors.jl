@@ -1,27 +1,26 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains functions related to the color support.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import .NCurses: init_color
 export ncurses_color, get_color_pair, modify_color, init_color_pair, set_color
 export unset_color
 
 """
-    ncurses_color([foreground, background,] attrs::Integer = 0; kwargs...)
+    ncurses_color([foreground, background,] attrs::Integer = 0; kwargs...) -> Int
 
-Return a mask to apply a color format with the foreground color `foreground`,
-background color `background`, and the attributes `attrs`.
+Return a mask to apply a color format with the foreground color `foreground`, background
+color `background`, and the attributes `attrs`.
 
-If the pair (`foreground`, `background`) is omitted, then the foreground and
-background color will not be changed.
+If the pair (`foreground`, `background`) is omitted, then the foreground and background
+color will not be changed.
 
-The colors can be specified by their names using `Symbol` or by their indices
-using `Int`.
+The colors can be specified by their names using `Symbol` or by their indices using `Int`.
 
 # Keywords
 
@@ -86,10 +85,10 @@ function ncurses_color(
 end
 
 """
-    get_color_pair(foreground::Int, background::Int)
+    get_color_pair(foreground::Int, background::Int) -> Int
 
-Return the ID of the color pair (`foreground`, `background`), or `nothing` if
-the color pair is not initialized.
+Return the ID of the color pair (`foreground`, `background`), or `nothing` if the color pair
+is not initialized.
 """
 function get_color_pair(foreground::Int, background::Int)
     return findfirst(
@@ -99,10 +98,10 @@ function get_color_pair(foreground::Int, background::Int)
 end
 
 """
-    init_color_pair(foreground::Symbol, background::Symbol)
+    init_color_pair(foreground::Symbol, background::Symbol) -> Int
 
-Initialize the color pair (`foreground`, `background`) and return its ID. If the
-pair already exists, then just the function just returns its ID.
+Initialize the color pair (`foreground`, `background`) and return its ID. If the pair
+already exists, just the function just returns its ID.
 """
 function init_color_pair(foreground::Symbol, background::Symbol)
     # Get the index related to the selected colors.
@@ -137,18 +136,16 @@ function init_color_pair(foreground::Int, background::Int)
 end
 
 """
-    modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int)
+    modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int) -> Int
 
-Modify the color ID `id` to the RGB value (`r`,`g`,`b`). If the symbol `name` is
-available, then the user can select this color ID by using `name` instead of the
-`id`.
+Modify the color ID `id` to the RGB value (`r`,`g`,`b`). If the symbol `name` is available,
+then the user can select this color ID by using `name` instead of the `id`.
 
 If the color name `name` already exists, then nothing will be changed.
 
-Notice that the range for the RGB color components is `[0,1000]`.
+Notice that the range for the RGB color components is `[0, 1000]`.
 
-If the color was initialized, then it returns the color ID. Otherwise, it
-returns `-1`.
+If the color was initialized, it returns the color ID. Otherwise, it returns `-1`.
 """
 function modify_color(name::Symbol, id::Int, r::Int, g::Int, b::Int)
     # If the color name is defined, then just return.
@@ -174,10 +171,10 @@ function modify_color(id::Int, r::Int, g::Int, b::Int)
 end
 
 """
-    set_color([win::Window,] color::Int)
+    set_color([win::Window,] color::Int) -> Nothing
 
-Set the color of the window `win` to `color` (see `ncurses_color`). If `win` is
-omitted, then it defaults to the root window.
+Set the color of the window `win` to `color` (see `ncurses_color`). If `win` is omitted,
+it defaults to the root window.
 """
 set_color(color::Int) = set_color(tui.wins[1], color)
 
@@ -187,10 +184,10 @@ function set_color(win::Window, color::Int)
 end
 
 """
-    unset_color([win::Window,] color::Number)
+    unset_color([win::Window,] color::Number) -> Nothing
 
-Unset the color `color` (see `ncurses_color`) in the window `win`. If `win` is
-omitted, then it defaults to the root window.
+Unset the color `color` (see `ncurses_color`) in the window `win`. If `win` is omitted, it
+defaults to the root window.
 """
 unset_color(color::Int) = unset_color(tui.wins[1], color)
 
@@ -199,9 +196,9 @@ function unset_color(win::Window, color::Int)
     return nothing
 end
 
-################################################################################
-#                              Private functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
 # Return the index related to the color `color`.
 function _get_color_index(color::Symbol)

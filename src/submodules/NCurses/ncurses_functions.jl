@@ -1,29 +1,28 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
-#   This file contains a wrapper of all libncurses functions that are used by
-#   the package.
+#   This file contains a wrapper of all libncurses functions that are used by the package.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-################################################################################
-#                                Private macros
-################################################################################
+############################################################################################
+#                                      Private Macros
+############################################################################################
 
 """
     @_ccalln expr
 
 Make a `ccall` to a `libncurses` function. The usage should be:
 
-    @_ccalln function(arg1::Type1, arg2::Type2, ...)::TypeReturn
+    @_ccalln function(arg1::Type1, arg2::Type2, ...) -> TypeReturn
 
-It uses the global constant structure `ncurses` to call the function. Hence, it
-must be initialized.
+It uses the global constant structure `ncurses` to call the function. Hence, it must be
+initialized.
 """
 macro _ccalln(expr)
-    !( expr.head == :(::) && expr.args[1].head == :call ) &&
+    !(expr.head == :(::) && expr.args[1].head == :call) &&
     error("Invalid use of @_ccall")
 
     return_type   = expr.args[2]
@@ -32,32 +31,32 @@ macro _ccalln(expr)
 
     arglist  = []
     typeargs = :(())
-    handler  = :(dlsym($(esc(ncurses)).libncurses, $(esc(function_name)) ))
-    out = :( ccall( $(handler) , $(esc(return_type)), $(esc(typeargs)) ) )
+    handler  = :(dlsym($(esc(ncurses)).libncurses, $(esc(function_name))))
+    out = :(ccall( $(handler), $(esc(return_type)), $(esc(typeargs))))
 
     for arg in args
         !(arg.head == :(::)) && error("All arguments must have a type.")
-        push!( out.args, :( $(esc(arg.args[1])) ) )
-        push!( typeargs.args, arg.args[2] )
+        push!(out.args, :($(esc(arg.args[1]))))
+        push!(typeargs.args, arg.args[2])
     end
 
     return out
 end
 
-################################################################################
-#                              NCurses functions
-################################################################################
+############################################################################################
+#                                    NCurses Functions
+############################################################################################
 
-# General functions
-# ==============================================================================
+# General Functions
+# ==========================================================================================
 
 # This code assembles the functions by using the following information:
 #
-# * `f`: Function name.
-# * `r`: Return type.
-# * `v`: Variable name.
-# * `j`: Variable type in Julia.
-# * `c`: Variable type in C.
+# - `f`: Function name.
+# - `r`: Return type.
+# - `v`: Variable name.
+# - `j`: Variable type in Julia.
+# - `c`: Variable type in C.
 
 for (f, r, v, j, c) in
     (
@@ -308,7 +307,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -318,9 +317,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str))
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) -> $($r)
 
         For more information, see `libncurses` documentation.
         """
@@ -330,8 +327,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that depends on arguments that must be `Integer`
-# ==============================================================================
+# Functions that Depends on Arguments that Must Be `Integer`
+# ==========================================================================================
 
 for (f, r, v, j, c) in
     (
@@ -509,7 +506,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -519,9 +516,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where T<:Integer
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where T<:Integer -> $($r)
 
         For more information, see `libncurses` documentation.
         """
@@ -531,8 +526,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that depends on arguments that must be `jlchtype`
-# ==============================================================================
+# Functions that Depends on Arguments that Must Be `jlchtype`
+# ==========================================================================================
 
 for (f, r, v, j, c) in
     (
@@ -567,7 +562,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -577,9 +572,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where T<:jlchtype
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where T<:jlchtype -> $($r)
 
         For more information, see `libncurses` documentation.
         """
@@ -590,8 +583,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that depends on arguments that must be `Integer` and `jlchtype`
-# ==============================================================================
+# Functions that Depends on Arguments that Must Be `Integer` and `jlchtype`
+# ==========================================================================================
 
 for (f, r, v, j, c) in
     (
@@ -661,7 +654,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -671,9 +664,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where {Tc<:jlchtype,Ti<:Integer}
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where {Tc<:jlchtype, Ti<:Integer} -> $($r)
 
         For more information, see `libncurses` documentation.
         """
@@ -684,8 +675,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that depends on arguments that must be `AbstractString`
-# ==============================================================================
+# Functions that Depends on Arguments that Must Be `AbstractString`
+# ==========================================================================================
 
 for (f, r, v, j, c) in
     (
@@ -722,9 +713,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where T<:AbstractString
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where T<:AbstractString -> $($r)
 
         For more information, see `libncurses` documentation.
         """
@@ -734,8 +723,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that arguments must be `AbstractString` and `Integer`
-# ==============================================================================
+# Functions that Arguments Must Be `AbstractString` and `Integer`
+# ==========================================================================================
 
 for (f, r, v, j, c) in
     (
@@ -762,7 +751,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -772,9 +761,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where {Ti<:Integer, Ts<:AbstractString} -> $($r)
 
         For more information, see `libncurses` documentation.
         """
@@ -784,15 +771,14 @@ for (f, r, v, j, c) in
     end
 end
 
-# Other functions
-# ==============================================================================
+# Other Functions
+# ==========================================================================================
 
 """
     ACS_(s::Symbol)
 
-Return the symbol `s` of the `acs_map`. For example, `ACS_HLINE` can be obtained
-from `ACS_(:HLINE)`.
-
+Return the symbol `s` of the `acs_map`. For example, `ACS_HLINE` can be obtained from
+`ACS_(:HLINE)`.
 """
 function ACS_(s::Symbol)
     if ncurses.acs_map == C_NULL
@@ -813,13 +799,11 @@ end
 export ACS_
 
 """
-    COLS()
+    COLS() -> Cint
 
-Return the number of columns in the root window. It must be called after
-`initscr()`.
+Return the number of columns in the root window. It must be called after `initscr()`.
 
 For more information, see `libncurses` documentation.
-
 """
 function COLS()
     if !ncurses.NCURSES_REENTRANT
@@ -832,13 +816,11 @@ end
 export COLS
 
 """
-    LINES()
+    LINES() -> Cint
 
-Return the number of lines in the root window. It must be called after
-`initscr()`.
+Return the number of lines in the root window. It must be called after `initscr()`.
 
 For more information, see `libncurses` documentation.
-
 """
 function LINES()
     if !ncurses.NCURSES_REENTRANT
@@ -851,7 +833,7 @@ end
 export LINES
 
 # Specialization
-# ==============================================================================
+# ==========================================================================================
 
 """
     wborder(win::Ptr{WINDOW})
@@ -861,18 +843,17 @@ Call the function `wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)`.
 """
 wborder(win::Ptr{WINDOW}) = wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)
 
-# NCurses version
-# ==============================================================================
+# NCurses Version
+# ==========================================================================================
 
 """
-    curses_version()
+    curses_version() -> NamedTuple
 
 Return the NCurses version in a named tuple with the following fields:
 
-* `major`: Major version.
-* `minor`: Minor version.
-* `patch`: Patch version.
-
+- `major`: Major version.
+- `minor`: Minor version.
+- `patch`: Patch version.
 """
 function curses_version()
     ver_ptr  = ccall( dlsym(ncurses.libncurses, :curses_version), Cstring, () )

@@ -1,14 +1,14 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains miscellaneous functions related to windows.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 """
-    set_window_title!(win::Window, title::AbstractString)
+    set_window_title!(win::Window, title::AbstractString) -> Nothing
 
 Set the title of the window `win` to `title`.
 """
@@ -45,16 +45,15 @@ function set_window_title!(win::Window, title::AbstractString)
     return nothing
 end
 
-################################################################################
-#                              Private Functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
 """
-    _get_window_coordinates(win::Ptr{WINDOW})
+    _get_window_coordinates(win::Ptr{WINDOW}) -> Int, Int
 
-Get the coordinates of the window `win` and return it on a tuple
-`(begy, begx)`. If the window is not initialized, then this function returns
-`(-1, -1)`.
+Get the coordinates of the window `win` and return it on a tuple `(begy, begx)`. If the
+window is not initialized, this function returns `(-1, -1)`.
 """
 function _get_window_coordinates(win::Ptr{WINDOW})
     if win != C_NULL
@@ -68,11 +67,10 @@ function _get_window_coordinates(win::Ptr{WINDOW})
 end
 
 """
-    _get_window_dimensions(win::Ptr{WINDOW})
+    _get_window_dimensions(win::Ptr{WINDOW}) -> Int, Int
 
-Get the dimensions of the window `win` and return it on a tuple
-`(dim_y, dim_x)`. If the window is not initialized, then this function returns
-`(-1, -1)`.
+Get the dimensions of the window `win` and return it on a tuple `(dim_y, dim_x)`. If the
+window is not initialized, this function returns `(-1, -1)`.
 """
 function _get_window_dimensions(win::Ptr{WINDOW})
     if win != C_NULL
@@ -86,11 +84,10 @@ function _get_window_dimensions(win::Ptr{WINDOW})
 end
 
 """
-    _get_window_cursor_position(win::Ptr{WINDOW})
+    _get_window_cursor_position(win::Ptr{WINDOW}) -> Int, Int
 
-Get the cursor position of the window `win` and return it on a tuple
-`(cur_y, cur_x)`.  If the window is not initialized, then this function returns
-`(-1, -1)`.
+Get the cursor position of the window `win` and return it on a tuple `(cur_y, cur_x)`. If
+the window is not initialized, then this function returns `(-1, -1)`.
 """
 function _get_window_cursor_position(win::Ptr{WINDOW})
     if win != C_NULL

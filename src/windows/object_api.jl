@@ -1,13 +1,12 @@
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
-#   This file defines the implementation of the functions required by the Object
-#   API for the windows.
+#   This file defines the implementation of the functions required by the Object API for the
+#   windows.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 can_accept_focus(win::Window) = win.focusable
 can_release_focus(win::Window) = true
@@ -81,14 +80,13 @@ function request_cursor(win::Window)
     return request_cursor(win.widget_container)
 end
 
-# Synchronize the cursor to the position of the focused widget in `window`. This
-# is necessary because all the operations are done in the buffer and then copied
-# to the view.
+# Synchronize the cursor to the position of the focused widget in `window`. This is
+# necessary because all the operations are done in the buffer and then copied to the view.
 function sync_cursor(window::Window)
     @unpack widget_container = window
 
-    # This is the top most function that synchronize the cursor. Hence, we must
-    # check if the focused widget request the cursor to show or hide it.
+    # This is the top most function that synchronize the cursor. Hence, we must check if the
+    # focused widget request the cursor to show or hide it.
     if !isnothing(widget_container) && request_cursor(widget_container)
         curs_set(1)
 
@@ -100,8 +98,8 @@ function sync_cursor(window::Window)
         y = by + cy
         x = bx + cx
 
-        # If the window has a border, then we must take this into account
-        # when updating the cursor coordinates.
+        # If the window has a border, we must take this into account when updating the
+        # cursor coordinates.
         if window.has_border
             y += 1
             x += 1
@@ -124,8 +122,8 @@ function update!(win::Window; force::Bool = false)
 
     force && wclear(buffer)
 
-    # Update the widget container. If it was updated, then we must mark that the
-    # view in this window needs update.
+    # Update the widget container. If it was updated, we must mark that the view in this
+    # window needs update.
     if update!(widget_container; force = force)
         request_update!(win)
     end
@@ -170,8 +168,8 @@ function update_layout!(win::Window; force::Bool = false)
         win_move = true
     end
 
-    # If we need to resize or move window, we must clear the border first.
-    # Otherwise, it will left a glitch on screen.
+    # If we need to resize or move window, we must clear the border first. Otherwise, it
+    # will left a glitch on screen.
     if win_resize || win_move
         wclear(win.view)
         wrefresh(win.view)
@@ -198,8 +196,8 @@ function update_layout!(win::Window; force::Bool = false)
         ncols  -= 2
     end
 
-    # We must verify if the user initially wanted the buffer as the same size of
-    # view. If so, we need to reduce the view we also must reduce the buffer.
+    # We must verify if the user initially wanted the buffer as the same size of view. If
+    # so, we need to reduce the view we also must reduce the buffer.
     if win.buffer_view_locked
         blines = nlines
         bcols  = ncols
@@ -213,8 +211,7 @@ function update_layout!(win::Window; force::Bool = false)
     win.has_border && set_window_title!(win, win.title)
 
     if win_resize || win_move || force
-        # Here, we need to update the layout of the container because the window
-        # changed.
+        # Here, we need to update the layout of the container because the window changed.
         update_layout!(win.widget_container; force = true)
 
         # Now, we update the window.

@@ -1,20 +1,19 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains macros and functions related to signals.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export @connect, @disconnect, @disconnect_all, @emit, @signal
 
 """
     @connect(object, signal::Symbol, f, kwargs)
 
-Connect the function `f` to the `signal` in the `object`. `kwargs` must be a
-named tuple with additional keyword arguments passed to `f` when the signal is
-emitted.
+Connect the function `f` to the `signal` in the `object`. `kwargs` must be a named tuple
+with additional keyword arguments passed to `f` when the signal is emitted.
 """
 macro connect(object::Symbol, signal::Symbol, f, kwargs = (;))
     var = Symbol("_signal_", signal)
@@ -84,8 +83,8 @@ end
 """
     @signal(name)
 
-Create the signal named `name`. This must be used inside a structure that
-supports `Base.@kwdef`.
+Create the signal named `name`. This must be used inside a structure that supports
+`Base.@kwdef`.
 """
 macro signal(name)
     var = Symbol("_signal_", name)
@@ -96,16 +95,15 @@ macro signal(name)
     return esc(ex)
 end
 
-# Signal properties
-# ------------------------------------------------------------------------------
+#                                    Signal Properties
+# ==========================================================================================
 
 export @delete_signal_property, @get_signal_property, @set_signal_property
 
 """
     @delete_signal_property(object::Symbol, signal::Symbol, property::Symbol)
 
-Delete the `property` of `signal` in `object`, meaning that the default value
-will be used.
+Delete the `property` of `signal` in `object`, meaning that the default value will be used.
 """
 macro delete_signal_property(object::Symbol, signal::Symbol, property::Symbol)
     var = Symbol("_signal_", signal)
@@ -121,8 +119,8 @@ end
 """
     @get_signal_property(object::Symbol, signal::Symbol, property::Symbol, default)
 
-Get the `property` of the `signal` in `object`, returning the `default` value it
-the property is not set.
+Get the `property` of the `signal` in `object`, returning the `default` value it the
+property is not set.
 """
 macro get_signal_property(object::Symbol, signal::Symbol, property::Symbol, default)
     var = Symbol("_signal_", signal)
