@@ -21,13 +21,21 @@ export get_text
     # Maximum allowed data size.
     max_data_size::Int = 0
 
-    # Field usable size in screen.
-    size::Int = 0
+    # Field usable width in screen.
+    field_width::Int = 0
 
-    # State of the input field.
-    curx::Int = 1
-    vbegx::Int = 1
-    vcurx::Int = 1
+    # Cursor position in the data vector.
+    cursor::Int = 1
+
+    # Physical cursor position.
+    phy_cursor_x::Int = 1
+    phy_cursor_y::Int = 1
+
+    # Beginning of the view expressed in text width.
+    view_beginning::Int = 1
+
+    # Rendered string.
+    rendered_view::String = ""
 
     # Internal buffer to avoid output flickering when drawing.
     internal_buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
@@ -53,6 +61,13 @@ const _INPUT_FIELD_STYLE_HEIGHT = Dict(
     :none   => 1
 )
 
+# Conversion dictionary between style and the width margins.
+const _INPUT_FIELD_STYLE_WIDTH_MARGINS = Dict(
+    :boxed  => 2,
+    :simple => 2,
+    :none   => 0
+)
+
 _INPUT_FIELD_DEFAULT_VALIDATOR(str::String) = true
 
 ############################################################################################
@@ -74,32 +89,21 @@ end
 
 function update_layout!(widget::WidgetInputField; force::Bool = false)
     if update_widget_layout!(widget; force = force)
-        @unpack curx, data, internal_buffer, height, style, vbegx, vcurx = widget
-        @unpack width = widget
+        @unpack internal_buffer, style = widget
+        @unpack height, width = widget
 
         # Since the widget could have changed its size, we need to compute the usable size
         # to display the text.
-        size = if style == :simple
-            width - 2
-        elseif style == :boxed
-            width - 2
-        else
-            width
-        end
+        widget.field_width = width - _INPUT_FIELD_STYLE_WIDTH_MARGINS[style]
 
-        num_chars = length(data)
-
-        # Make the position of the physical cursor valid.
-        if curx > size
-            curx  = max(size, 1)
-            vbegx = vcurx - size + 1
-        end
+        # Update the rendered text and also the cursor position.
+        _render_text_view_and_update_cursor_position!(widget)
 
         # Recreate the internal buffer considering the new size.
         internal_buffer !== Ptr{WINDOW}(0) && delwin(internal_buffer)
         internal_buffer = newwin(height, width, 0, 0)
 
-        @pack! widget = internal_buffer, size, curx, vbegx
+        @pack! widget = internal_buffer
 
         return true
     else
@@ -164,7 +168,10 @@ function process_keystroke!(widget::WidgetInputField, k::Keystroke)
 
     # Handle the input.
     else
-        _handle_input!(widget, k) && @emit widget text_changed
+        text_changed = _handle_input!(widget, k)
+        _render_text_view_and_update_cursor_position!(widget)
+
+        text_changed && @emit widget text_changed
 
         # Update the cursor position.
         _update_cursor(widget)
@@ -184,8 +191,8 @@ end
 request_cursor(::WidgetInputField) = true
 
 function redraw!(widget::WidgetInputField)
-    @unpack buffer, data, height, internal_buffer, is_valid, size = widget
-    @unpack style, vbegx, theme, width = widget
+    @unpack buffer, data, height, internal_buffer, is_valid, field_width = widget
+    @unpack style, theme, width = widget
 
     if internal_buffer === Ptr{WINDOW}(0)
         @log ERROR "redraw!" """
@@ -203,46 +210,37 @@ function redraw!(widget::WidgetInputField)
     # Clear the internal buffer.
     wclear(internal_buffer)
 
-    # Convert the data to string.
-    if !isempty(data)
-        aux = clamp(vbegx + size - 1, 1, length(data))
-        str = String(@view data[vbegx:aux])
-    else
-        str = ""
-    end
-
     # String to clear the entire field.
-    clear_str = " " ^ size
+    clear_str = " " ^ field_width
 
     if style == :simple
         mvwprintw(internal_buffer, 0, 0, "[")
 
         @ncolor c internal_buffer begin
             mvwprintw(internal_buffer, 0, 1, clear_str)
-            mvwprintw(internal_buffer, 0, 1, str)
+            mvwprintw(internal_buffer, 0, 1, widget.rendered_view)
         end
 
-        mvwprintw(internal_buffer, 0, size + 1, "]")
+        mvwprintw(internal_buffer, 0, field_width + 1, "]")
 
     elseif style == :boxed
-        wborder(internal_buffer)
-
         @ncolor c internal_buffer begin
             mvwprintw(internal_buffer, 1, 1, clear_str)
-            mvwprintw(internal_buffer, 1, 1, str)
+            mvwprintw(internal_buffer, 1, 1, widget.rendered_view)
         end
 
+        wborder(internal_buffer)
     else
         @ncolor c internal_buffer begin
             mvwprintw(internal_buffer, 0, 0, clear_str)
-            mvwprintw(internal_buffer, 0, 0, str)
+            mvwprintw(internal_buffer, 0, 0, widget.rendered_view)
         end
     end
 
     # Copy the internal buffer to the output buffer.
     copywin(internal_buffer, buffer, 0, 0, 0, 0, height - 1, width - 1, 0)
 
-    # We need to update the cursor after every redraw.
+    # Update the cursor.
     _update_cursor(widget)
 
     return nothing
@@ -273,8 +271,8 @@ end
 
 # Handle the input `k` to the input field `widget`.
 function _handle_input!(widget::WidgetInputField, k::Keystroke)
-    @unpack data, max_data_size, size, validator = widget
-    @unpack curx, vbegx, vcurx = widget
+    @unpack data, max_data_size, validator = widget
+    @unpack cursor = widget
 
     # Number of characters in the data array.
     num_chars = length(data)
@@ -286,74 +284,43 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
     text_changed = false
 
     # Translate the action and update the field state.
-    if action === :add_character
+    if action == :add_character
         # Check if we can add a new character.
         if (max_data_size <= 0) || (num_chars < max_data_size)
             c = k.value |> first
-            insert!(data, vcurx, c)
-
-            vcurx += 1
-            curx  += textwidth(c)
-
-            if curx > size
-                vbegx += curx - size
-                curx   = size
-            end
-
+            insert!(data, cursor, c)
+            cursor += 1
             text_changed = true
         end
 
-    elseif action === :delete_forward_character
-        if vcurx <= num_chars
-            deleteat!(data, vcurx)
+    elseif action == :delete_forward_character
+        if cursor <= num_chars
+            deleteat!(data, cursor)
             text_changed = true
         end
 
-    elseif action === :delete_previous_character
-        if vcurx > 1
-            c = data[vcurx - 1]
-            deleteat!(data, vcurx - 1)
-            vcurx -= 1
-
-            if vbegx > 1
-                vbegx -= 1
-            elseif curx > 1
-                curx -= 1
-            end
-
+    elseif action == :delete_previous_character
+        if cursor > 1
+            c = data[cursor - 1]
+            deleteat!(data, cursor - 1)
+            cursor -= 1
             text_changed = true
         end
 
-    elseif action === :goto_beginning
-        curx   = 1
-        vbegx  = 1
-        vcurx  = 1
+    elseif action == :goto_beginning
+        cursor = 1
 
-    elseif action === :goto_end
-        curx   = min(num_chars + 1, size)
-        vcurx  = num_chars + 1
-        vbegx  = max(vcurx - size + 1, 1)
+    elseif action == :goto_end
+        cursor = length(data) + 1
 
-    elseif action === :move_cursor_to_left
-        if vcurx > 1
-            curx  -= 1
-            vcurx -= 1
-
-            if curx < 1
-                curx = 1
-                vbegx = max(vbegx - 1, 1)
-            end
+    elseif action == :move_cursor_to_left
+        if cursor > 1
+            cursor -= 1
         end
 
-    elseif action === :move_cursor_to_right
-        if vcurx <= num_chars
-            curx  += 1
-            vcurx += 1
-
-            if curx > size
-                vbegx += curx - size
-                curx   = size
-            end
+    elseif action == :move_cursor_to_right
+        if cursor <= num_chars
+            cursor += 1
         end
     end
 
@@ -364,7 +331,7 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
 
     (action !== :none) && request_update!(widget)
 
-    @pack! widget = curx, vbegx, vcurx
+    @pack! widget = cursor
 
     return text_changed
 end
@@ -382,7 +349,7 @@ function _get_input_field_action(k::Keystroke)
     elseif k.ktype == :home
         action = :goto_beginning
 
-    elseif k.ktype == :end
+    elseif (k.ktype == :end)
         action = :goto_end
 
     elseif k.ktype == :backspace
@@ -398,30 +365,91 @@ function _get_input_field_action(k::Keystroke)
     return action
 end
 
-# Update the physical cursor in the `widget`.
-function _update_cursor(widget::WidgetInputField)
-    @unpack buffer, curx, style = widget
+# Render the view text and also update the internal values that store the cursor position.
+function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
+    @unpack buffer, cursor, data, field_width, style, view_beginning = widget
 
-    # Move the physical cursor to the correct position considering the border if
-    # present.
+    # Compute the string width up to the cursor.
+    string_width = sum(textwidth.(data))
+    string_width_before_cursor = sum(textwidth.(data[1:(cursor - 1)]))
+
+    # Update the View
+    # ======================================================================================
+
+    # If the beginning of the view is after the cursor, we should move it to match the
+    # cursor position.
+    if string_width_before_cursor < (view_beginning - 1)
+        view_beginning = string_width_before_cursor + 1
+
+    # If the end of the view is before the cursor, we should move it to match the cursor
+    # position. Notice that we always leave one space at the end in this case.
+    elseif (view_beginning + field_width - 2) < string_width_before_cursor
+        view_beginning = string_width_before_cursor - field_width + 2
+
+    end
+
+    # Make sure we only have one space at the end of the field if we are not at the
+    # beginning of the view.
+    if (view_beginning > 1) && (string_width < view_beginning + field_width - 2)
+        view_beginning = string_width - field_width + 2
+    end
+
+    # If the cursor is at the end, we should add one space.
+    if cursor > length(data)
+        view_beginning = max(1, string_width_before_cursor - field_width + 2)
+    end
+
+    # Update the Physical Cursor Position
+    # ======================================================================================
+
+    # Move the physical cursor to the correct position considering the border if present.
     #
     # NOTE: The initial position here starts at 1, but in NCurses it starts in 0.
 
     if style == :simple
-        px = curx
-        py = 0
-
+        widget.phy_cursor_x = string_width_before_cursor - view_beginning + 2
+        widget.phy_cursor_y = 0
     elseif style == :boxed
-        px = curx
-        py = 1
-
+        widget.phy_cursor_x = string_width_before_cursor - view_beginning + 2
+        widget.phy_cursor_y = 1
     else
-        px = curx - 1
-        py = 0
-
+        widget.phy_cursor_x = string_width_before_cursor - view_beginning + 1
+        widget.phy_cursor_y = 0
     end
 
-    wmove(buffer, py, px)
+    # Render the View
+    # ======================================================================================
 
+    current_str_width = 1
+    processed_char = 0
+
+    for c in data
+        current_str_width >= view_beginning && break
+        processed_char += 1
+        current_str_width += textwidth(c)
+    end
+
+    rendered_view = " "^(current_str_width - view_beginning)
+
+    current_view_width = current_str_width - view_beginning
+
+    for i in (processed_char + 1):length(data)
+        current_view_width += textwidth(data[i])
+        current_view_width > field_width && break
+        rendered_view *= data[i]
+    end
+
+    if (current_view_width - field_width) > 0
+        rendered_view *= " "^(current_view_width - field_width)
+    end
+
+    @pack! widget = view_beginning, rendered_view
+
+    return nothing
+end
+
+# Update the cursor in the view.
+function _update_cursor(widget::WidgetInputField)
+    wmove(widget.buffer, widget.phy_cursor_y, widget.phy_cursor_x)
     return nothing
 end
