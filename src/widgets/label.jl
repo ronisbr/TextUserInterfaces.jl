@@ -1,18 +1,18 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Widget: Label.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetLabel
 export change_text!
 
-################################################################################
-#                                  Structure
-################################################################################
+############################################################################################
+#                                        Structure
+############################################################################################
 
 @widget mutable struct WidgetLabel
     # Input label data from the user.
@@ -24,9 +24,9 @@ export change_text!
     _text::String
 end
 
-################################################################################
-#                                  Object API
-################################################################################
+############################################################################################
+#                                        Object API
+############################################################################################
 
 function update_layout!(label::WidgetLabel; force::Bool = false)
     if update_widget_layout!(label; force = force)
@@ -37,9 +37,9 @@ function update_layout!(label::WidgetLabel; force::Bool = false)
     end
 end
 
-################################################################################
-#                                  Widget API
-################################################################################
+############################################################################################
+#                                        Widget API
+############################################################################################
 
 can_accept_focus(::WidgetLabel) = false
 
@@ -91,28 +91,28 @@ function redraw!(widget::WidgetLabel)
     return nothing
 end
 
-################################################################################
-#                                   Helpers
-################################################################################
+############################################################################################
+#                                         Helpers
+############################################################################################
 
 @create_widget_helper label
 
-################################################################################
-#                               Public functions
-################################################################################
+############################################################################################
+#                                     Public Functions
+############################################################################################
 
 """
-    change_text!(widget::WidgetLabel, new_text::AbstractString; alignment = :l)
+    change_text!(widget::WidgetLabel, new_text::AbstractString; alignment = :l) -> Nothing
 
-Change to text of the label `widget` to `new_text`. The text alignment in the
-widget can be selected by the keyword `alignment`, which can be:
+Change to text of the label `widget` to `new_text`. The text alignment in the widget can be
+selected by the keyword `alignment`, which can be:
 
 - `:l`: left alignment (**default**);
 - `:c`: Center alignment; or
 - `:r`: Right alignment.
 
-The text color can be selected by the keyword `color`. It it is negative
-(**default**), then the current color will not be changed.
+The text color can be selected by the keyword `color`. It it is negative (**default**), the
+current color will not be changed.
 """
 function change_text!(
     widget::WidgetLabel,
@@ -127,12 +127,12 @@ function change_text!(
     return nothing
 end
 
-################################################################################
-#                              Private functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
-# This function gets the text in variable `text`, and apply the alignment. It
-# is only called when the widget layout is updated.
+# This function gets the text in variable `text`, and apply the alignment. It is only called
+# when the widget layout is updated.
 function _align_text!(widget::WidgetLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing

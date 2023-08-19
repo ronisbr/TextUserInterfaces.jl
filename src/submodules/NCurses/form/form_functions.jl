@@ -1,29 +1,29 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains a wrapper of all libform functions that are used by
 #   the package.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-################################################################################
-#                                Private macros
-################################################################################
+############################################################################################
+#                                      Private Macros
+############################################################################################
 
 """
     @_ccallf expr
 
 Make a `ccall` to a `libform` function. The usage should be:
 
-    @_ccallf function(arg1::Type1, arg2::Type2, ...)::TypeReturn
+    @_ccallf function(arg1::Type1, arg2::Type2, ...) -> TypeReturn
 
-It uses the global constant structure `ncurses` to call the function. Hence, it
-must be initialized.
+It uses the global constant structure `ncurses` to call the function. Hence, it must be
+initialized.
 """
 macro _ccallf(expr)
-    !( expr.head == :(::) && expr.args[1].head == :call ) &&
+    !(expr.head == :(::) && expr.args[1].head == :call) &&
     error("Invalid use of @_ccall")
 
     return_type   = expr.args[2]
@@ -32,38 +32,52 @@ macro _ccallf(expr)
 
     arglist  = []
     typeargs = :(())
-    handler  = :(dlsym($(esc(ncurses)).libform, $(esc(function_name)) ))
-    out = :( ccall( $(handler) , $(esc(return_type)), $(esc(typeargs)) ) )
+    handler  = :(dlsym($(esc(ncurses)).libform, $(esc(function_name))))
+    out = :(ccall( $(handler), $(esc(return_type)), $(esc(typeargs))))
 
     for arg in args
         !(arg.head == :(::)) && error("All arguments must have a type.")
-        push!( out.args, :( $(esc(arg.args[1])) ) )
-        push!( typeargs.args, arg.args[2] )
+        push!(out.args, :($(esc(arg.args[1]))))
+        push!(typeargs.args, arg.args[2])
     end
 
     return out
 end
 
-################################################################################
-#                              libform functions
-################################################################################
+############################################################################################
+#                                   `libform` Functions
+############################################################################################
 
-# General functions
-# ==============================================================================
+# General Functions
+# ==========================================================================================
 
-new_field(height::Int, width::Int, toprow::Int, leftcol::Int, offscreen::Int,
-          nbuffers::Int) =
-    @_ccallf new_field(height::Cint, width::Cint, toprow::Cint, leftcol::Cint,
-                       offscreen::Cint, nbuffers::Cint)::Ptr{Cvoid}
+function new_field(
+    height::Int,
+    width::Int,
+    toprow::Int,
+    leftcol::Int,
+    offscreen::Int,
+    nbuffers::Int
+)
+    @_ccallf new_field(
+        height::Cint,
+        width::Cint,
+        toprow::Cint,
+        leftcol::Cint,
+        offscreen::Cint,
+        nbuffers::Cint
+    )::Ptr{Cvoid}
+end
+
 export new_field
 
 # This code assembles the functions by using the following information:
 #
-# * `f`: Function name.
-# * `r`: Return type.
-# * `v`: Variable name.
-# * `j`: Variable type in Julia.
-# * `c`: Variable type in C.
+# - `f`: Function name.
+# - `r`: Return type.
+# - `v`: Variable name.
+# - `j`: Variable type in Julia.
+# - `c`: Variable type in C.
 
 for (f, r, v, j, c) in
     (
@@ -139,7 +153,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -149,9 +163,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str))
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) -> $($r)
 
         For more information, see `libform` documentation.
         """
@@ -161,8 +173,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that depends on arguments that must be `Integer`
-# ==============================================================================
+# Functions that Depends on Arguments that Must Be `Integer`
+# ==========================================================================================
 
 for (f, r, v, j, c) in
     (
@@ -237,7 +249,7 @@ for (f, r, v, j, c) in
 
     # Assemble the argument string to build the function documentation.
     args_str = ""
-    for i = 1:length(v)
+    for i in 1:length(v)
         args_str *= v[i] * "::" * j[i]
 
         if i != length(v)
@@ -247,9 +259,7 @@ for (f, r, v, j, c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where T<:Integer
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where T<:Integer -> $($r)
 
         For more information, see `libform` documentation.
         """
@@ -259,8 +269,8 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that arguments must be `AbstractString` and `Integer`
-# ==============================================================================
+# Functions that Arguments Must Be `AbstractString` and `Integer`
+# ==========================================================================================
 
 for (f,r,v,j,c) in
     (
@@ -290,9 +300,7 @@ for (f,r,v,j,c) in
 
     @eval begin
         """
-            $($fb)($($args_str)) where {Ti<:Integer,Ts<:AbstractString}
-
-        **Return type**: `$($r)`
+            $($fb)($($args_str)) where {Ti<:Integer, Ts<:AbstractString} -> $($r)
 
         For more information, see `libform` documentation.
         """
@@ -302,8 +310,8 @@ for (f,r,v,j,c) in
     end
 end
 
-# Global symbols
-# ==============================================================================
+# Global Symbols
+# ==========================================================================================
 
 for s in (
     :TYPE_ALNUM,
@@ -319,14 +327,14 @@ for s in (
 
     @eval begin
         """
-            $($sq)()
+            $($sq)() -> Pointer
 
         Return a pointer to the global symbol `$($sq)` of `libform`.
         """
         function $s()
             ptr = getfield(ncurses, $sq)
             if ptr == C_NULL
-                pptr = cglobal( dlsym(ncurses.libform, $sq), Ptr{Cvoid})
+                pptr = cglobal(dlsym(ncurses.libform, $sq), Ptr{Cvoid})
                 ptr  = unsafe_load(pptr)
                 setfield!(ncurses, $sq, ptr)
             end

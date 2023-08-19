@@ -1,38 +1,35 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains functions to create windows.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export create_window
 
 """
-    function create_window(;  kwargs...)
+    function create_window(;  kwargs...) -> Window
 
 Create a window.
 
 # Keyword
 
-- `bcols::Int`: Number of columns in the window buffer. This will be
-    automatically increased to, at least, fit the viewable part of the window.
-    (**Default** = 0)
-- `blines::Int`: Number of lines in the window buffer. This will be
-    automatically increased to, at least, fit the viewable part of the window.
-    (**Default** = 0)
-- `border::Bool`: If `true`, then the window will have a border.
-    (**Default** = `true`)
-- `buffer_size::Tuple{Int, Int}`: Number of rows and columns in the window
-    buffer. This will be automatically increased to, at least, fit the viewable
-    part of the window. (**Default** = `(0, 0)`)
-- `focusable::Bool`: If `true`, then the window can have focus. Otherwise, all
-    focus request will be rejected. (**Default** = `true`)
+- `bcols::Int`: Number of columns in the window buffer. This will be automatically increased
+    to, at least, fit the viewable part of the window. (**Default** = 0)
+- `blines::Int`: Number of lines in the window buffer. This will be automatically increased
+    to, at least, fit the viewable part of the window. (**Default** = 0)
+- `border::Bool`: If `true`, the window will have a border. (**Default** = `true`)
+- `buffer_size::Tuple{Int, Int}`: Number of rows and columns in the window buffer. This will
+    be automatically increased to, at least, fit the viewable part of the window.
+    (**Default** = `(0, 0)`)
+- `focusable::Bool`: If `true`, the window can have focus. Otherwise, all focus request will
+    be rejected. (**Default** = `true`)
 - `layout::ObjectLayout`: The layout configuration of the window.
     (**Default** = `ObjectLayout()`)
-- `title::String`: The title of the window, which will only be printed if
-    `border` is `true`. (**Default** = "")
+- `title::String`: The title of the window, which will only be printed if `border` is
+    `true`. (**Default** = "")
 """
 function create_window(;
     border::Bool = true,
@@ -119,7 +116,7 @@ function create_window(;
         view               = view,
     )
 
-    # # Update the widget container layout.
+    # Update the widget container layout.
     widget_container.window = win
     update_layout!(widget_container)
 

@@ -1,11 +1,11 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   This file contains macros related to widgets.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export @create_widget_helper, @widget
 
@@ -34,9 +34,9 @@ const _list_layout_anchors = (
 """
     @create_widget_helper(widget_symbol[, macro_name])
 
-This macro defines a helper to create a widget of type `widget_symbol`. The
-helper name is `macro_name`. If the latter is not available, then it will be
-composed of the prefix `tui_` plus the `widget_symbol`.
+This macro defines a helper to create a widget of type `widget_symbol`. The helper name is
+`macro_name`. If the latter is not available, then it will be composed of the prefix `tui_`
+plus the `widget_symbol`.
 """
 macro create_widget_helper(widget_symbol)
     macro_name = Symbol("tui_" * string(widget_symbol))
@@ -58,9 +58,8 @@ This macro creates a widget of type `$($wsq)` using the arguments
 
     <parameter> = <value>
 
-If the parameter `parent` is present, then the created widget will be added to
-`parent`. Otherwise, the widget will be created and returned, but not added to
-any parent.
+If the parameter `parent` is present, then the created widget will be added to `parent`.
+Otherwise, the widget will be created and returned, but not added to any parent.
 """
         macro $macro_name(args...)
             # List of expressions to be passed to the keyword as arguments.
@@ -73,8 +72,8 @@ any parent.
             # List of expressions to connect signals.
             expr_signals = Expr[]
 
-            # Variables to verify if the `parent` was defined. In this case, the
-            # created widget will be added to it.
+            # Variables to verify if the `parent` was defined. In this case, the created
+            # widget will be added to it.
             has_parent = false
             parent = nothing
 
@@ -82,17 +81,17 @@ any parent.
 
             for a in args
                 # `a` must be an expression like `property = value`.
-                if (a isa Expr) && (a.head === :(=))
-                    if a.args[1] === :parent
+                if (a isa Expr) && (a.head == :(=))
+                    if a.args[1] == :parent
                         has_parent = true
                         parent = a.args[2]
 
                     elseif a.args[1] ∈ _list_layout_args
-                        # In this case, if the parameter is an anchor and value
-                        # is a `Tuple`, we should convert to an `Anchor`.
+                        # In this case, if the parameter is an anchor and value is a
+                        # `Tuple`, we should convert to an `Anchor`.
                         if (a.args[1] ∈ _list_layout_anchors) &&
                             (a.args[2] isa Expr) &&
-                            (a.args[2].head === :tuple)
+                            (a.args[2].head == :tuple)
 
                             v = :(Anchor($(a.args[2].args...)))
                         else
@@ -101,10 +100,10 @@ any parent.
 
                         push!(expr_layout, Expr(:kw, a.args[1], v))
 
-                    elseif a.args[1] === :signal
-                        # Those statements will be executed after the widget has
-                        # been created. The widget variable name in the
-                        # following code is `widget`.
+                    elseif a.args[1] == :signal
+                        # Those statements will be executed after the widget has been
+                        # created. The widget variable name in the following code is
+                        # `widget`.
                         push!(
                             expr_signals,
                             :(@connect(widget, $(a.args[2].args...)))
@@ -156,7 +155,7 @@ Declare a structure of a widget.
 """
 macro widget(ex)
     # Expression must be a structure definition.
-    if !(typeof(ex) <: Expr) || (ex.head !== :struct)
+    if !(typeof(ex) <: Expr) || (ex.head != :struct)
         error("@widget must be used only with a structure definition.")
     end
 
@@ -200,4 +199,3 @@ macro widget(ex)
 
     return esc(ret)
 end
-

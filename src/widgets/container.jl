@@ -1,18 +1,18 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Widget container.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export add_widget!, remove_widget!
 export move_focus_to_next_widget!, move_focus_to_previous_widget!
 
-################################################################################
-#                                  Constants
-################################################################################
+############################################################################################
+#                                        Constants
+############################################################################################
 
 # Hints for the widget container layout.
 const _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS = Dict(
@@ -25,9 +25,9 @@ const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = Dict(
     :top_anchor    => Anchor(:parent, :top,    0),
 )
 
-################################################################################
-#                                  Object API
-################################################################################
+############################################################################################
+#                                        Object API
+############################################################################################
 
 function can_accept_focus(container::WidgetContainer)
     # We need to see if there is at least one widget that can receive the focus.
@@ -91,8 +91,8 @@ end
 function sync_cursor(container::WidgetContainer)
     focused_widget = get_focused_widget(container)
 
-    # If the container has a focused widget, move the cursor in the container
-    # buffer according the position of the widget.
+    # If the container has a focused widget, move the cursor in the container buffer
+    # according the position of the widget.
     if !isnothing(focused_widget)
         # Get the cursor position on the `buffer` of the widget.
         cy, cx = _get_window_cursor_position(get_buffer(focused_widget))
@@ -100,11 +100,10 @@ function sync_cursor(container::WidgetContainer)
 
         # Get the position of the container window.
         #
-        # This algorithm assumes that the cursor position after `wmove` is
-        # relative to the beginning of the container window. However, since
-        # everything is a `subpad`, the window coordinate (by,bx) is relative to
-        # the pad. Thus, we must subtract the `subpad` position so that the
-        # algorithm is consistent.
+        # This algorithm assumes that the cursor position after `wmove` is relative to the
+        # beginning of the container window. However, since everything is a `subpad`, the
+        # window coordinate (by,bx) is relative to the pad. Thus, we must subtract the
+        # `subpad` position so that the algorithm is consistent.
         wy, wx = _get_window_coordinates(get_buffer(container))
 
         # Compute the coordinates of the cursor with respect to the window.
@@ -126,8 +125,8 @@ function update_layout!(container::WidgetContainer; force::Bool = false)
     # Update the layout of the container as if it is a generic widget.
     if update_widget_layout!(container; force = force)
         for widget in container.widgets
-            # In this case, we must force all the children to update their
-            # layout because the container buffer has been recreated.
+            # In this case, we must force all the children to update their layout because
+            # the container buffer has been recreated.
             update_layout!(widget; force = true)
         end
 
@@ -137,9 +136,9 @@ function update_layout!(container::WidgetContainer; force::Bool = false)
     end
 end
 
-################################################################################
-#                                  Widget API
-################################################################################
+############################################################################################
+#                                        Widget API
+############################################################################################
 
 function create_widget(
     ::Val{:container},
@@ -260,12 +259,12 @@ function request_cursor(container::WidgetContainer)
     end
 end
 
-################################################################################
-#                               Public functions
-################################################################################
+############################################################################################
+#                                     Public Functions
+############################################################################################
 
 """
-    add_widget!(container::WidgetContainer, widget::Widget)
+    add_widget!(container::WidgetContainer, widget::Widget) -> Nothing
 
 Add the `widget` to the `container`.
 """
@@ -300,13 +299,12 @@ function add_widget!(container::WidgetContainer, widget::Widget)
 end
 
 """
-    move_focus_to_next_widget!(container::WidgetContainer; cyclic::Bool = false)
+    move_focus_to_next_widget!(container::WidgetContainer; cyclic::Bool = false) -> Bool
 
-Move the focus in `container` to the next widget. This function returns `true`
-if it was possible to acquire focus or `false` otherwise.
+Move the focus in `container` to the next widget. This function returns `true` if it was
+possible to acquire focus or `false` otherwise.
 
-If `cyclic` is `false`, the widget list is not cycled when searching for the
-next widget.
+If `cyclic` is `false`, the widget list is not cycled when searching for the next widget.
 """
 function move_focus_to_next_widget!(
     container::WidgetContainer;
@@ -326,13 +324,12 @@ function move_focus_to_next_widget!(
 end
 
 """
-    move_focus_to_previous_widget!(container::WidgetContainer; cyclic::Bool = false)
+    move_focus_to_previous_widget!(container::WidgetContainer; cyclic::Bool = false) -> Bool
 
-Move the focus in `container` to the previous widget. This function returns
-`true` if it was possible to acquire focus or `false` otherwise.
+Move the focus in `container` to the previous widget. This function returns `true` if it was
+possible to acquire focus or `false` otherwise.
 
-If `cyclic` is `false`, the widget list is not cycled when searching for the
-next widget.
+If `cyclic` is `false`, the widget list is not cycled when searching for the next widget.
 """
 function move_focus_to_previous_widget!(
     container::WidgetContainer;
@@ -351,6 +348,7 @@ function move_focus_to_previous_widget!(
     end
 end
 
+# TODO: Check return type.
 """
     move_focus_to_widget!(container::WidgetContainer, widget::Widget)
 
@@ -376,7 +374,7 @@ function move_focus_to_widget!(container::WidgetContainer, widget::Widget)
 end
 
 """
-    get_focused_widget(container::WidgetContainer)
+    get_focused_widget(container::WidgetContainer) -> Union{Nothing, Widget}
 
 Return the current widget in focus. If no widget is in focus, return `nothing`.
 """
@@ -397,7 +395,7 @@ function get_focused_widget(container::WidgetContainer)
 end
 
 """
-    remove_widget!(container::WidgetContainer, widget::Widget)
+    remove_widget!(container::WidgetContainer, widget::Widget) -> Nothing
 
 Remove the `widget` from the `container`.
 """
@@ -421,12 +419,11 @@ function remove_widget!(container::WidgetContainer, widget::Widget)
     return nothing
 end
 
-################################################################################
-#                              Private functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
-# Change the focused widget in `container` to `widget_id`, emitting the required
-# signals.
+# Change the focused widget in `container` to `widget_id`, emitting the required signals.
 function _change_focused_widget!(
     container::WidgetContainer,
     widget_id::Int;
@@ -464,13 +461,12 @@ function _draw_title!(container::WidgetContainer)
     # Get the width of the container.
     width = get_width(container)
 
-    # If the width is too small, then do nothing.
+    # If the width is too small, do nothing.
     if width ≤ 4
         return nothing
     end
 
-    # Check if the entire title cannot be written. In this case, the title will
-    # be shrunk.
+    # Check if the entire title cannot be written. In this case, the title will be shrunk.
     if length(title) ≥ width - 4
         title = title[1:width - 4]
     end
@@ -491,21 +487,21 @@ end
 
 # Process the command `cmd` sent to the `container`.
 function _process_command!(container::WidgetContainer, cmd::Symbol)
-    # If this container does not have a parent, it means it is a top container.
-    # Thus, we need to change the widgets in a cyclic manner.
+    # If this container does not have a parent, it means it is a top container. Thus, we
+    # need to change the widgets in a cyclic manner.
     cyclic = isnothing(container.container)
 
-    if cmd === :keystroke_processed
+    if cmd == :keystroke_processed
         return cmd
 
-    elseif cmd === :next_object
+    elseif cmd == :next_object
         if !move_focus_to_next_widget!(container; cyclic = cyclic)
             return :next_object
         end
 
         return :keystroke_processed
 
-    elseif cmd === :previous_object
+    elseif cmd == :previous_object
         if !move_focus_to_previous_widget!(container; cyclic = cyclic)
             return :previous_object
         end
@@ -516,10 +512,9 @@ function _process_command!(container::WidgetContainer, cmd::Symbol)
     return cmd
 end
 
-# Search the next widget that can accept the focus in the list. It returns the
-# object ID or `nothing` if no widget can accept the focus. If `cyclic` is
-# `true`, the list will be cycled to find a new widget. Otherwise, it will stop
-# at the last widget.
+# Search the next widget that can accept the focus in the list. It returns the object ID or
+# `nothing` if no widget can accept the focus. If `cyclic` is `true`, the list will be
+# cycled to find a new widget. Otherwise, it will stop at the last widget.
 function _search_next_widget_to_focus(
     container::WidgetContainer;
     cyclic::Bool = false
@@ -536,13 +531,13 @@ function _search_next_widget_to_focus(
 
     while true
         if !cyclic
-            # If the focus candidate is higher than the number of widgets, we
-            # have cycled the list. In this case, since `cyclic = false`, we
-            # just return that we could not find a suitable widget to focus.
+            # If the focus candidate is higher than the number of widgets, we have cycled
+            # the list. In this case, since `cyclic = false`, we just return that we could
+            # not find a suitable widget to focus.
             focus_candidate_id > num_widgets && return nothing
         else
-            # If we have `cyclic`, we must go back to the first widget if the
-            # current candidate is highger than the number of widgets.
+            # If we have `cyclic`, we must go back to the first widget if the current
+            # candidate is highger than the number of widgets.
             if focus_candidate_id > num_widgets
                 focus_candidate_id = 1
             end
@@ -555,8 +550,8 @@ function _search_next_widget_to_focus(
 
         num_tries += 1
 
-        # If the number of tries is equal the number of widgets, no widget can
-        # accept the focus.
+        # If the number of tries is equal the number of widgets, no widget can accept the
+        # focus.
         num_tries == num_widgets && return nothing
 
         focus_candidate_id = focus_candidate_id + 1
@@ -565,10 +560,9 @@ function _search_next_widget_to_focus(
     return nothing
 end
 
-# Search the previous widget that can accept the focus in the list. It returns
-# the object ID or `nothing` if no widget can accept the focus. If `cyclic` is
-# `true`, the list will be cycled to find a new widget. Otherwise, it will stop
-# at the first widget.
+# Search the previous widget that can accept the focus in the list. It returns the object ID
+# or `nothing` if no widget can accept the focus. If `cyclic` is `true`, the list will be
+# cycled to find a new widget. Otherwise, it will stop at the first widget.
 function _search_previous_widget_to_focus(
     container::WidgetContainer;
     cyclic::Bool = false
@@ -585,13 +579,13 @@ function _search_previous_widget_to_focus(
 
     while true
         if !cyclic
-            # If the focus candidate is lower than 0, we have cycled the list.
-            # In this case, since `cyclic = false`, we just return that we could
-            # not find a suitable widget to focus.
+            # If the focus candidate is lower than 0, we have cycled the list.  In this
+            # case, since `cyclic = false`, we just return that we could not find a suitable
+            # widget to focus.
             focus_candidate_id <= 0 && return nothing
         else
-            # If we have `cyclic`, we must go back to the last widget if the
-            # current candidate is lower than 0.
+            # If we have `cyclic`, we must go back to the last widget if the current
+            # candidate is lower than 0.
             if focus_candidate_id <= 0
                 focus_candidate_id = num_widgets
             end
@@ -614,8 +608,8 @@ function _search_previous_widget_to_focus(
     return nothing
 end
 
-################################################################################
-#                                   Helpers
-################################################################################
+############################################################################################
+#                                         Helpers
+############################################################################################
 
 @create_widget_helper container

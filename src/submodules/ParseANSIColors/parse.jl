@@ -1,23 +1,23 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Functions to parse a string with ANSI color escape sequences.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export parse_ansi_string
 
 """
-    parse_ansi_string(str::AbstractString)
+    parse_ansi_string(str::AbstractString) -> Vector{String}, Vector{Decoration}
 
-Parse the string `str` that can contain ANSI color escape sequences. This
-function returns two vectors:
+Parse the string `str` that can contain ANSI color escape sequences.
 
-- A vector with the strings;
-- A vector with objects of type `Decoration` describing the decoration of each
-    string.
+# Returns
+
+- `Vector{String}`: Strings.
+- `Vector{Decoration}`: Objects of type `Decoration` with the decoration of each string.
 """
 function parse_ansi_string(str::AbstractString)
     # Current state.
@@ -82,9 +82,9 @@ function parse_ansi_string(str::AbstractString)
     return s,d
 end
 
-################################################################################
-#                              Private functions
-################################################################################
+############################################################################################
+#                                    Private Functions
+############################################################################################
 
 function _parse_ansi_code(decoration::Decoration, code::String)
     tokens = split(code, ';')

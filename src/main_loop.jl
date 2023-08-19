@@ -1,14 +1,19 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Main application loop.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export app_main_loop
 
+"""
+    app_main_loop() -> Nothing
+
+Start the application main loop.
+"""
 function app_main_loop()
     # If there is no window in focus, try to acquire it.
     isnothing(get_focused_window()) && move_focus_to_next_window()

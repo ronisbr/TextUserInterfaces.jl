@@ -1,16 +1,16 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Description
-# ==============================================================================
+# ==========================================================================================
 #
 #   Function related to the destruction of TUI.
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export destroy_tui
 
 """
-    destroy_tui()
+    destroy_tui() -> Nothing
 
 Destroy the text user interface (TUI).
 """
@@ -46,4 +46,6 @@ function destroy_tui()
     file = logger.file
     !isnothing(file) && close(file)
     logger.file = nothing
+
+    return nothing
 end
