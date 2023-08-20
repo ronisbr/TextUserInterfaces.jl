@@ -28,7 +28,7 @@ function app_main_loop()
 
         # Check if the keystroke must be passed or if the signal hijacked it.
         if !@get_signal_property(tui, keypressed, block, false)
-            if k.ktype === :F1
+            if k.ktype == :F1
                 break
             else
                 process_keystroke(k)

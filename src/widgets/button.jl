@@ -95,7 +95,7 @@ function request_focus!(widget::WidgetButton)
 end
 
 function process_keystroke!(widget::WidgetButton, k::Keystroke)
-    if k.ktype === :enter
+    if k.ktype == :enter
         @emit widget return_pressed
         return :keystroke_processed
     end
