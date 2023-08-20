@@ -20,8 +20,8 @@ export change_text!
     text::String
 
     # Variables to store the parsed text and color to reduce the computational burden.
-    _text::Vector{String} = String[]
-    _colors::Vector{Int} = Int[]
+    aligned_text::Vector{String} = String[]
+    aligned_text_colors::Vector{Int} = Int[]
 end
 
 ############################################################################################
@@ -78,14 +78,14 @@ function create_widget(
 end
 
 function redraw!(widget::WidgetAnsiLabel)
-    @unpack buffer, theme, _text, _colors = widget
+    @unpack buffer, theme, aligned_text, aligned_text_colors = widget
     wclear(buffer)
 
     mvwprintw(buffer, 0, 0, "")
 
-    for i in 1:length(_text)
-        @ncolor _colors[i] buffer begin
-            wprintw(buffer, _text[i])
+    for i in 1:length(aligned_text)
+        @ncolor aligned_text_colors[i] buffer begin
+            wprintw(buffer, aligned_text[i])
         end
     end
 
@@ -183,8 +183,8 @@ function _parse_ansi_text!(widget::WidgetAnsiLabel)
         colors[i] = c
     end
 
-    widget._text   = vstr
-    widget._colors = colors
+    widget.aligned_text = vstr
+    widget.aligned_text_colors = colors
 
     update_layout!(widget)
     request_update!(widget)
