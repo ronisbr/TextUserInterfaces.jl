@@ -5,7 +5,6 @@ using FileWatching
 using LinearAlgebra
 using Parameters
 using StringManipulation
-using SnoopPrecompile
 
 import Base: getproperty, setproperty!
 
