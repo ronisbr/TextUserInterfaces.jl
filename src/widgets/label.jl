@@ -21,7 +21,7 @@ export change_text!
     text::String
 
     # Variable to store the aligned text to save computational burden.
-    _text::String
+    aligned_text::String
 end
 
 ############################################################################################
@@ -64,7 +64,7 @@ function create_widget(
         layout           = layout,
         text             = text,
         theme            = theme,
-        _text            = text,
+        aligned_text     = text,
         horizontal_hints = Dict(:width => width),
         vertical_hints   = Dict(:height => height)
     )
@@ -81,11 +81,11 @@ function create_widget(
 end
 
 function redraw!(widget::WidgetLabel)
-    @unpack buffer, theme, _text = widget
+    @unpack buffer, theme, aligned_text = widget
     wclear(buffer)
 
     @ncolor theme.default buffer begin
-        mvwprintw(buffer, 0, 0, _text)
+        mvwprintw(buffer, 0, 0, aligned_text)
     end
 
     return nothing
@@ -170,7 +170,7 @@ function _align_text!(widget::WidgetLabel)
         end
     end
 
-    widget._text = String(take!(buf))
+    widget.aligned_text = String(take!(buf))
 
     request_update!(widget)
 
