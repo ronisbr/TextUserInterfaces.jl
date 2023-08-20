@@ -7,9 +7,9 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-import SnoopPrecompile
+import PrecompileTools
 
-SnoopPrecompile.@precompile_setup begin
+PrecompileTools.@setup_workload begin
     # We must load the NCurses libraries first.
     __init__()
 
@@ -22,7 +22,7 @@ SnoopPrecompile.@precompile_setup begin
     new_stdout = redirect_stdout()
     new_stdin  = redirect_stdin()
 
-    SnoopPrecompile.@precompile_all_calls begin
+    PrecompileTools.@compile_workload begin
 
         # Precompile Initializaion Functions
         # ==================================================================================
