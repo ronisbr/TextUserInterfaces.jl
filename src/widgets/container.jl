@@ -160,7 +160,7 @@ function create_widget(
         vertical_hints   = _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS
     )
 
-    @log INFO "create_widget" """
+    @log DEBUG "create_widget" """
     Container created:
       ID               = $(container.id)
       border           = $(container.border),
@@ -288,7 +288,7 @@ function add_widget!(container::WidgetContainer, widget::Widget)
 
     request_update!(container)
 
-    @log INFO "add_widget!" """
+    @log DEBUG "add_widget!" """
     Add widget $(obj_desc(widget)) => $(obj_desc(container)):
         Top    = $(widget.top)
         Left   = $(widget.left)

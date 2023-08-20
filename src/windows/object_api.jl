@@ -12,7 +12,7 @@ can_accept_focus(win::Window) = win.focusable
 can_release_focus(win::Window) = true
 
 function destroy!(win::Window)
-    @log INFO "destroy!" "$(obj_desc(win)) will be destroyed."
+    @log DEBUG "destroy!" "$(obj_desc(win)) will be destroyed."
     @log_ident 1
 
     # Destroy the widget container.
@@ -39,7 +39,7 @@ function destroy!(win::Window)
     !isnothing(idx) && deleteat!(tui.windows, idx)
 
     @log_ident 0
-    @log INFO "destroy!" "Window destroyed: $(win.id)."
+    @log DEBUG "destroy!" "Window destroyed: $(win.id)."
 
     return nothing
 end

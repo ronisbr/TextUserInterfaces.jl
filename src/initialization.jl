@@ -31,7 +31,7 @@ function initialize_tui()
     # Open the log file.
     logger.file = open(logger.logfile, "w")
 
-    @log INFO "initialize_tui" """
+    @log DEBUG "initialize_tui" """
     TUI initialized.
     Terminal $(has_colors() == 1 ? "" : "does not ")have colors."""
 

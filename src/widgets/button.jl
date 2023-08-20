@@ -74,7 +74,7 @@ function create_widget(
         vertical_hints   = Dict(:height => _BUTTON_STYLE_HEIGHT[style])
     )
 
-    @log INFO "create_widget" """
+    @log DEBUG "create_widget" """
     WidgetButton created:
       ID    = $(button.id)
       Label = $(button.label)

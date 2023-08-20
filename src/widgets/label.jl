@@ -69,7 +69,7 @@ function create_widget(
         vertical_hints   = Dict(:height => height)
     )
 
-    @log INFO "create_widget" """
+    @log DEBUG "create_widget" """
     WidgetLabel created:
       ID = $(label.id)
       Alignment = $(label.alignment)

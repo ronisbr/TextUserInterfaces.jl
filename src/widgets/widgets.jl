@@ -72,7 +72,7 @@ function destroy_widget!(widget::Widget)
     # If the widget is added to a container, remove it.
     !isnothing(container) && remove_widget!(container, widget)
 
-    @log INFO "destroy_widget!" "Widget destroyed: $widget_desc"
+    @log DEBUG "destroy_widget!" "Widget destroyed: $widget_desc"
 
     # Now request to update the parent, which can be a container or a window.
     !isnothing(parent) && request_update!(parent)

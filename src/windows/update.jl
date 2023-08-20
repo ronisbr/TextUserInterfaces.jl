@@ -117,7 +117,7 @@ function _update_view!(win::Window; force::Bool = false)
         # Move the cursor back to the original position.
         wmove(view, cy, cx)
 
-        @log VERBOSE "_update_view!" "Window $(win.id): Buffer was copied to the view."
+        @log DEBUG "_update_view!" "Window $(win.id): Buffer was copied to the view."
 
         return true
     else

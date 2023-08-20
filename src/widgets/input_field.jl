@@ -145,7 +145,7 @@ function create_widget(
         vertical_hints   = Dict(:height => _INPUT_FIELD_STYLE_HEIGHT[style])
     )
 
-    @log INFO "create_widget" """
+    @log DEBUG "create_widget" """
     WidgetInputField created:
       ID             = $(input_field.id)
       Max. data size = $(max_data_size)
@@ -162,7 +162,6 @@ function process_keystroke!(widget::WidgetInputField, k::Keystroke)
 
     # If the keystroke is `enter`, just emit the signal.
     if k.ktype == :enter
-        @log INFO "PROCESS" "RETURN"
         @emit widget return_pressed
         return :keystroke_processed
 
