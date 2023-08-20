@@ -348,15 +348,14 @@ function move_focus_to_previous_widget!(
     end
 end
 
-# TODO: Check return type.
 """
-    move_focus_to_widget!(container::WidgetContainer, widget::Widget)
+    move_focus_to_widget!(container::WidgetContainer, widget::Widget) -> Nothing
 
 Move the focus of the `container` to the `widget`.
 """
 function move_focus_to_widget!(container::WidgetContainer, widget::Widget)
     # Find the widget ID in the container list.
-    id = findfirst(==(widget), container.widgets)
+    id = findfirst(w -> w === widget, container.widgets)
 
     if !isnothing(id)
         if request_focus!(widget)
@@ -371,6 +370,8 @@ function move_focus_to_widget!(container::WidgetContainer, widget::Widget)
             end
         end
     end
+
+    return nothing
 end
 
 """
