@@ -7,7 +7,8 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export move_focus_to_next_window, move_focus_to_previous_window, process_keystroke
+export move_focus_to_next_window, move_focus_to_previous_window, move_focus_to_window
+export process_keystroke
 
 # TODO: Improve this function. Is the name "global command" good?
 function check_global_command(k::Keystroke)
@@ -63,6 +64,24 @@ Move the focus to the previous window.
 function move_focus_to_previous_window()
     focus_candidate = _search_previous_window_to_focus()
     !isnothing(focus_candidate) && _change_focused_window(focus_candidate)
+    return nothing
+end
+
+"""
+    move_focus_to_window(window::Window)
+
+Move the focus to the `window`.
+"""
+function move_focus_to_window(window::Window)
+    id = findfirst(w -> w === window, tui.windows)
+
+    if isnothing(id)
+        @log CRITICAL "move_focus_to_window" """
+        The window was not found in the window list of the current TUI."""
+        return nothing
+    end
+
+    _change_focused_window(id)
     return nothing
 end
 
@@ -154,6 +173,9 @@ function _change_focused_window(window_id::Int)
 
         # Hide the cursor until a widget request it.
         curs_set(0)
+
+        # Move the window to the top.
+        top_panel(new_focused_window.panel)
 
         @emit new_focused_window focus_acquired
     end
