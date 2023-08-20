@@ -126,7 +126,7 @@ function create_window(;
     # We need to update the window to update the container.
     update!(win)
 
-    @log INFO "create_window" """
+    @log DEBUG "create_window" """
     Window created:
       ID                 = $(win.id)
       Buffer size        = ($blines, $bcols)

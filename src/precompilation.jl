@@ -14,7 +14,7 @@ PrecompileTools.@setup_workload begin
     __init__()
 
     logger.enabled = true
-    logger.level = INFO
+    logger.level = DEBUG
     logger.logfile = mktemp() |> first
 
     old_stdout = stdout

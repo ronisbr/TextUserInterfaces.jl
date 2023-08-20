@@ -7,12 +7,11 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-export logger, CRITICAL, WARNING, INFO, VERBOSE
+export logger, CRITICAL, WARNING, DEBUG
 
 const CRITICAL = 0
 const WARNING  = 1
-const INFO     = 2
-const VERBOSE  = 3
+const DEBUG    = 2
 
 @with_kw mutable struct Logger
     enabled::Bool = false

@@ -15,12 +15,12 @@ export destroy_tui
 Destroy the text user interface (TUI).
 """
 function destroy_tui()
-    @log INFO "destroy_tui" "TUI will be destroyed."
+    @log DEBUG "destroy_tui" "TUI will be destroyed."
 
     @disconnect_all tui keypressed
 
     if tui.initialized
-        @log INFO "destroy_tui" "TUI destroying windows."
+        @log DEBUG "destroy_tui" "TUI destroying windows."
         destroy_all_windows()
         endwin()
 
@@ -33,7 +33,7 @@ function destroy_tui()
         tui.focused_window_id = 0
     end
 
-    @log INFO "destroy_tui" "TUI has been destroyed."
+    @log DEBUG "destroy_tui" "TUI has been destroyed."
 
     # Reset all colors definitions.
     _reset_color_dict()

@@ -33,7 +33,7 @@ function create_widget(
         vertical_hints   = Dict(:height => 1)
     )
 
-    @log INFO "create_widget" "WidgetKeystroke created"
+    @log DEBUG "create_widget" "WidgetKeystroke created"
 
     # Return the created container.
     return keystroke
