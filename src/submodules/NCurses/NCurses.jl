@@ -48,14 +48,13 @@ function load_ncurses()
     ncurses.libform           = Ncurses_jll.libform_handle
     ncurses.NCURSES_REENTRANT = false
 
-    # If we use the ncurses from `Ncurses_jll`, then we must tell its terminfo
-    # directory as stated in:
+    # If we use the ncurses from `Ncurses_jll`, we must tell its terminfo directory as
+    # stated in:
     #
     #   https://github.com/JuliaPackaging/Yggdrasil/issues/455
     #
-    # TODO: Maybe we can set this directory locally. As pointed out by
-    # @giordano, this can break other packages that uses they own ncurses
-    # instances.
+    # TODO: Maybe we can set this directory locally. As pointed out by @giordano, this can
+    # break other packages that uses they own ncurses instances.
     ENV["TERMINFO_DIRS"] = joinpath(
         Ncurses_jll.artifact_dir,
         "share",
