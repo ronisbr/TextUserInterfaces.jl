@@ -1,0 +1,310 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Description
+# ==========================================================================================
+#
+#   Widget: List Box.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+export WidgetListBox
+
+############################################################################################
+#                                        Structure
+############################################################################################
+
+@widget mutable struct WidgetListBox
+    # List box data.
+    data::Vector{String}
+
+    # Selected data.
+    selected::Vector{Bool}
+
+    # Current highlighted item.
+    current_highlighted_item::Int = 0
+
+    # View pointer.
+    begview::Int = 0
+
+    # Number of lines that will be displayed.
+    numlines::Int = -1
+
+    # Original configuration related to the number of lines.
+    numlines₀::Int = -1
+
+    # Are the elements selectable?
+    selectable::Bool = false
+
+    # Allow multiple selection.
+    multiple_selection::Bool = false
+
+    # Styling
+    # ==========================================================================
+
+    show_icon::Bool = false
+    item_icon::String = "[ ]"
+    selected_item_icon::String = "[X]"
+
+    # Signals
+    # ==========================================================================
+
+    @signal esc_pressed
+    @signal return_pressed
+end
+
+############################################################################################
+#                                        Object API
+############################################################################################
+
+function update_layout!(widget::WidgetListBox; force::Bool = false)
+    if update_widget_layout!(widget; force = force)
+        @unpack begview, data, height, numlines, numlines₀ = widget
+
+        num_elements = length(data)
+
+        # In this case, we must take care about the size.
+        if numlines₀ ≤ 0
+            numlines = height
+        else
+            numlines = numlines₀
+        end
+
+        # `numlines` must not be greater than the widget height and the number of data.
+        numlines = min(numlines, height, num_elements)
+
+        # Adjust the beginning of the view.
+        if begview + numlines > num_elements
+            begview = num_elements - numlines
+        end
+
+        @pack! widget = begview, numlines
+
+        # Make sure that the highlighted item is on view.
+        _move_view(widget, 0)
+
+        return true
+    else
+        return false
+    end
+end
+
+############################################################################################
+#                                        Widget API
+############################################################################################
+
+can_accept_focus(::WidgetListBox) = true
+
+function create_widget(
+    ::Val{:list_box},
+    layout::ObjectLayout;
+    data::Vector{String} = String[],
+    multiple_selection::Bool = false,
+    number_of_lines::Int = -1,
+    item_icon::String = "[ ]",
+    selected_item_icon::String = "[X]",
+    selectable::Bool = true,
+    show_icon::Bool = false,
+    theme::Theme = tui.default_theme
+)
+    num_elements = length(data)
+    width_hint   = maximum(textwidth.(data))
+    height_hint  = length(data)
+
+    if show_icon
+        width_hint += max(textwidth(item_icon), textwidth(selected_item_icon)) + 1
+    end
+
+    # Create the widget.
+    list_box = WidgetListBox(;
+        id                 = reserve_object_id(),
+        layout             = layout,
+        theme              = theme,
+        data               = data,
+        selected           = zeros(Bool, num_elements),
+        item_icon          = item_icon,
+        multiple_selection = multiple_selection,
+        numlines           = number_of_lines,
+        numlines₀          = number_of_lines,
+        selectable         = selectable,
+        selected_item_icon = selected_item_icon,
+        show_icon          = show_icon,
+        horizontal_hints   = Dict(:width  => width_hint),
+        vertical_hints     = Dict(:height => height_hint)
+    )
+
+    @log DEBUG "create_widget" """
+    WidgetListBox created:
+      ID                 = $(list_box.id)
+      Num. of elements   = $(length(data))
+      Mult. selection    = $(multiple_selection)
+      Num. of lines      = $(number_of_lines)
+      Item Icon          = $(item_icon)
+      Selected item icon = $(selected_item_icon)
+      Selectable         = $(selectable)
+      Show item          = $(show_icon)"""
+
+    # Return the created widget.
+    return list_box
+end
+
+function process_keystroke!(widget::WidgetListBox, k::Keystroke)
+    # In this case, if we have a global command, we must not process the keystroke.
+    cmd = check_global_command(k)
+    isnothing(cmd) || return :keystorke_not_processed
+
+    # If the keystroke is `enter` or `esc`, just emit the signal.
+    if k.ktype == :enter
+        @emit widget return_pressed
+        return :keystroke_processed
+
+    elseif k.ktype == :esc
+        @emit widget esc_pressed
+        return :keystroke_processed
+
+    # Handle the input.
+    elseif _handle_input!(widget, k)
+        request_update!(widget)
+        return :keystroke_processed
+
+    else
+        return :keystroke_not_processed
+    end
+end
+
+function request_focus!(widget::WidgetListBox)
+    request_update!(widget)
+    return true
+end
+
+request_cursor(::WidgetListBox) = false
+
+function redraw!(widget::WidgetListBox)
+    @unpack begview, buffer = widget
+    @unpack current_highlighted_item, data, item_icon, selected_item_icon, numlines = widget
+    @unpack selected, show_icon, theme, width = widget
+
+    wclear(buffer)
+
+    for i in 0:numlines-1
+        # ID of the current item in the vectors.
+        id = clamp(begview + i + 1, 1, length(data))
+
+        # Select which icon must be used for this item.
+        if show_icon
+            icon  = selected[id] ? selected_item_icon : item_icon
+            icon *= " "
+        else
+            icon = ""
+        end
+
+        # Select which color the current item must be printed.
+        color_i = selected[id] ? theme.highlight : theme.default
+
+        # If the item is the highlighted (the one that holds the cursor), the color must be
+        # inverted.
+        if (begview + i == current_highlighted_item) && has_focus(widget)
+            # TODO: Give a new color here by defining it in the theme.
+            color_i = theme.highlight
+        end
+
+        # Compute the padding after the text so that the entire field is filled with the
+        # correct color.
+        str = icon * data[id]
+        Δ   = width - length(str)
+        pad = Δ > 0 ? " " ^ Δ : ""
+
+        @ncolor color_i buffer begin
+            mvwprintw(buffer, i, 0, str * pad)
+        end
+    end
+
+    return nothing
+end
+
+############################################################################################
+#                                         Helpers
+############################################################################################
+
+@create_widget_helper list_box
+
+############################################################################################
+#                                     Public Functions
+############################################################################################
+
+# TODO: Add functions to get the information from the list box.
+
+############################################################################################
+#                                    Private Functions
+############################################################################################
+
+# Handle the input `k` in the list box `widget`.
+function _handle_input!(widget::WidgetListBox, k::Keystroke)
+    @unpack data, begview, current_highlighted_item, multiple_selection, numlines = widget
+    @unpack selectable, selected = widget
+
+    # Shift that we must apply to the list highlight item.
+    Δx = 0
+
+    # Flag that indicates if the input was handled.
+    input_handled = true
+
+    # Toggle the selection of the current item.
+    if k.value == " "
+        if selectable
+            id = current_highlighted_item + 1
+
+            if multiple_selection
+                selected[id] = !selected[id]
+            else
+                selected .= false
+                selected[id] = true
+            end
+        end
+    # Select previous value.
+    elseif k.ktype == :up
+        Δx -= 1
+    # Select next value.
+    elseif k.ktype == :down
+        Δx += 1
+    elseif k.ktype == :pageup
+        Δx -= numlines
+    elseif k.ktype == :pagedown
+        Δx += numlines
+    elseif k.ktype == :home
+        # The overflow will be handled by `_move_view`.
+        Δx -= length(data)
+    elseif k.ktype == :end
+        # The overflow will be handled by `_move_view`.
+        Δx += length(data)
+    else
+        input_handled = false
+    end
+
+    if input_handled
+        _move_view(widget, Δx)
+        return true
+    else
+        return false
+    end
+end
+
+# Move the view in the list box `widget` by `Δx` itens.
+function _move_view(widget::WidgetListBox, Δx::Int)
+    @unpack begview, current_highlighted_item, data, numlines = widget
+
+    # Make sure `current_highlighted_item` is inside the allowed bounds considering the
+    # data.
+    current_highlighted_item = clamp(current_highlighted_item + Δx, 0, length(data) - 1)
+
+    # Check if the highlighted values is outside the view.
+    if current_highlighted_item < begview
+        begview = current_highlighted_item
+    elseif current_highlighted_item > (begview + numlines - 1)
+        begview = current_highlighted_item - numlines + 1
+    end
+
+    # Repack values that were modified.
+    @pack! widget = current_highlighted_item, begview
+
+    return nothing
+end
