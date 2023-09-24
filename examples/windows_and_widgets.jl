@@ -113,6 +113,7 @@ function windows_and_widgets()
     bw = create_window(;
         border    = true,
         theme     = Theme(border = ncurses_color(243, :black)),
+        focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),
             left_anchor   = Anchor(ROOT_WINDOW, :left),
