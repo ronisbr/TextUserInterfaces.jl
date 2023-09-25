@@ -8,6 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 export WidgetListBox
+export get_current_item, get_selected_items
 
 ############################################################################################
 #                                        Structure
@@ -20,8 +21,8 @@ export WidgetListBox
     # Selected data.
     selected::Vector{Bool}
 
-    # Current highlighted item.
-    current_highlighted_item::Int = 0
+    # Current item in the list box cursor.
+    current_item::Int = 0
 
     # View pointer.
     begview::Int = 0
@@ -108,7 +109,7 @@ function create_widget(
 )
     num_elements = length(data)
     width_hint   = maximum(textwidth.(data))
-    height_hint  = length(data)
+    height_hint  = number_of_lines > 0 ? number_of_lines : num_elements
 
     if show_icon
         width_hint += max(textwidth(item_icon), textwidth(selected_item_icon)) + 1
@@ -180,7 +181,7 @@ request_cursor(::WidgetListBox) = false
 
 function redraw!(widget::WidgetListBox)
     @unpack begview, buffer = widget
-    @unpack current_highlighted_item, data, item_icon, selected_item_icon, numlines = widget
+    @unpack current_item, data, item_icon, selected_item_icon, numlines = widget
     @unpack selected, show_icon, theme, width = widget
 
     wclear(buffer)
@@ -202,7 +203,7 @@ function redraw!(widget::WidgetListBox)
 
         # If the item is the highlighted (the one that holds the cursor), the color must be
         # inverted.
-        if (begview + i == current_highlighted_item) && has_focus(widget)
+        if (begview + i == current_item) && has_focus(widget)
             # TODO: Give a new color here by defining it in the theme.
             color_i = theme.highlight
         end
@@ -231,7 +232,23 @@ end
 #                                     Public Functions
 ############################################################################################
 
-# TODO: Add functions to get the information from the list box.
+"""
+    get_current_item(widget::WidgetListBox) -> Union{String, Nothing}
+
+Return the current item in the list box `widget`.
+"""
+function get_current_item(widget::WidgetListBox)
+    return widget.data[widget.current_item + 1]
+end
+
+"""
+    get_selected_items(widget::WidgetListBox) -> Vector{String}
+
+Return an array with the selected items in the list box `widget`.
+"""
+function get_selected_items(widget::WidgetListBox)
+    return widget.data[widget.selected]
+end
 
 ############################################################################################
 #                                    Private Functions
@@ -239,7 +256,7 @@ end
 
 # Handle the input `k` in the list box `widget`.
 function _handle_input!(widget::WidgetListBox, k::Keystroke)
-    @unpack data, begview, current_highlighted_item, multiple_selection, numlines = widget
+    @unpack data, begview, current_item, multiple_selection, numlines = widget
     @unpack selectable, selected = widget
 
     # Shift that we must apply to the list highlight item.
@@ -251,7 +268,7 @@ function _handle_input!(widget::WidgetListBox, k::Keystroke)
     # Toggle the selection of the current item.
     if k.value == " "
         if selectable
-            id = current_highlighted_item + 1
+            id = current_item + 1
 
             if multiple_selection
                 selected[id] = !selected[id]
@@ -290,21 +307,20 @@ end
 
 # Move the view in the list box `widget` by `Δx` itens.
 function _move_view(widget::WidgetListBox, Δx::Int)
-    @unpack begview, current_highlighted_item, data, numlines = widget
+    @unpack begview, current_item, data, numlines = widget
 
-    # Make sure `current_highlighted_item` is inside the allowed bounds considering the
-    # data.
-    current_highlighted_item = clamp(current_highlighted_item + Δx, 0, length(data) - 1)
+    # Make sure `current_item` is inside the allowed bounds considering the data.
+    current_item = clamp(current_item + Δx, 0, length(data) - 1)
 
     # Check if the highlighted values is outside the view.
-    if current_highlighted_item < begview
-        begview = current_highlighted_item
-    elseif current_highlighted_item > (begview + numlines - 1)
-        begview = current_highlighted_item - numlines + 1
+    if current_item < begview
+        begview = current_item
+    elseif current_item > (begview + numlines - 1)
+        begview = current_item - numlines + 1
     end
 
     # Repack values that were modified.
-    @pack! widget = current_highlighted_item, begview
+    @pack! widget = current_item, begview
 
     return nothing
 end
