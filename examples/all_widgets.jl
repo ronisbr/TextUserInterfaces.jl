@@ -159,6 +159,7 @@ function all_widgets()
 
     list_box_2 = @tui_list_box(
         parent             = c,
+        border = true,
         data               = ["Item #$i" for i in 1:10],
         multiple_selection = true,
         number_of_lines    = 5,
