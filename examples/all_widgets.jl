@@ -215,6 +215,24 @@ function all_widgets()
         (; label_widget = combo_box_1_information)
     )
 
+    # Horizontal Line
+    # ======================================================================================
+
+    hl = @tui_horizontal_line(
+        parent = c,
+        top_anchor = (combo_box_1, :bottom),
+        left_anchor = (:parent, :left),
+        right_anchor = (:parent, :right)
+    )
+
+    @tui_horizontal_line(
+        parent = c,
+        pattern = "+-",
+        top_anchor = (hl, :bottom),
+        left_anchor = (:parent, :left),
+        right_anchor = (:parent, :right)
+    )
+
     # Bottom Window
     # ======================================================================================
 
