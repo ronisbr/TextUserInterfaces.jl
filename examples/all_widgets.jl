@@ -183,6 +183,38 @@ function all_widgets()
         (; label_widget = list_box_2_information)
     )
 
+    # Combo Box
+    # ======================================================================================
+
+    function combo_box_item_changed(w; label_widget)
+        current_item = get_item(w)
+        str = "Current item: $(current_item)."
+        change_text!(label_widget, str)
+        return nothing
+    end
+
+    combo_box_1 = @tui_combo_box(
+        parent             = c,
+        data               = ["Item #$i" for i in 1:10],
+        left_anchor        = (list_box_2, :left),
+        top_anchor         = (list_box_2, :bottom),
+    )
+
+    combo_box_1_information = @tui_label(
+        parent        = c,
+        text          = "",
+        left_anchor   = (combo_box_1, :right, 2),
+        right_anchor  = (:parent, :right),
+        middle_anchor = (combo_box_1, :middle)
+    )
+
+    @connect(
+        combo_box_1,
+        item_changed,
+        combo_box_item_changed,
+        (; label_widget = combo_box_1_information)
+    )
+
     # Bottom Window
     # ======================================================================================
 

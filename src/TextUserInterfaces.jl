@@ -65,6 +65,8 @@ include("./widgets/list_box.jl")
 include("./widgets/object_api.jl")
 include("./widgets/widgets.jl")
 
+include("./widgets/combo_box.jl")
+
 include("./windows/constants.jl")
 include("./windows/create.jl")
 include("./windows/destroy.jl")
