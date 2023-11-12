@@ -50,6 +50,12 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     blines, bcols = _get_window_dimensions(win.buffer)
     vlines, vcols = _get_window_dimensions(win.view)
 
+    # We must remove the space for the border if required.
+    if win.has_border
+        vlines -= 2
+        vcols -= 2
+    end
+
     if y + vlines >= blines
         y = blines - vlines
     end
@@ -64,7 +70,7 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     request_update!(win)
 
     # Update the view if required.
-    update && update_view!(win)
+    update && _update_view!(win)
 
     return nothing
 end
