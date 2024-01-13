@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains constants related to windows.
 #
-#   This file contains constants related to windows.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 # Hints for the window layout.
 const _WINDOW_HORIZONTAL_LAYOUT_HINTS = Dict{Symbol, Any}(

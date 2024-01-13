@@ -1,12 +1,9 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file defines the implementation of the functions required by the Object API for the
+# windows.
 #
-#   This file defines the implementation of the functions required by the Object API for the
-#   windows.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 can_accept_focus(win::Window) = win.focusable
 can_release_focus(win::Window) = true

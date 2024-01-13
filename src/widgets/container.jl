@@ -1,17 +1,14 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Widget container.
 #
-#   Widget container.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export add_widget!, remove_widget!
 export move_focus_to_next_widget!, move_focus_to_previous_widget!
 
 ############################################################################################
-#                                        Constants
+#                                        Constants                                         #
 ############################################################################################
 
 # Hints for the widget container layout.
@@ -26,7 +23,7 @@ const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = Dict(
 )
 
 ############################################################################################
-#                                        Object API
+#                                        Object API                                        #
 ############################################################################################
 
 function can_accept_focus(container::WidgetContainer)
@@ -137,7 +134,7 @@ function update_layout!(container::WidgetContainer; force::Bool = false)
 end
 
 ############################################################################################
-#                                        Widget API
+#                                        Widget API                                        #
 ############################################################################################
 
 function create_widget(
@@ -200,8 +197,8 @@ function process_keystroke!(container::WidgetContainer, k::Keystroke)
             sync_cursor(container)
             return :keystroke_processed
 
-        # If the command was not processed by the widget, we need to check if
-        # there is a global action that must be performed.
+        # If the command was not processed by the widget, we need to check if there is a
+        # global action that must be performed.
         else
             gc = check_global_command(k)
 
@@ -260,7 +257,7 @@ function request_cursor(container::WidgetContainer)
 end
 
 ############################################################################################
-#                                     Public Functions
+#                                     Public Functions                                     #
 ############################################################################################
 
 """
@@ -421,7 +418,7 @@ function remove_widget!(container::WidgetContainer, widget::Widget)
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 # Change the focused widget in `container` to `widget_id`, emitting the required signals.
@@ -610,7 +607,7 @@ function _search_previous_widget_to_focus(
 end
 
 ############################################################################################
-#                                         Helpers
+#                                         Helpers                                          #
 ############################################################################################
 
 @create_widget_helper container

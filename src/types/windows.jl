@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Types related to windows.
 #
-#   Types related to windows.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export Window
 
@@ -27,8 +24,7 @@ export Window
     # Window theme.
     theme::Theme
 
-    # Buffer
-    # ======================================================================================
+    # == Buffer ============================================================================
 
     # Pointer to the window (pad) that handles the buffer.
     buffer::Ptr{WINDOW} = Ptr{WINDOW}(0)
@@ -36,8 +32,7 @@ export Window
     # If `true`, then the buffer has changed, which requires a view update.
     buffer_changed::Bool = true
 
-    # View
-    # ======================================================================================
+    # == View ==============================================================================
 
     # Pointer to the window view, which is the window that is actually draw on screen.
     view::Ptr{WINDOW} = Ptr{WINDOW}(0)
@@ -49,19 +44,16 @@ export Window
     # If `true`, then the view has changed and must be updated.
     view_needs_update::Bool = true
 
-    # Panel
-    # ======================================================================================
+    # == Panel =============================================================================
 
     # Panel of the window.
     panel::Ptr{Cvoid} = Ptr{Cvoid}(0)
 
-    # Widget Container
-    # ======================================================================================
+    # == Widget Container ==================================================================
 
     widget_container::WidgetContainer
 
-    # Signals
-    # ======================================================================================
+    # == Signals ===========================================================================
 
     @signal focus_acquired
     @signal focus_lost

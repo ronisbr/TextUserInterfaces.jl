@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Function related to the initialization of TUI.
 #
-#   Function related to the initialization of TUI.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export initialize_tui
 
@@ -18,8 +15,7 @@ function initialize_tui()
     # If the TUI is already initialized, we must destroy it first.
     tui.initialized && destroy_tui()
 
-    # Initialize NCurses
-    # ======================================================================================
+    # == Initialize NCurses ================================================================
 
     tui.stdscr = initscr()
     tui.initialized = true

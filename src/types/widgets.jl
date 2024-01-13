@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains the definitions related to widgets.
 #
-#   This file contains the definitions related to widgets.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export WidgetContainer
 
@@ -16,8 +13,7 @@ export WidgetContainer
     title_alignment::Symbol = :l
     widgets::Vector{Widget} = Widget[]
 
-    # Focus Management
-    # ======================================================================================
+    # == Focus Management ==================================================================
 
     focused_widget_id::Int = 0
 end

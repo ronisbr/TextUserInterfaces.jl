@@ -1,16 +1,13 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains functions related to keyboard input handling.
 #
-#   This file contains functions related to keyboard input handling.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export getkey
 
 ############################################################################################
-#                                        Functions
+#                                        Functions                                         #
 ############################################################################################
 
 """
@@ -38,8 +35,8 @@ function getkey(win::Union{Ptr{WINDOW}, Nothing} = nothing)
 
         s = string(Char(c))
 
-        # Here, we need to read a sequence of characters that is already in the
-        # buffer. Thus, we will disable the delay.
+        # Here, we need to read a sequence of characters that is already in the buffer.
+        # Thus, we will disable the delay.
         win_ptr = win === nothing ? tui.stdscr : win
         #nodelay(win_ptr, true)
 

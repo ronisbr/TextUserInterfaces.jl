@@ -1,16 +1,13 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Functions related to anchors.
 #
-#   Functions related to anchors.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export process_object_layout
 
 ############################################################################################
-#                                     Public Functions
+#                                     Public Functions                                     #
 ############################################################################################
 
 """
@@ -102,8 +99,7 @@ function process_object_layout(
     height = _process_layout_property(layout_height, :height, parent)
     width  = _process_layout_property(layout_width,  :width,  parent)
 
-    # Vertical
-    # ======================================================================================
+    # == Vertical ==========================================================================
 
     if vertical == :abottom_atop
         bottom = _get_anchor(bottom_anchor, parent)
@@ -170,8 +166,7 @@ function process_object_layout(
         error("Wrong vertical size configuration leading to negative top position.")
     end
 
-    # Horizontal
-    # ======================================================================================
+    # == Horizontal ========================================================================
 
     if horizontal == :aleft_aright
         left  = _get_anchor(left_anchor, parent)
@@ -242,7 +237,7 @@ function process_object_layout(
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 # Check if the `side` parameter of `anchor` is valid for vertical layout information. If

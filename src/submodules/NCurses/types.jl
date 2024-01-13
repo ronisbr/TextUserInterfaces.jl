@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Types related to NCurses.
 #
-#   Types related to NCurses.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export ncurses
 
@@ -23,16 +20,14 @@ This private structure handles some global variables that are used in the ncurse
     libmenu::Ptr{Nothing}    = Ptr{Nothing}(0)
     libpanel::Ptr{Nothing}   = Ptr{Nothing}(0)
 
-    # libncurses global symbols
-    # ==========================================================================
+    # == libncurses global symbols =========================================================
 
     LINES::Ptr{Cint}            = Ptr{Cint}(0)
     COLS::Ptr{Cint}             = Ptr{Cint}(0)
     acs_map::Ptr{Cuint}         = Ptr{Cuint}(0)
     acs_map_arr::Vector{UInt32} = UInt32[]
 
-    # libforms global symbols
-    # ==========================================================================
+    # == libforms global symbols ===========================================================
 
     TYPE_ALNUM::Ptr{Nothing}   = Ptr{Nothing}(0)
     TYPE_ALPHA::Ptr{Nothing}   = Ptr{Nothing}(0)

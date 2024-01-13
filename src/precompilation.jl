@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Precompilation.
 #
-#   Precompilation.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 import PrecompileTools
 
@@ -24,8 +21,7 @@ PrecompileTools.@setup_workload begin
 
     PrecompileTools.@compile_workload begin
 
-        # Precompile Initializaion Functions
-        # ==================================================================================
+        # == Precompile Initializaion Functions ============================================
 
         initialize_tui()
 
@@ -61,8 +57,7 @@ PrecompileTools.@setup_workload begin
             parent = con
         )
 
-        # Precompile Functions Related to TUI Update
-        # ==================================================================================
+        # == Precompile Functions Related to TUI Update ====================================
 
         # Create the keycodes to process the information.
         k_tab = Keystroke(9, string(Char(9)), :tab, false, false, false)
@@ -84,16 +79,14 @@ PrecompileTools.@setup_workload begin
         process_keystroke(k_a)
         tui_update()
 
-        # Precompile Input Related to Functions
-        # ==================================================================================
+        # == Precompile Input Related to Functions =========================================
 
         write(new_stdin, 'A')
         getkey()
         write(new_stdin, 'A')
         getkey(tui.stdscr)
 
-        # Precompile All Functions Related to TUI Desctruction
-        # ==================================================================================
+        # == Precompile All Functions Related to TUI Desctruction ==========================
 
         destroy_tui()
     end

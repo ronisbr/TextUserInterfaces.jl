@@ -2,8 +2,7 @@ using Test
 using TextUserInterfaces
 using TextUserInterfaces.NCurses
 
-# Check If The Libraries Were Loaded
-# ==========================================================================================
+# == Check If The Libraries Were Loaded ====================================================
 
 @testset "Libraries loading..." begin
     init_tui()
@@ -16,8 +15,7 @@ using TextUserInterfaces.NCurses
     destroy_tui()
 end
 
-# Check If The NCurses Version Is Consistent
-# ==========================================================================================
+# == Check If The NCurses Version Is Consistent ============================================
 
 @testset "NCurses version..." begin
     init_tui()
