@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains functions to refresh and update windows.
 #
-#   This file contains functions to refresh and update windows.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export update_window, refresh_all_windows, move_view!, move_view_inc!
 
@@ -33,8 +30,9 @@ function update_all_windows()
     return nothing
 end
 
-#                                           View
-# ==========================================================================================
+############################################################################################
+#                                           View                                           #
+############################################################################################
 
 """
     move_view!(win::Window, y::Int, x::Int; update::Bool = true) -> Nothing
@@ -76,7 +74,7 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 # Update the view of window `win` by copying the contents from the buffer. If the view does

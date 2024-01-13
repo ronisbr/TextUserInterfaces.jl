@@ -1,12 +1,9 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file defines the root window. This object is currently only used for anchoring
+# windows.
 #
-#   This file defines the root window. This object is currently only used for
-#   anchoring windows.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 get_left(rw::RootWindow)   = 0
 get_height(rw::RootWindow) = Int(LINES())

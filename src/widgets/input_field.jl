@@ -1,17 +1,14 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Widget: Input field.
 #
-#   Widget: Input field.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export WidgetInputField
 export get_text
 
 ############################################################################################
-#                                        Structure
+#                                        Structure                                         #
 ############################################################################################
 
 @widget mutable struct WidgetInputField
@@ -47,8 +44,7 @@ export get_text
     validator::Function = _INPUT_FIELD_DEFAULT_VALIDATOR
     is_valid::Bool = true
 
-    # Signals
-    # ======================================================================================
+    # == Signals ===========================================================================
 
     @signal return_pressed
     @signal text_changed
@@ -71,7 +67,7 @@ const _INPUT_FIELD_STYLE_WIDTH_MARGINS = Dict(
 _INPUT_FIELD_DEFAULT_VALIDATOR(str::String) = true
 
 ############################################################################################
-#                                        Object API
+#                                        Object API                                        #
 ############################################################################################
 
 function destroy!(widget::WidgetInputField)
@@ -112,7 +108,7 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
 end
 
 ############################################################################################
-#                                        Widget API
+#                                        Widget API                                        #
 ############################################################################################
 
 can_accept_focus(::WidgetInputField) = true
@@ -246,13 +242,13 @@ function redraw!(widget::WidgetInputField)
 end
 
 ############################################################################################
-#                                         Helpers
+#                                         Helpers                                          #
 ############################################################################################
 
 @create_widget_helper input_field
 
 ############################################################################################
-#                                     Public Functions
+#                                     Public Functions                                     #
 ############################################################################################
 
 """
@@ -265,7 +261,7 @@ function get_text(widget::WidgetInputField)
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 # Handle the input `k` to the input field `widget`.
@@ -372,8 +368,7 @@ function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
     string_width = sum(textwidth.(data))
     string_width_before_cursor = sum(textwidth.(data[1:(cursor - 1)]))
 
-    # Update the View
-    # ======================================================================================
+    # == Update the View ===================================================================
 
     # If the beginning of the view is after the cursor, we should move it to match the
     # cursor position.
@@ -398,8 +393,7 @@ function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
         view_beginning = max(1, string_width_before_cursor - field_width + 2)
     end
 
-    # Update the Physical Cursor Position
-    # ======================================================================================
+    # == Update the Physical Cursor Position ===============================================
 
     # Move the physical cursor to the correct position considering the border if present.
     #
@@ -416,8 +410,7 @@ function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
         widget.phy_cursor_y = 0
     end
 
-    # Render the View
-    # ======================================================================================
+    # == Render the View ===================================================================
 
     current_str_width = 1
     processed_char = 0

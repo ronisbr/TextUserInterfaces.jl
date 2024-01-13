@@ -1,12 +1,9 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file defines the implementation of the functions required by the Object API for the
+# widgets.
 #
-#   This file defines the implementation of the functions required by the Object API for the
-#   widgets.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 can_accept_focus(widget::Widget) = false
 can_release_focus(widget::Widget) = true

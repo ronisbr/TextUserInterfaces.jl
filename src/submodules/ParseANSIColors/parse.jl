@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Functions to parse a string with ANSI color escape sequences.
 #
-#   Functions to parse a string with ANSI color escape sequences.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export parse_ansi_string
 
@@ -40,8 +37,8 @@ function parse_ansi_string(str::AbstractString)
 
     for c in str
         # Check if we have a escape character. In this case, change the state to
-        # `:escape_seq`. We also need to add the string assembled so far to the
-        # output vector.
+        # `:escape_seq`. We also need to add the string assembled so far to the output
+        # vector.
         if c == '\e'
             state = :escape_seq_beg
 
@@ -83,7 +80,7 @@ function parse_ansi_string(str::AbstractString)
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 function _parse_ansi_code(decoration::Decoration, code::String)

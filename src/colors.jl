@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains functions related to the color support.
 #
-#   This file contains functions related to the color support.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 import .NCurses: init_color
 export ncurses_color, get_color_pair, modify_color, init_color_pair, set_color
@@ -139,7 +136,7 @@ end
     modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int) -> Int
 
 Modify the color ID `id` to the RGB value (`r`,`g`,`b`). If the symbol `name` is available,
-then the user can select this color ID by using `name` instead of the `id`.
+the user can select this color ID by using `name` instead of the `id`.
 
 If the color name `name` already exists, then nothing will be changed.
 
@@ -197,7 +194,7 @@ function unset_color(win::Window, color::Int)
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 # Return the index related to the color `color`.

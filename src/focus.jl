@@ -1,11 +1,8 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# Functions related to the global focus manager.
 #
-#   Functions related to the global focus manager.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 export move_focus_to_next_window, move_focus_to_previous_window, move_focus_to_window
 export process_keystroke
@@ -151,7 +148,7 @@ function process_keystroke(k::Keystroke)
 end
 
 ############################################################################################
-#                                    Private Functions
+#                                    Private Functions                                     #
 ############################################################################################
 
 # Change the focused window to the window with ID `window_id`.

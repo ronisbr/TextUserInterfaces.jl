@@ -1,14 +1,11 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains a wrapper of all libncurses functions that are used by the package.
 #
-#   This file contains a wrapper of all libncurses functions that are used by the package.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 ############################################################################################
-#                                      Private Macros
+#                                      Private Macros                                      #
 ############################################################################################
 
 """
@@ -44,11 +41,10 @@ macro _ccalln(expr)
 end
 
 ############################################################################################
-#                                    NCurses Functions
+#                                    NCurses Functions                                     #
 ############################################################################################
 
-# General Functions
-# ==========================================================================================
+# == General Functions =====================================================================
 
 # This code assembles the functions by using the following information:
 #
@@ -327,8 +323,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Depends on Arguments that Must Be `Integer`
-# ==========================================================================================
+# == Functions that Depends on Arguments that Must Be `Integer` ============================
 
 for (f, r, v, j, c) in
     (
@@ -526,8 +521,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Depends on Arguments that Must Be `jlchtype`
-# ==========================================================================================
+# == Functions that Depends on Arguments that Must Be `jlchtype` ===========================
 
 for (f, r, v, j, c) in
     (
@@ -583,8 +577,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Depends on Arguments that Must Be `Integer` and `jlchtype`
-# ==========================================================================================
+# == Functions that Depends on Arguments that Must Be `Integer` and `jlchtype` =============
 
 for (f, r, v, j, c) in
     (
@@ -675,8 +668,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Depends on Arguments that Must Be `AbstractString`
-# ==========================================================================================
+# == Functions that Depends on Arguments that Must Be `AbstractString` =====================
 
 for (f, r, v, j, c) in
     (
@@ -723,8 +715,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Arguments Must Be `AbstractString` and `Integer`
-# ==========================================================================================
+# == Functions that Arguments Must Be `AbstractString` and `Integer` =======================
 
 for (f, r, v, j, c) in
     (
@@ -771,8 +762,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Other Functions
-# ==========================================================================================
+# == Other Functions =======================================================================
 
 """
     ACS_(s::Symbol)
@@ -832,8 +822,7 @@ function LINES()
 end
 export LINES
 
-# Specialization
-# ==========================================================================================
+# == Specialization ========================================================================
 
 """
     wborder(win::Ptr{WINDOW})
@@ -843,8 +832,7 @@ Call the function `wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)`.
 """
 wborder(win::Ptr{WINDOW}) = wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)
 
-# NCurses Version
-# ==========================================================================================
+# == NCurses Version =======================================================================
 
 """
     curses_version() -> NamedTuple

@@ -1,15 +1,11 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+## Description #############################################################################
 #
-# Description
-# ==========================================================================================
+# This file contains a wrapper of all libmenu functions that are used by the package.
 #
-#   This file contains a wrapper of all libmenu functions that are used by
-#   the package.
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+############################################################################################
 
 ############################################################################################
-#                                      Private Macros
+#                                      Private Macros                                      #
 ############################################################################################
 
 """
@@ -45,11 +41,10 @@ macro _ccallm(expr)
 end
 
 ############################################################################################
-#                                   `libform` Functions
+#                                   `libform` Functions                                    #
 ############################################################################################
 
-# General Functions
-# ==========================================================================================
+# == General Functions =====================================================================
 
 # This code assembles the functions by using the following information:
 #
@@ -169,8 +164,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Depends on Arguments that Must Be `Integer`
-# ==========================================================================================
+# == Functions that Depends on Arguments that Must Be `Integer` ============================
 
 for (f, r, v, j, c) in
     (
@@ -222,8 +216,7 @@ for (f, r, v, j, c) in
     end
 end
 
-# Functions that Depends on Arguments that Must Be `AbstractString`
-# ==========================================================================================
+# == Functions that Depends on Arguments that Must Be `AbstractString` =====================
 
 for (f, r, v, j, c) in
     (
