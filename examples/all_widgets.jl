@@ -218,19 +218,32 @@ function all_widgets()
     # Horizontal Line
     # ======================================================================================
 
-    hl = @tui_horizontal_line(
+    hl1 = @tui_horizontal_line(
         parent = c,
         top_anchor = (combo_box_1, :bottom),
         left_anchor = (:parent, :left),
         right_anchor = (:parent, :right)
     )
 
-    @tui_horizontal_line(
+    hl2 = @tui_horizontal_line(
         parent = c,
         pattern = "+-",
-        top_anchor = (hl, :bottom),
+        top_anchor = (hl1, :bottom),
         left_anchor = (:parent, :left),
         right_anchor = (:parent, :right)
+    )
+
+    # Progress Bar
+    # ======================================================================================
+
+    pb = @tui_progress_bar(
+        parent = c,
+        top_anchor = (hl2, :bottom),
+        left_anchor = (:parent, :left),
+        right_anchor = (:parent, :right),
+        value = 0,
+        show_value = true,
+        theme = Theme(default = ncurses_color(:green, 246))
     )
 
     # Bottom Window
@@ -264,6 +277,19 @@ function all_widgets()
         top_anchor    = (:parent, :top),
         text          = cy * "F1" * cr * " : Quit"
     )
+
+    # == Signals ===========================================================================
+
+    # Function to handle keystrokes.
+    function handle_keystroke(tui; keystroke, kwargs...)
+        if keystroke.value == "+"
+            set_value!(pb, pb.value + 1)
+        elseif keystroke.value == "-"
+            set_value!(pb, pb.value - 1)
+        end
+    end
+
+    @connect tui keypressed handle_keystroke
 
     app_main_loop()
 end
