@@ -23,6 +23,9 @@ function app_main_loop()
         k = getkey()
         @emit tui keypressed (; keystroke = k)
 
+        # If the signal destroyed the TUI, we should just exit.
+        !tui.initialized && break
+
         # Check if the keystroke must be passed or if the signal hijacked it.
         if !@get_signal_property(tui, keypressed, block, false)
             if k.ktype == :F1
