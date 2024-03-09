@@ -18,7 +18,7 @@ export change_text!
     text::String
 
     # Variable to store the aligned text to save computational burden.
-    aligned_text::String
+    aligned_text::Vector{String}
 end
 
 ############################################################################################
@@ -61,7 +61,7 @@ function create_widget(
         layout           = layout,
         text             = text,
         theme            = theme,
-        aligned_text     = text,
+        aligned_text     = tokens,
         horizontal_hints = Dict(:width => width),
         vertical_hints   = Dict(:height => height)
     )
@@ -82,7 +82,9 @@ function redraw!(widget::WidgetLabel)
     wclear(buffer)
 
     @ncolor theme.default buffer begin
-        mvwprintw(buffer, 0, 0, aligned_text)
+        @inbounds for l in 1:length(aligned_text)
+            mvwprintw(buffer, l - 1, 0, aligned_text[l])
+        end
     end
 
     return nothing
@@ -134,20 +136,21 @@ function _align_text!(widget::WidgetLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing
 
-    @unpack alignment, buffer, fill, text, width = widget
+    @unpack alignment, buffer, fill, text, width, aligned_text = widget
 
     # Split the string in each line.
     tokens = split(text, "\n")
 
-    # Buffers to store the formatted text and line.
-    buf  = IOBuffer()
+    # Buffers to store the line.
     bufl = IOBuffer()
 
-    for line in tokens
+    empty!(aligned_text)
+    sizehint!(aligned_text, length(tokens))
 
+    for line in tokens
         # Check the alignment and print accordingly.
         if alignment == :r
-            col = width - textwidth(line) - 1
+            col = width - textwidth(line)
             write(bufl, " " ^ col, line)
         elseif alignment == :c
             col = div(width - textwidth(line), 2)
@@ -160,14 +163,12 @@ function _align_text!(widget::WidgetLabel)
         # widget width.
         if fill
             formatted_line = String(take!(bufl))
-            rem = clamp(width - textwidth(formatted_line) - 1, 0, width)
-            write(buf, formatted_line, " " ^ rem, '\n')
+            rem = clamp(width - textwidth(formatted_line), 0, width)
+            push!(aligned_text, formatted_line * " " ^ rem)
         else
-            write(buf, take!(bufl), '\n')
+            push!(aligned_text, String(take!(bufl)))
         end
     end
-
-    widget.aligned_text = String(take!(buf))
 
     request_update!(widget)
 
