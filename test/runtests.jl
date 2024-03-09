@@ -4,8 +4,8 @@ using TextUserInterfaces.NCurses
 
 # == Check If The Libraries Were Loaded ====================================================
 
-@testset "Libraries loading..." begin
-    init_tui()
+@testset "Libraries Loading" begin
+    initialize_tui()
 
     @test TextUserInterfaces.ncurses.libncurses != C_NULL
     @test TextUserInterfaces.ncurses.libpanel   != C_NULL
@@ -17,8 +17,8 @@ end
 
 # == Check If The NCurses Version Is Consistent ============================================
 
-@testset "NCurses version..." begin
-    init_tui()
+@testset "NCurses Version" begin
+    initialize_tui()
 
     ncurses_version = curses_version()
 
