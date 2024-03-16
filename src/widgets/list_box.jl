@@ -213,13 +213,12 @@ function redraw!(widget::WidgetListBox)
         end
 
         # Select which color the current item must be printed.
-        color_i = selected[id] ? theme.highlight : theme.default
+        color_i = selected[id] ? theme.selected : theme.default
 
         # If the item is the highlighted (the one that holds the cursor), the color must be
         # inverted.
         if (begview + i == current_item) && has_focus(widget)
-            # TODO: Give a new color here by defining it in the theme.
-            color_i = theme.highlight
+            color_i |= theme.highlight
         end
 
         # Compute the padding after the text so that the entire field is filled with the

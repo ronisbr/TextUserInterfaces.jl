@@ -13,13 +13,18 @@ Defines a theme in the text user interface.
 
 # Fields
 
-- `default::Int`: The default NCurses color for all elements.
-- `highlight::Int`: The NCurses color used for highlighted elements.
+- `default::Int`: NCurses color for all elements.
+- `error::Int`: NCurses color for errors.
+- `highlight::Int`: NCurses color used for highlighted elements.
+- `selected::Int`: NCurses color for selected items.
+- `border::Int`: NCurses color for borders.
+- `title::Int`: NCurses color for titles.
 """
 @with_kw struct Theme
     default::Int = 0
     error::Int = 0
     highlight::Int = 0
+    selected::Int = 0
     border::Int = 0
     title::Int = 0
 end

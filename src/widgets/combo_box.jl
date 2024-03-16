@@ -127,7 +127,7 @@ function redraw!(widget::WidgetComboBox)
 
     # We will highlight the combo box if it is selected or if list box is opened.
     list_box_opened = !isnothing(get_parent(list_box))
-    color = (has_focus(widget) || list_box_opened) ? theme.highlight : theme.default
+    color = (has_focus(widget) || list_box_opened) ? theme.selected : theme.default
 
     # Get the string that will be printed.
     str = data[current_item]
