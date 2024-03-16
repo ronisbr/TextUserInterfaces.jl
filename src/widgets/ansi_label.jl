@@ -17,8 +17,8 @@ export change_text!
     text::String
 
     # Variables to store the parsed text and color to reduce the computational burden.
-    aligned_text::Vector{String} = String[]
-    aligned_text_colors::Vector{Int} = Int[]
+    aligned_text::Vector{Vector{String}} = Vector{String}[]
+    aligned_text_colors::Vector{Vector{Int}} = Int[]
 end
 
 ############################################################################################
@@ -80,9 +80,16 @@ function redraw!(widget::WidgetAnsiLabel)
 
     mvwprintw(buffer, 0, 0, "")
 
-    for i in 1:length(aligned_text)
-        @ncolor aligned_text_colors[i] buffer begin
-            wprintw(buffer, aligned_text[i])
+    @inbounds for l in 1:length(aligned_text)
+        line = aligned_text[l]
+        line_colors = aligned_text_colors[l]
+
+        mvwprintw(buffer, l - 1, 0, "")
+
+        for i in 1:length(line)
+            @ncolor line_colors[i] buffer begin
+                wprintw(buffer, line[i])
+            end
         end
     end
 
@@ -132,56 +139,69 @@ function _parse_ansi_text!(widget::WidgetAnsiLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing
 
-    @unpack alignment, buffer, text, width = widget
+    @unpack alignment, buffer, text, width, aligned_text, aligned_text_colors = widget
 
     # Split the string in each line.
     tokens = split(text, "\n")
 
-    # Formatted text.
-    text = ""
+    # Empty the vectors with the string and decorations.
+    empty!(aligned_text)
+    empty!(aligned_text_colors)
+
+    # Variable that will store the decorations of the previous line.
+    vd = nothing
 
     for line in tokens
-        # Notice that if the ANSI escape sequence is not valid, then the alignment will not
-        # be correct. This regex remove all ANSI escape sequences to count for the printable
+        # Formatted text.
+        text = ""
+
+        # Notice that if the ANSI escape sequence is not valid, the alignment will not be
+        # correct. This regex remove all ANSI escape sequences to count for the printable
         # characters.
-        if alignment ∈ [:r, :c]
+        if (alignment == :r) || (alignment == :c)
             printable_line = remove_decorations(line)
             line_width     = textwidth(printable_line)
         else
             line_width = 0
         end
 
-        # Check the alignment and print accordingly.
-        if alignment === :r
+        # Align the current line accordingly.
+        if alignment == :r
             col   = width - line_width - 1
-            text *= " "^col * line * "\n"
-        elseif alignment === :c
+            text *= " "^col * line
+        elseif alignment == :c
             col   = div(width - line_width, 2)
-            text *= " "^col * line * "\n"
+            text *= " "^col * line
         else
-            text *= line * "\n"
+            text *= line
         end
+
+        # Get the decoration of the last line, if it exists.
+        decoration = (!isnothing(vd) && !isempty(vd)) ?
+            last(vd) :
+            ParseAnsiColors.Decoration()
+
+        # Now, we need to parse ANSI escape sequences and build the decorations for this
+        # line.
+        vstr, vd = parse_ansi_string(text, decoration)
+        num_decorations = length(vd)
+
+        colors = Vector{Int}(undef, num_decorations)
+
+        @inbounds for i in 1:num_decorations
+            d = vd[i]
+            c = ncurses_color(
+                d.foreground,
+                d.background;
+                bold      = d.bold,
+                underline = d.underline
+            )
+            colors[i] = c
+        end
+
+        push!(aligned_text, vstr)
+        push!(aligned_text_colors, colors)
     end
-
-    # Parse the ANSI escape sequences.
-    vstr, vd = parse_ansi_string(text)
-    num_decorations = length(vd)
-
-    colors = Vector{Int}(undef, num_decorations)
-
-    @inbounds for i in 1:num_decorations
-        d = vd[i]
-        c = ncurses_color(
-            d.foreground,
-            d.background;
-            bold      = d.bold,
-            underline = d.underline
-        )
-        colors[i] = c
-    end
-
-    widget.aligned_text = vstr
-    widget.aligned_text_colors = colors
 
     update_layout!(widget)
     request_update!(widget)

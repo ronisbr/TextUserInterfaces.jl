@@ -7,19 +7,17 @@
 export parse_ansi_string
 
 """
-    parse_ansi_string(str::AbstractString) -> Vector{String}, Vector{Decoration}
+    parse_ansi_string(str::AbstractString, decoration::Decoration = Decoration()) -> Vector{String}, Vector{Decoration}
 
-Parse the string `str` that can contain ANSI color escape sequences.
+Parse the string `str` that can contain ANSI color escape sequences. The user can pass the
+initial `decoration`, which will be considered as the initial state.
 
 # Returns
 
 - `Vector{String}`: Strings.
 - `Vector{Decoration}`: Objects of type `Decoration` with the decoration of each string.
 """
-function parse_ansi_string(str::AbstractString)
-    # Current state.
-    decoration = Decoration()
-
+function parse_ansi_string(str::AbstractString, decoration::Decoration = Decoration())
     # Vector containing the decorations.
     d = Vector{Decoration}(undef, 0)
 
@@ -51,8 +49,7 @@ function parse_ansi_string(str::AbstractString)
             continue
         end
 
-        # If we are not in the state `:escape_seq`, then just add the character
-        # to the string.
+        # If we are not in the state `:escape_seq`, just add the character to the string.
         if state == :string
             str_i *= string(c)
         elseif state == :escape_seq_beg
@@ -71,12 +68,12 @@ function parse_ansi_string(str::AbstractString)
         end
     end
 
-    if !isempty(str_i)
-        push!(s, str_i)
-        push!(d, decoration)
-    end
+    !isempty(str_i) && push!(s, str_i)
 
-    return s,d
+    # We always push the last decoration.
+    push!(d, decoration)
+
+    return s, d
 end
 
 ############################################################################################
