@@ -4,6 +4,8 @@
 #
 ############################################################################################
 
+export Widget
+
 # Abstract type of objects.
 abstract type Object end
 
