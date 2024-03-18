@@ -43,19 +43,48 @@ PrecompileTools.@setup_workload begin
             parent = con
         )
 
-        button = @tui_button(
-            label = "Button",
+        ansi_label = @tui_ansi_label(
+            text = "\e[35mThis is an ANSI label.",
             left_anchor = (:parent, :left),
             top_anchor = (label, :bottom),
             parent = con
         )
 
-        input = @tui_input_field(
+        button = @tui_button(
+            label = "Button",
+            left_anchor = (:parent, :left),
+            top_anchor = (ansi_label, :bottom),
+            parent = con
+        )
+
+        hline = @tui_horizontal_line(
             top_anchor = (button, :bottom),
             left_anchor = (:parent, :left),
             right_anchor = (:parent, :right),
             parent = con
         )
+
+        input = @tui_input_field(
+            top_anchor = (hline, :bottom),
+            left_anchor = (:parent, :left),
+            right_anchor = (:parent, :right),
+            parent = con
+        )
+
+        lbox = @tui_list_box(
+            data = ["Item 1", "Item 2", "Item 3"],
+            top_anchor = (input, :bottom),
+            left_anchor = (:parent, :left),
+            parent = con
+        )
+
+        pbar = @tui_progress_bar(
+            top_anchor = (lbox, :bottom),
+            left_anchor = (:parent, :left),
+            right_anchor = (:parent, :right),
+            parent = con
+        )
+        set_value!(pbar, 50)
 
         # == Precompile Functions Related to TUI Update ====================================
 
@@ -94,5 +123,5 @@ PrecompileTools.@setup_workload begin
     # Restore the default log file.
     logger.logfile = "./tui.log"
 
-    redirect_stdout(old_stdout)
+    # redirect_stdout(old_stdout)
 end
