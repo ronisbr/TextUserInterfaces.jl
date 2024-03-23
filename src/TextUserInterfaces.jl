@@ -65,6 +65,7 @@ include("./widgets/label.jl")
 include("./widgets/list_box.jl")
 include("./widgets/object_api.jl")
 include("./widgets/progress_bar.jl")
+include("./widgets/raw_buffer.jl")
 include("./widgets/widgets.jl")
 
 include("./widgets/combo_box.jl")

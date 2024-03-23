@@ -246,6 +246,47 @@ function all_widgets()
         theme = Theme(default = ncurses_color(:green, 246))
     )
 
+    # Raw Buffer
+    # ======================================================================================
+
+    function raw_buffer_draw!(rb::WidgetRawBuffer, buffer)
+        height = rb.height
+        width  = rb.width
+
+        # Top line.
+        NCurses.waddch(buffer, NCurses.ACS_(:ULCORNER))
+
+        for j in 2:(width - 1)
+            NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
+        end
+
+        NCurses.waddch(buffer, NCurses.ACS_(:URCORNER))
+
+        # Intermidiate borders.
+        for i in 2:(height - 1)
+            NCurses.mvwaddch(buffer, i - 1, 0,         NCurses.ACS_(:VLINE))
+            NCurses.mvwaddch(buffer, i - 1, width - 1, NCurses.ACS_(:VLINE))
+        end
+
+        # Bottom line.
+        NCurses.waddch(buffer, NCurses.ACS_(:LLCORNER))
+
+        for j in 2:(width - 1)
+            NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
+        end
+
+        NCurses.waddch(buffer, NCurses.ACS_(:LRCORNER))
+    end
+
+    rb = @tui_raw_buffer(
+        parent = c,
+        draw! = raw_buffer_draw!,
+        top_anchor = (pb, :bottom),
+        left_anchor = (:parent, :left),
+        right_anchor = (:parent, :right),
+        height = 3
+    )
+
     # Bottom Window
     # ======================================================================================
 
