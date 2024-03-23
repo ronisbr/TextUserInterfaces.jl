@@ -224,6 +224,9 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
             request_update!(widget)
         end
 
+        # Emit the signal related to the layout update.
+        @emit widget layout_updated
+
         return update_needed
     else
         return false
