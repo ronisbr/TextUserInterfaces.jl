@@ -589,6 +589,13 @@ for (f, r, v, j, c) in
             ["chtype", "Cint"]
         ),
         (
+            :mvaddch,
+            Cint,
+            ["y", "x", "ch"],
+            ["Ti", "Ti", "Tc"],
+            ["Cint", "Cint", "chtype"]
+        ),
+        (
             :mvhline,
             Cint,
             ["y", "x", "ch", "n"],
@@ -601,6 +608,13 @@ for (f, r, v, j, c) in
             ["y", "x", "ch", "n"],
             ["Ti", "Ti", "Tc", "Ti"],
             ["Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvwaddch,
+            Cint,
+            ["win", "y", "x", "ch"],
+            ["Ptr{WINDOW}", "Ti", "Ti", "Tc"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "chtype"]
         ),
         (
             :mvwhline,
