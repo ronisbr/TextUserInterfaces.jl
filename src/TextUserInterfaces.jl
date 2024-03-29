@@ -69,6 +69,7 @@ include("./widgets/raw_buffer.jl")
 include("./widgets/widgets.jl")
 
 include("./widgets/combo_box.jl")
+include("./widgets/panels.jl")
 
 include("./windows/constants.jl")
 include("./windows/create.jl")
@@ -78,6 +79,7 @@ include("./windows/object_api.jl")
 include("./windows/root_window.jl")
 include("./windows/update.jl")
 include("./windows/theme.jl")
+
 
 ############################################################################################
 #                                     Global Variables                                     #
