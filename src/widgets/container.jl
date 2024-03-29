@@ -239,7 +239,7 @@ function redraw!(container::WidgetContainer)
     # Redraw all the widgets in the container if necessary.
     if update_needed
         for widget in widgets
-            redraw!(widget)
+            widget.hidden || redraw!(widget)
         end
     end
 
@@ -355,7 +355,7 @@ function move_focus_to_widget!(container::WidgetContainer, widget::Widget)
     id = findfirst(w -> w === widget, container.widgets)
 
     if !isnothing(id)
-        if request_focus!(widget)
+        if request_focus!(widget) && !widget.hidden
             _change_focused_widget!(container, id)
 
             # We also need to make this container in focus if it is inside
@@ -388,7 +388,10 @@ function get_focused_widget(container::WidgetContainer)
             return nothing
         end
 
-        return widgets[focused_widget_id]
+        # If the widget is hidden, we must report that we have no focus.
+        focused_widget = widgets[focused_widget_id]
+        focused_widget.hidden && return nothing
+        return focused_widget
     end
 end
 
@@ -544,7 +547,9 @@ function _search_next_widget_to_focus(
         candidate_widget = widgets[focus_candidate_id]
 
         # Check if the candidate can accept the focus.
-        can_accept_focus(candidate_widget) && return focus_candidate_id
+        if can_accept_focus(candidate_widget) && !candidate_widget.hidden
+            return focus_candidate_id
+        end
 
         num_tries += 1
 
@@ -592,7 +597,9 @@ function _search_previous_widget_to_focus(
         candidate_widget = widgets[focus_candidate_id]
 
         # Check if the candidate can accept the focus.
-        can_accept_focus(candidate_widget) && return focus_candidate_id
+        if can_accept_focus(candidate_widget) && !candidate_widget.hidden
+            return focus_candidate_id
+        end
 
         num_tries += 1
 

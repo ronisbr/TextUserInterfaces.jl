@@ -4,7 +4,8 @@
 #
 ############################################################################################
 
-export create_widget, destroy_widget_buffer!, get_buffer, get_parent, request_update!, move_focus_to_widget
+export create_widget, destroy_widget_buffer!, get_buffer, get_parent, hide!
+export move_focus_to_widget, request_update!, unhide!
 
 """
     create_widget_buffer!(widget::Widget) -> Nothing
@@ -136,6 +137,18 @@ function has_focus(widget::Widget)
 end
 
 """
+    hide!(widget::Widget) -> Nothing
+
+Hide `widget`, meaning that it will still be in the parent container but it will not be
+drawn or receive focus.
+"""
+function hide!(widget::Widget)
+    widget.hidden = true
+    request_update!(widget)
+    return nothing
+end
+
+"""
     move_focus_to_widget(widget::Widget) -> Nothing
 
 Move the focus to the `widget`, meaning that all parent chain will get focused up to the
@@ -169,12 +182,23 @@ If `force` is `true`, then the widget will be updated even if it is not needed.
 """
 function update!(widget::Widget; force::Bool = false)
     if widget.update_needed || force
-        redraw!(widget)
+        widget.hidden || redraw!(widget)
         widget.update_needed = false
         return true
     else
         return false
     end
+end
+
+"""
+    unhide!(widget::Widget) -> Nothing
+
+Unhide `widget`, meaning that it will be drawn in its parent buffer.
+"""
+function unhide!(widget::Widget)
+    widget.hidden = false
+    request_update!(widget)
+    return nothing
 end
 
 """

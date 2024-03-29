@@ -185,6 +185,9 @@ macro widget(ex)
         # Mark if the widget needs to be update.
         :(update_needed::Bool = true)
 
+        # Indicate that the widget is hidden.
+        :(hidden::Bool = false)
+
         # Default signals.
         :(@signal focus_acquired)
         :(@signal focus_lost)
