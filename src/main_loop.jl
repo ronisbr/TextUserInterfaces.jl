@@ -7,11 +7,25 @@
 export app_main_loop
 
 """
+    check_keystroke(k1::Keystroke, k2::Keystroke) -> Bool
+    check_keystroke(k1::Symbol, k2::Symbol) -> Bool
+    check_keystroke(k1::Symbol, k2::Keystroke) -> Bool
+    check_keystroke(k1::Keystroke, k2::Symbol) -> Bool
+
+Evaluate if either keystroke.type or keystroke k1 and k2 match
+"""
+check_keystroke(k1::Keystroke, k2::Keystroke) = k1 == k2
+check_keystroke(k1::Symbol, k2::Symbol) = k1 == k2
+check_keystroke(k1::Keystroke, k2::Symbol) = k1.ktype == k2
+check_keystroke(k1::Symbol, k2::Keystroke) = k1 == k2.ktype
+
+
+"""
     app_main_loop() -> Nothing
 
 Start the application main loop.
 """
-function app_main_loop()
+function app_main_loop(; exitkey = :F1)
     # If there is no window in focus, try to acquire it.
     isnothing(get_focused_window()) && move_focus_to_next_window()
 
@@ -28,7 +42,7 @@ function app_main_loop()
 
         # Check if the keystroke must be passed or if the signal hijacked it.
         if !@get_signal_property(tui, keypressed, block, false)
-            if k.ktype == :F1
+            if check_keystroke(k, exitkey)
                 break
             else
                 process_keystroke(k)
