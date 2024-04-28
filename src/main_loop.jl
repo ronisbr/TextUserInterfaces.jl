@@ -7,20 +7,6 @@
 export app_main_loop
 
 """
-    check_keystroke(k1::Keystroke, k2::Keystroke) -> Bool
-    check_keystroke(k1::Symbol, k2::Symbol) -> Bool
-    check_keystroke(k1::Symbol, k2::Keystroke) -> Bool
-    check_keystroke(k1::Keystroke, k2::Symbol) -> Bool
-
-Evaluate if either keystroke.type or keystroke k1 and k2 match
-"""
-check_keystroke(k1::Keystroke, k2::Keystroke) = k1 == k2
-check_keystroke(k1::Symbol, k2::Symbol) = k1 == k2
-check_keystroke(k1::Keystroke, k2::Symbol) = k1.ktype == k2
-check_keystroke(k1::Symbol, k2::Keystroke) = k1 == k2.ktype
-
-
-"""
     app_main_loop() -> Nothing
 
 Start the application main loop.
@@ -42,7 +28,7 @@ function app_main_loop(; exitkey = :F1)
 
         # Check if the keystroke must be passed or if the signal hijacked it.
         if !@get_signal_property(tui, keypressed, block, false)
-            if check_keystroke(k, exitkey)
+            if _check_keystroke(k, exitkey)
                 break
             else
                 process_keystroke(k)
@@ -58,3 +44,21 @@ function app_main_loop(; exitkey = :F1)
 
     return nothing
 end
+
+############################################################################################
+#                                    Private Functions                                     #
+############################################################################################
+
+"""
+    _check_keystroke(k1::Keystroke, k2::Keystroke) -> Bool
+    _check_keystroke(k1::Symbol, k2::Symbol) -> Bool
+    _check_keystroke(k1::Symbol, k2::Keystroke) -> Bool
+    _check_keystroke(k1::Keystroke, k2::Symbol) -> Bool
+
+Evaluate if either `keystroke.ktype` or `keystroke` `k1` and `k2` match.
+"""
+_check_keystroke(k1::Keystroke, k2::Keystroke) = k1 == k2
+_check_keystroke(k1::Symbol, k2::Symbol) = k1 == k2
+_check_keystroke(k1::Keystroke, k2::Symbol) = k1.ktype == k2
+_check_keystroke(k1::Symbol, k2::Keystroke) = k1 == k2.ktype
+
