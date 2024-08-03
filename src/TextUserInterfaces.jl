@@ -71,6 +71,7 @@ include("./widgets/widgets.jl")
 
 include("./widgets/combo_box.jl")
 include("./widgets/panels.jl")
+include("./widgets/tabs.jl")
 
 include("./windows/constants.jl")
 include("./windows/create.jl")

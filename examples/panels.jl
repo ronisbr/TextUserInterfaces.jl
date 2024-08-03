@@ -202,7 +202,7 @@ function panels()
     combo_box_1 = @tui_combo_box(
         parent      = p.panels[2, 3],
         data        = ["Item #$i" for i in 1:10],
-        left_anchor = (list_box_2, :left),
+        left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top),
     )
 
