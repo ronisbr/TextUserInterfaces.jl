@@ -79,7 +79,9 @@ function create_tabs!(
             right_anchor  = Anchor(:parent, :right),
             top_anchor    = Anchor(:parent, :top)
         );
-        draw! = (rb, buffer) -> return nothing,
+        draw! = (rb, buffer) -> begin
+            return nothing
+        end,
         theme = theme
     )
     add_widget!(container, rb)
@@ -113,7 +115,7 @@ function create_tabs!(
 
     # Now we can create the real drawing function for the raw buffer.
     rb.draw! = (rb::WidgetRawBuffer, buffer::Ptr{WINDOW}) -> begin
-        _tabs__draw_border_and_tabline(rb, buffer, tabs)
+        _tabs__draw_border_and_tabline!(rb, buffer, tabs)
     end
 
     return tabs
@@ -163,11 +165,15 @@ end
 ############################################################################################
 
 """
-    _tabs__draw_border_and_tabline(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, tabs::Tabs)
+    _tabs__draw_border_and_tabline!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, tabs::Tabs)
 
 Function to draw the border and tab line in the raw buffer `rb` considering the `tabs`.
 """
-function _tabs__draw_border_and_tabline(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, tabs::Tabs)
+function _tabs__draw_border_and_tabline!(
+    rb::WidgetRawBuffer,
+    buffer::Ptr{WINDOW},
+    tabs::Tabs
+)
     # == Unpack ============================================================================
 
     w          = rb.width
