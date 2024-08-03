@@ -27,7 +27,7 @@ can_accept_focus(::WidgetRawBuffer) = false
 function create_widget(
     ::Val{:raw_buffer},
     layout::ObjectLayout;
-    draw!::Function,
+    draw!::Function = _raw_buffer__default_draw!,
     theme::Theme = tui.default_theme
 )
     # Create the widget.
@@ -53,6 +53,12 @@ function redraw!(widget::WidgetRawBuffer)
     widget.draw!(widget, buffer)
     return nothing
 end
+
+############################################################################################
+#                                    Private Functions                                     #
+############################################################################################
+
+_raw_buffer__default_draw!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}) = nothing
 
 ############################################################################################
 #                                         Helpers                                          #

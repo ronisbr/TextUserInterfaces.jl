@@ -79,9 +79,6 @@ function create_tabs!(
             right_anchor  = Anchor(:parent, :right),
             top_anchor    = Anchor(:parent, :top)
         );
-        draw! = (rb, buffer) -> begin
-            return nothing
-        end,
         theme = theme
     )
     add_widget!(container, rb)
