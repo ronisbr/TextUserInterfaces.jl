@@ -11,19 +11,18 @@ export getkey
 ############################################################################################
 
 """
-    getkey(win::Union{Ptr{WINDOW},Nothing} = nothing) -> Keystroke
+    getkey(win::Ptr{WINDOW} = tui.stdscr) -> Keystroke
 
-Wait for a keystroke in the window `win` and return it (see [`Keystroke`](@ref)).  If `win`
-is `nothing`, `getch()` will be used instead of `wgetch(win)` to listen for the keystroke.
+Wait for a keystroke in the window `win` and return it (see [`Keystroke`](@ref)). If `win`
+is omited, the standard screen (`tui.stdscr`) is used.
 """
-function getkey(win::Union{Ptr{WINDOW}, Nothing} = nothing)
-    win_ptr = win === nothing ? tui.stdscr : win
-    nodelay(win_ptr, true)
-    c_raw = wgetch(win_ptr)
+function getkey(win::Ptr{WINDOW} = tui.stdscr)
+    nodelay(win, true)
+    c_raw = wgetch(win)
 
     while (c_raw < 0) && isopen(stdin)
         poll_fd(RawFD(Base.STDIN_NO), 0.1; readable=true)
-        c_raw = wgetch(win_ptr)
+        c_raw = wgetch(win)
     end
 
     c_raw < 0 && return Keystroke(raw = c_raw, value = "ERR", ktype = :undefined)
@@ -35,21 +34,14 @@ function getkey(win::Union{Ptr{WINDOW}, Nothing} = nothing)
 
         s = string(Char(c))
 
-        # Here, we need to read a sequence of characters that is already in the buffer.
-        # Thus, we will disable the delay.
-        win_ptr = win === nothing ? tui.stdscr : win
-        #nodelay(win_ptr, true)
-
-        # Read the entire sequence limited to 10 characters.
-        for i = 1:10
-            nc = wgetch(win_ptr)
+        # Here, we need to read a sequence of characters that is already in the buffer,
+        # limited to 10 characters.
+        for i in 1:10
+            nc = wgetch(win)
             (nc < 0 || nc == nocharval) && break
             s *= string(Char(nc))
             haskey(keycodes, s) && break
         end
-
-        # Re-enable the delay.
-        #nodelay(win_ptr, false)
 
         if length(s) == 1
             return Keystroke(raw = c, value = s, ktype = :esc)
@@ -84,48 +76,48 @@ function getkey(win::Union{Ptr{WINDOW}, Nothing} = nothing)
         end
     elseif 192 <= c <= 223 # utf8 based logic starts here
         bs1 = UInt8(c)
-        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        return Keystroke(raw = c, value = String([bs1, bs2]), ktype = :utf8)
+        bs2 = wgetch(win)
+        return Keystroke(raw = c, value = String(UInt8[bs1, bs2]), ktype = :utf8)
 
     elseif  224 <= c <= 239
         bs1 = UInt8(c)
-        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        return Keystroke(raw = c, value = String([bs1, bs2, bs3]), ktype = :utf8)
+        bs2 = wgetch(win)
+        bs3 = wgetch(win)
+        return Keystroke(raw = c, value = String(UInt8[bs1, bs2, bs3]), ktype = :utf8)
 
     elseif  240 <= c <= 247
         bs1 = UInt8(c)
-        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs4 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = wgetch(win)
+        bs3 = wgetch(win)
+        bs4 = wgetch(win)
         return Keystroke(
             raw = c,
-            value = String([bs1, bs2, bs3, bs4]),
+            value = String(UInt8[bs1, bs2, bs3, bs4]),
             ktype = :utf8
         )
 
     elseif  248 <= c <= 251
         bs1 = UInt8(c)
-        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs4 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs5 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = wgetch(win)
+        bs3 = wgetch(win)
+        bs4 = wgetch(win)
+        bs5 = wgetch(win)
         return Keystroke(
             raw = c,
-            value = String([bs1, bs2, bs3, bs4, bs5]),
+            value = String(UInt8[bs1, bs2, bs3, bs4, bs5]),
             ktype = :utf8
         )
 
     elseif  252 <= c <= 253
         bs1 = UInt8(c)
-        bs2 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs3 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs4 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs5 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
-        bs6 = win === nothing ? UInt8(getch()) : UInt8(wgetch(win))
+        bs2 = wgetch(win)
+        bs3 = wgetch(win)
+        bs4 = wgetch(win)
+        bs5 = wgetch(win)
+        bs6 = wgetch(win)
         return Keystroke(
             raw = c,
-            value = String([bs1, bs2, bs3, bs4, bs5, bs6]),
+            value = String(UInt8[bs1, bs2, bs3, bs4, bs5, bs6]),
             ktype = :utf8
         )
 
