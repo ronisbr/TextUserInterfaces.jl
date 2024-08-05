@@ -17,19 +17,19 @@ function initialize_tui()
 
     # == Initialize NCurses ================================================================
 
-    tui.stdscr = initscr()
+    tui.stdscr = NCurses.initscr()
     tui.initialized = true
-    has_colors() == 1 && start_color()
+    NCurses.has_colors() == 1 && NCurses.start_color()
 
     # Do not echo keystrokes.
-    noecho()
+    NCurses.noecho()
 
     # Open the log file.
     logger.file = open(logger.logfile, "w")
 
     @log DEBUG "initialize_tui" """
     TUI initialized.
-    Terminal $(has_colors() == 1 ? "" : "does not ")have colors."""
+    Terminal $(NCurses.has_colors() == 1 ? "" : "does not ")have colors."""
 
     # Set the default theme.
     tui.default_theme = _create_default_theme()

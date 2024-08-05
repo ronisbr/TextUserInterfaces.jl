@@ -49,7 +49,7 @@ end
 
 function redraw!(widget::WidgetRawBuffer)
     @unpack buffer = widget
-    wclear(buffer)
+    NCurses.wclear(buffer)
     widget.draw!(widget, buffer)
     return nothing
 end

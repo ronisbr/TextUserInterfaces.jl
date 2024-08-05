@@ -76,19 +76,19 @@ end
 
 function redraw!(widget::WidgetAnsiLabel)
     @unpack buffer, theme, aligned_text, aligned_text_colors = widget
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
-    mvwprintw(buffer, 0, 0, "")
+    NCurses.mvwprintw(buffer, 0, 0, "")
 
     @inbounds for l in 1:length(aligned_text)
         line = aligned_text[l]
         line_colors = aligned_text_colors[l]
 
-        mvwprintw(buffer, l - 1, 0, "")
+        NCurses.mvwprintw(buffer, l - 1, 0, "")
 
         for i in 1:length(line)
             @ncolor line_colors[i] buffer begin
-                wprintw(buffer, line[i])
+                NCurses.wprintw(buffer, line[i])
             end
         end
     end

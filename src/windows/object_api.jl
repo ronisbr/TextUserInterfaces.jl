@@ -17,17 +17,17 @@ function destroy!(win::Window)
 
     # Delete everything.
     if win.panel !== Ptr{Cvoid}(0)
-        del_panel(win.panel)
+        NCurses.del_panel(win.panel)
         win.panel = Ptr{Cvoid}(0)
     end
 
     if win.buffer !== Ptr{WINDOW}(0)
-        delwin(win.buffer)
+        NCurses.delwin(win.buffer)
         win.buffer = Ptr{WINDOW}(0)
     end
 
     if win.view !== Ptr{WINDOW}(0)
-        delwin(win.view)
+        NCurses.delwin(win.view)
         win.view = Ptr{WINDOW}(0)
     end
 
@@ -43,15 +43,15 @@ end
 
 get_buffer(win::Window) = win.buffer
 
-get_left(win::Window)   = win.view != C_NULL ? Int(getbegx(win.view)) : -1
-get_height(win::Window) = win.view != C_NULL ? Int(getmaxy(win.view)) : -1
-get_width(win::Window)  = win.view != C_NULL ? Int(getmaxx(win.view)) : -1
-get_top(win::Window)    = win.view != C_NULL ? Int(getbegy(win.view)) : -1
+get_left(win::Window)   = win.view != C_NULL ? Int(NCurses.getbegx(win.view)) : -1
+get_height(win::Window) = win.view != C_NULL ? Int(NCurses.getmaxy(win.view)) : -1
+get_width(win::Window)  = win.view != C_NULL ? Int(NCurses.getmaxx(win.view)) : -1
+get_top(win::Window)    = win.view != C_NULL ? Int(NCurses.getbegy(win.view)) : -1
 
-get_inner_left(win::Window)   = win.buffer != C_NULL ? Int(getbegx(win.buffer)) : -1
-get_inner_height(win::Window) = win.buffer != C_NULL ? Int(getmaxy(win.buffer)) : -1
-get_inner_width(win::Window)  = win.buffer != C_NULL ? Int(getmaxx(win.buffer)) : -1
-get_inner_top(win::Window)    = win.buffer != C_NULL ? Int(getbegy(win.buffer)) : -1
+get_inner_left(win::Window)   = win.buffer != C_NULL ? Int(NCurses.getbegx(win.buffer)) : -1
+get_inner_height(win::Window) = win.buffer != C_NULL ? Int(NCurses.getmaxy(win.buffer)) : -1
+get_inner_width(win::Window)  = win.buffer != C_NULL ? Int(NCurses.getmaxx(win.buffer)) : -1
+get_inner_top(win::Window)    = win.buffer != C_NULL ? Int(NCurses.getbegy(win.buffer)) : -1
 
 function process_keystroke!(win::Window, k::Keystroke)
     process_keystroke!(win.widget_container, k)
@@ -85,7 +85,7 @@ function sync_cursor(window::Window)
     # This is the top most function that synchronize the cursor. Hence, we must check if the
     # focused widget request the cursor to show or hide it.
     if !isnothing(widget_container) && request_cursor(widget_container)
-        curs_set(1)
+        NCurses.curs_set(1)
 
         # Get the cursor position on the `buffer` of the widget.
         cy, cx = _get_window_cursor_position(get_buffer(widget_container))
@@ -103,12 +103,12 @@ function sync_cursor(window::Window)
         end
 
         # Move the cursor.
-        wmove(window.view, y, x)
-        wrefresh(window.view)
+        NCurses.wmove(window.view, y, x)
+        NCurses.wrefresh(window.view)
 
         # TODO: Limit the cursor position to the edge of the screen.
     else
-        curs_set(0)
+        NCurses.curs_set(0)
     end
 
     return nothing
@@ -117,7 +117,7 @@ end
 function update!(win::Window; force::Bool = false)
     @unpack buffer, has_border, widget_container, view, theme, title = win
 
-    force && wclear(buffer)
+    force && NCurses.wclear(buffer)
 
     # Update the widget container. If it was updated, we must mark that the view in this
     # window needs update.
@@ -129,7 +129,7 @@ function update!(win::Window; force::Bool = false)
 
     # Update the border and the title since the theme might change.
     has_border && @ncolor theme.border view begin
-        wborder(view)
+        NCurses.wborder(view)
         set_window_title!(win, title)
     end
 
@@ -168,22 +168,22 @@ function update_layout!(win::Window; force::Bool = false)
     # If we need to resize or move window, we must clear the border first. Otherwise, it
     # will left a glitch on screen.
     if win_resize || win_move
-        wclear(win.view)
-        wrefresh(win.view)
+        NCurses.wclear(win.view)
+        NCurses.wrefresh(win.view)
     end
 
     # Resize window if necessary.
-    win_resize && wresize(win.view, nlines, ncols)
+    win_resize && NCurses.wresize(win.view, nlines, ncols)
 
     # Move window if necessary.
     if win_move
-        mvwin(win.view, begin_y, begin_x)
+        NCurses.mvwin(win.view, begin_y, begin_x)
         win.position = (begin_y, begin_x)
     end
 
     # Check if the user wants a border.
     win.has_border && @ncolor theme.border win.view begin
-        wborder(win.view)
+        NCurses.wborder(win.view)
     end
 
     # Recompute the required buffer size if the user wants a border in the
@@ -203,7 +203,7 @@ function update_layout!(win::Window; force::Bool = false)
         bcols  = max(ncols,  get_width(win))
     end
 
-    win_resize && wresize(win.buffer, blines, bcols)
+    win_resize && NCurses.wresize(win.buffer, blines, bcols)
 
     win.has_border && set_window_title!(win, win.title)
 

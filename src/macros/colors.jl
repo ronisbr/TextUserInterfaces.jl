@@ -19,9 +19,9 @@ color >= 0 && wattroff(buffer, color)
 """
 macro ncolor(color, buffer, block)
     ex = quote
-        $color >= 0 && wattron($buffer, $color)
+        $color >= 0 && NCurses.wattron($buffer, $color)
         $block
-        $color >= 0 && wattroff($buffer, $color)
+        $color >= 0 && NCurses.wattroff($buffer, $color)
     end
 
     return esc(ex)

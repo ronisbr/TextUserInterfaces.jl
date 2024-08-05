@@ -64,8 +64,6 @@ function new_field(
     )::Ptr{Cvoid}
 end
 
-export new_field
-
 # This code assembles the functions by using the following information:
 #
 # - `f`: Function name.
@@ -163,7 +161,6 @@ for (f, r, v, j, c) in
         For more information, see `libform` documentation.
         """
         $f($(argsj...)) = @_ccallf $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -258,7 +255,6 @@ for (f, r, v, j, c) in
         For more information, see `libform` documentation.
         """
         $f($(argsj...)) where {T<:Integer} = @_ccallf $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -298,7 +294,6 @@ for (f,r,v,j,c) in
         For more information, see `libform` documentation.
         """
         $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccallf $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -333,6 +328,5 @@ for s in (
 
             return ptr
         end
-        export $s
     end
 end

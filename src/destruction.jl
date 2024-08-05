@@ -19,7 +19,7 @@ function destroy_tui()
     if tui.initialized
         @log DEBUG "destroy_tui" "TUI destroying windows."
         destroy_all_windows()
-        endwin()
+        NCurses.endwin()
 
         # Mark the TUI as not initialized.
         tui.stdscr = Ptr{WINDOW}(0)

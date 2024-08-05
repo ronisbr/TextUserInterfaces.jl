@@ -54,11 +54,11 @@ function create_window(;
     ncols   = width
 
     # Create the window.
-    view = newwin(nlines, ncols, begin_y, begin_x)
+    view = NCurses.newwin(nlines, ncols, begin_y, begin_x)
 
     # Check if the user wants a border.
     border && @ncolor theme.border view begin
-        wborder(view)
+        NCurses.wborder(view)
     end
 
     # Create the buffer.
@@ -78,13 +78,13 @@ function create_window(;
         bcols  = border ? ncols - 2  : ncols
     end
 
-    buffer = newpad(blines, bcols)
+    buffer = NCurses.newpad(blines, bcols)
 
     # Set the window theme.
-    wbkgd(buffer, theme.default)
+    NCurses.wbkgd(buffer, theme.default)
 
     # Create the panel.
-    panel = new_panel(view)
+    panel = NCurses.new_panel(view)
 
     # Compute the window coordinate with respect to the screen.
     position = (begin_y, begin_x)

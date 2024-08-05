@@ -60,12 +60,12 @@ end
 
 function redraw!(widget::WidgetKeystroke)
     @unpack buffer = widget
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     if has_focus(widget)
-        mvwprintw(buffer, 0, 0, "FOCUS: " * widget.k.value)
+        NCurses.mvwprintw(buffer, 0, 0, "FOCUS: " * widget.k.value)
     else
-        mvwprintw(buffer, 0, 0, widget.k.value)
+        NCurses.mvwprintw(buffer, 0, 0, widget.k.value)
     end
 
     return nothing

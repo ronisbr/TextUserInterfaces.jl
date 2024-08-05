@@ -126,7 +126,7 @@ function init_color_pair(foreground::Int, background::Int)
 
     # Initialize the color pair.
     idx = length(tui.initialized_color_pairs) + 1
-    init_pair(idx, foreground, background)
+    NCurses.init_pair(idx, foreground, background)
     push!(tui.initialized_color_pairs, (foreground, background))
 
     return idx
@@ -176,7 +176,7 @@ it defaults to the root window.
 set_color(color::Int) = set_color(tui.wins[1], color)
 
 function set_color(win::Window, color::Int)
-    win.ptr != C_NULL && wattron(win.ptr, color)
+    win.ptr != C_NULL && NCurses.wattron(win.ptr, color)
     return nothing
 end
 
@@ -189,7 +189,7 @@ defaults to the root window.
 unset_color(color::Int) = unset_color(tui.wins[1], color)
 
 function unset_color(win::Window, color::Int)
-    win.ptr != C_NULL && wattroff(win.ptr, color)
+    win.ptr != C_NULL && NCurses.wattroff(win.ptr, color)
     return nothing
 end
 

@@ -17,12 +17,12 @@ Wait for a keystroke in the window `win` and return it (see [`Keystroke`](@ref))
 is omited, the standard screen (`tui.stdscr`) is used.
 """
 function getkey(win::Ptr{WINDOW} = tui.stdscr)
-    nodelay(win, true)
-    c_raw = wgetch(win)
+    NCurses.nodelay(win, true)
+    c_raw = NCurses.wgetch(win)
 
     while (c_raw < 0) && isopen(stdin)
         poll_fd(RawFD(Base.STDIN_NO), 0.1; readable=true)
-        c_raw = wgetch(win)
+        c_raw = NCurses.wgetch(win)
     end
 
     c_raw < 0 && return Keystroke(raw = c_raw, value = "ERR", ktype = :undefined)
@@ -37,7 +37,7 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr)
         # Here, we need to read a sequence of characters that is already in the buffer,
         # limited to 10 characters.
         for i in 1:10
-            nc = wgetch(win)
+            nc = NCurses.wgetch(win)
             (nc < 0 || nc == nocharval) && break
             s *= string(Char(nc))
             haskey(keycodes, s) && break
@@ -76,20 +76,20 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr)
         end
     elseif 192 <= c <= 223 # utf8 based logic starts here
         bs1 = UInt8(c)
-        bs2 = wgetch(win)
+        bs2 = NCurses.wgetch(win)
         return Keystroke(raw = c, value = String(UInt8[bs1, bs2]), ktype = :utf8)
 
     elseif  224 <= c <= 239
         bs1 = UInt8(c)
-        bs2 = wgetch(win)
-        bs3 = wgetch(win)
+        bs2 = NCurses.wgetch(win)
+        bs3 = NCurses.wgetch(win)
         return Keystroke(raw = c, value = String(UInt8[bs1, bs2, bs3]), ktype = :utf8)
 
     elseif  240 <= c <= 247
         bs1 = UInt8(c)
-        bs2 = wgetch(win)
-        bs3 = wgetch(win)
-        bs4 = wgetch(win)
+        bs2 = NCurses.wgetch(win)
+        bs3 = NCurses.wgetch(win)
+        bs4 = NCurses.wgetch(win)
         return Keystroke(
             raw = c,
             value = String(UInt8[bs1, bs2, bs3, bs4]),
@@ -98,10 +98,10 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr)
 
     elseif  248 <= c <= 251
         bs1 = UInt8(c)
-        bs2 = wgetch(win)
-        bs3 = wgetch(win)
-        bs4 = wgetch(win)
-        bs5 = wgetch(win)
+        bs2 = NCurses.wgetch(win)
+        bs3 = NCurses.wgetch(win)
+        bs4 = NCurses.wgetch(win)
+        bs5 = NCurses.wgetch(win)
         return Keystroke(
             raw = c,
             value = String(UInt8[bs1, bs2, bs3, bs4, bs5]),
@@ -110,11 +110,11 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr)
 
     elseif  252 <= c <= 253
         bs1 = UInt8(c)
-        bs2 = wgetch(win)
-        bs3 = wgetch(win)
-        bs4 = wgetch(win)
-        bs5 = wgetch(win)
-        bs6 = wgetch(win)
+        bs2 = NCurses.wgetch(win)
+        bs3 = NCurses.wgetch(win)
+        bs4 = NCurses.wgetch(win)
+        bs5 = NCurses.wgetch(win)
+        bs6 = NCurses.wgetch(win)
         return Keystroke(
             raw = c,
             value = String(UInt8[bs1, bs2, bs3, bs4, bs5, bs6]),

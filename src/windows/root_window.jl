@@ -6,13 +6,13 @@
 ############################################################################################
 
 get_left(rw::RootWindow)   = 0
-get_height(rw::RootWindow) = Int(LINES())
-get_width(rw::RootWindow)  = Int(COLS())
+get_height(rw::RootWindow) = Int(NCurses.LINES())
+get_width(rw::RootWindow)  = Int(NCurses.COLS())
 get_top(rw::RootWindow)    = 0
 
 get_inner_left(rw::RootWindow)   = 0
-get_inner_height(rw::RootWindow) = Int(LINES())
-get_inner_width(rw::RootWindow)  = Int(COLS())
+get_inner_height(rw::RootWindow) = Int(NCurses.LINES())
+get_inner_width(rw::RootWindow)  = Int(NCurses.COLS())
 get_inner_top(rw::RootWindow)    = 0
 
 function Base.getproperty(rw::T, field::Symbol) where T<:RootWindow

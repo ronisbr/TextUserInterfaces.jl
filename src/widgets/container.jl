@@ -108,7 +108,7 @@ function sync_cursor(container::WidgetContainer)
         x = bx + cx - wx
 
         # Move the cursor.
-        wmove(get_buffer(container), y, x)
+        NCurses.wmove(get_buffer(container), y, x)
     end
 
     # We must sync the cursor in the parent as well.
@@ -216,11 +216,11 @@ end
 function redraw!(container::WidgetContainer)
     @unpack border, buffer, update_needed, widgets, theme = container
 
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     if border
         @ncolor theme.border buffer begin
-            wborder(buffer)
+            NCurses.wborder(buffer)
         end
 
         @ncolor theme.title buffer begin
@@ -481,7 +481,7 @@ function _draw_title!(container::WidgetContainer)
         pad = 2
     end
 
-    mvwprintw(buffer, 0, pad, title)
+    NCurses.mvwprintw(buffer, 0, pad, title)
 
     return nothing
 end

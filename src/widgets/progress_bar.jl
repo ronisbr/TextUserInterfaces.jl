@@ -63,7 +63,7 @@ function redraw!(widget::WidgetProgressBar)
 
     value = clamp(value, 0, 100)
 
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     # Compute the number of spaces with and without decoration.
     num_with_color = round(Int, width * value / 100)
@@ -73,12 +73,12 @@ function redraw!(widget::WidgetProgressBar)
 
     # Draw the background.
     @ncolor (theme.default) buffer begin
-        mvwprintw(buffer, Δy, 0, " "^width)
+        NCurses.mvwprintw(buffer, Δy, 0, " "^width)
     end
 
     # Draw the progress.
     @ncolor (theme.default | A_REVERSE) buffer begin
-        mvwprintw(buffer, Δy, 0, " "^num_with_color)
+        NCurses.mvwprintw(buffer, Δy, 0, " "^num_with_color)
     end
 
     # Draw the progress value, if requested, considering the correct colors.
@@ -92,16 +92,16 @@ function redraw!(widget::WidgetProgressBar)
             color = theme.default
 
             if pos_i < num_with_color
-                color |= A_REVERSE
+                color |= NCurses.A_REVERSE
             end
 
             @ncolor color buffer begin
                 c = progress_str[i]
 
                 if c == '%'
-                    mvwprintw(buffer, Δy, pos_i, "%%")
+                    NCurses.mvwprintw(buffer, Δy, pos_i, "%%")
                 else
-                    mvwprintw(buffer, Δy, pos_i, string(c))
+                    NCurses.mvwprintw(buffer, Δy, pos_i, string(c))
                 end
             end
         end

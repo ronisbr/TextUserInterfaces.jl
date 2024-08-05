@@ -75,7 +75,7 @@ function destroy!(widget::WidgetInputField)
 
     # We must destroy the internal buffer.
     if widget.internal_buffer !== Ptr{WINDOW}(0)
-        delwin(internal_buffer)
+        NCurses.delwin(internal_buffer)
         widget.internal_buffer = Ptr{WINDOW}(0)
     end
 
@@ -96,8 +96,8 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
         _render_text_view_and_update_cursor_position!(widget)
 
         # Recreate the internal buffer considering the new size.
-        internal_buffer !== Ptr{WINDOW}(0) && delwin(internal_buffer)
-        internal_buffer = newwin(height, width, 0, 0)
+        internal_buffer !== Ptr{WINDOW}(0) && NCurses.delwin(internal_buffer)
+        internal_buffer = NCurses.newwin(height, width, 0, 0)
 
         @pack! widget = internal_buffer
 
@@ -199,41 +199,41 @@ function redraw!(widget::WidgetInputField)
     c = is_valid ? theme.default : theme.error
 
     if has_focus(widget)
-        c |= A_UNDERLINE
+        c |= NCurses.A_UNDERLINE
     end
 
     # Clear the internal buffer.
-    wclear(internal_buffer)
+    NCurses.wclear(internal_buffer)
 
     # String to clear the entire field.
     clear_str = " " ^ field_width
 
     if style == :simple
-        mvwprintw(internal_buffer, 0, 0, "[")
+        NCurses.mvwprintw(internal_buffer, 0, 0, "[")
 
         @ncolor c internal_buffer begin
-            mvwprintw(internal_buffer, 0, 1, clear_str)
-            mvwprintw(internal_buffer, 0, 1, widget.rendered_view)
+            NCurses.mvwprintw(internal_buffer, 0, 1, clear_str)
+            NCurses.mvwprintw(internal_buffer, 0, 1, widget.rendered_view)
         end
 
-        mvwprintw(internal_buffer, 0, field_width + 1, "]")
+        NCurses.mvwprintw(internal_buffer, 0, field_width + 1, "]")
 
     elseif style == :boxed
         @ncolor c internal_buffer begin
-            mvwprintw(internal_buffer, 1, 1, clear_str)
-            mvwprintw(internal_buffer, 1, 1, widget.rendered_view)
+            NCurses.mvwprintw(internal_buffer, 1, 1, clear_str)
+            NCurses.mvwprintw(internal_buffer, 1, 1, widget.rendered_view)
         end
 
-        wborder(internal_buffer)
+        NCurses.wborder(internal_buffer)
     else
         @ncolor c internal_buffer begin
-            mvwprintw(internal_buffer, 0, 0, clear_str)
-            mvwprintw(internal_buffer, 0, 0, widget.rendered_view)
+            NCurses.mvwprintw(internal_buffer, 0, 0, clear_str)
+            NCurses.mvwprintw(internal_buffer, 0, 0, widget.rendered_view)
         end
     end
 
     # Copy the internal buffer to the output buffer.
-    copywin(internal_buffer, buffer, 0, 0, 0, 0, height - 1, width - 1, 0)
+    NCurses.copywin(internal_buffer, buffer, 0, 0, 0, 0, height - 1, width - 1, 0)
 
     # Update the cursor.
     _update_cursor(widget)
@@ -442,6 +442,6 @@ end
 
 # Update the cursor in the view.
 function _update_cursor(widget::WidgetInputField)
-    wmove(widget.buffer, widget.phy_cursor_y, widget.phy_cursor_x)
+    NCurses.wmove(widget.buffer, widget.phy_cursor_y, widget.phy_cursor_x)
     return nothing
 end

@@ -120,7 +120,7 @@ request_cursor(::WidgetComboBox) = false
 function redraw!(widget::WidgetComboBox)
     @unpack buffer, current_item, data, list_box, width, theme = widget
 
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     # Get the current selected item.
     current_item = clamp(current_item, 1, length(data))
@@ -135,7 +135,7 @@ function redraw!(widget::WidgetComboBox)
     pad = Δ > 0 ? " " ^ Δ : ""
 
     @ncolor color buffer begin
-        mvwprintw(buffer, 0, 0, str * pad)
+        NCurses.mvwprintw(buffer, 0, 0, str * pad)
     end
 
     return nothing
@@ -195,7 +195,7 @@ end
 # Function executed when the return is pressed in the list box `widget`.
 function _list_box_return_pressed(widget::WidgetListBox; combo_box::WidgetComboBox)
     _list_box_esc_pressed(widget; combo_box = combo_box)
-    
+
     list_box_selected_item = widget.current_item + 1
 
     if list_box_selected_item != combo_box.current_item

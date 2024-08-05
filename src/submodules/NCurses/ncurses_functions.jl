@@ -318,7 +318,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -516,7 +515,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where T<:Integer = @_ccalln $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -571,7 +569,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where T<:jlchtype = @_ccalln $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst1)
         _precompile_func($f, $argst2)
     end
@@ -676,7 +673,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where {Tc<:jlchtype,Ti<:Integer} = @_ccalln $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst1)
         _precompile_func($f, $argst2)
     end
@@ -724,7 +720,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where T<:AbstractString = @_ccalln $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -771,7 +766,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccalln $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -800,7 +794,6 @@ function ACS_(s::Symbol)
         error("Symbol `$s` is not defined in `acs_map`.")
     end
 end
-export ACS_
 
 """
     COLS() -> Cint
@@ -817,7 +810,6 @@ function COLS()
         return ccall(dlsym(ncurses.libncurses, :_nc_COLS), Cint, ())
     end
 end
-export COLS
 
 """
     LINES() -> Cint
@@ -834,7 +826,6 @@ function LINES()
         return ccall(dlsym(ncurses.libncurses, :_nc_LINES), Cint, ())
     end
 end
-export LINES
 
 # == Specialization ========================================================================
 
@@ -873,5 +864,3 @@ function curses_version()
         error("Could not obtain the NCurses version. Returned string: $(tokens[2])")
     end
 end
-
-export curses_version

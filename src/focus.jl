@@ -169,10 +169,10 @@ function _change_focused_window(window_id::Int)
         request_update!(new_focused_window.widget_container)
 
         # Hide the cursor until a widget request it.
-        curs_set(0)
+        NCurses.curs_set(0)
 
         # Move the window to the top.
-        top_panel(new_focused_window.panel)
+        NCurses.top_panel(new_focused_window.panel)
 
         @emit new_focused_window focus_acquired
     end

@@ -13,8 +13,8 @@ Update the entire TUI.
 """
 function tui_update()
     update_all_windows()
-    update_panels()
-    doupdate()
+    NCurses.update_panels()
+    NCurses.doupdate()
 
     return nothing
 end

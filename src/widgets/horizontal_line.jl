@@ -48,7 +48,7 @@ end
 
 function redraw!(widget::WidgetHorizontalLine)
     @unpack buffer, pattern, theme, width = widget
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     pw = textwidth(pattern)
     Δ = floor(Int, width / pw)
@@ -59,7 +59,7 @@ function redraw!(widget::WidgetHorizontalLine)
     end
 
     @ncolor theme.default buffer begin
-        mvwprintw(buffer, 0, 0, str)
+        NCurses.mvwprintw(buffer, 0, 0, str)
     end
 
     return nothing

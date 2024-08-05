@@ -79,11 +79,11 @@ end
 
 function redraw!(widget::WidgetLabel)
     @unpack buffer, theme, aligned_text = widget
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     @ncolor theme.default buffer begin
         @inbounds for l in 1:length(aligned_text)
-            mvwprintw(buffer, l - 1, 0, aligned_text[l])
+            NCurses.mvwprintw(buffer, l - 1, 0, aligned_text[l])
         end
     end
 

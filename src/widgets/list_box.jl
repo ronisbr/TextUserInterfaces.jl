@@ -190,7 +190,7 @@ function redraw!(widget::WidgetListBox)
     @unpack border, current_item, data, item_icon, selected_item_icon, numlines = widget
     @unpack selected, show_icon, theme, width = widget
 
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     if border
         Δi = 1
@@ -228,11 +228,11 @@ function redraw!(widget::WidgetListBox)
         pad = Δ > 0 ? " " ^ Δ : ""
 
         @ncolor color_i buffer begin
-            mvwprintw(buffer, i + Δi, Δj, str * pad)
+            NCurses.mvwprintw(buffer, i + Δi, Δj, str * pad)
         end
     end
 
-    border && wborder(buffer)
+    border && NCurses.wborder(buffer)
 
     return nothing
 end

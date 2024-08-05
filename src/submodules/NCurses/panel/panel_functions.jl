@@ -135,7 +135,6 @@ for (f, r, v, j, c) in
         For more information, see `libmenu` documentation.
         """
         $f($(argsj...)) = @_ccallp $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end
@@ -175,7 +174,6 @@ for (f, r, v, j, c) in
         For more information, see `libmenu` documentation.
         """
         $f($(argsj...)) where {T<:Integer} = @_ccallp $f($(argsc...))::$r
-        export $f
         _precompile_func($f, $argst)
     end
 end

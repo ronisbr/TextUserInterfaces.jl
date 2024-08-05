@@ -31,12 +31,12 @@ function set_window_title!(win::Window, title::AbstractString)
             col = div(wsx - length(title_esc), 2)
 
             @ncolor theme.title win.view begin
-                mvwprintw(win.view, 0, col, title_esc)
+                NCurses.mvwprintw(win.view, 0, col, title_esc)
             end
         end
 
         # Move the cursor to the original position.
-        wmove(win.view, cury, curx)
+        NCurses.wmove(win.view, cury, curx)
     end
 
     return nothing
@@ -54,8 +54,8 @@ window is not initialized, this function returns `(-1, -1)`.
 """
 function _get_window_coordinates(win::Ptr{WINDOW})
     if win != C_NULL
-        begy = Int(getbegy(win))
-        begx = Int(getbegx(win))
+        begy = Int(NCurses.getbegy(win))
+        begx = Int(NCurses.getbegx(win))
 
         return begy, begx
     else
@@ -71,8 +71,8 @@ window is not initialized, this function returns `(-1, -1)`.
 """
 function _get_window_dimensions(win::Ptr{WINDOW})
     if win != C_NULL
-        wsy = Int(getmaxy(win))
-        wsx = Int(getmaxx(win))
+        wsy = Int(NCurses.getmaxy(win))
+        wsx = Int(NCurses.getmaxx(win))
 
         return wsy, wsx
     else
@@ -88,8 +88,8 @@ the window is not initialized, then this function returns `(-1, -1)`.
 """
 function _get_window_cursor_position(win::Ptr{WINDOW})
     if win != C_NULL
-        cury = Int(getcury(win))
-        curx = Int(getcurx(win))
+        cury = Int(NCurses.getcury(win))
+        curx = Int(NCurses.getcurx(win))
 
         return cury, curx
     else

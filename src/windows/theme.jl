@@ -14,7 +14,7 @@ but it does not perform an update.
 """
 function set_window_theme!(window::Window, theme::Theme)
     window.theme = theme
-    wbkgd(window.buffer, theme.default)
+    NCurses.wbkgd(window.buffer, theme.default)
     request_update!(window)
     return nothing
 end

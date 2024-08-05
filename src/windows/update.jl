@@ -100,7 +100,7 @@ function _update_view!(win::Window; force::Bool = false)
         dmincol = has_border ? 1        : 0
         dmaxrow = has_border ? maxy - 2 : maxy - 1
         dmaxcol = has_border ? maxx - 2 : maxx - 1
-        copywin(
+        NCurses.copywin(
             buffer,
             view,
             origin[1],
@@ -119,7 +119,7 @@ function _update_view!(win::Window; force::Bool = false)
         win.view_needs_update = false
 
         # Move the cursor back to the original position.
-        wmove(view, cy, cx)
+        NCurses.wmove(view, cy, cx)
 
         @log DEBUG "_update_view!" "Window $(win.id): Buffer was copied to the view."
 

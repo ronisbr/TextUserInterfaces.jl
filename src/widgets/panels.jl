@@ -226,67 +226,67 @@ function _panel_cell_draw_border!(
 )
     @unpack theme, height, width = rb
 
-    theme.border >= 0 && wattron(buffer, theme.border)
+    theme.border >= 0 && NCurses.wattron(buffer, theme.border)
 
     # == Top Line ==========================================================================
 
     if top
         if left
-            waddch(buffer, ACS_(:ULCORNER))
+            NCurses.waddch(buffer, NCurses.ACS_(:ULCORNER))
         else
-            waddch(buffer, ACS_(:TTEE))
+            NCurses.waddch(buffer, NCurses.ACS_(:TTEE))
         end
 
     elseif left
-        waddch(buffer, ACS_(:LTEE))
+        NCurses.waddch(buffer, NCurses.ACS_(:LTEE))
 
     else
-        waddch(buffer, ACS_(:PLUS))
+        NCurses.waddch(buffer, NCurses.ACS_(:PLUS))
     end
 
     for _ in 2:(width - 1)
-        waddch(buffer, ACS_(:HLINE))
+        NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
     end
 
     if top && right
-        waddch(buffer, ACS_(:URCORNER))
+        NCurses.waddch(buffer, NCurses.ACS_(:URCORNER))
 
     elseif right
-        waddch(buffer, ACS_(:RTEE))
+        NCurses.waddch(buffer, NCurses.ACS_(:RTEE))
 
     else
-        waddch(buffer, ACS_(:HLINE))
+        NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
     end
 
     # == Intermediate Borders ==============================================================
 
     for i in 2:(height - 1)
-        mvwaddch(buffer, i - 1, 0, ACS_(:VLINE))
-        right && mvwaddch(buffer, i - 1, width - 1, ACS_(:VLINE))
+        NCurses.mvwaddch(buffer, i - 1, 0, NCurses.ACS_(:VLINE))
+        right && NCurses.mvwaddch(buffer, i - 1, width - 1, NCurses.ACS_(:VLINE))
     end
 
     # == Bottom Line =======================================================================
 
     if !bottom
-        mvwaddch(buffer, height - 1, 0, ACS_(:VLINE))
-        right && mvwaddch(buffer, height - 1, width - 1, ACS_(:VLINE))
+        NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:VLINE))
+        right && NCurses.mvwaddch(buffer, height - 1, width - 1, NCurses.ACS_(:VLINE))
 
     else
         # Bottom line.
         if left
-            mvwaddch(buffer, height - 1, 0, ACS_(:LLCORNER))
+            NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:LLCORNER))
         else
-            mvwaddch(buffer, height - 1, 0, ACS_(:BTEE))
+            NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:BTEE))
         end
 
         for _ in 2:width
-            waddch(buffer, ACS_(:HLINE))
+            NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
         end
 
-        right && waddch(buffer, ACS_(:LRCORNER))
+        right && NCurses.waddch(buffer, NCurses.ACS_(:LRCORNER))
     end
 
-    theme.border >= 0 && wattroff(buffer, theme.border)
+    theme.border >= 0 && NCurses.wattroff(buffer, theme.border)
 
     return nothing
 end
@@ -320,21 +320,21 @@ function _panel_cell_draw_title!(
 
     if alignment == :l
         @ncolor theme.title buffer begin
-            mvwprintw(buffer, 0, 1, title)
+            NCurses.mvwprintw(buffer, 0, 1, title)
         end
 
     elseif alignment == :c
         lpad = max(div(width - tw - right_cell, 2), 0)
 
         @ncolor theme.title buffer begin
-            mvwprintw(buffer, 0, lpad, title)
+            NCurses.mvwprintw(buffer, 0, lpad, title)
         end
 
     elseif alignment == :r
         lpad = max(width - tw, 0)
 
         @ncolor theme.title buffer begin
-            mvwprintw(buffer, 0, lpad - 1 - right_cell, title)
+            NCurses.mvwprintw(buffer, 0, lpad - 1 - right_cell, title)
         end
     end
 

@@ -101,7 +101,7 @@ end
 
 function redraw!(widget::WidgetButton)
     @unpack buffer = widget
-    wclear(buffer)
+    NCurses.wclear(buffer)
 
     _draw_button!(widget, has_focus(widget))
 
@@ -126,7 +126,7 @@ function _draw_button!(widget::WidgetButton, focused::Bool)
 
     if style == :none
         @ncolor c buffer begin
-            mvwprintw(buffer, 0, 0, label)
+            NCurses.mvwprintw(buffer, 0, 0, label)
         end
     else
         # Center the label in the button.
@@ -136,18 +136,18 @@ function _draw_button!(widget::WidgetButton, focused::Bool)
         str = " "^pad * label * " "^(Δ - pad)
 
         if style == :boxed
-            mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
-            mvwprintw(buffer, 1, 0, "│")
+            NCurses.mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
+            NCurses.mvwprintw(buffer, 1, 0, "│")
 
             @ncolor c buffer begin
-                wprintw(buffer, " " * str * " ")
+                NCurses.wprintw(buffer, " " * str * " ")
             end
 
-            wprintw(buffer, "│")
-            mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
+            NCurses.wprintw(buffer, "│")
+            NCurses.mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
         else
             @ncolor c buffer begin
-                mvwprintw(buffer, 0, 0, "[ " * str * " ]")
+                NCurses.mvwprintw(buffer, 0, 0, "[ " * str * " ]")
             end
         end
     end

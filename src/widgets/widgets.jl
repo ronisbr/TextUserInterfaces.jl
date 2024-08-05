@@ -33,7 +33,7 @@ function create_widget_buffer!(widget::Widget)
 
         # Create the buffer that will hold the contents.
         parent_buffer = get_buffer(parent)
-        buffer = subpad(parent_buffer, height, width, top, left)
+        buffer = NCurses.subpad(parent_buffer, height, width, top, left)
     else
         # TODO: Should this be an error?
         buffer = Ptr{WINDOW}(0)
@@ -85,7 +85,7 @@ Destroy the buffer of the `widget`.
 """
 function destroy_widget_buffer!(widget::Widget)
     if widget.buffer != Ptr{WINDOW}(0)
-        delwin(widget.buffer)
+        NCurses.delwin(widget.buffer)
         widget.buffer = Ptr{WINDOW}(0)
     end
 
@@ -242,9 +242,9 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
         # TODO: Calling `mvwin` on subpad does not work. Hence, we destroy and
         # recreate the subpad. We must check if there is a better way.
         if update_needed
-            delwin(widget.buffer)
+            NCurses.delwin(widget.buffer)
             widget.buffer = Ptr{WINDOW}(0)
-            widget.buffer = subpad(get_buffer(parent), height, width, top, left)
+            widget.buffer = NCurses.subpad(get_buffer(parent), height, width, top, left)
             request_update!(widget)
         end
 
