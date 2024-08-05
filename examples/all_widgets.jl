@@ -236,13 +236,26 @@ function all_widgets()
     # Progress Bar
     # ======================================================================================
 
-    pb = @tui_progress_bar(
+    pb1 = @tui_progress_bar(
         parent = c,
         top_anchor = (hl2, :bottom),
         left_anchor = (:parent, :left),
         right_anchor = (:parent, :right),
         value = 0,
         show_value = true,
+        theme = Theme(default = ncurses_color(:green, 246))
+    )
+
+    pb2 = @tui_progress_bar(
+        parent = c,
+        top_anchor = (pb1, :bottom),
+        left_anchor = (:parent, :left),
+        right_anchor = (:parent, :right),
+        border = true,
+        value = 0,
+        show_value = true,
+        title = "Progress",
+        title_alignment = :c,
         theme = Theme(default = ncurses_color(:green, 246))
     )
 
@@ -281,7 +294,7 @@ function all_widgets()
     rb = @tui_raw_buffer(
         parent = c,
         draw! = raw_buffer_draw!,
-        top_anchor = (pb, :bottom),
+        top_anchor = (pb2, :bottom),
         left_anchor = (:parent, :left),
         right_anchor = (:parent, :right),
         height = 3
@@ -324,9 +337,11 @@ function all_widgets()
     # Function to handle keystrokes.
     function handle_keystroke(tui; keystroke, kwargs...)
         if keystroke.value == "+"
-            set_value!(pb, pb.value + 1)
+            set_value!(pb1, pb1.value + 1)
+            set_value!(pb2, pb2.value + 1)
         elseif keystroke.value == "-"
-            set_value!(pb, pb.value - 1)
+            set_value!(pb1, pb1.value - 1)
+            set_value!(pb2, pb2.value - 1)
         end
     end
 

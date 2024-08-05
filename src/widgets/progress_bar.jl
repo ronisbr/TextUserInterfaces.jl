@@ -18,6 +18,8 @@ export set_value!
     border::Bool = false
     show_value::Bool = false
     value::Int = 0
+    title::String = ""
+    title_alignment::Symbol = :l
 end
 
 ############################################################################################
@@ -34,6 +36,8 @@ function create_widget(
     border::Bool = false,
     show_value::Bool = false,
     value::Int = 0,
+    title::String = "",
+    title_alignment::Symbol = :l,
     theme::Theme = tui.default_theme
 )
 
@@ -41,10 +45,13 @@ function create_widget(
     progress_bar = WidgetProgressBar(
         ;
         id               = reserve_object_id(),
+        border           = border,
         layout           = layout,
         show_value       = show_value,
         value            = value,
         theme            = theme,
+        title            = title,
+        title_alignment  = title_alignment,
         horizontal_hints = Dict(:width  => 30),
         vertical_hints   = Dict(:height => border ? 3 : 1)
     )
@@ -59,26 +66,50 @@ function create_widget(
 end
 
 function redraw!(widget::WidgetProgressBar)
-    @unpack buffer, border, show_value, value, width, theme = widget
+    @unpack buffer, border, show_value, value, width, title, title_alignment, theme = widget
 
     value = clamp(value, 0, 100)
 
     NCurses.wclear(buffer)
 
+    Δy = 0
+    Δx = 0
+
+    if border
+        NCurses.wborder(buffer)
+
+        # Check if we need to draw the title.
+        if !isempty(title)
+            tw = textwidth(title)
+
+            Δxt = if title_alignment == :r
+                max(width - tw - 1, 0)
+            elseif title_alignment == :c
+                max(div(width - tw - 2, 2), 0)
+            else
+                1
+            end
+
+            NCurses.mvwprintw(buffer, 0, Δxt, title)
+        end
+
+        Δx = 1
+        Δy = 1
+        width -= 2
+    end
+
     # Compute the number of spaces with and without decoration.
     num_with_color = round(Int, width * value / 100)
     num_without_color = width - num_with_color
 
-    Δy = border ? 1 : 0
-
     # Draw the background.
     @ncolor (theme.default) buffer begin
-        NCurses.mvwprintw(buffer, Δy, 0, " "^width)
+        NCurses.mvwprintw(buffer, Δy, Δx, " "^width)
     end
 
     # Draw the progress.
-    @ncolor (theme.default | A_REVERSE) buffer begin
-        NCurses.mvwprintw(buffer, Δy, 0, " "^num_with_color)
+    @ncolor (theme.default | NCurses.A_REVERSE) buffer begin
+        NCurses.mvwprintw(buffer, Δy, Δx, " "^num_with_color)
     end
 
     # Draw the progress value, if requested, considering the correct colors.
