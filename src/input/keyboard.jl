@@ -15,12 +15,18 @@ export getkey
 
 Wait for a keystroke in the window `win` and return it (see [`Keystroke`](@ref)). If `win`
 is omited, the standard screen (`tui.stdscr`) is used.
+
+# Keywords
+
+- `block::Bool`: If `true`, the function will block waiting for a keystroke. Otherwise, it
+    will immediately return the keystroke "ERR" if no key is available in the stack.
+    (**Default** = `true`)
 """
-function getkey(win::Ptr{WINDOW} = tui.stdscr)
+function getkey(win::Ptr{WINDOW} = tui.stdscr; block::Bool = true)
     NCurses.nodelay(win, true)
     c_raw = NCurses.wgetch(win)
 
-    while (c_raw < 0) && isopen(stdin)
+    while block && (c_raw < 0) && isopen(stdin)
         poll_fd(RawFD(Base.STDIN_NO), 0.1; readable=true)
         c_raw = NCurses.wgetch(win)
     end
