@@ -26,7 +26,7 @@ function app_main_loop(; exitkey = :F1)
 
     # Main application loop.
     while true
-        app_main_loop_iteration(; block = false, exitkey) || break
+        app_main_loop_iteration(; block = true, exitkey) || break
     end
 
     destroy_tui()
