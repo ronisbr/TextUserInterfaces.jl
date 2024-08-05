@@ -124,7 +124,7 @@ function mark_field!(
     cursor_position::Vector{Int},
     current_player::Int
 )
-    
+
     x, y = cursor_position
     text = _PLAYER_MARKS[current_player]
     change_text!(fields[x, y], "\n$text\n"; alignment = :c)
@@ -245,7 +245,7 @@ function tic_tac_toe()
             old_cursor_position .= cursor_position
             cursor_position[1] = min(cursor_position[1] + 1, 3)
             update_cursor!(fields, old_cursor_position, cursor_position, board_marks)
-        
+
         # Check if the player can mark the current cursor position, and check if the game
         # ended.
         elseif keystroke.ktype == :enter
@@ -270,7 +270,7 @@ function tic_tac_toe()
                         default = ncurses_color(_PLAYER_COLORS[current_player], :black)
                     )
                 end
-                
+
                 if r == -1
                     change_text!(result, "No player won!")
                 elseif r == 1
