@@ -6,7 +6,7 @@
 
 export Window
 
-@with_kw mutable struct Window <: Object
+@kwdef mutable struct Window <: Object
     id::Int = 0
     title::String = ""
     title_color::Int = 0

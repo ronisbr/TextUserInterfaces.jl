@@ -20,7 +20,7 @@ Defines a theme in the text user interface.
 - `border::Int`: NCurses color for borders.
 - `title::Int`: NCurses color for titles.
 """
-@with_kw struct Theme
+@kwdef struct Theme
     default::Int = 0
     error::Int = 0
     highlight::Int = 0

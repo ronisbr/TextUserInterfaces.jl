@@ -1,6 +1,6 @@
 module ParseAnsiColors
 
-using Parameters
+import Base: @kwdef
 
 include("./types.jl")
 include("./parse.jl")

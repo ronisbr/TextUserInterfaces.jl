@@ -20,7 +20,7 @@ Structure that defines a keystroke.
 - `ctrl::Bool`: `true` if CTRL key was pressed (only valid if `ktype != :char`).
 - `shift::Bool`: `true` if SHIFT key was pressed (only valid if `ktype != :char`).
 """
-@with_kw struct Keystroke
+@kwdef struct Keystroke
     raw::Int32 = 0
     value::String
     ktype::Symbol

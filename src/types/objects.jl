@@ -62,7 +62,7 @@ This structure defines the layout of an object.
     negative, then it means that there is no information about them. Hence, the relative
     arguments (anchors) must provide the missing information.
 """
-@with_kw struct ObjectLayout
+@kwdef struct ObjectLayout
     # Anchors (relative positioning).
     bottom_anchor::Anchor = _NO_ANCHOR
     left_anchor::Anchor   = _NO_ANCHOR

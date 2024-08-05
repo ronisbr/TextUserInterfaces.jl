@@ -2,7 +2,6 @@ module NCurses
 
 using Libdl
 using Ncurses_jll
-using Parameters
 
 ############################################################################################
 #                                          Types                                           #

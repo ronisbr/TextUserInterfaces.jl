@@ -53,7 +53,15 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr; block::Bool = true)
             return Keystroke(raw = c, value = s, ktype = :esc)
 
         elseif haskey(keycodes, s)
-            return Keystroke(keycodes[s], raw = c)
+            kc = keycodes[s]
+            return Keystroke(
+                raw   = c,
+                value = kc.value,
+                ktype = kc.ktype,
+                alt   = kc.alt,
+                ctrl  = kc.ctrl,
+                shift = kc.shift
+            )
 
         else
             # In this case, ALT was pressed.

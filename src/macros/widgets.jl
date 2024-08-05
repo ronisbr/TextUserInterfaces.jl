@@ -195,7 +195,7 @@ macro widget(ex)
     ]...)
 
     ret = quote
-        @with_kw $ex
+        @kwdef $ex
     end
 
     return esc(ret)

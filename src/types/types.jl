@@ -14,7 +14,7 @@ include("./signals.jl")
 include("./widgets.jl")
 include("./windows.jl")
 
-@with_kw mutable struct TextUserInterface
+@kwdef mutable struct TextUserInterface
     initialized::Bool = false
 
     # == Windows ===========================================================================

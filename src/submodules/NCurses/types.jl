@@ -11,7 +11,7 @@ export ncurses
 
 This private structure handles some global variables that are used in the ncurses wrapper.
 """
-@with_kw mutable struct NCURSES
+@kwdef mutable struct NCURSES
 
     NCURSES_REENTRANT::Bool  = false
 

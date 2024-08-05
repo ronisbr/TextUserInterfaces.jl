@@ -16,8 +16,24 @@ export create_theme
 Create a new theme using the default values but replacing the ones in the keywords
 `kwargs...`. The latter can be any field name available in [`Theme`](@ref).
 """
-function create_theme(; kwargs...)
-    return Theme(tui.default_theme; kwargs...)
+function create_theme(
+    ;
+    default   = tui.default_theme.default,
+    error     = tui.default_theme.error,
+    highlight = tui.default_theme.highlight,
+    selected  = tui.default_theme.selected,
+    border    = tui.default_theme.border,
+    title     = tui.default_theme.title,
+)
+    return Theme(
+        ;
+        default,
+        error,
+        highlight,
+        selected,
+        border,
+        title,
+    )
 end
 
 ############################################################################################

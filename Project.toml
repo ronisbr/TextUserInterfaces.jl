@@ -9,9 +9,9 @@ FileWatching = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Ncurses_jll = "68e3532b-a499-55ff-9963-d1c0c0748b3a"
-Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 StringManipulation = "892a3eda-7b42-436c-8928-eab12a02cf0e"
+UnPack = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
 
 [compat]
 julia = "1.6"

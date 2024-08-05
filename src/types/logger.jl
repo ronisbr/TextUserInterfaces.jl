@@ -10,7 +10,7 @@ const CRITICAL = 0
 const WARNING  = 1
 const DEBUG    = 2
 
-@with_kw mutable struct Logger
+@kwdef mutable struct Logger
     enabled::Bool = false
     level::Int = CRITICAL
     logfile::String = "./tui.log"

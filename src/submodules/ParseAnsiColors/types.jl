@@ -5,7 +5,7 @@
 ############################################################################################
 
 # This struct describe the decoration of a string.
-@with_kw struct Decoration
+@kwdef struct Decoration
     foreground::Int = 7
     background::Int = 0
     bold::Bool      = false

@@ -3,10 +3,10 @@ module TextUserInterfaces
 using Dates
 using FileWatching
 using LinearAlgebra
-using Parameters
 using StringManipulation
+using UnPack
 
-import Base: getproperty, setproperty!
+import Base: getproperty, setproperty!, @kwdef
 
 ############################################################################################
 #                                        Submodules                                        #

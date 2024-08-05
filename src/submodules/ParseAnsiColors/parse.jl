@@ -90,53 +90,119 @@ function _parse_ansi_code(decoration::Decoration, code::String)
         if code_i == 0
             decoration = Decoration()
         elseif code_i == 1
-            decoration = Decoration(decoration; bold = true)
+            decoration = Decoration(
+                foreground = decoration.foreground,
+                background = decoration.background,
+                bold       = true,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         elseif code_i == 4
-            decoration = Decoration(decoration; underline = true)
+            decoration = Decoration(
+                foreground = decoration.foreground,
+                background = decoration.background,
+                bold       = decoration.bold,
+                underline  = true,
+                reversed   = decoration.reversed
+            )
         elseif code_i == 7
-            decoration = Decoration(decoration; reversed = true)
+            decoration = Decoration(
+                foreground = decoration.foreground,
+                background = decoration.background,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = true
+            )
         elseif 30 <= code_i <= 37
-            decoration = Decoration(decoration; foreground = code_i - 30)
+            decoration = Decoration(
+                foreground = code_i - 30,
+                background = decoration.background,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         # 256-color support for foreground.
         elseif code_i == 38
-            # In this case, we can have an extended color code. To check this,
-            # we must have at least two more codes.
-            if i+2 ≤ length(tokens)
-                code_i_1 = tryparse(Int, tokens[i+1], base = 10)
-                code_i_2 = tryparse(Int, tokens[i+2], base = 10)
+            # In this case, we can have an extended color code. To check this, we must have
+            # at least two more codes.
+            if (i + 2) ≤ length(tokens)
+                code_i_1 = tryparse(Int, tokens[i + 1], base = 10)
+                code_i_2 = tryparse(Int, tokens[i + 2], base = 10)
 
                 if code_i_1 == 5
-                    decoration = Decoration(decoration; foreground = code_i_2)
+                    decoration = Decoration(
+                        foreground = code_i_2,
+                        background = decoration.background,
+                        bold       = decoration.bold,
+                        underline  = decoration.underline,
+                        reversed   = decoration.reversed
+                    )
                 end
 
                 i += 2
             end
         elseif code_i == 39
-            decoration = Decoration(decoration; foreground = 7)
+            decoration = Decoration(
+                foreground = 7,
+                background = decoration.background,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         elseif 40 <= code_i <= 47
-            decoration = Decoration(decoration; background = code_i - 40)
+            decoration = Decoration(
+                foreground = decoration.foreground,
+                background = code_i - 40,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         # 256-color support for background.
         elseif code_i == 48
             # In this case, we can have an extended color code. To check this,
             # we must have at least two more codes.
             if i+2 ≤ length(tokens)
-                code_i_1 = tryparse(Int, tokens[i+1], base = 10)
-                code_i_2 = tryparse(Int, tokens[i+2], base = 10)
+                code_i_1 = tryparse(Int, tokens[i + 1], base = 10)
+                code_i_2 = tryparse(Int, tokens[i + 2], base = 10)
 
                 if code_i_1 == 5
-                    decoration = Decoration(decoration; background = code_i_2)
+                    decoration = Decoration(
+                        foreground = decoration.foreground,
+                        background = code_i_2,
+                        bold       = decoration.bold,
+                        underline  = decoration.underline,
+                        reversed   = decoration.reversed
+                    )
                 end
 
                 i += 2
             end
         elseif code_i == 49
-            decoration = Decoration(decoration; background = 0)
+            decoration = Decoration(
+                foreground = decoration.foreground,
+                background = 0,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         # Bright foreground colors defined by Aixterm.
         elseif 90 <= code_i <= 97
-            decoration = Decoration(decoration; foreground = code_i - 82)
+            decoration = Decoration(
+                foreground = code_i - 82,
+                background = decoration.background,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         # Bright background colors defined by Aixterm.
         elseif 100 <= code_i <= 107
-            decoration = Decoration(decoration; background = code_i - 92)
+            decoration = Decoration(
+                foreground = decoration.foreground,
+                background = code_i - 92,
+                bold       = decoration.bold,
+                underline  = decoration.underline,
+                reversed   = decoration.reversed
+            )
         end
 
         i += 1
