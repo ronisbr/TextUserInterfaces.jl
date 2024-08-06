@@ -17,7 +17,7 @@ export set_value!
 @widget mutable struct WidgetProgressBar
     border::Bool = false
     show_value::Bool = false
-    value::Int = 0
+    value::Float64 = 0.0
     title::String = ""
     title_alignment::Symbol = :l
 end
@@ -35,7 +35,7 @@ function create_widget(
     layout::ObjectLayout;
     border::Bool = false,
     show_value::Bool = false,
-    value::Int = 0,
+    value::Number = 0.0,
     title::String = "",
     title_alignment::Symbol = :l,
     theme::Theme = tui.default_theme
@@ -114,7 +114,7 @@ function redraw!(widget::WidgetProgressBar)
 
     # Draw the progress value, if requested, considering the correct colors.
     if show_value
-        progress_str = "$value %"
+        progress_str = "$(round(Int, value)) %"
         lstr = length(progress_str)
         str_pos = floor(Int, (width - lstr) / 2)
 
@@ -152,11 +152,11 @@ end
 ############################################################################################
 
 """
-    set_value!(progress_bar::WidgetProgressBar, value::Int) -> Nothing
+    set_value!(progress_bar::WidgetProgressBar, value::Number) -> Nothing
 
 Set the `value` of the `progress_bar`.
 """
-function set_value!(progress_bar::WidgetProgressBar, value::Int)
+function set_value!(progress_bar::WidgetProgressBar, value::Number)
     progress_bar.value = clamp(value, 0, 100)
     request_update!(progress_bar)
     return nothing
