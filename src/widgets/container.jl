@@ -160,10 +160,10 @@ function create_widget(
     @log DEBUG "create_widget" """
     Container created:
       ID               = $(container.id)
-      border           = $(container.border),
+      border           = $(container.border)
       horizontal_hints = $(container.horizontal_hints)
-      title            = $(container.title),
-      title_alignment  = $(container.title_alignment),
+      title            = $(container.title)
+      title_alignment  = $(container.title_alignment)
       vertical_hints   = $(container.vertical_hints)"""
 
     # Return the created container.
