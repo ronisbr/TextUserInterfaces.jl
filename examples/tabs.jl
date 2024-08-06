@@ -32,64 +32,66 @@ function tabs()
 
     # -- Tab 1 -----------------------------------------------------------------------------
 
-    function button_return_pressed(w; new_label, label_widget)
-        change_text!(label_widget, new_label)
-        return nothing
+    @tui_builder begin
+        function button_return_pressed(w; new_label, label_widget)
+            change_text!(label_widget, new_label)
+            return nothing
+        end
+
+        @tui_button(
+            parent      = t.tabs[1],
+            style       = :simple,
+            left_anchor = (:parent, :left),
+            top_anchor  = (:parent, :top, 1),
+        )
+
+        @tui_button(
+            parent        = t.tabs[1],
+            style         = :boxed,
+            left_anchor   = (__LAST__, :right),
+            middle_anchor = (__LAST__, :middle),
+        )
+
+        @tui_button(
+            parent        = t.tabs[1],
+            style         = :none,
+            left_anchor   = (__LAST__, :right),
+            middle_anchor = (__LAST__, :middle),
+        )
+
+        @tui_label(
+            parent       = t.tabs[1],
+            text         = "",
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom, 3),
+        )
+
+        @connect(
+            __ID1__,
+            return_pressed,
+            button_return_pressed,
+            (new_label = "Button #1 was pressed.", label_widget = __LAST__)
+        )
+
+        @connect(
+            __ID2__,
+            return_pressed,
+            button_return_pressed,
+            (new_label = "Button #2 was pressed.", label_widget = __LAST__)
+        )
+
+        @connect(
+            __ID3__,
+            return_pressed,
+            button_return_pressed,
+            (new_label = "Button #3 was pressed.", label_widget = __LAST__)
+        )
     end
-
-    button_1 = @tui_button(
-        parent      = t.tabs[1],
-        style       = :simple,
-        left_anchor = (:parent, :left),
-        top_anchor  = (:parent, :top, 1),
-    )
-
-    button_2 = @tui_button(
-        parent      = t.tabs[1],
-        style         = :boxed,
-        left_anchor   = (button_1, :right),
-        middle_anchor = (button_1, :middle),
-    )
-
-    button_3 = @tui_button(
-        parent        = t.tabs[1],
-        style         = :none,
-        left_anchor   = (button_2, :right),
-        middle_anchor = (button_2, :middle),
-    )
-
-    button_information = @tui_label(
-        parent       = t.tabs[1],
-        text         = "",
-        left_anchor  = (:parent, :left),
-        right_anchor = (:parent, :right),
-        top_anchor   = (button_1, :bottom, 3),
-    )
-
-    @connect(
-        button_1,
-        return_pressed,
-        button_return_pressed,
-        (new_label = "Button #1 was pressed.", label_widget = button_information)
-    )
-
-    @connect(
-        button_2,
-        return_pressed,
-        button_return_pressed,
-        (new_label = "Button #2 was pressed.", label_widget = button_information)
-    )
-
-    @connect(
-        button_3,
-        return_pressed,
-        button_return_pressed,
-        (new_label = "Button #3 was pressed.", label_widget = button_information)
-    )
 
     # -- Tab 2 -----------------------------------------------------------------------------
 
-    ansi_label = @tui_ansi_label(
+    @tui_ansi_label(
         parent      = t.tabs[2],
         text        = "\e[1mThis \e[34mis a color \e[47mlabel\e[0m in Tab 2.",
         left_anchor = (:parent, :left),
@@ -98,34 +100,36 @@ function tabs()
 
     # -- Tab 3 -----------------------------------------------------------------------------
 
-    function combo_box_item_changed(w; label_widget)
-        current_item = get_item(w)
-        str = "Current item: $(current_item)."
-        change_text!(label_widget, str)
-        return nothing
+    @tui_builder begin
+        function combo_box_item_changed(w; label_widget)
+            current_item = get_item(w)
+            str = "Current item: $(current_item)."
+            change_text!(label_widget, str)
+            return nothing
+        end
+
+        @tui_combo_box(
+            parent      = t.tabs[3],
+            data        = ["Item #$i" for i in 1:10],
+            left_anchor = (:parent, :left),
+            top_anchor  = (:parent, :top),
+        )
+
+        @tui_label(
+            parent        = t.tabs[3],
+            text          = "",
+            left_anchor   = (__LAST__, :right, 2),
+            right_anchor  = (:parent, :right),
+            middle_anchor = (__LAST__, :middle)
+        )
+
+        @connect(
+            __LAST1__,
+            item_changed,
+            combo_box_item_changed,
+            (; label_widget = __LAST__)
+        )
     end
-
-    combo_box_1 = @tui_combo_box(
-        parent      = t.tabs[3],
-        data        = ["Item #$i" for i in 1:10],
-        left_anchor = (:parent, :left),
-        top_anchor  = (:parent, :top),
-    )
-
-    combo_box_1_information = @tui_label(
-        parent        = t.tabs[3],
-        text          = "",
-        left_anchor   = (combo_box_1, :right, 2),
-        right_anchor  = (:parent, :right),
-        middle_anchor = (combo_box_1, :middle)
-    )
-
-    @connect(
-        combo_box_1,
-        item_changed,
-        combo_box_item_changed,
-        (; label_widget = combo_box_1_information)
-    )
 
     # == Bottom Window =====================================================================
 

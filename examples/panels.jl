@@ -27,83 +27,82 @@ function panels()
         lines = 3
     )
 
-    # Label
-    # ======================================================================================
+    # == Label =============================================================================
 
-    label = @tui_label(
+    @tui_label(
         parent      = p.panels[1, 1],
         text        = "This is a label.",
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top)
     )
 
-    # ANSI Label
-    # ======================================================================================
+    # == ANSI Label ========================================================================
 
-    ansi_label = @tui_ansi_label(
+    @tui_ansi_label(
         parent      = p.panels[1, 2],
         text        = "\e[1mThis \e[34mis a color \e[47mlabel.",
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top)
     )
 
-    # Button
-    # ======================================================================================
+    # == Button ============================================================================
 
-    function button_return_pressed(w; new_label, label_widget)
-        change_text!(label_widget, new_label)
-        return nothing
+    @tui_builder begin
+        function button_return_pressed(w; new_label, label_widget)
+            change_text!(label_widget, new_label)
+            return nothing
+        end
+
+        @tui_button(
+            parent      = p.panels[1, 3],
+            style       = :simple,
+            left_anchor = (:parent, :left),
+            top_anchor  = (:parent, :top, 1),
+        )
+
+        @tui_button(
+            parent        = p.panels[1, 3],
+            style         = :boxed,
+            left_anchor   = (__LAST__, :right),
+            middle_anchor = (__LAST__, :middle),
+        )
+
+        @tui_button(
+            parent        = p.panels[1, 3],
+            style         = :none,
+            left_anchor   = (__LAST__, :right),
+            middle_anchor = (__LAST__, :middle),
+        )
+
+        @tui_label(
+            parent       = p.panels[1, 3],
+            text         = "",
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__ID1__, :bottom, 3),
+        )
+
+        @connect(
+            __ID1__,
+            return_pressed,
+            button_return_pressed,
+            (new_label = "Button #1 was pressed.", label_widget = __LAST__)
+        )
+
+        @connect(
+            __ID2__,
+            return_pressed,
+            button_return_pressed,
+            (new_label = "Button #2 was pressed.", label_widget = __LAST__)
+        )
+
+        @connect(
+            __ID3__,
+            return_pressed,
+            button_return_pressed,
+            (new_label = "Button #3 was pressed.", label_widget = __LAST__)
+        )
     end
-
-    button_1 = @tui_button(
-        parent      = p.panels[1, 3],
-        style       = :simple,
-        left_anchor = (:parent, :left),
-        top_anchor  = (:parent, :top, 1),
-    )
-
-    button_2 = @tui_button(
-        parent        = p.panels[1, 3],
-        style         = :boxed,
-        left_anchor   = (button_1, :right),
-        middle_anchor = (button_1, :middle),
-    )
-
-    button_3 = @tui_button(
-        parent        = p.panels[1, 3],
-        style         = :none,
-        left_anchor   = (button_2, :right),
-        middle_anchor = (button_2, :middle),
-    )
-
-    button_information = @tui_label(
-        parent       = p.panels[1, 3],
-        text         = "",
-        left_anchor  = (:parent, :left),
-        right_anchor = (:parent, :right),
-        top_anchor   = (button_1, :bottom, 3),
-    )
-
-    @connect(
-        button_1,
-        return_pressed,
-        button_return_pressed,
-        (new_label = "Button #1 was pressed.", label_widget = button_information)
-    )
-
-    @connect(
-        button_2,
-        return_pressed,
-        button_return_pressed,
-        (new_label = "Button #2 was pressed.", label_widget = button_information)
-    )
-
-    @connect(
-        button_3,
-        return_pressed,
-        button_return_pressed,
-        (new_label = "Button #3 was pressed.", label_widget = button_information)
-    )
 
     # Input Fields
     # ======================================================================================

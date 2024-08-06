@@ -34,69 +34,71 @@ function windows_and_widgets()
 
     # Create the three windows:
     for title in (" WINDOW 1 ", " WINDOW 2 ", " WINDOW 3 ")
-        w = create_window(
-            layout = ObjectLayout(top = x, left = y, height = 10, width = 56),
-            border = true,
-            title = title
-        )
-
-        c = w.widget_container
-
-        l = @tui_label(
-            parent = c,
-            height = 1,
-            left = 2,
-            top = 2,
-            text = "The last pressed button was:"
-        )
-
-        text = @tui_label(
-            parent = c,
-            middle_anchor = (l, :middle),
-            left_anchor   = (l, :right, 1),
-            width = 10,
-            text = "",
-            theme = Theme(default = ncurses_color(:yellow, :black))
-        )
-
-        bt1  = @tui_button(
-            parent = c,
-            top = 5,
-            left_anchor = (c, :left),
-            label = "Button 1",
-            style = :simple,
-            signal = (
-                return_pressed,
-                button_return_pressed,
-                (label_widget = text, new_label = "Button 1")
+        @tui_builder begin
+            w = create_window(
+                layout = ObjectLayout(top = x, left = y, height = 10, width = 56),
+                border = true,
+                title = title
             )
-        )
 
-        bt2  = @tui_button(
-            parent = c,
-            middle_anchor = (bt1, :middle),
-            center_anchor = (c,   :center),
-            label = "Button 2",
-            style = :boxed,
-            signal = (
-                return_pressed,
-                button_return_pressed,
-                (label_widget = text, new_label = "Button 2")
-            )
-        )
+            c = w.widget_container
 
-        bt3  = @tui_button(
-            parent = c,
-            middle_anchor = (bt2, :middle),
-            right_anchor  = (c,   :right),
-            label = "Button 3",
-            style = :none,
-            signal = (
-                return_pressed,
-                button_return_pressed,
-                (label_widget = text, new_label = "Button 3")
+            @tui_label(
+                parent = c,
+                text   = "The last pressed button was:",
+                height = 1,
+                left   = 2,
+                top    = 2
             )
-        )
+
+            @tui_label(
+                parent        = c,
+                text          = "",
+                theme         = Theme(default = ncurses_color(:yellow, :black)),
+                middle_anchor = (__LAST__, :middle),
+                left_anchor   = (__LAST__, :right, 1),
+                width         = 10
+            )
+
+            @tui_button(
+                parent      = c,
+                label       = "Button 1",
+                style       = :simple,
+                top         = 5,
+                left_anchor = (:parent, :left),
+                signal      = (
+                    return_pressed,
+                    button_return_pressed,
+                    (label_widget = __ID2__, new_label = "Button 1")
+                )
+            )
+
+            @tui_button(
+                parent        = c,
+                label         = "Button 2",
+                style         = :boxed,
+                middle_anchor = (__LAST__, :middle),
+                center_anchor = (:parent, :center),
+                signal        = (
+                    return_pressed,
+                    button_return_pressed,
+                    (label_widget = __ID2__, new_label = "Button 2")
+                )
+            )
+
+            @tui_button(
+                parent        = c,
+                label         = "Button 3",
+                style         = :none,
+                middle_anchor = (__LAST__, :middle),
+                right_anchor  = (:parent,  :right),
+                signal        = (
+                    return_pressed,
+                    button_return_pressed,
+                    (label_widget = __ID2__, new_label = "Button 3")
+                )
+            )
+        end
 
         push!(wins, w)
 

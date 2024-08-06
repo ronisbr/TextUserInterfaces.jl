@@ -27,6 +27,7 @@ export ParseAnsiColors
 include("./macros/signals.jl")
 include("./macros/colors.jl")
 include("./macros/widgets.jl")
+include("./macros/tui_builder.jl")
 
 ############################################################################################
 #                                          Types                                           #

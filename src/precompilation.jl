@@ -27,64 +27,66 @@ PrecompileTools.@setup_workload begin
 
         win = create_window(title = "Window")
 
-        con = @tui_container(
-            parent = win.widget_container,
-            border = true,
-            bottom_anchor = (:parent, :bottom),
-            left_anchor = (:parent, :left),
-            right_anchor = (:parent, :center),
-            top_anchor = (:parent, :top),
-        )
+        @tui_builder begin
+            con = @tui_container(
+                parent        = win.widget_container,
+                border        = true,
+                bottom_anchor = (:parent, :bottom),
+                left_anchor   = (:parent, :left),
+                right_anchor  = (:parent, :center),
+                top_anchor    = (:parent, :top),
+            )
 
-        label = @tui_label(
-            text = "This is a label",
-            left_anchor = (:parent, :left),
-            top_anchor = (:parent, :top),
-            parent = con
-        )
+            label = @tui_label(
+                parent      = con,
+                text        = "This is a label",
+                left_anchor = (:parent, :left),
+                top_anchor  = (:parent, :top)
+            )
 
-        ansi_label = @tui_ansi_label(
-            text = "\e[35mThis is an ANSI label.",
-            left_anchor = (:parent, :left),
-            top_anchor = (label, :bottom),
-            parent = con
-        )
+            ansi_label = @tui_ansi_label(
+                parent      = con,
+                text        = "\e[35mThis is an ANSI label.",
+                left_anchor = (:parent, :left),
+                top_anchor  = (__LAST__, :bottom)
+            )
 
-        button = @tui_button(
-            label = "Button",
-            left_anchor = (:parent, :left),
-            top_anchor = (ansi_label, :bottom),
-            parent = con
-        )
+            button = @tui_button(
+                parent      = con,
+                label       = "Button",
+                left_anchor = (:parent, :left),
+                top_anchor  = (__LAST__, :bottom),
+            )
 
-        hline = @tui_horizontal_line(
-            top_anchor = (button, :bottom),
-            left_anchor = (:parent, :left),
-            right_anchor = (:parent, :right),
-            parent = con
-        )
+            hline = @tui_horizontal_line(
+                parent       = con,
+                top_anchor   = (__LAST__, :bottom),
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right)
+            )
 
-        input = @tui_input_field(
-            top_anchor = (hline, :bottom),
-            left_anchor = (:parent, :left),
-            right_anchor = (:parent, :right),
-            parent = con
-        )
+            input = @tui_input_field(
+                parent       = con,
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                top_anchor   = (__LAST__, :bottom),
+            )
 
-        lbox = @tui_list_box(
-            data = ["Item 1", "Item 2", "Item 3"],
-            top_anchor = (input, :bottom),
-            left_anchor = (:parent, :left),
-            parent = con
-        )
+            lbox = @tui_list_box(
+                parent      = con,
+                data        = ["Item 1", "Item 2", "Item 3"],
+                left_anchor = (:parent, :left),
+                top_anchor  = (__LAST__, :bottom),
+            )
 
-        pbar = @tui_progress_bar(
-            top_anchor = (lbox, :bottom),
-            left_anchor = (:parent, :left),
-            right_anchor = (:parent, :right),
-            parent = con
-        )
-        set_value!(pbar, 50)
+            pbar = @tui_progress_bar(
+                parent       = con,
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                top_anchor   = (__LAST__, :bottom),
+            )
+            set_value!(pbar, 50)
+        end
 
         # == Precompile Functions Related to TUI Update ====================================
 
