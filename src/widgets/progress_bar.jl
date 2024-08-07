@@ -58,8 +58,9 @@ function create_widget(
 
     @log DEBUG "create_widget" """
     WidgetInputField created:
-      ID             = $(progress_bar.id)
-      Show value     = $(progress_bar.show_value)"""
+      ID         = $(progress_bar.id)
+      Border     = $(progress_bar.border)
+      Show value = $(progress_bar.show_value)"""
 
     # Return the created container.
     return progress_bar

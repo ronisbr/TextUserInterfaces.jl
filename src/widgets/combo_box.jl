@@ -67,7 +67,7 @@ function create_widget(
     @log DEBUG "create_widget" """
     WidgetComboBox created:
       ID                 = $(combo_box.id)
-      Num. of elements   = $(length(data))"""
+      Number of elements = $(length(data))"""
 
     # Create the list box.
     list_box_layout = ObjectLayout(

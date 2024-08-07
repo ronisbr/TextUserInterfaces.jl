@@ -158,13 +158,11 @@ function create_widget(
     )
 
     @log DEBUG "create_widget" """
-    Container created:
+    WidgetContainer created:
       ID               = $(container.id)
-      border           = $(container.border)
-      horizontal_hints = $(container.horizontal_hints)
-      title            = $(container.title)
-      title_alignment  = $(container.title_alignment)
-      vertical_hints   = $(container.vertical_hints)"""
+      Border           = $(container.border)
+      Title            = $(container.title)
+      Title alignment  = $(container.title_alignment)"""
 
     # Return the created container.
     return container

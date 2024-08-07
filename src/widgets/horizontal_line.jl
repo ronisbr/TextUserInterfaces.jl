@@ -39,7 +39,7 @@ function create_widget(
 
     @log DEBUG "create_widget" """
     WidgetHorizontalLine created:
-      ID = $(line.id)
+      ID      = $(line.id)
       Pattern = $(line.pattern)"""
 
     # Return the created widget.

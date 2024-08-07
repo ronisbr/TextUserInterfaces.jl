@@ -41,7 +41,8 @@ function create_widget(
 
     @log DEBUG "create_widget" """
     WidgetRawBuffer created:
-      ID = $(raw_buffer.id)"""
+      ID            = $(raw_buffer.id)
+      Draw function = $(raw_buffer.draw!)"""
 
     # Return the created container.
     return raw_buffer

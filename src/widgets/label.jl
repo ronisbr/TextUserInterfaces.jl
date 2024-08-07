@@ -68,10 +68,10 @@ function create_widget(
 
     @log DEBUG "create_widget" """
     WidgetLabel created:
-      ID = $(label.id)
+      ID        = $(label.id)
       Alignment = $(label.alignment)
-      Fill color = $(label.fill)
-      Text = \"$(label.text)\""""
+      Fill      = $(label.fill)
+      Text      = \"$(label.text)\""""
 
     # Return the created container.
     return label

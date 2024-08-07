@@ -66,9 +66,9 @@ function create_widget(
 
     @log DEBUG "create_widget" """
     WidgetAnsiLabel created:
-      ID = $(label.id)
+      ID        = $(label.id)
       Alignment = $(label.alignment)
-      Text = \"$(label.text)\""""
+      Text      = \"$(label.text)\""""
 
     # Return the created container.
     return label

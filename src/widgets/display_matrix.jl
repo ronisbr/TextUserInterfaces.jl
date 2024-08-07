@@ -69,7 +69,7 @@ function create_widget(
 
     @log DEBUG "create_widget" """
     WidgetDisplayMatrix created:
-      ID = $(display_matrix.id)
+      ID     = $(display_matrix.id)
       Matrix = $(display_matrix.matrix)"""
 
     # Return the created container.

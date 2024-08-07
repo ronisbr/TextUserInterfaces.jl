@@ -122,18 +122,18 @@ function create_widget(
     list_box = WidgetListBox(
         ;
         id                 = reserve_object_id(),
-        layout             = layout,
-        theme              = theme,
         border             = border,
         data               = data,
-        selected           = zeros(Bool, num_elements),
         item_icon          = item_icon,
+        layout             = layout,
         multiple_selection = multiple_selection,
         numlines           = number_of_lines,
         numlines₀          = number_of_lines,
         selectable         = selectable,
+        selected           = zeros(Bool, num_elements),
         selected_item_icon = selected_item_icon,
         show_icon          = show_icon,
+        theme              = theme,
         horizontal_hints   = Dict(:width  => width_hint),
         vertical_hints     = Dict(:height => height_hint)
     )
@@ -141,13 +141,13 @@ function create_widget(
     @log DEBUG "create_widget" """
     WidgetListBox created:
       ID                 = $(list_box.id)
-      Num. of elements   = $(length(data))
-      Mult. selection    = $(multiple_selection)
-      Num. of lines      = $(number_of_lines)
-      Item Icon          = $(item_icon)
       Border             = $(border)
-      Selected item icon = $(selected_item_icon)
+      Item icon          = $(item_icon)
+      Multiple selection = $(multiple_selection)
+      Number of elements = $(length(data))
+      Number of lines    = $(number_of_lines)
       Selectable         = $(selectable)
+      Selected item icon = $(selected_item_icon)
       Show item          = $(show_icon)"""
 
     # Return the created widget.
