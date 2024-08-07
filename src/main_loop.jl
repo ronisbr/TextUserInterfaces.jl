@@ -4,7 +4,7 @@
 #
 ############################################################################################
 
-export app_main_loop
+export app_main_loop, app_main_loop_iteration
 
 """
     app_main_loop() -> Nothing
