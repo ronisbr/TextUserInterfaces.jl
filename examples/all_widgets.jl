@@ -266,6 +266,25 @@ function all_widgets()
 
         @connect tui keypressed handle_keystroke
 
+        # == Display Matrix ================================================================
+
+        @tui_display_matrix(
+            parent       = c,
+            matrix       = rand(10, 10) * 1e4,
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom),
+        )
+
+        @connect(
+            tui,
+            keypressed,
+            (tui; keystroke) -> begin
+                if keystroke.value == "j"
+                    change_matrix!(__LAST__, rand(Int, 10, 10))
+                end
+            end
+        )
 
         # == Raw Buffer ====================================================================
 

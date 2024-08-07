@@ -86,6 +86,15 @@ PrecompileTools.@setup_workload begin
                 top_anchor   = (__LAST__, :bottom),
             )
             set_value!(pbar, 50)
+
+            dm = @tui_display_matrix(
+                parent       = con,
+                matrix       = randn(3, 3),
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                top_anchor   = (__LAST__, :bottom),
+            )
+            change_matrix!(dm, randn(3, 3))
         end
 
         # == Precompile Functions Related to TUI Update ====================================

@@ -127,7 +127,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $(string(parent))
+        $(string(obj_desc(parent)))
         @log_pad 0
         layout:
         @log_pad 4
@@ -142,7 +142,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $(string(parent))
+        $(string(obj_desc(parent)))
         @log_pad 0
         layout:
         @log_pad 4
@@ -157,7 +157,7 @@ function process_object_layout(
 
         parent:
         @log_pad 4
-        $(string(parent))
+        $(string(obj_desc(parent)))
         @log_pad 0
         layout:
         @log_pad 4
