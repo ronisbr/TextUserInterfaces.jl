@@ -68,7 +68,7 @@ end
 """
 macro tui_builder(expr)
     exprs = Any[]
-    obj_names = Symbol[]
+    obj_names = Any[]
 
     expr.head != :block && error("The expression must be a block.")
 
@@ -93,7 +93,7 @@ macro tui_builder(expr)
             push!(obj_names, var_name)
             push!(exprs, Expr(:(=), var_name, e))
 
-        elseif e.head == :(=)
+        elseif (e.head == :(=)) && (e.args[2] isa Expr)
             # If the expression is an assignment, we need to check if we are creating a
             # widget using a `@tui_` function.
             if (e.args[2].head == :macrocall) &&
@@ -132,11 +132,11 @@ function _isa_marker(sym::Symbol)
 end
 
 """
-    _parse_marker(sym::Symbol, obj_names::Vector{Symbol}) -> Symbol
+    _parse_marker(sym::Symbol, obj_names::Vector{Any}) -> Symbol
 
 Replace the marker `sym` by the correct object in `obj_names`.
 """
-function _parse_marker(sym::Symbol, obj_names::Vector{Symbol})
+function _parse_marker(sym::Symbol, obj_names::Vector{Any})
     num_objs = length(obj_names)
     sym_str  = string(sym)
 
@@ -179,11 +179,11 @@ function _parse_marker(sym::Symbol, obj_names::Vector{Symbol})
 end
 
 """
-    _replace_markers!(expr::Expr, obj_names::Vector{Symbol}) -> Nothing
+    _replace_markers!(expr::Expr, obj_names::Vector{Any}) -> Nothing
 
 Replace all occurrences of markers in `expr` considering the object vector `obj_names`.
 """
-function _replace_markers!(expr::Expr, obj_names::Vector{Symbol})
+function _replace_markers!(expr::Expr, obj_names::Vector{Any})
     for i in eachindex(expr.args)
         if (expr.args[i] isa Symbol) && _isa_marker(expr.args[i])
             expr.args[i] = _parse_marker(expr.args[i], obj_names)
