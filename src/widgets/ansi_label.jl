@@ -107,19 +107,21 @@ end
 ############################################################################################
 
 """
-    change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment = :l) -> Nothing
+    change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment = widget.alignment) -> Nothing
 
 Change to text of the ANSI label `widget` to `new_text`. The text alignment in the widget
 can be selected by the keyword `alignment`, which can be:
 
-- `:l`: left alignment (**default**);
+- `:l`: left alignment;
 - `:c`: Center alignment; or
 - `:r`: Right alignment.
+
+By default, it uses the current alignment of `widget`.
 """
 function change_text!(
     widget::WidgetAnsiLabel,
     new_text::AbstractString;
-    alignment = :l
+    alignment = widget.alignment
 )
     widget.text = new_text
     widget.alignment = alignment
