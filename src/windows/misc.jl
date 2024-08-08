@@ -5,11 +5,11 @@
 ############################################################################################
 
 """
-    set_window_title!(win::Window, title::AbstractString) -> Nothing
+    set_window_title!(win::Window, title::AbstractString, alignment::Symbol) -> Nothing
 
-Set the title of the window `win` to `title`.
+Set the title of the window `win` to `title` considering the `alignment`.
 """
-function set_window_title!(win::Window, title::AbstractString)
+function set_window_title!(win::Window, title::AbstractString, alignment::Symbol)
     win.title = title
 
     if win.has_border
@@ -25,13 +25,19 @@ function set_window_title!(win::Window, title::AbstractString)
         title_esc = escape_string(title)
 
         # Print the title if there is any character.
-        length_title_esc = length(title_esc)
+        tw_esc_title = textwidth(title_esc)
 
-        if length_title_esc > 0
-            col = div(wsx - length(title_esc), 2)
+        if tw_esc_title > 0
+            if alignment == :c
+                Δx = div(wsx - tw_esc_title, 2)
+            elseif alignment == :r
+                Δx = wsx - tw_esc_title - 1
+            else
+                Δx = 1
+            end
 
             @ncolor theme.title win.view begin
-                NCurses.mvwprintw(win.view, 0, col, title_esc)
+                NCurses.mvwprintw(win.view, 0, Δx, title_esc)
             end
         end
 

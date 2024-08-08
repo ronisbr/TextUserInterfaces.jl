@@ -14,19 +14,26 @@ Create a window.
 # Keyword
 
 - `bcols::Int`: Number of columns in the window buffer. This will be automatically increased
-    to, at least, fit the viewable part of the window. (**Default** = 0)
+    to, at least, fit the viewable part of the window.
+    (**Default** = 0)
 - `blines::Int`: Number of lines in the window buffer. This will be automatically increased
-    to, at least, fit the viewable part of the window. (**Default** = 0)
-- `border::Bool`: If `true`, the window will have a border. (**Default** = `true`)
+    to, at least, fit the viewable part of the window.
+    (**Default** = 0)
+- `border::Bool`: If `true`, the window will have a border.
+    (**Default** = `true`)
 - `buffer_size::Tuple{Int, Int}`: Number of rows and columns in the window buffer. This will
     be automatically increased to, at least, fit the viewable part of the window.
     (**Default** = `(0, 0)`)
 - `focusable::Bool`: If `true`, the window can have focus. Otherwise, all focus request will
-    be rejected. (**Default** = `true`)
-- `layout::ObjectLayout`: The layout configuration of the window.
+    be rejected.
+    (**Default** = `true`)
+- `layout::ObjectLayout`: Layout configuration of the window.
     (**Default** = `ObjectLayout()`)
-- `title::String`: The title of the window, which will only be printed if `border` is
-    `true`. (**Default** = "")
+- `title::String`: Title of the window, which will only be printed if `border` is
+    `true`.
+    (**Default** = "")
+- `title_alignment::Symbol`: Title alignment. It can be `:l`, `:c`, or `:r`.
+    (**Default** = `:c`)
 """
 function create_window(;
     border::Bool = true,
@@ -35,6 +42,7 @@ function create_window(;
     layout::ObjectLayout = ObjectLayout(),
     theme::Theme = tui.default_theme,
     title::String = "",
+    title_alignment::Symbol = :c
 )
     # Check if the TUI has been initialized.
     !tui.initialized && error("The text user interface was not initialized.")
@@ -108,6 +116,7 @@ function create_window(;
         panel              = panel,
         position           = position,
         title              = title,
+        title_alignment    = title_alignment,
         theme              = theme,
         widget_container   = widget_container,
         view               = view,
@@ -117,7 +126,7 @@ function create_window(;
     widget_container.window = win
     update_layout!(widget_container)
 
-    border && set_window_title!(win, title)
+    border && set_window_title!(win, title, title_alignment)
     push!(tui.windows, win)
 
     # We need to update the window to update the container.
@@ -133,7 +142,7 @@ function create_window(;
       Has border         = $(win.has_border)
       Physical size      = ($nlines, $ncols)
       Title              = \"$(win.title)\"
-      Title color        = $(win.title_color)"""
+      Title alignment    = $(win.title_alignment)"""
 
     # Return the pointer to the window.
     return win

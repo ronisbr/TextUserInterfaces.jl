@@ -9,7 +9,7 @@ export Window
 @kwdef mutable struct Window <: Object
     id::Int = 0
     title::String = ""
-    title_color::Int = 0
+    title_alignment::Symbol = :c
     position::Tuple{Int, Int} = (0, 0)
     has_border::Bool = false
     focusable::Bool = true
