@@ -131,8 +131,9 @@ PrecompileTools.@setup_workload begin
         destroy_tui()
     end
 
-    # Restore the default log file.
+    # Restore the default log configurations.
     logger.logfile = "./tui.log"
+    logger.level   = CRITICAL
 
     # redirect_stdout(old_stdout)
 end
