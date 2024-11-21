@@ -57,6 +57,13 @@ end
 for (f, r, v, j, c) in
     (
         (
+            :beep,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
             :can_change_color,
             Cbool,
             [],
@@ -65,7 +72,7 @@ for (f, r, v, j, c) in
         ),
         (
             :cbreak,
-            Cvoid,
+            Cint,
             [],
             [],
             []
@@ -86,6 +93,13 @@ for (f, r, v, j, c) in
         ),
         (
             :clrtoeol,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :def_prog_mode,
             Cint,
             [],
             [],
@@ -169,11 +183,25 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}"]
         ),
         (
+            :getmouse,
+            Cint,
+            ["event"],
+            ["Ptr{MEVENT}"],
+            ["Ptr{MEVENT}"]
+        ),
+        (
             :has_colors,
             Cbool,
             [],
             [],
             []
+        ),
+        (
+            :winch,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
         ),
         (
             :initscr,
@@ -197,11 +225,11 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Cuchar"]
         ),
         (
-            :scrollok,
-            Cvoid,
-            ["win", "bf"],
-            ["Ptr{WINDOW}", "Bool"],
-            ["Ptr{WINDOW}", "Cuchar"]
+            :mousemask,
+            Culong,
+            ["newmask", "oldmask"],
+            ["UInt", "Ptr{UInt}"],
+            ["Culong", "Ptr{Culong}"]
         ),
         (
             :nodelay,
@@ -225,11 +253,32 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Cuchar"]
         ),
         (
+            :overwrite,
+            Cint,
+            ["scr", "dest"],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}"],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}"]
+        ),
+        (
             :refresh,
             Cvoid,
             [],
             [],
             []
+        ),
+        (
+            :reset_prog_mode,
+            Cint,
+            [],
+            [],
+            []
+        ),
+        (
+            :scrollok,
+            Cvoid,
+            ["win", "bf"],
+            ["Ptr{WINDOW}", "Bool"],
+            ["Ptr{WINDOW}", "Cuchar"]
         ),
         (
             :start_color,
@@ -360,6 +409,13 @@ for (f, r, v, j, c) in
             ["win", "nlines", "ncols", "begin_y", "begin_x"],
             ["Ptr{WINDOW}", ["T" for _ = 1:4]...],
             ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
+        ),
+        (
+            :halfdelay,
+            Cint,
+            ["tenths"],
+            ["T"],
+            ["Cint"]
         ),
         (
             :init_color,
@@ -691,6 +747,20 @@ for (f, r, v, j, c) in
         ),
         (
             :printw,
+            Cvoid,
+            ["str"],
+            ["T"],
+            ["Cstring"]
+        ),
+        (
+            :waddstr,
+            Cvoid,
+            ["win", "str"],
+            ["Ptr{WINDOW}", "T"],
+            ["Ptr{WINDOW}", "Cstring"]
+        ),
+        (
+            :addstr,
             Cvoid,
             ["str"],
             ["T"],
