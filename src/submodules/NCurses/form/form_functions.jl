@@ -45,7 +45,7 @@ end
 ############################################################################################
 
 # == General Functions =====================================================================
-                                                                                            
+
 function new_field(
     height::Int,
     width::Int,
@@ -74,6 +74,20 @@ end
 
 for (f, r, v, j, c) in
     (
+        (
+            :field_buffer,
+            Cstring,
+            ["field", "buffer"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cint"]
+        ),
+        (
+            :form_driver,
+            Cint,
+            ["form", "ch"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cint"]
+        ),
         (
             :free_field,
             Cint,
@@ -110,11 +124,74 @@ for (f, r, v, j, c) in
             ["Ptr{Cvoid}"]
         ),
         (
+            :set_field_back,
+            Cint,
+            ["field", "value"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cuint"]
+        ),
+        (
+            :set_field_buffer,
+            Cint,
+            ["field", "buf", "c"],
+            ["Ptr{Cvoid}", "Integer", "AbstractString"],
+            ["Ptr{Cvoid}", "Cint", "Cstring"]
+        ),
+        (
+            :set_field_opts,
+            Cint,
+            ["field", "field_options"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cuint"]
+        ),
+        (
+            :set_field_just,
+            Cint,
+            ["field", "justification"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cint"]
+        ),
+        (
+            :set_field_type,
+            Cint,
+            ["field", "type", "arg"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cint"]
+        ),
+        (
+            :set_field_type,
+            Cint,
+            ["field", "type", "padding", "vmin", "vmax"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Integer", "Integer", "Integer"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cint", "Cint", "Cint"]
+        ),
+        (
+            :set_field_type,
+            Cint,
+            ["field", "type", "padding", "vmin", "vmax"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Integer", "Float64", "Float64"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cint", "Cdouble", "Cdouble"]
+        ),
+        (
+            :set_field_type,
+            Cint,
+            ["field", "type", "valuelist", "checkcase", "checkunique"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Vector", "Integer", "Integer"],
+            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Ptr{Cstring}", "Cint", "Cint"]
+        ),
+        (
             :set_field_type,
             Cint,
             ["field", "type", "regex"],
             ["Ptr{Cvoid}", "Ptr{Cvoid}", "String"],
             ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cstring"]
+        ),
+        (
+            :set_form_opts,
+            Cint,
+            ["form", "form_options"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cuint"]
         ),
         (
             :set_form_win,
@@ -161,139 +238,6 @@ for (f, r, v, j, c) in
         For more information, see `libform` documentation.
         """
         $f($(argsj...)) = @_ccallf $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `Integer` ============================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :field_buffer,
-            Cstring,
-            ["field", "buffer"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cint"]
-        ),
-        (
-            :form_driver,
-            Cint,
-            ["form", "ch"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cint"]),
-        (
-            :set_field_back,
-            Cint,
-            ["field", "value"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cuint"]),
-        (
-            :set_field_opts,
-            Cint,
-            ["field", "field_options"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cuint"]),
-        (
-            :set_field_just,
-            Cint,
-            ["field", "justification"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cint"]),
-        (
-            :set_field_type,
-            Cint,
-            ["field", "type", "arg"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cint"]),
-        (
-            :set_field_type,
-            Cint,
-            ["field", "type", "padding", "vmin", "vmax"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "T", "T", "T"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cint", "Cint", "Cint"]),
-        (
-            :set_field_type,
-            Cint,
-            ["field", "type", "padding", "vmin", "vmax"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "T", "Float64", "Float64"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Cint", "Cdouble", "Cdouble"]),
-        (
-            :set_field_type,
-            Cint,
-            ["field", "type", "valuelist", "checkcase", "checkunique"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Vector", "T", "T"],
-            ["Ptr{Cvoid}", "Ptr{Cvoid}", "Ptr{Cstring}", "Cint", "Cint"]),
-        (
-            :set_form_opts,
-            Cint,
-            ["form", "form_options"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cuint"]
-        ),
-    )
-
-    fb = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
-    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where T<:Integer -> $($r)
-
-        For more information, see `libform` documentation.
-        """
-        $f($(argsj...)) where {T<:Integer} = @_ccallf $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Arguments Must Be `AbstractString` and `Integer` =======================
-
-for (f,r,v,j,c) in
-    (
-        (
-            :set_field_buffer,
-            Cint,
-            ["field","buf","c"],
-            ["Ptr{Cvoid}","Ti","Ts"],
-            ["Ptr{Cvoid}","Cint","Cstring"]
-        ),
-    )
-
-    fb    = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "Ts" ? "String," : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i = 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where {Ti<:Integer, Ts<:AbstractString} -> $($r)
-
-        For more information, see `libform` documentation.
-        """
-        $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccallf $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
 end
