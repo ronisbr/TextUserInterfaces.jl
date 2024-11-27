@@ -5,42 +5,6 @@
 ############################################################################################
 
 ############################################################################################
-#                                      Private Macros                                      #
-############################################################################################
-
-"""
-    @_ccallf expr
-
-Make a `ccall` to a `libform` function. The usage should be:
-
-    @_ccallf function(arg1::Type1, arg2::Type2, ...) -> TypeReturn
-
-It uses the global constant structure `ncurses` to call the function. Hence, it must be
-initialized.
-"""
-macro _ccallf(expr)
-    !(expr.head == :(::) && expr.args[1].head == :call) &&
-    error("Invalid use of @_ccall")
-
-    return_type   = expr.args[2]
-    function_name = QuoteNode(expr.args[1].args[1])
-    args          = expr.args[1].args[2:end]
-
-    arglist  = []
-    typeargs = :(())
-    handler  = :(dlsym($(esc(ncurses)).libform, $(esc(function_name))))
-    out = :(ccall( $(handler), $(esc(return_type)), $(esc(typeargs))))
-
-    for arg in args
-        !(arg.head == :(::)) && error("All arguments must have a type.")
-        push!(out.args, :($(esc(arg.args[1]))))
-        push!(typeargs.args, arg.args[2])
-    end
-
-    return out
-end
-
-############################################################################################
 #                                   `libform` Functions                                    #
 ############################################################################################
 
@@ -54,7 +18,7 @@ function new_field(
     offscreen::Int,
     nbuffers::Int
 )
-    @_ccallf new_field(
+    @ccall new_field(
         height::Cint,
         width::Cint,
         toprow::Cint,
@@ -237,7 +201,7 @@ for (f, r, v, j, c) in
 
         For more information, see `libform` documentation.
         """
-        $f($(argsj...)) = @_ccallf $f($(argsc...))::$r
+        $f($(argsj...)) = @ccall $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
 end
