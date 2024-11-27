@@ -57,11 +57,46 @@ end
 for (f, r, v, j, c) in
     (
         (
+            :addstr,
+            Cvoid,
+            ["str"],
+            ["AbstractString"],
+            ["Cstring"]
+        ),
+        (
+            :attroff,
+            Cint,
+            ["attrs"],
+            ["Integer"],
+            ["Cint"]
+        ),
+        (
+            :attron,
+            Cint,
+            ["attrs"],
+            ["Integer"],
+            ["Cint"]
+        ),
+        (
             :beep,
             Cint,
             [],
             [],
             []
+        ),
+        (
+            :bkgd,
+            Cint,
+            ["ch"],
+            ["Integer"],
+            ["Cint"]
+        ),
+        (
+            :box,
+            Cvoid,
+            ["win", "verch", "horch"],
+            ["Ptr{WINDOW}", "jlchtype", "jlchtype"],
+            ["Ptr{WINDOW}", "chtype", "chtype"]
         ),
         (
             :can_change_color,
@@ -99,6 +134,30 @@ for (f, r, v, j, c) in
             []
         ),
         (
+            :copywin,
+            Cint,
+            [
+                "scr",
+                "dest",
+                "sminrow",
+                "smincol",
+                "dminrow",
+                "dmincol",
+                "dmaxrow",
+                "dmaxcol",
+                "overlay"
+            ],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Integer" for _ = 1:7]...],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Cint" for _ = 1:7]...]
+        ),
+        (
+            :curs_set,
+            Cint,
+            ["visibility"],
+            ["Integer"],
+            ["Cint"]
+        ),
+        (
             :def_prog_mode,
             Cint,
             [],
@@ -111,6 +170,13 @@ for (f, r, v, j, c) in
             ["win"],
             ["Ptr{WINDOW}"],
             ["Ptr{WINDOW}"]
+        ),
+        (
+            :derwin,
+            Ptr{WINDOW},
+            ["win", "nlines", "ncols", "begin_y", "begin_x"],
+            ["Ptr{WINDOW}", ["Integer" for _ = 1:4]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
         ),
         (
             :doupdate,
@@ -190,6 +256,13 @@ for (f, r, v, j, c) in
             ["Ptr{MEVENT}"]
         ),
         (
+            :halfdelay,
+            Cint,
+            ["tenths"],
+            ["Integer"],
+            ["Cint"]
+        ),
+        (
             :has_colors,
             Cbool,
             [],
@@ -197,11 +270,25 @@ for (f, r, v, j, c) in
             []
         ),
         (
-            :winch,
+            :hline,
             Cint,
-            ["win"],
-            ["Ptr{WINDOW}"],
-            ["Ptr{WINDOW}"]
+            ["ch", "n"],
+            ["jlchtype", "Integer"],
+            ["chtype", "Cint"]
+        ),
+        (
+            :init_color,
+            Cint,
+            ["color", "r", "g", "b"],
+            ["Integer", "Integer", "Integer", "Integer"],
+            ["Cshort", "Cshort", "Cshort", "Cshort"]
+        ),
+        (
+            :init_pair,
+            Cint,
+            ["pair", "f", "b"],
+            ["Integer", "Integer", "Integer"],
+            ["Cshort", "Cshort", "Cshort"]
         ),
         (
             :initscr,
@@ -225,11 +312,95 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Cuchar"]
         ),
         (
+            :mouseinterval,
+            Cint,
+            ["n"],
+            ["Integer"],
+            ["Cint"]
+        ),
+        (
             :mousemask,
             Culong,
             ["newmask", "oldmask"],
             ["UInt", "Ptr{UInt}"],
             ["Culong", "Ptr{Culong}"]
+        ),
+        (
+            :mvaddch,
+            Cint,
+            ["y", "x", "ch"],
+            ["Integer", "Integer", "jlchtype"],
+            ["Cint", "Cint", "chtype"]
+        ),
+        (
+            :mvhline,
+            Cint,
+            ["y", "x", "ch", "n"],
+            ["Integer", "Integer", "jlchtype", "Integer"],
+            ["Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvvline,
+            Cint,
+            ["y", "x", "ch", "n"],
+            ["Integer", "Integer", "jlchtype", "Integer"],
+            ["Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvwaddch,
+            Cint,
+            ["win", "y", "x", "ch"],
+            ["Ptr{WINDOW}", "Integer", "Integer", "jlchtype"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "chtype"]
+        ),
+        (
+            :mvwhline,
+            Cint,
+            ["win", "y", "x", "ch", "n"],
+            ["Ptr{WINDOW}", "Integer", "Integer", "jlchtype", "Integer"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvprintw,
+            Cvoid,
+            ["y", "x", "str"],
+            ["Integer", "Integer", "AbstractString"],
+            ["Cint", "Cint", "Cstring"]
+        ),
+        (
+            :mvwprintw,
+            Cvoid,
+            ["win", "y", "x", "str"],
+            ["Ptr{WINDOW}", "Integer", "Integer", "AbstractString"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "Cstring"]
+        ),
+        (
+            :mvwvline,
+            Cint,
+            ["win", "y", "x", "ch", "n"],
+            ["Ptr{WINDOW}", "Integer", "Integer", "jlchtype", "Integer"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "chtype", "Cint"]
+        ),
+        (
+            :mvwin,
+            Cvoid,
+            ["win", "y", "x"],
+            ["Ptr{WINDOW}", "Integer", "Integer"],
+            ["Ptr{WINDOW}", "Cint", "Cint"]
+        ),
+        (
+            :newpad,
+            Ptr{WINDOW},
+            ["lines", "cols"],
+            ["Integer", "Integer"],
+            ["Cint", "Cint"]
+        ),
+        (
+            :newwin,
+            Ptr{WINDOW},
+            ["lines", "cols", "y", "x"],
+            ["Integer" for _ = 1:4],
+            ["Cint" for _ = 1:4]
         ),
         (
             :nodelay,
@@ -260,6 +431,27 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Ptr{WINDOW}"]
         ),
         (
+            :prefresh,
+            Cint,
+            ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
+            ["Ptr{WINDOW}", ["Integer" for _ = 1:6]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
+        ),
+        (
+            :pnoutrefresh,
+            Cint,
+            ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
+            ["Ptr{WINDOW}", ["Integer" for _ = 1:6]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
+        ),
+        (
+            :printw,
+            Cvoid,
+            ["str"],
+            ["AbstractString"],
+            ["Cstring"]
+        ),
+        (
             :refresh,
             Cvoid,
             [],
@@ -272,6 +464,13 @@ for (f, r, v, j, c) in
             [],
             [],
             []
+        ),
+        (
+            :resizeterm,
+            Cint,
+            ["lines", "columns"],
+            ["Integer", "Integer"],
+            ["Cint", "Cint"]
         ),
         (
             :scrollok,
@@ -288,11 +487,67 @@ for (f, r, v, j, c) in
             []
         ),
         (
+            :subpad,
+            Ptr{WINDOW},
+            ["win", "nlines", "ncols", "begin_y", "begin_x"],
+            ["Ptr{WINDOW}", ["Integer" for _ = 1:4]...],
+            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
+        ),
+        (
             :touchwin,
             Cvoid,
             ["win"],
             ["Ptr{WINDOW}"],
             ["Ptr{WINDOW}"]
+        ),
+        (
+            :vline,
+            Cint,
+            ["ch", "n"],
+            ["jlchtype", "Integer"],
+            ["chtype", "Cint"]
+        ),
+        (
+            :waddch,
+            Cvoid,
+            ["win", "ch"],
+            ["Ptr{WINDOW}", "jlchtype"],
+            ["Ptr{WINDOW}", "chtype"]
+        ),
+        (
+            :waddstr,
+            Cvoid,
+            ["win", "str"],
+            ["Ptr{WINDOW}", "AbstractString"],
+            ["Ptr{WINDOW}", "Cstring"]
+        ),
+        (
+            :wattroff,
+            Cint,
+            ["win", "attrs"],
+            ["Ptr{WINDOW}", "Integer"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wattron,
+            Cint,
+            ["win", "attrs"],
+            ["Ptr{WINDOW}", "Integer"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wbkgd,
+            Cint,
+            ["win", "ch"],
+            ["Ptr{WINDOW}", "Integer"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wborder,
+            Cvoid,
+            ["win", "ls", "rs", "ts", "bs", "tl", "tr", "bl", "br"],
+            ["Ptr{WINDOW}", ["jlchtype" for _ = 1:8]...],
+            ["Ptr{WINDOW}", ["chtype" for _ = 1:8]...]
         ),
         (
             :wclear,
@@ -330,6 +585,27 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}"]
         ),
         (
+            :whline,
+            Cint,
+            ["win", "ch", "n"],
+            ["Ptr{WINDOW}", "jlchtype", "Integer"],
+            ["Ptr{WINDOW}", "chtype", "Cint"]
+        ),
+        (
+            :winch,
+            Cint,
+            ["win"],
+            ["Ptr{WINDOW}"],
+            ["Ptr{WINDOW}"]
+        ),
+        (
+            :wmove,
+            Cvoid,
+            ["win", "y", "x"],
+            ["Ptr{WINDOW}", "Integer", "Integer"],
+            ["Ptr{WINDOW}", "Cint", "Cint"]
+        ),
+        (
             :wnoutrefresh,
             Cvoid,
             ["win"],
@@ -342,6 +618,34 @@ for (f, r, v, j, c) in
             ["win"],
             ["Ptr{WINDOW}"],
             ["Ptr{WINDOW}"]
+        ),
+        (
+            :wprintw,
+            Cvoid,
+            ["win", "str"],
+            ["Ptr{WINDOW}", "AbstractString"],
+            ["Ptr{WINDOW}", "Cstring"]
+        ),
+        (
+            :wresize,
+            Cvoid,
+            ["win", "lines", "cols"],
+            ["Ptr{WINDOW}", "Integer", "Integer"],
+            ["Ptr{WINDOW}", "Cint", "Cint"]
+        ),
+        (
+            :wtimeout,
+            Cvoid,
+            ["win", "delay"],
+            ["Ptr{WINDOW}", "Integer"],
+            ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wvline,
+            Cint,
+            ["win", "ch", "n"],
+            ["Ptr{WINDOW}", "jlchtype", "Integer"],
+            ["Ptr{WINDOW}", "chtype", "Cint"]
         ),
     )
 
@@ -367,475 +671,6 @@ for (f, r, v, j, c) in
         For more information, see `libncurses` documentation.
         """
         $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `Integer` ============================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :attroff,
-            Cint,
-            ["attrs"],
-            ["T"],
-            ["Cint"]
-        ),
-        (
-            :attron,
-            Cint,
-            ["attrs"],
-            ["T"],
-            ["Cint"]
-        ),
-        (
-            :bkgd,
-            Cint,
-            ["ch"],
-            ["T"],
-            ["Cint"]
-        ),
-        (
-            :curs_set,
-            Cint,
-            ["visibility"],
-            ["T"],
-            ["Cint"]
-        ),
-        (
-            :derwin,
-            Ptr{WINDOW},
-            ["win", "nlines", "ncols", "begin_y", "begin_x"],
-            ["Ptr{WINDOW}", ["T" for _ = 1:4]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
-        ),
-        (
-            :halfdelay,
-            Cint,
-            ["tenths"],
-            ["T"],
-            ["Cint"]
-        ),
-        (
-            :init_color,
-            Cint,
-            ["color", "r", "g", "b"],
-            ["T", "T", "T", "T"],
-            ["Cshort", "Cshort", "Cshort", "Cshort"]
-        ),
-        (
-            :init_pair,
-            Cint,
-            ["pair", "f", "b"],
-            ["T", "T", "T"],
-            ["Cshort", "Cshort", "Cshort"]
-        ),
-        (
-            :mouseinterval,
-            Cint,
-            ["n"],
-            ["T"],
-            ["Cint"]
-        ),
-        (
-            :mvwin,
-            Cvoid,
-            ["win", "y", "x"],
-            ["Ptr{WINDOW}", "T", "T"],
-            ["Ptr{WINDOW}", "Cint", "Cint"]
-        ),
-        (
-            :newpad,
-            Ptr{WINDOW},
-            ["lines", "cols"],
-            ["T", "T"],
-            ["Cint", "Cint"]
-        ),
-        (
-            :newwin,
-            Ptr{WINDOW},
-            ["lines", "cols", "y", "x"],
-            ["T" for _ = 1:4],
-            ["Cint" for _ = 1:4]
-        ),
-        (
-            :resizeterm,
-            Cint,
-            ["lines", "columns"],
-            ["T", "T"],
-            ["Cint", "Cint"]
-        ),
-        (
-            :subpad,
-            Ptr{WINDOW},
-            ["win", "nlines", "ncols", "begin_y", "begin_x"],
-            ["Ptr{WINDOW}", ["T" for _ = 1:4]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
-        ),
-        (
-            :wattroff,
-            Cint,
-            ["win", "attrs"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "Cint"]
-        ),
-        (
-            :wattron,
-            Cint,
-            ["win", "attrs"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "Cint"]
-        ),
-        (
-            :wbkgd,
-            Cint,
-            ["win", "ch"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "Cint"]
-        ),
-        (
-            :wmove,
-            Cvoid,
-            ["win", "y", "x"],
-            ["Ptr{WINDOW}", "T", "T"],
-            ["Ptr{WINDOW}", "Cint", "Cint"]
-        ),
-        (
-            :wresize,
-            Cvoid,
-            ["win", "lines", "cols"],
-            ["Ptr{WINDOW}", "T", "T"],
-            ["Ptr{WINDOW}", "Cint", "Cint"]
-        ),
-        (
-            :wtimeout,
-            Cvoid,
-            ["win", "delay"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "Cint"]
-        ),
-        # Functions with very long arguments.
-        (
-            :copywin,
-            Cint,
-            [
-                "scr",
-                "dest",
-                "sminrow",
-                "smincol",
-                "dminrow",
-                "dmincol",
-                "dmaxrow",
-                "dmaxcol",
-                "overlay"
-            ],
-            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["T" for _ = 1:7]...],
-            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Cint" for _ = 1:7]...]
-        ),
-        (
-            :prefresh,
-            Cint,
-            ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
-            ["Ptr{WINDOW}", ["T" for _ = 1:6]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
-        ),
-        (
-            :pnoutrefresh,
-            Cint,
-            ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
-            ["Ptr{WINDOW}", ["T" for _ = 1:6]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
-        )
-    )
-
-    fb    = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where T<:Integer -> $($r)
-
-        For more information, see `libncurses` documentation.
-        """
-        $f($(argsj...)) where T<:Integer = @_ccalln $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `jlchtype` ===========================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :box,
-            Cvoid,
-            ["win", "verch", "horch"],
-            ["Ptr{WINDOW}", "T", "T"],
-            ["Ptr{WINDOW}", "chtype", "chtype"]
-        ),
-        (
-            :waddch,
-            Cvoid,
-            ["win", "ch"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "chtype"]
-        ),
-        (
-            :wborder,
-            Cvoid,
-            ["win", "ls", "rs", "ts", "bs", "tl", "tr", "bl", "br"],
-            ["Ptr{WINDOW}", ["T" for _ = 1:8]...],
-            ["Ptr{WINDOW}", ["chtype" for _ = 1:8]...]
-        ),
-    )
-
-    fb     = Meta.quot(f)
-    argst1 = Meta.parse("(" * ([s == "T" ? "Char," : s * "," for s in j]...) * ")")
-    argst2 = Meta.parse("(" * ([s == "T" ? "Int,"  : s * "," for s in j]...) * ")")
-    argsj  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where T<:jlchtype -> $($r)
-
-        For more information, see `libncurses` documentation.
-        """
-        $f($(argsj...)) where T<:jlchtype = @_ccalln $f($(argsc...))::$r
-        _precompile_func($f, $argst1)
-        _precompile_func($f, $argst2)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `Integer` and `jlchtype` =============
-
-for (f, r, v, j, c) in
-    (
-        (
-            :hline,
-            Cint,
-            ["ch", "n"],
-            ["Tc", "Ti"],
-            ["chtype", "Cint"]
-        ),
-        (
-            :mvaddch,
-            Cint,
-            ["y", "x", "ch"],
-            ["Ti", "Ti", "Tc"],
-            ["Cint", "Cint", "chtype"]
-        ),
-        (
-            :mvhline,
-            Cint,
-            ["y", "x", "ch", "n"],
-            ["Ti", "Ti", "Tc", "Ti"],
-            ["Cint", "Cint", "chtype", "Cint"]
-        ),
-        (
-            :mvvline,
-            Cint,
-            ["y", "x", "ch", "n"],
-            ["Ti", "Ti", "Tc", "Ti"],
-            ["Cint", "Cint", "chtype", "Cint"]
-        ),
-        (
-            :mvwaddch,
-            Cint,
-            ["win", "y", "x", "ch"],
-            ["Ptr{WINDOW}", "Ti", "Ti", "Tc"],
-            ["Ptr{WINDOW}", "Cint", "Cint", "chtype"]
-        ),
-        (
-            :mvwhline,
-            Cint,
-            ["win", "y", "x", "ch", "n"],
-            ["Ptr{WINDOW}", "Ti", "Ti", "Tc", "Ti"],
-            ["Ptr{WINDOW}", "Cint", "Cint", "chtype", "Cint"]
-        ),
-        (
-            :mvwvline,
-            Cint,
-            ["win", "y", "x", "ch", "n"],
-            ["Ptr{WINDOW}", "Ti", "Ti", "Tc", "Ti"],
-            ["Ptr{WINDOW}", "Cint", "Cint", "chtype", "Cint"]
-        ),
-        (
-            :vline,
-            Cint,
-            ["ch", "n"],
-            ["Tc", "Ti"],
-            ["chtype", "Cint"]
-        ),
-        (
-            :whline,
-            Cint,
-            ["win", "ch", "n"],
-            ["Ptr{WINDOW}", "Tc", "Ti"],
-            ["Ptr{WINDOW}", "chtype", "Cint"]
-        ),
-        (
-            :wvline,
-            Cint,
-            ["win", "ch", "n"],
-            ["Ptr{WINDOW}", "Tc", "Ti"],
-            ["Ptr{WINDOW}", "chtype", "Cint"]
-        ),
-    )
-
-    fb     = Meta.quot(f)
-    argst1 = Meta.parse("(" * ([s == "Tc" ? "Char," : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
-    argst2 = Meta.parse("(" * ([s == "Tc" ? "Int,"  : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
-    argsj  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc  = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where {Tc<:jlchtype, Ti<:Integer} -> $($r)
-
-        For more information, see `libncurses` documentation.
-        """
-        $f($(argsj...)) where {Tc<:jlchtype,Ti<:Integer} = @_ccalln $f($(argsc...))::$r
-        _precompile_func($f, $argst1)
-        _precompile_func($f, $argst2)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `AbstractString` =====================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :wprintw,
-            Cvoid,
-            ["win", "str"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "Cstring"]
-        ),
-        (
-            :printw,
-            Cvoid,
-            ["str"],
-            ["T"],
-            ["Cstring"]
-        ),
-        (
-            :waddstr,
-            Cvoid,
-            ["win", "str"],
-            ["Ptr{WINDOW}", "T"],
-            ["Ptr{WINDOW}", "Cstring"]
-        ),
-        (
-            :addstr,
-            Cvoid,
-            ["str"],
-            ["T"],
-            ["Cstring"]
-        ),
-    )
-
-    fb    = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "T" ? "String," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i = 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where T<:AbstractString -> $($r)
-
-        For more information, see `libncurses` documentation.
-        """
-        $f($(argsj...)) where T<:AbstractString = @_ccalln $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Arguments Must Be `AbstractString` and `Integer` =======================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :mvprintw,
-            Cvoid,
-            ["y", "x", "str"],
-            ["Ti", "Ti", "Ts"],
-            ["Cint", "Cint", "Cstring"]
-        ),
-        (
-            :mvwprintw,
-            Cvoid,
-            ["win", "y", "x", "str"],
-            ["Ptr{WINDOW}", "Ti", "Ti", "Ts"],
-            ["Ptr{WINDOW}", "Cint", "Cint", "Cstring"]
-        ),
-    )
-
-    fb    = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "Ts" ? "String," : s == "Ti" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i,j) in zip(v,j)]
-    argsc = [Meta.parse(i * "::" * j) for (i,j) in zip(v,c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where {Ti<:Integer, Ts<:AbstractString} -> $($r)
-
-        For more information, see `libncurses` documentation.
-        """
-        $f($(argsj...)) where {Ti<:Integer,Ts<:AbstractString} = @_ccalln $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
 end
