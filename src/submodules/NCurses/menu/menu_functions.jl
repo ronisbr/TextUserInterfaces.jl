@@ -61,73 +61,120 @@ for (f, r, v, j, c) in
             Ptr{Cvoid},
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :free_item,
             Cint,
             ["item"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :free_menu,
             Cint,
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :item_description,
             Cstring,
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :item_index,
             Cint,
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :item_name,
             Cstring,
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :item_value,
             Cint,
             ["item"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
+        (
+            :menu_driver,
+            Cint,
+            ["menu", "c"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cint"]
+        ),
+        (
+            :new_item,
+            Ptr{Cvoid},
+            ["name", "description"],
+            ["Integer", "Integer"],
+            ["Cstring", "Cstring"]
+        ),
         (
             :new_menu,
             Ptr{Cvoid},
             ["items"],
             ["Vector{Ptr{Cvoid}}"],
-            ["Ptr{Ptr{Cvoid}}"]),
+            ["Ptr{Ptr{Cvoid}}"],
+        ),
         (
             :pos_menu_cursor,
             Cint,
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
         (
             :post_menu,
             Cint,
             ["menu"],
             ["Ptr{Cvoid}"],
-            ["Ptr{Cvoid}"]),
+            ["Ptr{Cvoid}"],
+        ),
+        (
+            :set_menu_mark,
+            Cint,
+            ["menu", "mark"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cstring"]
+        ),
+        (
+            :set_menu_format,
+            Cint,
+            ["menu", "rows", "cols"],
+            ["Ptr{Cvoid}", "Integer", "Integer"],
+            ["Ptr{Cvoid}", "Cint", "Cint"]
+        ),
+        (
+            :set_menu_opts,
+            Cint,
+            ["menu", "opts"],
+            ["Ptr{Cvoid}", "Integer"],
+            ["Ptr{Cvoid}", "Cint"]
+        ),
         (
             :set_menu_sub,
             Cint,
             ["menu", "win"],
             ["Ptr{Cvoid}", "Ptr{WINDOW}"],
-            ["Ptr{Cvoid}", "Ptr{WINDOW}"]),
+            ["Ptr{Cvoid}", "Ptr{WINDOW}"],
+        ),
         (
             :set_menu_win,
             Cint,
             ["menu", "win"],
             ["Ptr{Cvoid}", "Ptr{WINDOW}"],
-            ["Ptr{Cvoid}", "Ptr{WINDOW}"]),
+            ["Ptr{Cvoid}", "Ptr{WINDOW}"],
+        ),
         (
             :unpost_menu,
             Cint,
@@ -159,102 +206,6 @@ for (f, r, v, j, c) in
         For more information, see `libmenu` documentation.
         """
         $f($(argsj...)) = @_ccallm $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `Integer` ============================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :menu_driver,
-            Cint,
-            ["menu", "c"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cint"]),
-        (
-            :set_menu_format,
-            Cint,
-            ["menu", "rows", "cols"],
-            ["Ptr{Cvoid}", "T", "T"],
-            ["Ptr{Cvoid}", "Cint", "Cint"]),
-        (
-            :set_menu_opts,
-            Cint,
-            ["menu", "opts"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cint"]
-        ),
-    )
-
-    fb = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "T" ? "Int," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
-    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where T<:Integer -> $($r)
-
-        For more information, see `libmenu` documentation.
-        """
-        $f($(argsj...)) where {T<:Integer} = @_ccallm $f($(argsc...))::$r
-        _precompile_func($f, $argst)
-    end
-end
-
-# == Functions that Depends on Arguments that Must Be `AbstractString` =====================
-
-for (f, r, v, j, c) in
-    (
-        (
-            :new_item,
-            Ptr{Cvoid},
-            ["name", "description"],
-            ["T", "T"],
-            ["Cstring", "Cstring"]),
-        (
-            :set_menu_mark,
-            Cint,
-            ["menu", "mark"],
-            ["Ptr{Cvoid}", "T"],
-            ["Ptr{Cvoid}", "Cstring"]
-        ),
-    )
-
-    fb = Meta.quot(f)
-    argst = Meta.parse("(" * ([s == "T" ? "String," : s * "," for s in j]...) * ")")
-    argsj = [Meta.parse(i * "::" * j) for (i, j) in zip(v, j)]
-    argsc = [Meta.parse(i * "::" * j) for (i, j) in zip(v, c)]
-
-    # Assemble the argument string to build the function documentation.
-    args_str = ""
-    for i = 1:length(v)
-        args_str *= v[i] * "::" * j[i]
-
-        if i != length(v)
-            args_str *= ", "
-        end
-    end
-
-    @eval begin
-        """
-            $($fb)($($args_str)) where T<:AbstractString -> $($r)
-
-        For more information, see `libmenu` documentation.
-        """
-        $f($(argsj...)) where {T<:AbstractString} = @_ccallm $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
 end
