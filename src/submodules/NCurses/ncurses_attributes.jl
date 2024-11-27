@@ -12,29 +12,27 @@ export COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE, COLOR_PAIR
 
 const NCURSES_ATTR_SHIFT = 8
 
-function NCURSES_BITS(m, shf)
-    m << (shf + NCURSES_ATTR_SHIFT)
-end
+NCURSES_BITS(m, shf) = m << (shf + NCURSES_ATTR_SHIFT)
 
 const A_NORMAL     =  UInt32(0)
 const A_ATTRIBUTES = ~UInt32(0)
-const A_CHARTEXT   = NCURSES_BITS(UInt32(1),0) - UInt32(1)
-const A_COLOR      = NCURSES_BITS( (UInt32(1) << 8) - UInt32(1),0)
-const A_STANDOUT   = NCURSES_BITS(UInt32(1), 8)
-const A_UNDERLINE  = NCURSES_BITS(UInt32(1), 9)
-const A_REVERSE    = NCURSES_BITS(UInt32(1),10)
-const A_BLINK      = NCURSES_BITS(UInt32(1),11)
-const A_DIM        = NCURSES_BITS(UInt32(1),12)
-const A_BOLD       = NCURSES_BITS(UInt32(1),13)
-const A_ALTCHARSET = NCURSES_BITS(UInt32(1),14)
-const A_INVIS      = NCURSES_BITS(UInt32(1),15)
-const A_PROTECT    = NCURSES_BITS(UInt32(1),16)
-const A_HORIZONTAL = NCURSES_BITS(UInt32(1),17)
-const A_LEFT       = NCURSES_BITS(UInt32(1),18)
-const A_LOW        = NCURSES_BITS(UInt32(1),19)
-const A_RIGHT      = NCURSES_BITS(UInt32(1),20)
-const A_TOP        = NCURSES_BITS(UInt32(1),21)
-const A_VERTICAL   = NCURSES_BITS(UInt32(1),22)
+const A_CHARTEXT   = NCURSES_BITS(UInt32(1), 0) - UInt32(1)
+const A_COLOR      = NCURSES_BITS((UInt32(1) << 8) - UInt32(1), 0)
+const A_STANDOUT   = NCURSES_BITS(UInt32(1),  8)
+const A_UNDERLINE  = NCURSES_BITS(UInt32(1),  9)
+const A_REVERSE    = NCURSES_BITS(UInt32(1), 10)
+const A_BLINK      = NCURSES_BITS(UInt32(1), 11)
+const A_DIM        = NCURSES_BITS(UInt32(1), 12)
+const A_BOLD       = NCURSES_BITS(UInt32(1), 13)
+const A_ALTCHARSET = NCURSES_BITS(UInt32(1), 14)
+const A_INVIS      = NCURSES_BITS(UInt32(1), 15)
+const A_PROTECT    = NCURSES_BITS(UInt32(1), 16)
+const A_HORIZONTAL = NCURSES_BITS(UInt32(1), 17)
+const A_LEFT       = NCURSES_BITS(UInt32(1), 18)
+const A_LOW        = NCURSES_BITS(UInt32(1), 19)
+const A_RIGHT      = NCURSES_BITS(UInt32(1), 20)
+const A_TOP        = NCURSES_BITS(UInt32(1), 21)
+const A_VERTICAL   = NCURSES_BITS(UInt32(1), 22)
 
 const COLOR_BLACK   = 0
 const COLOR_RED     = 1
