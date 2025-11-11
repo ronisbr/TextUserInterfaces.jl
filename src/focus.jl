@@ -93,55 +93,24 @@ function process_keystroke(k::Keystroke)
     # check for resizing events and pass the keystroke to the windows in focus.
     if k.ktype == :resize
         for win in tui.windows
-            # Here, we need to force the layout update. For some reason, if
-            # a window occupies the entire screen, then NCurses
-            # automatically change the value returned by `getmaxx` and
-            # `getmaxy`. Thus, the repositioning algorithm thinks we do not
-            # need to resize the window and then the buffers are not
-            # resized. This is not the fastest algorithm, but since resize
-            # events tends to be sparse, there will not be noticeable
-            # impact.
-            update_layout!(win; force=true)
+            # Here, we need to force the layout update. For some reason, if a window
+            # occupies the entire screen, then NCurses automatically change the value
+            # returned by `getmaxx` and `getmaxy`. Thus, the repositioning algorithm thinks
+            # we do not need to resize the window and then the buffers are not resized. This
+            # is not the fastest algorithm, but since resize events tends to be sparse,
+            # there will not be noticeable impact.
+            update_layout!(win; force = true)
         end
     else
-        while true
+        focused_window = get_focused_window()
+
+        # If we do not have a focused window, try to find one.
+        if isnothing(focused_window)
+            move_focus_to_next_window()
             focused_window = get_focused_window()
-
-            if !isnothing(focused_window)
-                r = process_keystroke!(focused_window, k)
-
-                if r == :keystroke_processed
-                    break
-
-                elseif r == :next_object
-                    move_focus_to_next_window()
-                    new_focused_window = get_focused_window()
-
-                    # If the current window request to change the focus, but the
-                    # only focusable window is it, do nothing.
-                    new_focused_window === focused_window && break
-
-                elseif r == :previous_object
-                    move_focus_to_previous_window()
-                    new_focused_window = get_focused_window()
-
-                    # If the current window request to change the focus, but the
-                    # only focusable window is it, do nothing.
-                    new_focused_window === focused_window && break
-
-                else
-                    @log CRITICAL "process_keystroke" """
-                    The function `process_keystroke` for the object $(obj_desc(focused_window)) returned a invalid value: $(r)."""
-                    break
-                end
-            else
-                move_focus_to_next_window()
-
-                # If no window can be focused, do nothing.
-                new_focused_window = get_focused_window()
-                isnothing(new_focused_window) && break
-            end
         end
+
+        !isnothing(focused_window) && process_keystroke!(focused_window, k)
     end
 
     return nothing

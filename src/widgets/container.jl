@@ -169,43 +169,40 @@ function create_widget(
 end
 
 function process_keystroke!(container::WidgetContainer, k::Keystroke)
-    focused_widget = get_focused_widget(container)
+    # If the user pressed tab, they want to change the widget.
+    if k.ktype == :tab
+        # If the container has a focused widget, give it the chance to process the
+        # keystroke first.
+        fw = get_focused_widget(container)
 
-    # If we do not have a focused widget, try to focus one first.
-    if isnothing(focused_widget)
-        cmd = check_global_command(k)
+        !isnothing(fw) && process_keystroke!(fw, k) == :keystroke_processed &&
+            return :keystroke_processed
 
-        if isnothing(cmd)
-            if !move_focus_to_next_widget!(container)
-                return :next_widget
-            end
-        else
-            if _process_command!(container, cmd) === :keystroke_processed
-                return :keystroke_processed
-            end
+        # Otherwise, we need to change the focused widget in this container.
+
+        # If this container does not have a parent, it means it is a top container. Thus, we
+        # need to change the widgets in a cyclic manner.
+        cyclic = isnothing(container.container)
+
+        if !k.shift
+            !move_focus_to_next_widget!(container; cyclic = cyclic) && return :next_object
+            return :keystroke_processed
         end
 
-        focused_widget = get_focused_widget(container)
+        !move_focus_to_previous_widget!(container; cyclic = cyclic) && return :previous_object
+
+        return :keystroke_processed
     end
+
+    focused_widget = get_focused_widget(container)
 
     if !isnothing(focused_widget)
         r = process_keystroke!(focused_widget, k)
 
-        if r === :keystroke_processed
+        if r == :keystroke_processed
             sync_cursor(container)
             return :keystroke_processed
-
-        # If the command was not processed by the widget, we need to check if there is a
-        # global action that must be performed.
-        else
-            gc = check_global_command(k)
-
-            if !isnothing(gc)
-                r = gc
-            end
         end
-
-        return _process_command!(container, r)
     end
 
     return :keystroke_not_processed
@@ -482,33 +479,6 @@ function _draw_title!(container::WidgetContainer)
     NCurses.mvwprintw(buffer, 0, pad, title)
 
     return nothing
-end
-
-# Process the command `cmd` sent to the `container`.
-function _process_command!(container::WidgetContainer, cmd::Symbol)
-    # If this container does not have a parent, it means it is a top container. Thus, we
-    # need to change the widgets in a cyclic manner.
-    cyclic = isnothing(container.container)
-
-    if cmd == :keystroke_processed
-        return cmd
-
-    elseif cmd == :next_object
-        if !move_focus_to_next_widget!(container; cyclic = cyclic)
-            return :next_object
-        end
-
-        return :keystroke_processed
-
-    elseif cmd == :previous_object
-        if !move_focus_to_previous_widget!(container; cyclic = cyclic)
-            return :previous_object
-        end
-
-        return :keystroke_processed
-    end
-
-    return cmd
 end
 
 # Search the next widget that can accept the focus in the list. It returns the object ID or

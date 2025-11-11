@@ -153,14 +153,14 @@ function create_widget(
 end
 
 function process_keystroke!(widget::WidgetInputField, k::Keystroke)
-    # In this case, if we have a global command, we must not process the keystroke.
-    cmd = check_global_command(k)
-    isnothing(cmd) || return :keystorke_not_processed
-
     # If the keystroke is `enter`, just emit the signal.
     if k.ktype == :enter
         @emit widget return_pressed
         return :keystroke_processed
+
+    elseif k.ktype == :tab
+        # Let the container handle the tab key to change focus.
+        return :keystroke_not_processed
 
     # Handle the input.
     else

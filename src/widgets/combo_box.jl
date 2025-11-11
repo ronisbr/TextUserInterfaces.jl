@@ -92,10 +92,6 @@ function create_widget(
 end
 
 function process_keystroke!(widget::WidgetComboBox, k::Keystroke)
-    # In this case, if we have a global command, we must not process the keystroke.
-    cmd = check_global_command(k)
-    isnothing(cmd) || return :keystorke_not_processed
-
     if k.ktype == :enter
         add_widget!(get_parent(widget), widget.list_box)
         move_focus_to_widget!(get_parent(widget), widget.list_box)
@@ -105,6 +101,10 @@ function process_keystroke!(widget::WidgetComboBox, k::Keystroke)
         @connect(list_box, esc_pressed,    _list_box_esc_pressed,    (; combo_box = widget))
         @connect(list_box, focus_lost,     _list_box_focus_lost,     (; combo_box = widget))
         @connect(list_box, return_pressed, _list_box_return_pressed, (; combo_box = widget))
+
+    elseif k.ktype == :tab
+        # Let the container handle the tab key to change focus.
+        return :keystroke_not_processed
     end
 
     return :keystroke_processed

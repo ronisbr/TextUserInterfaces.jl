@@ -155,10 +155,6 @@ function create_widget(
 end
 
 function process_keystroke!(widget::WidgetListBox, k::Keystroke)
-    # In this case, if we have a global command, we must not process the keystroke.
-    cmd = check_global_command(k)
-    isnothing(cmd) || return :keystorke_not_processed
-
     # If the keystroke is `enter` or `esc`, just emit the signal.
     if k.ktype == :enter
         @emit widget return_pressed
