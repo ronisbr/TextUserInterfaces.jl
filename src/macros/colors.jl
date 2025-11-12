@@ -9,7 +9,7 @@ export ncolor
 """
     @ncolor(color, buffer, block)
 
-This macro executes the following code:
+This macro expands to the following code:
 
 ```julia
 color >= 0 && wattron(buffer, color)

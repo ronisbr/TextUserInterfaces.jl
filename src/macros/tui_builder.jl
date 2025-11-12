@@ -26,8 +26,8 @@ design the TUI:
 
 !!! note
 
-    This macro assings variables to store all objects created using `@tui_` functions that
-    are not storred in a variable. Those variables are named `__OBJ_IDn__`, where `n` is the
+    This macro assigns variables to store all objects created using `@tui_` functions that
+    are not stored in a variable. Those variables are named `__OBJ_IDn__`, where `n` is the
     object ID.
 
 # Extended Help

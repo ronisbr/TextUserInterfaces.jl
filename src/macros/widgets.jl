@@ -6,7 +6,7 @@
 
 export @create_widget_helper, @widget
 
-const _list_layout_args = (
+const _LAYOUT_ARGS = (
     :bottom_anchor,
     :left_anchor,
     :right_anchor,
@@ -19,7 +19,7 @@ const _list_layout_args = (
     :width
 )
 
-const _list_layout_anchors = (
+const _LAYOUT_ANCHORS = (
     :bottom_anchor,
     :left_anchor,
     :right_anchor,
@@ -83,10 +83,10 @@ Otherwise, the widget will be created and returned, but not added to any parent.
                         has_parent = true
                         parent = a.args[2]
 
-                    elseif a.args[1] ∈ _list_layout_args
+                    elseif a.args[1] ∈ _LAYOUT_ARGS
                         # In this case, if the parameter is an anchor and value is a
                         # `Tuple`, we should convert to an `Anchor`.
-                        if (a.args[1] ∈ _list_layout_anchors) &&
+                        if (a.args[1] ∈ _LAYOUT_ANCHORS) &&
                             (a.args[2] isa Expr) &&
                             (a.args[2].head == :tuple)
 
@@ -127,7 +127,6 @@ Otherwise, the widget will be created and returned, but not added to any parent.
                 create_widget_expr = quote
                     let
                         layout = ObjectLayout(; $(expr_layout...))
-                        widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                         add_widget!($parent, widget)
                         $(expr_signals...)
                         widget
@@ -160,39 +159,42 @@ macro widget(ex)
     ex.args[2] = :($(ex.args[2]) <: Widget)
 
     # Then, we just need to add the required fields inside the arguments.
-    push!(ex.args[3].args, [
-        :(id::Int = 0)
-        :(container::Union{Nothing, WidgetContainer} = nothing)
-        :(window::Union{Nothing, Object} = nothing)
-        :(buffer::Ptr{WINDOW} = Ptr{WINDOW}(0))
+    push!(
+        ex.args[3].args,
+        [
+            :(id::Int = 0)
+            :(container::Union{Nothing, WidgetContainer} = nothing)
+            :(window::Union{Nothing, Object} = nothing)
+            :(buffer::Ptr{WINDOW} = Ptr{WINDOW}(0))
 
-        # Configuration related to the size and position of the widget.
-        :(layout::ObjectLayout = ObjectLayout())
+            # Configuration related to the size and position of the widget.
+            :(layout::ObjectLayout = ObjectLayout())
 
-        # Horizontal and vertical hints for the object layout.
-        :(horizontal_hints::Dict{Symbol, Any} = Dict())
-        :(vertical_hints::Dict{Symbol, Any} = Dict())
+            # Horizontal and vertical hints for the object layout.
+            :(horizontal_hints::Dict{Symbol, Any} = Dict())
+            :(vertical_hints::Dict{Symbol, Any} = Dict())
 
-        # Current size and position of the widget.
-        :(top::Int    = -1)
-        :(left::Int   = -1)
-        :(height::Int = -1)
-        :(width::Int  = -1)
+            # Current size and position of the widget.
+            :(top::Int    = -1)
+            :(left::Int   = -1)
+            :(height::Int = -1)
+            :(width::Int  = -1)
 
-        # Widget theme.
-        :(theme::Theme = tui.default_theme)
+            # Widget theme.
+            :(theme::Theme = tui.default_theme)
 
-        # Mark if the widget needs to be update.
-        :(update_needed::Bool = true)
+            # Mark if the widget needs to be update.
+            :(update_needed::Bool = true)
 
-        # Indicate that the widget is hidden.
-        :(hidden::Bool = false)
+            # Indicate that the widget is hidden.
+            :(hidden::Bool = false)
 
-        # Default signals.
-        :(@signal focus_acquired)
-        :(@signal focus_lost)
-        :(@signal layout_updated)
-    ]...)
+            # Default signals.
+            :(@signal focus_acquired)
+            :(@signal focus_lost)
+            :(@signal layout_updated)
+        ]...,
+    )
 
     ret = quote
         @kwdef $ex
