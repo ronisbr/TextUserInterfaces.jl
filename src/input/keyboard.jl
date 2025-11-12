@@ -14,7 +14,7 @@ export getkey
     getkey(win::Ptr{WINDOW} = tui.stdscr) -> Keystroke
 
 Wait for a keystroke in the window `win` and return it (see [`Keystroke`](@ref)). If `win`
-is omited, the standard screen (`tui.stdscr`) is used.
+is omitted, the standard screen (`tui.stdscr`) is used.
 
 # Keywords
 
@@ -27,7 +27,7 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr; block::Bool = true)
     c_raw = NCurses.wgetch(win)
 
     while block && (c_raw < 0) && isopen(stdin)
-        poll_fd(RawFD(Base.STDIN_NO), 0.1; readable=true)
+        poll_fd(RawFD(Base.STDIN_NO), 0.1; readable = true)
         c_raw = NCurses.wgetch(win)
     end
 
@@ -42,7 +42,7 @@ function getkey(win::Ptr{WINDOW} = tui.stdscr; block::Bool = true)
 
         # Here, we need to read a sequence of characters that is already in the buffer,
         # limited to 10 characters.
-        for i in 1:10
+        for _ in 1:10
             nc = NCurses.wgetch(win)
             (nc < 0 || nc == nocharval) && break
             s *= string(Char(nc))
