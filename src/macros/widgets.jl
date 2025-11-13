@@ -48,14 +48,13 @@ macro create_widget_helper(widget_symbol, macro_name)
 """
     @$($mnq)(args...)
 
-This macro creates a widget of type `$($wsq)` using the arguments
-`args...`.
+This macro creates a widget of type `$($wsq)` using the arguments `args...`.
 
 `args` must be a set of expressions as follows:
 
     <parameter> = <value>
 
-If the parameter `parent` is present, then the created widget will be added to `parent`.
+If the parameter `parent` is present, the created widget will be added to `parent`.
 Otherwise, the widget will be created and returned, but not added to any parent.
 """
         macro $macro_name(args...)
