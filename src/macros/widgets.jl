@@ -127,6 +127,7 @@ Otherwise, the widget will be created and returned, but not added to any parent.
                 create_widget_expr = quote
                     let
                         layout = ObjectLayout(; $(expr_layout...))
+                        widget = create_widget(Val($ws), layout; $(expr_kwargs...))
                         add_widget!($parent, widget)
                         $(expr_signals...)
                         widget
