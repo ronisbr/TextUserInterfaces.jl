@@ -211,6 +211,7 @@ end
 function redraw!(container::WidgetContainer)
     @unpack border, buffer, update_needed, widgets, theme = container
 
+    NCurses.wbkgd(buffer, theme.default)
     NCurses.wclear(buffer)
 
     if border
