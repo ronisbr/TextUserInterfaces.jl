@@ -27,11 +27,11 @@ end
 
 function update_layout!(label::WidgetAnsiLabel; force::Bool = false)
     if update_widget_layout!(label; force = force)
-        _parse_ansi_text!(label)
+        _widget_ansi_label__parse_ansi_text!(label)
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 ############################################################################################
@@ -44,7 +44,6 @@ function create_widget(
     ::Val{:ansi_label},
     layout::ObjectLayout;
     alignment = :l,
-    fill::Bool = false,
     theme::Theme = tui.default_theme,
     text::String = "Label"
 )
@@ -87,8 +86,8 @@ function redraw!(widget::WidgetAnsiLabel)
         NCurses.mvwprintw(buffer, l - 1, 0, "")
 
         for i in 1:length(line)
-            @ncolor line_colors[i] buffer begin
-                NCurses.wprintw(buffer, line[i])
+            @ncolor line_colors[i - 1 + begin] buffer begin
+                NCurses.wprintw(buffer, line[i - 1 + begin])
             end
         end
     end
@@ -123,10 +122,10 @@ function change_text!(
     new_text::AbstractString;
     alignment = widget.alignment
 )
-    widget.text = new_text
+    widget.text      = new_text
     widget.alignment = alignment
 
-    _parse_ansi_text!(widget)
+    _widget_ansi_label__parse_ansi_text!(widget)
 
     return nothing
 end
@@ -135,9 +134,13 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# This function gets the text in the variable `text`, and converts the ANSI escape sequences
-# to NCurse colors. It is only called when the widget layout is updated.
-function _parse_ansi_text!(widget::WidgetAnsiLabel)
+"""
+    _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel) -> Nothing
+
+This function gets the `text` in `widget` and converts the ANSI escape sequences to NCurse
+colors. It is only called when the widget layout is updated.
+"""
+function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing
 
@@ -191,14 +194,14 @@ function _parse_ansi_text!(widget::WidgetAnsiLabel)
         colors = Vector{Int}(undef, num_decorations)
 
         @inbounds for i in 1:num_decorations
-            d = vd[i]
+            d = vd[i - 1 + begin]
             c = ncurses_color(
                 d.foreground,
                 d.background;
                 bold      = d.bold,
                 underline = d.underline
             )
-            colors[i] = c
+            colors[i - 1 + begin] = c
         end
 
         push!(aligned_text, vstr)

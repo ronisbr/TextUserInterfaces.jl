@@ -8,9 +8,7 @@
 can_accept_focus(widget::Widget) = false
 can_release_focus(widget::Widget) = true
 
-function destroy!(widget::Widget)
-    return destroy_widget!(widget)
-end
+destroy!(widget::Widget) = destroy_widget!(widget)
 
 get_left(widget::Widget)   = widget.left
 get_width(widget::Widget)  = widget.width

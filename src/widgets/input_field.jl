@@ -93,7 +93,7 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
         widget.field_width = width - _INPUT_FIELD_STYLE_WIDTH_MARGINS[style]
 
         # Update the rendered text and also the cursor position.
-        _render_text_view_and_update_cursor_position!(widget)
+        _widget_input_field__render_text_view_and_update_cursor_position!(widget)
 
         # Recreate the internal buffer considering the new size.
         internal_buffer !== Ptr{WINDOW}(0) && NCurses.delwin(internal_buffer)
@@ -102,9 +102,9 @@ function update_layout!(widget::WidgetInputField; force::Bool = false)
         @pack! widget = internal_buffer
 
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 ############################################################################################
@@ -153,33 +153,31 @@ function create_widget(
 end
 
 function process_keystroke!(widget::WidgetInputField, k::Keystroke)
+    # Let the container handle the tab key to change focus.
+    k.ktype == :tab && return :keystroke_not_processed
+
     # If the keystroke is `enter`, just emit the signal.
     if k.ktype == :enter
         @emit widget return_pressed
         return :keystroke_processed
-
-    elseif k.ktype == :tab
-        # Let the container handle the tab key to change focus.
-        return :keystroke_not_processed
+    end
 
     # Handle the input.
-    else
-        text_changed = _handle_input!(widget, k)
-        _render_text_view_and_update_cursor_position!(widget)
+    text_changed = _widget_input_field__handle_input!(widget, k)
+    _widget_input_field__render_text_view_and_update_cursor_position!(widget)
 
-        text_changed && @emit widget text_changed
+    text_changed && @emit widget text_changed
 
-        # Update the cursor position.
-        _update_cursor(widget)
+    # Update the cursor position.
+    _widget_input_field__update_cursor(widget)
 
-        return :keystroke_processed
-    end
+    return :keystroke_processed
 end
 
 function request_focus!(widget::WidgetInputField)
     # When accepting focus we must update the cursor position so that it can be positioned
     # in the position it was when the focus was released.
-    _update_cursor(widget)
+    _widget_input_field__update_cursor(widget)
     request_update!(widget)
     return true
 end
@@ -237,7 +235,7 @@ function redraw!(widget::WidgetInputField)
     NCurses.copywin(internal_buffer, buffer, 0, 0, 0, 0, height - 1, width - 1, 0)
 
     # Update the cursor.
-    _update_cursor(widget)
+    _widget_input_field__update_cursor(widget)
 
     return nothing
 end
@@ -265,8 +263,13 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Handle the input `k` to the input field `widget`.
-function _handle_input!(widget::WidgetInputField, k::Keystroke)
+"""
+    _widget_input_field__handle_input!(widget::WidgetInputField, k::Keystroke) -> Bool
+
+Handle the input `k` to the input field `widget`. It returns `true` if the text was changed,
+`false` otherwise.
+"""
+function _widget_input_field__handle_input!(widget::WidgetInputField, k::Keystroke)
     @unpack data, max_data_size, validator = widget
     @unpack cursor = widget
 
@@ -274,7 +277,7 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
     num_chars = length(data)
 
     # Get the action.
-    action = _get_input_field_action(k)
+    action = _widget_input_field__get_action(k)
 
     # Check if the text has changed.
     text_changed = false
@@ -332,37 +335,30 @@ function _handle_input!(widget::WidgetInputField, k::Keystroke)
     return text_changed
 end
 
-# Obtain the action that the user wants by hitting the keystroke `k`.
-function _get_input_field_action(k::Keystroke)
-    action = :none
+"""
+    _widget_input_field__get_input_field_action(k::Keystroke) -> Nothing
 
-    if k.ktype == :left
-        action = :move_cursor_to_left
+Obtain the action that the user wants by hitting the keystroke `k`.
+"""
+function _widget_input_field__get_action(k::Keystroke)
+    k.ktype == :left      && return :move_cursor_to_left
+    k.ktype == :right     && return :move_cursor_to_right
+    k.ktype == :home      && return :goto_beginning
+    k.ktype == :end       && return :goto_end
+    k.ktype == :backspace && return :delete_previous_character
+    k.ktype == :delete    && return :delete_forward_character
+    k.ktype == :char      && return :add_character
+    k.ktype == :utf8      && return :add_character
 
-    elseif k.ktype == :right
-        action = :move_cursor_to_right
-
-    elseif k.ktype == :home
-        action = :goto_beginning
-
-    elseif (k.ktype == :end)
-        action = :goto_end
-
-    elseif k.ktype == :backspace
-        action = :delete_previous_character
-
-    elseif k.ktype == :delete
-        action = :delete_forward_character
-
-    elseif (k.ktype == :char) || (k.ktype == :utf8)
-        action = :add_character
-    end
-
-    return action
+    return :none
 end
 
-# Render the view text and also update the internal values that store the cursor position.
-function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
+"""
+    _widget_input_field__render_text_view_and_update_cursor_position!(widget::WidgetInputField) -> Nothing
+
+Render the view text and also update the internal values that store the cursor position.
+"""
+function _widget_input_field__render_text_view_and_update_cursor_position!(widget::WidgetInputField)
     @unpack buffer, cursor, data, field_width, style, view_beginning = widget
 
     # Compute the string width up to the cursor.
@@ -380,7 +376,6 @@ function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
     # position. Notice that we always leave one space at the end in this case.
     elseif (view_beginning + field_width - 2) < string_width_before_cursor
         view_beginning = string_width_before_cursor - field_width + 2
-
     end
 
     # Make sure we only have one space at the end of the field if we are not at the
@@ -441,8 +436,12 @@ function _render_text_view_and_update_cursor_position!(widget::WidgetInputField)
     return nothing
 end
 
-# Update the cursor in the view.
-function _update_cursor(widget::WidgetInputField)
+"""
+    _widget_input_field__update_cursor(widget::WidgetInputField) -> Nothing
+
+Update the cursor in the view.
+"""
+function _widget_input_field__update_cursor(widget::WidgetInputField)
     NCurses.wmove(widget.buffer, widget.phy_cursor_y, widget.phy_cursor_x)
     return nothing
 end

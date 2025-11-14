@@ -125,8 +125,7 @@ function create_panels!(
 
             containers[i, j] = create_widget(
                 Val(:container),
-                ObjectLayout(
-                    ;
+                ObjectLayout(;
                     top_anchor  = top_anchor,
                     left_anchor = left_anchor,
                     width       = "$(column_widths[j])%",
@@ -169,8 +168,8 @@ function create_panels!(
                         top_anchor = Anchor(:parent, :top)
                     );
                     draw! = (rb::WidgetRawBuffer, buffer::Ptr{WINDOW}) -> begin
-                        _panel_cell_draw_border!(rb, buffer, bottom, left, right, top)
-                        !isnothing(titles) && _panel_cell_draw_title!(
+                        _panels__draw_cell_border!(rb, buffer, bottom, left, right, top)
+                        !isnothing(titles) && _panels__draw_cell_title!(
                             rb,
                             buffer,
                             titles[i, j];
@@ -210,13 +209,13 @@ end
 ############################################################################################
 
 """
-    _panel_cell_draw_border!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, bottom::Bool, left::Bool, right::Bool, top::Bool) -> Nothing
+    _panels__draw_cell_border!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, bottom::Bool, left::Bool, right::Bool, top::Bool) -> Nothing
 
 Draw function for the panel cell raw buffer. It renders to the `buffer` of the widget `rb`
 the cell. The cell position is specified by the arguments `bottom`, `left`, `right`, and
 `top`.
 """
-function _panel_cell_draw_border!(
+function _panels__draw_cell_border!(
     rb::WidgetRawBuffer,
     buffer::Ptr{WINDOW},
     bottom::Bool,
@@ -292,8 +291,8 @@ function _panel_cell_draw_border!(
 end
 
 """
-    _panel_cell_draw_title!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, title::String; kwargs...) -> Nothing
-
+    _panels__cell_draw_title!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW}, title::String; kwargs...) -> Nothing
+    
 Draw the `title` in the panel cell `buffer` of the widget `rb`.
 
 # Keywords
@@ -305,7 +304,7 @@ Draw the `title` in the panel cell `buffer` of the widget `rb`.
     take into account the right border.
     (**Default** = `false`)
 """
-function _panel_cell_draw_title!(
+function _panels__draw_cell_title!(
     rb::WidgetRawBuffer,
     buffer::Ptr{WINDOW},
     title::String;

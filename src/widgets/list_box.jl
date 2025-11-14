@@ -77,12 +77,12 @@ function update_layout!(widget::WidgetListBox; force::Bool = false)
         @pack! widget = begview, numlines
 
         # Make sure that the highlighted item is on view.
-        _move_view(widget, 0)
+        _widget_list_box__move_view!(widget, 0)
 
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 ############################################################################################
@@ -165,7 +165,7 @@ function process_keystroke!(widget::WidgetListBox, k::Keystroke)
         return :keystroke_processed
 
     # Handle the input.
-    elseif _handle_input!(widget, k)
+    elseif _widget_list_box__handle_input!(widget, k)
         request_update!(widget)
         return :keystroke_processed
 
@@ -265,8 +265,12 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Handle the input `k` in the list box `widget`.
-function _handle_input!(widget::WidgetListBox, k::Keystroke)
+"""
+    _widget_list_box__handle_input!(widget::WidgetListBox, k::Keystroke) -> nothing
+
+Handle the input `k` in the list box `widget`.
+"""
+function _widget_list_box__handle_input!(widget::WidgetListBox, k::Keystroke)
     @unpack data, begview, current_item, multiple_selection, numlines = widget
     @unpack selectable, selected = widget
 
@@ -299,25 +303,29 @@ function _handle_input!(widget::WidgetListBox, k::Keystroke)
     elseif k.ktype == :pagedown
         Δx += numlines
     elseif k.ktype == :home
-        # The overflow will be handled by `_move_view`.
+        # The overflow will be handled by `_move_view!`.
         Δx -= length(data)
     elseif k.ktype == :end
-        # The overflow will be handled by `_move_view`.
+        # The overflow will be handled by `_move_view!`.
         Δx += length(data)
     else
         input_handled = false
     end
 
     if input_handled
-        _move_view(widget, Δx)
+        _widget_list_box__move_view!(widget, Δx)
         return true
-    else
-        return false
     end
+
+    return false
 end
 
-# Move the view in the list box `widget` by `Δx` itens.
-function _move_view(widget::WidgetListBox, Δx::Int)
+"""
+    _widget_list_box__move_view!(widget::WidgetListBox, Δx::Int) -> Nothing
+
+Move the view in the list box `widget` by `Δx` itens.
+"""
+function _widget_list_box__move_view!(widget::WidgetListBox, Δx::Int)
     @unpack begview, current_item, data, numlines = widget
 
     # Make sure `current_item` is inside the allowed bounds considering the data.

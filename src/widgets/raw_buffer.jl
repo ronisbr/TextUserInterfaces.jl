@@ -31,8 +31,7 @@ function create_widget(
     theme::Theme = tui.default_theme
 )
     # Create the widget.
-    raw_buffer = WidgetRawBuffer(
-        ;
+    raw_buffer = WidgetRawBuffer(;
         id     = reserve_object_id(),
         draw!  = draw!,
         layout = layout,

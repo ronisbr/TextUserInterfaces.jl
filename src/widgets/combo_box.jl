@@ -30,14 +30,6 @@ end
 #                                        Object API                                        #
 ############################################################################################
 
-function update_layout!(widget::WidgetComboBox; force::Bool = false)
-    if update_widget_layout!(widget; force = force)
-        return true
-    else
-        return false
-    end
-end
-
 ############################################################################################
 #                                        Widget API                                        #
 ############################################################################################
@@ -54,14 +46,13 @@ function create_widget(
     height_hint  = 1
 
     # Create the combo box.
-    combo_box = WidgetComboBox(
-        ;
-        id = reserve_object_id(),
-        layout = layout,
-        theme = theme,
-        data = data,
+    combo_box = WidgetComboBox(;
+        id               = reserve_object_id(),
+        layout           = layout,
+        theme            = theme,
+        data             = data,
         horizontal_hints = Dict(:width => width_hint),
-        vertical_hints = Dict(:height => height_hint)
+        vertical_hints   = Dict(:height => height_hint)
     )
 
     @log DEBUG "create_widget" """
@@ -71,18 +62,18 @@ function create_widget(
 
     # Create the list box.
     list_box_layout = ObjectLayout(
-        top_anchor = Anchor(combo_box, :bottom, 0),
+        top_anchor  = Anchor(combo_box, :bottom, 0),
         left_anchor = Anchor(combo_box, :left, 0),
-        height = 5
+        height      = 5
     )
 
     list_box = create_widget(
         Val(:list_box),
         list_box_layout;
-        border = false,
-        data = data,
+        border     = false,
+        data       = data,
         selectable = false,
-        theme = theme
+        theme      = theme
     )
 
     combo_box.list_box = list_box
@@ -92,19 +83,18 @@ function create_widget(
 end
 
 function process_keystroke!(widget::WidgetComboBox, k::Keystroke)
+    # Let the container handle the tab key to change focus.
+    k.ktype == :tab && return :keystroke_not_processed
+
     if k.ktype == :enter
         add_widget!(get_parent(widget), widget.list_box)
         move_focus_to_widget!(get_parent(widget), widget.list_box)
 
         list_box = widget.list_box
 
-        @connect(list_box, esc_pressed,    _list_box_esc_pressed,    (; combo_box = widget))
-        @connect(list_box, focus_lost,     _list_box_focus_lost,     (; combo_box = widget))
-        @connect(list_box, return_pressed, _list_box_return_pressed, (; combo_box = widget))
-
-    elseif k.ktype == :tab
-        # Let the container handle the tab key to change focus.
-        return :keystroke_not_processed
+        @connect(list_box, esc_pressed,    _widget_combo_box__list_box_esc_pressed,    (; combo_box = widget))
+        @connect(list_box, focus_lost,     _widget_combo_box__list_box_focus_lost,     (; combo_box = widget))
+        @connect(list_box, return_pressed, _widget_combo_box__list_box_return_pressed, (; combo_box = widget))
     end
 
     return :keystroke_processed
@@ -164,8 +154,12 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Close the list box of the combo box `widget`.
-function _close_list_box!(widget::Widget)
+"""
+    _widget_combo_box__close_list_box!(widget::Widget) -> Nothing
+
+Close the list box of the combo box `widget`.
+"""
+function _widget_combo_box__close_list_box!(widget::Widget)
     # We must check if we are inside a container. If not, do nothing.
     parent = get_parent(widget)
     isnothing(parent) && return nothing
@@ -173,9 +167,17 @@ function _close_list_box!(widget::Widget)
     return nothing
 end
 
-# Function executed when the signal `esc_pressed` is emitted in the list box.
-function _list_box_esc_pressed(widget::WidgetListBox; combo_box::WidgetComboBox)
-    _close_list_box!(widget)
+"""
+    _widget_combo_box__list_box_esc_pressed(widget::WidgetListBox; kwargs...) -> Nothing
+
+Function executed when the signal `esc_pressed` is emitted in the list box.
+
+# Keywords
+
+- `combo_box::WidgetComboBox`: Combo box that contains the list box.
+"""
+function _widget_combo_box__list_box_esc_pressed(widget::WidgetListBox; combo_box::WidgetComboBox)
+    _widget_combo_box__close_list_box!(widget)
 
     # We should disconnect all signals.
     @disconnect_all(widget, focus_lost)
@@ -187,14 +189,33 @@ function _list_box_esc_pressed(widget::WidgetListBox; combo_box::WidgetComboBox)
     return nothing
 end
 
-# Function executed when the focus of the list box `widget` is lost.
-function _list_box_focus_lost(widget::WidgetListBox; combo_box::WidgetComboBox)
-    return _list_box_esc_pressed(widget; combo_box = combo_box)
+"""
+    _widget_combo_box__list_box_focus_lost(widget::WidgetListBox; kwargs...) -> Return type
+
+Function executed when the focus of the list box `widget` is lost.
+
+# Keywords
+
+- `combo_box::WidgetComboBox`: Combo box that contains the list box.
+"""
+function _widget_combo_box__list_box_focus_lost(widget::WidgetListBox; combo_box::WidgetComboBox)
+    return _widget_combo_box__list_box_esc_pressed(widget; combo_box = combo_box)
 end
 
-# Function executed when the return is pressed in the list box `widget`.
-function _list_box_return_pressed(widget::WidgetListBox; combo_box::WidgetComboBox)
-    _list_box_esc_pressed(widget; combo_box = combo_box)
+"""
+    _widget_combo_box__list_box_return_pressed(widget::WidgetListBox; kwargs...) -> Nothing
+
+Function executed when the return is pressed in the list box `widget`.
+
+# Keywords
+
+- `combo_box::WidgetComboBox`: Combo box that contains the list box.
+"""
+function _widget_combo_box__list_box_return_pressed(
+    widget::WidgetListBox;
+    combo_box::WidgetComboBox,
+)
+    _widget_combo_box__list_box_esc_pressed(widget; combo_box = combo_box)
 
     list_box_selected_item = widget.current_item + 1
 

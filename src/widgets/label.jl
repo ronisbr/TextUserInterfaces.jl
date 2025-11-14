@@ -27,11 +27,11 @@ end
 
 function update_layout!(label::WidgetLabel; force::Bool = false)
     if update_widget_layout!(label; force = force)
-        _align_text!(label)
+        _widget_label__align_text!(label)
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 ############################################################################################
@@ -120,10 +120,10 @@ function change_text!(
     new_text::AbstractString;
     alignment = widget.alignment
 )
-    widget.text = new_text
+    widget.text      = new_text
     widget.alignment = alignment
 
-    _align_text!(widget)
+    _widget_label__align_text!(widget)
 
     return nothing
 end
@@ -132,9 +132,13 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# This function gets the text in variable `text`, and apply the alignment. It is only called
-# when the widget layout is updated.
-function _align_text!(widget::WidgetLabel)
+"""
+    _widget_label__align_text!(widget::WidgetLabel) -> Nothing
+
+This function gets the text in variable `text`, and apply the alignment. It is only called
+when the widget layout is updated.
+"""
+function _widget_label__align_text!(widget::WidgetLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing
 
@@ -153,13 +157,13 @@ function _align_text!(widget::WidgetLabel)
         # Check the alignment and print accordingly.
         if alignment == :r
             col = width - textwidth(line)
-            write(bufl, " " ^ col, line)
+            write(bufl, " " ^ col)
         elseif alignment == :c
             col = div(width - textwidth(line), 2)
-            write(bufl, " " ^ col, line)
-        else
-            write(bufl, line)
+            write(bufl, " " ^ col)
         end
+
+        write(bufl, line)
 
         # If `fill` is `true`, then fill the remaining spaces up to the
         # widget width.

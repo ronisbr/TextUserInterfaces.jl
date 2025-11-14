@@ -26,8 +26,7 @@ const _BUTTON_STYLE_HEIGHT = Dict(
     :none   => 1
 )
 
-# Conversion dictionary between style and width that must be added to the label
-# length.
+# Conversion dictionary between style and width that must be added to the label length.
 const _BUTTON_STYLE_WIDTH = Dict(
     :boxed  => 4,
     :simple => 4,
@@ -66,7 +65,7 @@ function create_widget(
         layout           = layout,
         style            = style,
         theme            = theme,
-        horizontal_hints = Dict(:width => textwidth(label) + _BUTTON_STYLE_WIDTH[style]),
+        horizontal_hints = Dict(:width  => textwidth(label) + _BUTTON_STYLE_WIDTH[style]),
         vertical_hints   = Dict(:height => _BUTTON_STYLE_HEIGHT[style])
     )
 
@@ -103,7 +102,7 @@ function redraw!(widget::WidgetButton)
     @unpack buffer = widget
     NCurses.wclear(buffer)
 
-    _draw_button!(widget, has_focus(widget))
+    _widget_button__draw!(widget, has_focus(widget))
 
     return nothing
 end
@@ -118,7 +117,13 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-function _draw_button!(widget::WidgetButton, focused::Bool)
+"""
+    _widget_button__draw!(widget::WidgetButton, focused::Bool) -> Nothing
+
+Draw the button `widget`. If `focused` is `true`, the button will be highlighted
+accordingly.
+"""
+function _widget_button__draw!(widget::WidgetButton, focused::Bool)
     @unpack buffer, width, label, style, theme = widget
 
     # Get the background color depending on the focus.

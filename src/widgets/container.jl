@@ -28,7 +28,7 @@ const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = Dict(
 
 function can_accept_focus(container::WidgetContainer)
     # We need to see if there is at least one widget that can receive the focus.
-    widget_id = _search_next_widget_to_focus(container; cyclic = true)
+    widget_id = _widget_container__search_next_widget_to_focus(container; cyclic = true)
     return !isnothing(widget_id)
 end
 
@@ -62,27 +62,23 @@ function request_focus!(container::WidgetContainer; direction::Symbol = :next)
     # First, check if we have an object in focus.
     focused_widget = get_focused_widget(container)
 
-    if !isnothing(focused_widget)
-        if request_focus!(focused_widget)
-            sync_cursor(container)
-            return true
-        end
+    if !isnothing(focused_widget) && request_focus!(focused_widget)
+        sync_cursor(container)
+        return true
     end
 
-    # If no object is in focus or if the current one did not accept the focus,
-    # search for another widget to receive the focus.
-    if direction === :next
+    # If no object is in focus or if the current one did not accept the focus, search for
+    # another widget to receive the focus.
+    if direction == :next
         move_focus_to_next_widget!(container)
     else
         move_focus_to_previous_widget!(container)
     end
 
-    if !isnothing(get_focused_widget(container))
-        sync_cursor(container)
-        return true
-    else
-        return false
-    end
+    isnothing(get_focused_widget(container)) && return false
+
+    sync_cursor(container)
+    return true
 end
 
 function sync_cursor(container::WidgetContainer)
@@ -128,9 +124,9 @@ function update_layout!(container::WidgetContainer; force::Bool = false)
         end
 
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 ############################################################################################
@@ -220,7 +216,7 @@ function redraw!(container::WidgetContainer)
         end
 
         @ncolor theme.title buffer begin
-            _draw_title!(container)
+            _widget_container__draw_title!(container)
         end
     end
 
@@ -299,21 +295,18 @@ possible to acquire focus or `false` otherwise.
 
 If `cyclic` is `false`, the widget list is not cycled when searching for the next widget.
 """
-function move_focus_to_next_widget!(
-    container::WidgetContainer;
-    cyclic::Bool = false
-)
+function move_focus_to_next_widget!(container::WidgetContainer; cyclic::Bool = false)
     # Try to find a new candidate to focus.
-    widget_id = _search_next_widget_to_focus(container; cyclic = cyclic)
+    widget_id = _widget_container__search_next_widget_to_focus(container; cyclic = cyclic)
 
     # If we found a new candidate, request the focus.
     if !isnothing(widget_id)
-        _change_focused_widget!(container, widget_id; direction = :next)
+        _widget_container__change_focused_widget!(container, widget_id; direction = :next)
         return true
-    else
-        _change_focused_widget!(container, 0; direction = :next)
-        return false
     end
+
+    _widget_container__change_focused_widget!(container, 0; direction = :next)
+    return false
 end
 
 """
@@ -324,21 +317,18 @@ possible to acquire focus or `false` otherwise.
 
 If `cyclic` is `false`, the widget list is not cycled when searching for the next widget.
 """
-function move_focus_to_previous_widget!(
-    container::WidgetContainer;
-    cyclic::Bool = false
-)
+function move_focus_to_previous_widget!(container::WidgetContainer; cyclic::Bool = false)
     # Try to find a new candidate to focus.
-    widget_id = _search_previous_widget_to_focus(container; cyclic = cyclic)
+    widget_id = _widget_container__search_previous_widget_to_focus(container; cyclic = cyclic)
 
     # If we found a new candidate, request the focus.
     if !isnothing(widget_id)
-        _change_focused_widget!(container, widget_id; direction = :previous)
+        _widget_container__change_focused_widget!(container, widget_id; direction = :previous)
         return true
-    else
-        _change_focused_widget!(container, 0; direction = :previous)
-        return false
     end
+
+    _widget_container__change_focused_widget!(container, 0; direction = :previous)
+    return false
 end
 
 """
@@ -350,18 +340,13 @@ function move_focus_to_widget!(container::WidgetContainer, widget::Widget)
     # Find the widget ID in the container list.
     id = findfirst(w -> w === widget, container.widgets)
 
-    if !isnothing(id)
-        if request_focus!(widget) && !widget.hidden
-            _change_focused_widget!(container, id)
+    if !isnothing(id) && request_focus!(widget) && !widget.hidden
+        _widget_container__change_focused_widget!(container, id)
 
-            # We also need to make this container in focus if it is inside
-            # another container.
-            parent_container = container.container
+        # We also need to make this container in focus if it is inside another container.
+        parent_container = container.container
 
-            if !isnothing(parent_container)
-                move_focus_to_widget!(parent_container, container)
-            end
-        end
+        !isnothing(parent_container) && move_focus_to_widget!(parent_container, container)
     end
 
     return nothing
@@ -375,20 +360,20 @@ Return the current widget in focus. If no widget is in focus, return `nothing`.
 function get_focused_widget(container::WidgetContainer)
     @unpack focused_widget_id, widgets = container
 
-    @inbounds if focused_widget_id == 0
-        return nothing
-    else
-        if focused_widget_id > length(widgets)
-            @log CRITICAL "get_focused_widget" """
-            The focused widget ID is outside the allowed range."""
-            return nothing
-        end
+    focused_widget_id == 0 && return nothing
 
-        # If the widget is hidden, we must report that we have no focus.
-        focused_widget = widgets[focused_widget_id]
-        focused_widget.hidden && return nothing
-        return focused_widget
+    if focused_widget_id > length(widgets)
+        @log CRITICAL "get_focused_widget" """
+        The focused widget ID is outside the allowed range."""
+        return nothing
     end
+
+    focused_widget = @inbounds widgets[focused_widget_id]
+
+    # If the widget is hidden, we must report that we have no focus.
+    focused_widget.hidden && return nothing
+
+    return focused_widget
 end
 
 """
@@ -399,18 +384,16 @@ Remove the `widget` from the `container`.
 function remove_widget!(container::WidgetContainer, widget::Widget)
     idx = findfirst(x -> x === widget, container.widgets)
 
-    if isnothing(idx)
-        # TODO: Write to the log.
-        return nothing
-    end
+    # TODO: Write to the log.
+    isnothing(idx) && return nothing
 
     # Delete the widget from the list.
     deleteat!(container.widgets, idx)
 
     widget.container = nothing
-    widget.window = nothing
-    destroy_widget_buffer!(widget)
+    widget.window    = nothing
 
+    destroy_widget_buffer!(widget)
     request_update!(container)
 
     return nothing
@@ -420,17 +403,24 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Change the focused widget in `container` to `widget_id`, emitting the required signals.
-function _change_focused_widget!(
+"""
+    _widget_container__change_focused_widget!(container::WidgetContainer, widget_id::Int; kwargs...) -> Nothing
+
+Change the focused widget in `container` to `widget_id`, emitting the required signals.
+
+# Keywords
+
+- `direction::Symbol`: Direction to move the focus. It can be `:next` or `:previous`.
+    (**Default**: `:next`)
+"""
+function _widget_container__change_focused_widget!(
     container::WidgetContainer,
     widget_id::Int;
     direction::Symbol = :next
 )
     focused_widget = get_focused_widget(container)
 
-    if !isnothing(focused_widget)
-        @emit focused_widget focus_lost
-    end
+    !isnothing(focused_widget) && @emit focused_widget focus_lost
 
     container.focused_widget_id = widget_id
 
@@ -451,28 +441,32 @@ function _change_focused_widget!(
     return nothing
 end
 
-# Draw the title in the container `container`.
-function _draw_title!(container::WidgetContainer)
+"""
+    _widget_container__draw_title!(container::WidgetContainer) -> Nothing
+
+Draw the title in the container `container`.
+"""
+function _widget_container__draw_title!(container::WidgetContainer)
     @unpack buffer, title, title_alignment = container
 
     # Get the width of the container.
     width = get_width(container)
 
     # If the width is too small, do nothing.
-    if width ≤ 4
-        return nothing
-    end
+    width ≤ 4 && return nothing
 
     # Check if the entire title cannot be written. In this case, the title will be shrunk.
     if length(title) ≥ width - 4
+        # TODO: We must consider the printable size here!
         title = title[1:width - 4]
     end
 
     # Compute the padding to print the title based on the alignment.
+    # TODO: We must consider the printable size here!
     if title_alignment == :r
         pad = width - 2 - length(title)
     elseif title_alignment == :c
-        pad = div(width - length(title), 2)
+        pad = (width - length(title)) ÷ 2
     else
         pad = 2
     end
@@ -482,10 +476,19 @@ function _draw_title!(container::WidgetContainer)
     return nothing
 end
 
-# Search the next widget that can accept the focus in the list. It returns the object ID or
-# `nothing` if no widget can accept the focus. If `cyclic` is `true`, the list will be
-# cycled to find a new widget. Otherwise, it will stop at the last widget.
-function _search_next_widget_to_focus(
+"""
+    _widget_container__search_next_widget_to_focus(container::WidgetContainer; kwargs...) -> Union{Nothing, Int}
+
+Search the next widget that can accept the focus in the list. It returns the object ID or
+`nothing` if no widget can accept the focus. 
+
+# Keywords
+
+- `cyclic::Bool`: If `true`, the list will be cycled to find a new widget. Otherwise, it
+    will stop at the last widget.
+    (**Default**: `false`)
+"""
+function _widget_container__search_next_widget_to_focus(
     container::WidgetContainer;
     cyclic::Bool = false
 )
@@ -516,9 +519,7 @@ function _search_next_widget_to_focus(
         candidate_widget = widgets[focus_candidate_id]
 
         # Check if the candidate can accept the focus.
-        if can_accept_focus(candidate_widget) && !candidate_widget.hidden
-            return focus_candidate_id
-        end
+        can_accept_focus(candidate_widget) && !candidate_widget.hidden && return focus_candidate_id
 
         num_tries += 1
 
@@ -532,10 +533,19 @@ function _search_next_widget_to_focus(
     return nothing
 end
 
-# Search the previous widget that can accept the focus in the list. It returns the object ID
-# or `nothing` if no widget can accept the focus. If `cyclic` is `true`, the list will be
-# cycled to find a new widget. Otherwise, it will stop at the first widget.
-function _search_previous_widget_to_focus(
+"""
+    _widget_container__search_previous_widget_to_focus(container::WidgetContainer; kwargs...) -> Union{Int, Nothing}
+
+Search the previous widget that can accept the focus in the list. It returns the object ID
+or `nothing` if no widget can accept the focus. 
+
+# Keywords
+
+- `cyclic::Bool`: If `true`, the list will be cycled to find a new widget. Otherwise, it
+    will stop at the first widget.
+    (**Default**: `false`)
+"""
+function _widget_container__search_previous_widget_to_focus(
     container::WidgetContainer;
     cyclic::Bool = false
 )
@@ -566,9 +576,7 @@ function _search_previous_widget_to_focus(
         candidate_widget = widgets[focus_candidate_id]
 
         # Check if the candidate can accept the focus.
-        if can_accept_focus(candidate_widget) && !candidate_widget.hidden
-            return focus_candidate_id
-        end
+        can_accept_focus(candidate_widget) && !candidate_widget.hidden && return focus_candidate_id
 
         num_tries += 1
 

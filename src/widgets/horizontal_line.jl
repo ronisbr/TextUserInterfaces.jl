@@ -27,8 +27,7 @@ function create_widget(
     theme::Theme = tui.default_theme,
 )
     # Create the widget.
-    line = WidgetHorizontalLine(
-        ;
+    line = WidgetHorizontalLine(;
         id               = reserve_object_id(),
         horizontal_hints = Dict(:width  => textwidth(pattern)),
         layout           = layout,

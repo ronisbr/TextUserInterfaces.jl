@@ -28,9 +28,9 @@ function update_layout!(dm::WidgetDisplayMatrix; force::Bool = false)
     if update_widget_layout!(dm; force = force)
         _widget_matrix__render_matrix!(dm)
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 ############################################################################################
@@ -57,8 +57,7 @@ function create_widget(
     width  = 8c + 4
 
     # Create the widget.
-    display_matrix = WidgetDisplayMatrix(
-        ;
+    display_matrix = WidgetDisplayMatrix(;
         id               = reserve_object_id(),
         matrix           = matrix,
         layout           = layout,
@@ -83,19 +82,21 @@ function redraw!(dm::WidgetDisplayMatrix)
     r = length(rendered_matrix)
 
     @ncolor theme.border buffer begin
+        ll = largest_line + 3
+
         # Draw the corners.
-        NCurses.mvwaddch(buffer, 0,     0,                NCurses.ACS_(:ULCORNER))
-        NCurses.mvwaddch(buffer, r + 1, 0,                NCurses.ACS_(:LLCORNER))
-        NCurses.mvwaddch(buffer, 0,     largest_line + 3, NCurses.ACS_(:URCORNER))
-        NCurses.mvwaddch(buffer, r + 1, largest_line + 3, NCurses.ACS_(:LRCORNER))
+        NCurses.mvwaddch(buffer, 0,     0,  NCurses.ACS_(:ULCORNER))
+        NCurses.mvwaddch(buffer, r + 1, 0,  NCurses.ACS_(:LLCORNER))
+        NCurses.mvwaddch(buffer, 0,     ll, NCurses.ACS_(:URCORNER))
+        NCurses.mvwaddch(buffer, r + 1, ll, NCurses.ACS_(:LRCORNER))
 
         # Draw the line.
-        NCurses.mvwvline(buffer, 1, 0, NCurses.ACS_(:VLINE), r)
-        NCurses.mvwvline(buffer, 1, largest_line + 3, NCurses.ACS_(:VLINE), r)
+        NCurses.mvwvline(buffer, 1, 0,  NCurses.ACS_(:VLINE), r)
+        NCurses.mvwvline(buffer, 1, ll, NCurses.ACS_(:VLINE), r)
     end
 
     @ncolor theme.default buffer begin
-        @inbounds for l in 1:length(rendered_matrix)
+        @inbounds for l in eachindex(rendered_matrix)
             NCurses.mvwprintw(buffer, l, 2, rendered_matrix[l])
         end
     end
@@ -155,7 +156,7 @@ function _widget_matrix__render_matrix!(dm::WidgetDisplayMatrix)
     str = String(take!(buf))
 
     rendered_matrix = map(s -> rstrip(s)[2:end], split(str, '\n')[2:end])
-    largest_line = maximum(textwidth.(rendered_matrix))
+    largest_line    = maximum(textwidth.(rendered_matrix))
 
     @pack! dm = largest_line, rendered_matrix
 

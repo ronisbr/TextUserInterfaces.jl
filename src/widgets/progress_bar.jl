@@ -42,8 +42,7 @@ function create_widget(
 )
 
     # Create the widget.
-    progress_bar = WidgetProgressBar(
-        ;
+    progress_bar = WidgetProgressBar(;
         id               = reserve_object_id(),
         border           = border,
         layout           = layout,
@@ -53,7 +52,7 @@ function create_widget(
         title            = title,
         title_alignment  = title_alignment,
         horizontal_hints = Dict(:width  => 30),
-        vertical_hints   = Dict(:height => border ? 3 : 1)
+        vertical_hints   = Dict(:height => border ? 3 : 1),
     )
 
     @log DEBUG "create_widget" """
@@ -119,7 +118,7 @@ function redraw!(widget::WidgetProgressBar)
         lstr = length(progress_str)
         str_pos = floor(Int, (width - lstr) / 2)
 
-        for i in 1:length(progress_str)
+        @inbounds for i in 1:length(progress_str)
             pos_i = str_pos + (i - 1)
             color = theme.default
 
@@ -128,7 +127,7 @@ function redraw!(widget::WidgetProgressBar)
             end
 
             @ncolor color buffer begin
-                c = progress_str[i]
+                c = progress_str[i - 1 + begin]
 
                 if c == '%'
                     NCurses.mvwprintw(buffer, Δy, pos_i, "%%")

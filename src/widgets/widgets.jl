@@ -47,7 +47,6 @@ function create_widget_buffer!(widget::Widget)
     widget.top    = top
 
     return nothing
-
 end
 
 """
@@ -123,17 +122,14 @@ function has_focus(widget::Widget)
         widget_has_focus = widget === get_focused_widget(container)
         container_has_focus = has_focus(container)
         return widget_has_focus && container_has_focus
-    else
-        # If the widget does not have a container, then it is added to a window.
-        # In this case, we need to check if the window has the focus.
-        window = widget.window
-
-        if !isnothing(window)
-            return window === get_focused_window()
-        else
-            return false
-        end
     end
+
+    # If the widget does not have a container, then it is added to a window.  In this case,
+    # we need to check if the window has the focus.
+    window = widget.window
+    !isnothing(window) && return window === get_focused_window()
+
+    return false
 end
 
 """
@@ -185,9 +181,9 @@ function update!(widget::Widget; force::Bool = false)
         widget.hidden || redraw!(widget)
         widget.update_needed = false
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 """
@@ -252,7 +248,7 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
         @emit widget layout_updated
 
         return update_needed
-    else
-        return false
     end
+
+    return false
 end
