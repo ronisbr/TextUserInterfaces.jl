@@ -80,6 +80,11 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
+"""
+    _parse_ansi_code(decoration::Decoration, code::String) -> Decoration
+
+Parse the ANSI code `code` and update the `decoration` accordingly.
+"""
 function _parse_ansi_code(decoration::Decoration, code::String)
     tokens = split(code, ';')
 
