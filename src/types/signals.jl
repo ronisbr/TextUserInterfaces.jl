@@ -17,6 +17,7 @@ Defines a signal.
     during the connection.
 - `kwargs::NamedTuple`: Additional keyword arguments passed to the connection function
     together with those native to the signal.
+- `properties::Dict{Symbol, Any}`: A dictionary of properties associated with the signal.
 """
 @kwdef struct Signal
     connections::Vector{Function} = Function[]
