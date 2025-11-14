@@ -197,16 +197,21 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Return the index related to the color `color`.
+"""
+    _get_color_index(color::Symbol) -> Int
+
+Return the index related to the `color`.
+"""
 function _get_color_index(color::Symbol)
-    if haskey(_ncurses_colors, color)
-        return _ncurses_colors[color]
-    else
-        error("Unknown color :$color.")
-    end
+    !haskey(_ncurses_colors, color) && error("Unknown color :$color.")
+    return _ncurses_colors[color]
 end
 
-# Reset the color dictionary.
+"""
+    _reset_color_dict() -> Nothing
+
+Reset the color dictionary.
+"""
 function _reset_color_dict()
     empty!(_ncurses_colors)
     merge!(_ncurses_colors, _default_ncurses_colors)

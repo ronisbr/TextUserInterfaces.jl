@@ -16,8 +16,7 @@ export create_theme
 Create a new theme using the default values but replacing the ones in the keywords
 `kwargs...`. The latter can be any field name available in [`Theme`](@ref).
 """
-function create_theme(
-    ;
+function create_theme(;
     default   = tui.default_theme.default,
     error     = tui.default_theme.error,
     highlight = tui.default_theme.highlight,
@@ -25,8 +24,7 @@ function create_theme(
     border    = tui.default_theme.border,
     title     = tui.default_theme.title,
 )
-    return Theme(
-        ;
+    return Theme(;
         default,
         error,
         highlight,
@@ -40,7 +38,11 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Create the default theme.
+"""
+    _create_default_theme() -> Nothing
+
+Create the default theme.
+"""
 function _create_default_theme()
     default   = ncurses_color(:white, :black)
     error     = ncurses_color(:red, 0)
@@ -49,8 +51,7 @@ function _create_default_theme()
     border    = default
     title     = default
 
-    return Theme(
-        ;
+    return Theme(;
         default,
         error,
         highlight,

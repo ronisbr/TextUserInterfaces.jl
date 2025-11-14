@@ -57,11 +57,8 @@ function app_main_loop_iteration(; block::Bool = true, exitkey::Symbol = :F1)
 
     # Check if the keystroke must be passed or if the signal hijacked it.
     if !@get_signal_property(tui, keypressed, block, false)
-        if _check_keystroke(k, exitkey)
-            return false
-        else
-            process_keystroke(k)
-        end
+        _check_keystroke(k, exitkey) && return false
+        process_keystroke(k)
     end
 
     @delete_signal_property tui keypressed block
@@ -84,7 +81,7 @@ end
 Evaluate if either `keystroke.ktype` or `keystroke` `k1` and `k2` match.
 """
 _check_keystroke(k1::Keystroke, k2::Keystroke) = k1 == k2
-_check_keystroke(k1::Symbol, k2::Symbol) = k1 == k2
-_check_keystroke(k1::Keystroke, k2::Symbol) = k1.ktype == k2
-_check_keystroke(k1::Symbol, k2::Keystroke) = k1 == k2.ktype
+_check_keystroke(k1::Symbol, k2::Symbol)       = k1 == k2
+_check_keystroke(k1::Keystroke, k2::Symbol)    = k2 == k1.ktype
+_check_keystroke(k1::Symbol, k2::Keystroke)    = k1 == k2.ktype
 

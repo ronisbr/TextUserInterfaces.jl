@@ -75,14 +75,14 @@ function log_message(level::Int, msg::String, id::String = "")
 
     Δ_pad = 0
 
-    @inbounds for i = 1:length(lines)
+    @inbounds for i in eachindex(lines)
         # Check if the line is a command to change the logging pad.
         aux = match(r"^@log_pad [0-9]+", lines[i])
         if aux !== nothing
             Δ_pad = parse(Int64, aux.match[10:end])
         else
             i_output  = ""
-            i_output *= i == 1 ? time_str : time_pad
+            i_output *= i == first(eachindex(lines)) ? time_str : time_pad
             i_output *= id_str * " "^(logger.pad + Δ_pad) * lines[i]
             output   *= rstrip(i_output) * "\n"
         end

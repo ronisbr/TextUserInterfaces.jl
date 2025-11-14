@@ -7,19 +7,6 @@
 export move_focus_to_next_window, move_focus_to_previous_window, move_focus_to_window
 export process_keystroke
 
-# TODO: Improve this function. Is the name "global command" good?
-function check_global_command(k::Keystroke)
-    if k.ktype == :tab
-        if !k.shift
-            return :next_object
-        else
-            return :previous_object
-        end
-    end
-
-    return nothing
-end
-
 """
     get_focused_window() -> Union{Nothing, Window}
 
@@ -29,17 +16,15 @@ function get_focused_window()
     focused_window_id = tui.focused_window_id
     windows = tui.windows
 
-    @inbounds if focused_window_id == 0
-        return nothing
-    else
-        if focused_window_id > length(windows)
-            @log CRITICAL "get_focused_window" """
-            The focused window ID is outside the allowed range."""
-            return nothing
-        end
+    focused_window_id == 0 && return nothing
 
-        return windows[focused_window_id]
+    if focused_window_id > length(windows)
+        @log CRITICAL "get_focused_window" """
+        The focused window ID is outside the allowed range."""
+        return nothing
     end
+
+    return windows[focused_window_id]
 end
 
 """
@@ -120,7 +105,11 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Change the focused window to the window with ID `window_id`.
+"""
+    _change_focused_window(window_id::Int) -> Nothing
+
+Change the focused window to the window with ID `window_id`.
+"""
 function _change_focused_window(window_id::Int)
     focused_window = get_focused_window()
 
@@ -149,8 +138,12 @@ function _change_focused_window(window_id::Int)
     return nothing
 end
 
-# Search the next window that can accept focus in the list. It returns the window ID of
-# `nothing` if no window can accept the focus.
+"""
+    _search_next_window_to_focus() -> Nothing
+
+Search the next window that can accept focus in the list. It returns the window ID of
+`nothing` if no window can accept the focus.
+"""
 function _search_next_window_to_focus()
     @unpack windows, focused_window_id = tui
 
@@ -184,8 +177,12 @@ function _search_next_window_to_focus()
     return nothing
 end
 
-# Search the previous window that can accept focus in the list. It returns the window ID of
-# `nothing` if no window can accept the focus.
+"""
+    _search_previous_window_to_focus() -> Nothing
+
+Search the previous window that can accept focus in the list. It returns the window ID of
+`nothing` if no window can accept the focus.
+"""
 function _search_previous_window_to_focus()
     @unpack windows, focused_window_id = tui
 

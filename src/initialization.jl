@@ -28,8 +28,8 @@ function initialize_tui()
     logger.file = open(logger.logfile, "w")
 
     @log DEBUG "initialize_tui" """
-    TUI initialized.
-    Terminal $(NCurses.has_colors() == 1 ? "" : "does not ")have colors."""
+        TUI initialized.
+        Terminal $(NCurses.has_colors() == 1 ? "" : "does not ")have colors."""
 
     # Set the default theme.
     tui.default_theme = _create_default_theme()
