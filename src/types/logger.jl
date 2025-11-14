@@ -20,7 +20,7 @@ const DEBUG    = 2
 
     file::Union{Nothing, IOStream} = nothing
     pad::Int = 0
-    lock::Threads.SpinLock = Threads.SpinLock()
+    lock::Threads.ReentrantLock = Threads.ReentrantLock()
 end
 
 # Global logger instance.
