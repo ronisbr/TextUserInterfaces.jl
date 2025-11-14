@@ -135,7 +135,7 @@ for (f, r, v, j, c) in
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i in 1:length(v)
-        args_str *= v[i - 1 + begin] * "::" * j[i - 1 +]
+        args_str *= v[i - 1 + begin] * "::" * j[i - 1 + begin]
 
         if i != length(v)
             args_str *= ", "
