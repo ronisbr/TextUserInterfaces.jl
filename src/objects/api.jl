@@ -165,12 +165,13 @@ keyword `force` is `true`, the `object` must be updated.
 update!(object::Object; force::Bool = true) = return false
 
 """
-    update_layout!(object::Object) -> Nothing
+    update_layout!(object::Object) -> Bool
 
-Update the layout of the object based on the stored configuration.
+Update the layout of the object based on the stored configuration. This function must return
+`true` if the layout was changed, or `false` otherwise.
 """
 update_layout!
 
-# This helps to increase the performance due to the many conversions from object
-# to string for debugging purposes.
+# This helps to increase the performance due to the many conversions from object to string
+# for debugging purposes.
 Base.string(obj::Object) = sprint(print, obj)

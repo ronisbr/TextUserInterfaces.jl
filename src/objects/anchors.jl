@@ -123,45 +123,45 @@ function process_object_layout(
 
     elseif vertical == :unknown
         @log CRITICAL "process_object_layout" """
-        It was not possible to guess the vertical layout of the object.
+            It was not possible to guess the vertical layout of the object.
 
-        parent:
-        @log_pad 4
-        $(string(obj_desc(parent)))
-        @log_pad 0
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            parent:
+            @log_pad 4
+            $(string(obj_desc(parent)))
+            @log_pad 0
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("It was not possible to guess the vertical layout of the object.")
     end
 
     if top < 0
         @log CRITICAL "process_object_layout" """
-        Wrong vertical size configuration leading to negative top position.
+            Wrong vertical size configuration leading to negative top position.
 
-        parent:
-        @log_pad 4
-        $(string(obj_desc(parent)))
-        @log_pad 0
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            parent:
+            @log_pad 4
+            $(string(obj_desc(parent)))
+            @log_pad 0
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to negative top position.")
     end
 
     if height <= 0
         @log CRITICAL "process_object_layout" """
-        Wrong vertical size configuration leading to negative top position.
+            Wrong vertical size configuration leading to negative top position.
 
-        parent:
-        @log_pad 4
-        $(string(obj_desc(parent)))
-        @log_pad 0
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            parent:
+            @log_pad 4
+            $(string(obj_desc(parent)))
+            @log_pad 0
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to negative top position.")
     end
@@ -190,45 +190,45 @@ function process_object_layout(
 
     elseif horizontal == :unknown
         @log CRITICAL "process_object_layout" """
-        It was not possible to guess the horizontal layout of the object.
+            It was not possible to guess the horizontal layout of the object.
 
-        parent:
-        @log_pad 4
-        $(string(parent))
-        @log_pad 0
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            parent:
+            @log_pad 4
+            $(string(parent))
+            @log_pad 0
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("It was not possible to guess the horizontal layout of the object.")
     end
 
     if left < 0
         @log CRITICAL "process_object_layout" """
-        Wrong vertical size configuration leading to negative left position.
+            Wrong vertical size configuration leading to negative left position.
 
-        parent:
-        @log_pad 4
-        $(string(parent))
-        @log_pad 0
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            parent:
+            @log_pad 4
+            $(string(parent))
+            @log_pad 0
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to negative left position.")
     end
 
     if width <= 0
         @log CRITICAL "process_object_layout" """
-        Wrong vertical size configuration leading to non-positive width position.
+            Wrong vertical size configuration leading to non-positive width position.
 
-        parent:
-        @log_pad 4
-        $(string(parent))
-        @log_pad 0
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            parent:
+            @log_pad 4
+            $(string(parent))
+            @log_pad 0
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("Wrong vertical size configuration leading to non-positive width position.")
     end
@@ -240,20 +240,34 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Check if the `side` parameter of `anchor` is valid for vertical layout information. If
-# `anchor` is `_NO_ANCHOR`, then `true` is always returned.
+"""
+    _check_vertical_anchor(anchor::Anchor) -> Bool
+
+Check if the `side` parameter of `anchor` is valid for vertical layout information. If
+`anchor` is `_NO_ANCHOR`, then `true` is always returned.
+"""
 function _check_vertical_anchor(anchor::Anchor)
     return (anchor == _NO_ANCHOR) || (anchor.side ∈ (:bottom, :middle, :top))
 end
 
 # Check if the `side` parameter of `anchor` is valid for horizontal layout information. If
 # `anchor` is `_NO_ANCHOR`, then `true` is always returned.
+"""
+    _check_horizontal_anchor(anchor::Anchor) -> Bool
+
+Check if the `side` parameter of `anchor` is valid for horizontal layout information. If
+`anchor` is `_NO_ANCHOR`, `true` is always returned.
+"""
 function _check_horizontal_anchor(anchor::Anchor)
     return (anchor == _NO_ANCHOR) || (anchor.side ∈ (:left, :center, :right))
 end
 
-# Return the line or column related to the anchor `anchor`. If the object in `anchor` is the
-# `parent`, then the layout will be computed relative to the `parent`.
+"""
+    _get_anchor(anchor::Anchor, parent::Object) -> Int
+
+Return the line or column related to the anchor `anchor`. If the object in `anchor` is the
+`parent`, the layout will be computed relative to the `parent`.
+"""
 function _get_anchor(anchor::Anchor, parent::Object)
     @nospecialize parent
 
@@ -276,33 +290,30 @@ function _get_anchor(anchor::Anchor, parent::Object)
         error("Symbol $obj is not a valid source for anchors.")
     end
 
-    if anchor.side == :bottom
-        return top + height + pad
-    elseif anchor.side == :top
-        return top + pad
-    elseif anchor.side == :left
-        return left + pad
-    elseif anchor.side == :right
-        return left + width + pad
-    elseif anchor.side == :center
-        return left + div(width, 2) + pad
-    elseif anchor.side == :middle
-        return top + div(height, 2) + pad
-    else
-        error("Unknown side in anchor.")
-    end
+    anchor.side == :bottom && return top + height + pad
+    anchor.side == :top    && return top + pad
+    anchor.side == :left   && return left + pad
+    anchor.side == :right  && return left + width + pad
+    anchor.side == :center && return left + div(width, 2) + pad
+    anchor.side == :middle && return top + div(height, 2) + pad
+    
+    error("Unknown side in anchor.")
 end
 
-# Process the vertical layout information in `layout`, and return how the vertical layout
-# can be obtained:
-#
-# - `:abottom_atop`: Bottom and top anchors were specified.
-# - `:abottom_top`: Bottom anchor and top position were specified.
-# - `:abottom_height`: Bottom anchor and height were specified.
-# - `:atop_height`: Top anchor and height were specified.
-# - `:amiddle_height`: Middle anchor and height were specified.
-# - `:top_height`: Top and height were specified.
-# - `:unknown`: Insufficient information to compute the vertical positioning.
+"""
+    _process_vertical_info(layout::ObjectLayout) -> Symbol
+
+Process the vertical layout information in `layout` and return how the vertical layout
+can be obtained:
+
+- `:abottom_atop`: Bottom and top anchors were specified.
+- `:abottom_top`: Bottom anchor and top position were specified.
+- `:abottom_height`: Bottom anchor and height were specified.
+- `:atop_height`: Top anchor and height were specified.
+- `:amiddle_height`: Middle anchor and height were specified.
+- `:top_height`: Top and height were specified.
+- `:unknown`: Insufficient information to compute the vertical positioning.
+"""
 function _process_vertical_info(layout::ObjectLayout)
     @unpack bottom_anchor, top_anchor, middle_anchor, top, height = layout
 
@@ -312,11 +323,11 @@ function _process_vertical_info(layout::ObjectLayout)
        !_check_vertical_anchor(top_anchor)
 
         @log CRITICAL "_process_vertical_info" """
-        Wrong vertical anchor type.
+            Wrong vertical anchor type.
 
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("Wrong vertical anchor type.")
     end
@@ -340,16 +351,20 @@ function _process_vertical_info(layout::ObjectLayout)
     return vertical
 end
 
-# Process the horizontal layout information in `layout`, and return how the horizontal
-# layout can be obtained:
-#
-# - `:aleft_aright`: Left and right anchors were specified.
-# - `:aleft_width`: Left anchor and width were specified.
-# - `:aleft_height`: Left anchor and height were specified.
-# - `:aright_height`: Right anchor and height were specified.
-# - `:acenter_height`: Center anchor and height were specified.
-# - `:left_height`: Left and height were specified.
-# - `:unknown`: Insufficient information to compute the horizontal positioning.
+"""
+    _process_horizontal_info(layout::ObjectLayout) -> Symbol
+
+Process the horizontal layout information in `layout` and return how the horizontal
+layout can be obtained:
+
+- `:aleft_aright`: Left and right anchors were specified.
+- `:aleft_width`: Left anchor and width were specified.
+- `:aleft_height`: Left anchor and height were specified.
+- `:aright_height`: Right anchor and height were specified.
+- `:acenter_height`: Center anchor and height were specified.
+- `:left_height`: Left and height were specified.
+- `:unknown`: Insufficient information to compute the horizontal positioning.
+"""
 function _process_horizontal_info(layout::ObjectLayout)
     @unpack left_anchor, right_anchor, center_anchor, left, width = layout
 
@@ -359,11 +374,11 @@ function _process_horizontal_info(layout::ObjectLayout)
        !_check_horizontal_anchor(right_anchor)
 
         @log CRITICAL "_PROCESS_HORIZONTAL_INFO" """
-        Wrong horizontal anchor type.
+            Wrong horizontal anchor type.
 
-        layout:
-        @log_pad 4
-        $(_str(layout))"""
+            layout:
+            @log_pad 4
+            $(_str(layout))"""
 
         error("Wrong vertical anchor type.")
     end
@@ -387,10 +402,14 @@ function _process_horizontal_info(layout::ObjectLayout)
     return horizontal
 end
 
-# Process the layout value `v` related to the dimension `dim` of the parent widget `parent`.
-# `dim` can be `:height` or `:width`.
-#
-# If `v` is an `Int`, then it return  `v`.
+"""
+    _process_layout_property(v::Union{Int, String}, dim::Symbol, parent::Object) -> Int
+
+Process the layout value `v` related to the dimension `dim` of the parent widget `parent`.
+`dim` can be `:height` or `:width`.
+
+If `v` is an `Int`, it returns `v`.
+"""
 function _process_layout_property(v::String, dim::Symbol, parent::Object)
     @nospecialize parent
 
@@ -413,7 +432,11 @@ function _process_layout_property(v::Int, ::Symbol, parent::Object)
     return v
 end
 
-# Convert the information in `layout` to a string for debugging purposes.
+"""
+    _str(layout::ObjectLayout) -> String
+
+Convert the information in `layout` to a string for debugging purposes.
+"""
 function _str(layout::ObjectLayout)
     ab = layout.bottom_anchor
     al = layout.left_anchor
@@ -429,17 +452,19 @@ function _str(layout::ObjectLayout)
     ac_str = ac == _NO_ANCHOR ? "No anchor" : "($(typeof(ac.obj)), $(ac.side), $(ac.pad))"
     am_str = am == _NO_ANCHOR ? "No anchor" : "($(typeof(am.obj)), $(am.side), $(am.pad))"
 
-    return str = """
-    bottom_anchor = $am_str
-    left_anchor   = $ac_str
-    right_anchor  = $at_str
-    top_anchor    = $ar_str
-    center_anchor = $al_str
-    middle_anchor = $ab_str
+    str = """
+        bottom_anchor = $am_str
+        left_anchor   = $ac_str
+        right_anchor  = $at_str
+        top_anchor    = $ar_str
+        center_anchor = $al_str
+        middle_anchor = $ab_str
 
-    top    = $(layout.top)
-    left   = $(layout.left)
-    height = $(layout.height)
-    width  = $(layout.width)
-    """
+        top    = $(layout.top)
+        left   = $(layout.left)
+        height = $(layout.height)
+        width  = $(layout.width)
+        """
+
+    return str
 end
