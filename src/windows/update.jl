@@ -68,7 +68,7 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     request_update!(win)
 
     # Update the view if required.
-    update && _update_view!(win)
+    update && _window__update_view!(win)
 
     return nothing
 end
@@ -77,12 +77,21 @@ end
 #                                    Private Functions                                     #
 ############################################################################################
 
-# Update the view of window `win` by copying the contents from the buffer. If the view does
-# not need to be updated (see `view_needs_update`), nothing is done. If the keyword `force`
-# is `true`, the copy will always happen.
-#
-# It returns `true` if the view has been updated or `false` otherwise.
-function _update_view!(win::Window; force::Bool = false)
+"""
+    _window__update_view!(win::Window; kwargs...) -> Bool
+
+Update the view of window `win` by copying the contents from the buffer. If the view does
+not need to be updated (see `view_needs_update`), nothing is done. If the keyword `force` is
+`true`, the copy will always happen.
+
+It returns `true` if the view has been updated or `false` otherwise.
+
+# Keywords
+
+- `force::Bool`: Keyword description
+    (**Default**: `false`)
+"""
+function _window__update_view!(win::Window; force::Bool = false)
     @unpack has_border, buffer, view, origin = win
 
     if win.view_needs_update || force
@@ -124,7 +133,7 @@ function _update_view!(win::Window; force::Bool = false)
         @log DEBUG "_update_view!" "Window $(win.id): Buffer was copied to the view."
 
         return true
-    else
-        return false
     end
+
+    return false
 end

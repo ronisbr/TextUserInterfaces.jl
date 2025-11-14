@@ -16,13 +16,9 @@ get_inner_width(rw::RootWindow)  = Int(NCurses.COLS())
 get_inner_top(rw::RootWindow)    = 0
 
 function Base.getproperty(rw::T, field::Symbol) where T<:RootWindow
-    if field == :height
-        return get_height(rw)
-    elseif field == :width
-        return get_width(rw)
-    else
-        error("$T has no field $field.")
-    end
+    field == :height && return get_height(rw)
+    field == :width  && return get_width(rw)
+    error("$T has no field $field.")
 end
 
 Base.string(::RootWindow) = "Root window"

@@ -60,10 +60,7 @@ end
 
 function release_focus!(win::Window)
     container = win.widget_container
-
-    if !isnothing(container)
-        release_focus!(container)
-    end
+    !isnothing(container) && release_focus!(container)
 
     return nothing
 end
@@ -121,11 +118,9 @@ function update!(win::Window; force::Bool = false)
 
     # Update the widget container. If it was updated, we must mark that the view in this
     # window needs update.
-    if update!(widget_container; force = force)
-        request_update!(win)
-    end
+    update!(widget_container; force = force) && request_update!(win)
 
-    _update_view!(win)
+    _window__update_view!(win)
 
     # Update the border and the title since the theme might change.
     has_border && @ncolor theme.border view begin
@@ -214,7 +209,7 @@ function update_layout!(win::Window; force::Bool = false)
         # Now, we update the window.
         update!(win, force = true)
         return true
-    else
-        return false
     end
+
+    return false
 end
