@@ -126,6 +126,8 @@ function create_window(;
     widget_container.window = win
     update_layout!(widget_container)
 
+    set_window_theme!(win, theme)
+
     border && set_window_title!(win, title, title_alignment)
     push!(tui.windows, win)
 
