@@ -33,6 +33,7 @@ function initialize_tui()
 
     # Set the default theme.
     tui.default_theme = _create_default_theme()
+    set_window_theme!(tui.default_theme)
 
     return tui
 end
