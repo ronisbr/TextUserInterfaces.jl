@@ -26,10 +26,9 @@ macro _ccalln(expr)
     function_name = QuoteNode(expr.args[1].args[1])
     args          = expr.args[1].args[2:end]
 
-    arglist  = []
     typeargs = :(())
     handler  = :(dlsym($(esc(ncurses)).libncurses, $(esc(function_name))))
-    out = :(ccall( $(handler), $(esc(return_type)), $(esc(typeargs))))
+    out      = :(ccall( $(handler), $(esc(return_type)), $(esc(typeargs))))
 
     for arg in args
         !(arg.head == :(::)) && error("All arguments must have a type.")
@@ -147,8 +146,8 @@ for (f, r, v, j, c) in
                 "dmaxcol",
                 "overlay"
             ],
-            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Integer" for _ = 1:7]...],
-            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Cint" for _ = 1:7]...]
+            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Integer" for _ in 1:7]...],
+            ["Ptr{WINDOW}", "Ptr{WINDOW}", ["Cint" for _ in 1:7]...]
         ),
         (
             :curs_set,
@@ -175,8 +174,8 @@ for (f, r, v, j, c) in
             :derwin,
             Ptr{WINDOW},
             ["win", "nlines", "ncols", "begin_y", "begin_x"],
-            ["Ptr{WINDOW}", ["Integer" for _ = 1:4]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
+            ["Ptr{WINDOW}", ["Integer" for _ in 1:4]...],
+            ["Ptr{WINDOW}", ["Cint" for _ in 1:4]...]
         ),
         (
             :doupdate,
@@ -399,8 +398,8 @@ for (f, r, v, j, c) in
             :newwin,
             Ptr{WINDOW},
             ["lines", "cols", "y", "x"],
-            ["Integer" for _ = 1:4],
-            ["Cint" for _ = 1:4]
+            ["Integer" for _ in 1:4],
+            ["Cint" for _ in 1:4]
         ),
         (
             :nodelay,
@@ -434,15 +433,15 @@ for (f, r, v, j, c) in
             :prefresh,
             Cint,
             ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
-            ["Ptr{WINDOW}", ["Integer" for _ = 1:6]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
+            ["Ptr{WINDOW}", ["Integer" for _ in 1:6]...],
+            ["Ptr{WINDOW}", ["Cint" for _ in 1:6]...]
         ),
         (
             :pnoutrefresh,
             Cint,
             ["win", "pminrow", "pmincol", "sminrow", "smincol", "smaxrow", "smaxcol"],
-            ["Ptr{WINDOW}", ["Integer" for _ = 1:6]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:6]...]
+            ["Ptr{WINDOW}", ["Integer" for _ in 1:6]...],
+            ["Ptr{WINDOW}", ["Cint" for _ in 1:6]...]
         ),
         (
             :printw,
@@ -490,8 +489,8 @@ for (f, r, v, j, c) in
             :subpad,
             Ptr{WINDOW},
             ["win", "nlines", "ncols", "begin_y", "begin_x"],
-            ["Ptr{WINDOW}", ["Integer" for _ = 1:4]...],
-            ["Ptr{WINDOW}", ["Cint" for _ = 1:4]...]
+            ["Ptr{WINDOW}", ["Integer" for _ in 1:4]...],
+            ["Ptr{WINDOW}", ["Cint" for _ in 1:4]...]
         ),
         (
             :touchwin,
@@ -546,8 +545,8 @@ for (f, r, v, j, c) in
             :wborder,
             Cvoid,
             ["win", "ls", "rs", "ts", "bs", "tl", "tr", "bl", "br"],
-            ["Ptr{WINDOW}", ["jlchtype" for _ = 1:8]...],
-            ["Ptr{WINDOW}", ["chtype" for _ = 1:8]...]
+            ["Ptr{WINDOW}", ["jlchtype" for _ in 1:8]...],
+            ["Ptr{WINDOW}", ["chtype" for _ in 1:8]...]
         ),
         (
             :wclear,
@@ -657,7 +656,7 @@ for (f, r, v, j, c) in
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
+        args_str *= v[i - 1 + begin] * "::" * j[i - 1 + begin]
 
         if i != length(v)
             args_str *= ", "
@@ -694,14 +693,13 @@ function ACS_(s::Symbol)
         else
             ncurses.acs_map = ccall(dlsym(ncurses.libncurses, :_nc_acs_map), Cuint, ())
         end
+
         ncurses.acs_map_arr = unsafe_wrap(Array, ncurses.acs_map, 128)
     end
 
-    if haskey(acs_map_dict, s)
-        return ncurses.acs_map_arr[acs_map_dict[s]+1]
-    else
-        error("Symbol `$s` is not defined in `acs_map`.")
-    end
+    !haskey(acs_map_dict, s) && error("Symbol `$s` is not defined in `acs_map`.")
+
+    return ncurses.acs_map_arr[acs_map_dict[s] + 1]
 end
 
 public COLS
@@ -715,11 +713,14 @@ For more information, see `libncurses` documentation.
 """
 function COLS()
     if !ncurses.NCURSES_REENTRANT
-        ncurses.COLS == C_NULL && ( ncurses.COLS = cglobal( dlsym(ncurses.libncurses, :COLS), Cint) )
+        if ncurses.COLS == C_NULL
+            ncurses.COLS = cglobal(dlsym(ncurses.libncurses, :COLS), Cint)
+        end
+
         return unsafe_load(ncurses.COLS)
-    else
-        return ccall(dlsym(ncurses.libncurses, :_nc_COLS), Cint, ())
     end
+
+    return ccall(dlsym(ncurses.libncurses, :_nc_COLS), Cint, ())
 end
 
 public LINES
@@ -733,11 +734,14 @@ For more information, see `libncurses` documentation.
 """
 function LINES()
     if !ncurses.NCURSES_REENTRANT
-        ncurses.LINES == C_NULL && ( ncurses.LINES = cglobal( dlsym(ncurses.libncurses, :LINES), Cint) )
+        if ncurses.LINES == C_NULL
+            ncurses.LINES = cglobal(dlsym(ncurses.libncurses, :LINES), Cint)
+        end
+
         return unsafe_load(ncurses.LINES)
-    else
-        return ccall(dlsym(ncurses.libncurses, :_nc_LINES), Cint, ())
     end
+
+    return ccall(dlsym(ncurses.libncurses, :_nc_LINES), Cint, ())
 end
 
 # == Specialization ========================================================================
@@ -766,7 +770,7 @@ Return the NCurses version in a named tuple with the following fields:
 - `patch`: Patch version.
 """
 function curses_version()
-    ver_ptr  = ccall( dlsym(ncurses.libncurses, :curses_version), Cstring, () )
+    ver_ptr  = ccall(dlsym(ncurses.libncurses, :curses_version), Cstring, ())
     ver_str  = unsafe_string(ver_ptr)
     tokens   = split(ver_str, ' ')
     ver_toks = split(tokens[2], '.')

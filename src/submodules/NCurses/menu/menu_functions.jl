@@ -26,10 +26,9 @@ macro _ccallm(expr)
     function_name = QuoteNode(expr.args[1].args[1])
     args          = expr.args[1].args[2:end]
 
-    arglist  = []
     typeargs = :(())
     handler  = :(dlsym($(esc(ncurses)).libmenu, $(esc(function_name)) ))
-    out = :(ccall($(handler), $(esc(return_type)), $(esc(typeargs))))
+    out      = :(ccall($(handler), $(esc(return_type)), $(esc(typeargs))))
 
     for arg in args
         !(arg.head == :(::)) && error("All arguments must have a type.")
@@ -192,7 +191,7 @@ for (f, r, v, j, c) in
     # Assemble the argument string to build the function documentation.
     args_str = ""
     for i in 1:length(v)
-        args_str *= v[i] * "::" * j[i]
+        args_str *= v[i - 1 + begin] * "::" * j[i - 1 + begin]
 
         if i != length(v)
             args_str *= ", "
