@@ -673,9 +673,13 @@ for (f, r, v, j, c) in
         $f($(argsj...)) = @_ccalln $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
+
+    eval(Meta.parse("public $f"))
 end
 
 # == Other Functions =======================================================================
+
+public ACS_
 
 """
     ACS_(s::Symbol)
@@ -700,6 +704,8 @@ function ACS_(s::Symbol)
     end
 end
 
+public COLS
+
 """
     COLS() -> Cint
 
@@ -715,6 +721,8 @@ function COLS()
         return ccall(dlsym(ncurses.libncurses, :_nc_COLS), Cint, ())
     end
 end
+
+public LINES
 
 """
     LINES() -> Cint
@@ -734,6 +742,8 @@ end
 
 # == Specialization ========================================================================
 
+public wborder
+
 """
     wborder(win::Ptr{WINDOW})
 
@@ -743,6 +753,8 @@ Call the function `wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)`.
 wborder(win::Ptr{WINDOW}) = wborder(win, 0, 0, 0, 0, 0, 0, 0, 0)
 
 # == NCurses Version =======================================================================
+
+public curses_version
 
 """
     curses_version() -> NamedTuple

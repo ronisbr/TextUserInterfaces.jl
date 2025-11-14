@@ -208,4 +208,6 @@ for (f, r, v, j, c) in
         $f($(argsj...)) = @_ccallm $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
+
+    eval(Meta.parse("public $f"))
 end

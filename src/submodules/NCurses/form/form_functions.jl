@@ -46,6 +46,8 @@ end
 
 # == General Functions =====================================================================
 
+public new_field
+
 function new_field(
     height::Int,
     width::Int,
@@ -240,6 +242,8 @@ for (f, r, v, j, c) in
         $f($(argsj...)) = @_ccallf $f($(argsc...))::$r
         _precompile_func($f, $argst)
     end
+
+    eval(Meta.parse("public $f"))
 end
 
 # == Global Symbols ========================================================================
@@ -273,4 +277,6 @@ for s in (
             return ptr
         end
     end
+
+    eval(Meta.parse("public $s"))
 end
