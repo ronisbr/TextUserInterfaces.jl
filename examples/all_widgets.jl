@@ -230,24 +230,44 @@ function all_widgets()
 
         # == Progress Bar ==================================================================
 
-        @tui_progress_bar(
+        cpb = @tui_container(
             parent       = c,
-            show_value   = true,
-            theme        = Theme(default = ncurses_color(:green, 246)),
-            value        = 0,
+            border       = true,
+            title        = " Progress Bar",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom),
+            height       = 6,
         )
 
         @tui_progress_bar(
-            parent          = c,
-            border          = true,
+            parent          = cpb,
+            left_anchor     = (:parent, :left),
+            right_anchor    = (:parent, :right),
+            top_anchor      = (:parent, :top),
+        )
+
+        @tui_progress_bar(
+            parent          = cpb,
             show_value      = true,
-            theme           = Theme(default = ncurses_color(:green, 246)),
-            title           = "Progress",
-            title_alignment = :c,
-            value           = 0,
+            style           = :line,
+            left_anchor     = (:parent, :left),
+            right_anchor    = (:parent, :right),
+            top_anchor      = (__LAST__, :bottom),
+        )
+
+        @tui_progress_bar(
+            parent          = cpb,
+            show_value      = true,
+            left_anchor     = (:parent, :left),
+            right_anchor    = (:parent, :right),
+            top_anchor      = (__LAST__, :bottom),
+        )
+
+        @tui_progress_bar(
+            parent          = cpb,
+            show_value      = false,
+            style           = :line,
             left_anchor     = (:parent, :left),
             right_anchor    = (:parent, :right),
             top_anchor      = (__LAST__, :bottom),
@@ -256,9 +276,13 @@ function all_widgets()
         # Function to handle keystrokes related to the progress bar.
         function handle_keystroke(tui; keystroke, kwargs...)
             if keystroke.value == "+"
+                set_value!(__LAST3__, __LAST3__.value + 1)
+                set_value!(__LAST2__, __LAST2__.value + 1)
                 set_value!(__LAST1__, __LAST1__.value + 1)
                 set_value!(__LAST__,  __LAST__.value  + 1)
             elseif keystroke.value == "-"
+                set_value!(__LAST3__, __LAST3__.value - 1)
+                set_value!(__LAST2__, __LAST2__.value - 1)
                 set_value!(__LAST1__, __LAST1__.value - 1)
                 set_value!(__LAST__,  __LAST__.value  - 1)
             end
@@ -273,7 +297,7 @@ function all_widgets()
             matrix       = rand(10, 10) * 1e4,
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
-            top_anchor   = (__LAST__, :bottom),
+            top_anchor   = (__LAST4__, :bottom),
         )
 
         @connect(
@@ -355,12 +379,12 @@ function all_widgets()
         left_anchor   = (:parent, :left),
         right_anchor  = (:parent, :right),
         top_anchor    = (:parent, :top),
-        text          = cy * "F1" * cr * " : Quit"
+        text          = cy * "[F1 | Alt + q]" * cr * " : Quit"
     )
 
     # == Signals ===========================================================================
 
-    app_main_loop()
+    app_main_loop(; exit_keys = [:F1, "\eq"])
 end
 
 all_widgets()

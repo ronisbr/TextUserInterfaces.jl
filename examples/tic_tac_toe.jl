@@ -286,7 +286,7 @@ function tic_tac_toe()
 
     # == Main Loop =========================================================================
 
-    app_main_loop()
+    app_main_loop(; exit_keys = [:F1, "\eq"])
 
     return nothing
 end

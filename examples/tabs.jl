@@ -159,34 +159,39 @@ function tabs()
         left_anchor   = (:parent, :left),
         right_anchor  = (:parent, :right),
         top_anchor    = (:parent, :top),
-        text          = cy * "ALT + 1" * cr * " : Tab 1  " * cg * "|" * cr * " " *
-                        cy * "ALT + 2" * cr * " : Tab 2  " * cg * "|" * cr * " " *
-                        cy * "ALT + 3" * cr * " : Tab 3  " * cg * "|" * cr * " " *
-                        cy * "F1" * cr * " : Quit"
+        text          = cy * "Alt + 1" * cr * " : Tab 1  " * cg * "|" * cr * " " *
+                        cy * "Alt + 2" * cr * " : Tab 2  " * cg * "|" * cr * " " *
+                        cy * "Alt + 3" * cr * " : Tab 3  " * cg * "|" * cr * " " *
+                        cy * "[F1 | Alt + q]" * cr * " : Quit"
     )
 
     # == Signals ===========================================================================
 
     # Function to handle keystrokes.
     function handle_keystroke(tui; keystroke, kwargs...)
-        if keystroke.alt
-            @set_signal_property(tui, keypressed, block, true)
-        else
-            @delete_signal_property(tui, keypressed, block)
-        end
+        tab_changed = false
 
         if keystroke.value == "\e1"
             change_tab!(t, 1)
+            tab_changed = true
         elseif keystroke.value == "\e2"
             change_tab!(t, 2)
+            tab_changed = true
         elseif keystroke.value == "\e3"
             change_tab!(t, 3)
+            tab_changed = true
+        end
+
+        if tab_changed
+            @set_signal_property(tui, keypressed, block, true)
+        else
+            @delete_signal_property(tui, keypressed, block)
         end
     end
 
     @connect tui keypressed handle_keystroke
 
-    app_main_loop()
+    app_main_loop(; exit_keys = [:F1, "\eq"])
 end
 
 tabs()

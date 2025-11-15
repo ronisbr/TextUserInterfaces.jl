@@ -142,12 +142,12 @@ function windows_and_widgets()
         left_anchor   = (:parent, :left),
         right_anchor  = (:parent, :right),
         top_anchor    = (:parent, :top),
-        text          = cy * "F1" * cr * " : Quit" * sep *
+        text          = cy * "[F1 | Alt + q]" * cr * " : Quit" * sep *
                         cy * "F2" * cr * " : Move to the next window" * sep *
                         cy * "F3" * cr * " : Move to the previous window"
     )
 
-    app_main_loop()
+    app_main_loop(; exit_keys = [:F1, "\eq"])
 end
 
 windows_and_widgets()

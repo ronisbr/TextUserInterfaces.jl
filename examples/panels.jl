@@ -321,7 +321,7 @@ function panels()
         left_anchor   = (:parent, :left),
         right_anchor  = (:parent, :right),
         top_anchor    = (:parent, :top),
-        text          = cy * "F1" * cr * " : Quit"
+        text          = cy * "[F1 | Alt + q]" * cr * " : Quit"
     )
 
     # == Signals ===========================================================================
@@ -337,7 +337,7 @@ function panels()
 
     @connect tui keypressed handle_keystroke
 
-    app_main_loop()
+    app_main_loop(; exit_keys = [:F1, "\eq"])
 end
 
 panels()

@@ -13,11 +13,13 @@ Start the application main loop.
 
 # Keywords
 
-- `exitkey::Symbol`: A symbol that defines the key that leads to the application
-    termination.
-    (**Default**: `:F1`)
+- `exit_keys::AbstractVector{Union{Symbol, String}}`: A vector of symbols or strings
+    that define the keys that lead to the application termination. If it is a `Symbol`, we
+    compare against the field `ktype` of the [`Keystroke`](@ref). If it is a `String`, we
+    compare against the field `value` of the [`Keystroke`](@ref).
+    (**Default**: `[:F1]`)
 """
-function app_main_loop(; exitkey = :F1)
+function app_main_loop(; exit_keys::AbstractVector = [:F1])
     # If there is no window in focus, try to acquire it.
     isnothing(get_focused_window()) && move_focus_to_next_window()
 
@@ -26,7 +28,7 @@ function app_main_loop(; exitkey = :F1)
 
     # Main application loop.
     while true
-        app_main_loop_iteration(; block = true, exitkey) || break
+        app_main_loop_iteration(; block = true, exit_keys) || break
     end
 
     destroy_tui()
@@ -44,11 +46,15 @@ means that the should continue the iterations. Otherwise, we must quit the appli
 
 - `block::Bool`: If `true`, the function will block waiting for a keystroke.
     (**Default**: `true`)
-- `exitkey::Symbol`: A symbol that defines the key that leads to the application
-    termination.
-    (**Default**: `:F1`)
+- `exit_keys::AbstractVector{Union{Symbol, String}}`: A vector of symbols or strings
+    that define the keys that lead to the application termination. If it is a `Symbol`, we
+    compare against the field `ktype` of the [`Keystroke`](@ref). If it is a `String`, we
+    compare against the field `value` of the [`Keystroke`](@ref).
 """
-function app_main_loop_iteration(; block::Bool = true, exitkey::Symbol = :F1)
+function app_main_loop_iteration(;
+    block::Bool = true,
+    exit_keys::AbstractVector = [:F1]
+)
     k = getkey(; block)
     @emit tui keypressed (; keystroke = k)
 
@@ -57,7 +63,10 @@ function app_main_loop_iteration(; block::Bool = true, exitkey::Symbol = :F1)
 
     # Check if the keystroke must be passed or if the signal hijacked it.
     if !@get_signal_property(tui, keypressed, block, false)
-        _check_keystroke(k, exitkey) && return false
+        for e in exit_keys
+            _check_keystroke(k, e) && return false
+        end
+
         process_keystroke(k)
     end
 
@@ -73,15 +82,11 @@ end
 ############################################################################################
 
 """
-    _check_keystroke(k1::Keystroke, k2::Keystroke) -> Bool
-    _check_keystroke(k1::Symbol, k2::Symbol) -> Bool
-    _check_keystroke(k1::Symbol, k2::Keystroke) -> Bool
-    _check_keystroke(k1::Keystroke, k2::Symbol) -> Bool
+    _check_keystroke(k::Keystroke, s::Union{Symbol, String}) -> Bool
 
-Evaluate if either `keystroke.ktype` or `keystroke` `k1` and `k2` match.
+If `s` is a `Symbol`, check if the keystroke field of `k.ktype` matches `s`. If `s` is a
+`String`, check if the keystroke field of `k.value` matches `s`.
 """
-_check_keystroke(k1::Keystroke, k2::Keystroke) = k1 == k2
-_check_keystroke(k1::Symbol, k2::Symbol)       = k1 == k2
-_check_keystroke(k1::Keystroke, k2::Symbol)    = k2 == k1.ktype
-_check_keystroke(k1::Symbol, k2::Keystroke)    = k1 == k2.ktype
+_check_keystroke(k::Keystroke, s::Symbol) = k.ktype == s
+_check_keystroke(k::Keystroke, s::String) = k.value == s
 
