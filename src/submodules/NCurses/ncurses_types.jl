@@ -13,7 +13,7 @@ export WINDOW
 const attr_t         = Cuint
 const Cbool          = UInt8
 const chtype         = UInt32
-const jlchtype       = Union{Integer,Char}
+const jlchtype       = Union{Integer, Char}
 const NCURSES_SIZE_T = Cshort
 
 ############################################################################################

@@ -645,7 +645,7 @@ for (f, r, v, j, c) in
             ["win", "ch", "n"],
             ["Ptr{WINDOW}", "jlchtype", "Integer"],
             ["Ptr{WINDOW}", "chtype", "Cint"]
-        ),
+        )
     )
 
     fb    = Meta.quot(f)

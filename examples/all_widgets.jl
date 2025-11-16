@@ -233,6 +233,7 @@ function all_widgets()
         cpb = @tui_container(
             parent       = c,
             border       = true,
+            border_style = :rounded,
             title        = " Progress Bar",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
