@@ -41,6 +41,7 @@ include("./types/types.jl")
 
 include("./logger.jl")
 
+include("./borders.jl")
 include("./colors.jl")
 include("./destruction.jl")
 include("./focus.jl")

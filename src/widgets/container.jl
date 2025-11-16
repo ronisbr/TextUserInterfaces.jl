@@ -137,6 +137,7 @@ function create_widget(
     ::Val{:container},
     layout::ObjectLayout;
     border::Bool = false,
+    border_style::Symbol = :default,
     theme::Theme = tui.default_theme,
     title::String = "",
     title_alignment::Symbol = :l,
@@ -145,6 +146,7 @@ function create_widget(
     container = WidgetContainer(;
         layout           = layout,
         border           = border,
+        border_style     = border_style,
         horizontal_hints = _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS,
         id               = reserve_object_id(),
         theme            = theme,
@@ -157,6 +159,7 @@ function create_widget(
     WidgetContainer created:
       ID               = $(container.id)
       Border           = $(container.border)
+      Border style     = $(container.border_style)
       Title            = $(container.title)
       Title alignment  = $(container.title_alignment)"""
 
@@ -205,14 +208,14 @@ function process_keystroke!(container::WidgetContainer, k::Keystroke)
 end
 
 function redraw!(container::WidgetContainer)
-    @unpack border, buffer, update_needed, widgets, theme = container
+    @unpack border, border_style, buffer, update_needed, widgets, theme = container
 
     NCurses.wbkgd(buffer, theme.default)
     NCurses.wclear(buffer)
 
     if border
         @ncolor theme.border buffer begin
-            NCurses.wborder(buffer)
+            draw_border!(buffer; style = border_style)
         end
 
         @ncolor theme.title buffer begin
