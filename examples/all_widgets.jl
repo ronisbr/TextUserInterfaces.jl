@@ -131,20 +131,32 @@ function all_widgets()
             return nothing
         end
 
+        clb = @tui_container(
+            parent       = c,
+            border       = true,
+            border_style = :rounded,
+            title        = " List Box ",
+            left_anchor  = (:parent, :left),
+            top_anchor   = (__LAST__, :bottom),
+            height       = 7,
+            width        = 15,
+        )
+
         @tui_list_box(
-            parent          = c,
+            parent          = clb,
             data            = ["Item #$i" for i in 1:10],
-            number_of_lines = 5,
+            bottom_anchor   = (:parent, :bottom),
             left_anchor     = (:parent, :left),
-            top_anchor      = (__LAST__, :bottom),
+            right_anchor    = (:parent, :right),
+            top_anchor      = (:parent, :top),
         )
 
         @tui_label(
             parent        = c,
             text          = "",
-            left_anchor   = (__LAST__, :right, 2),
+            left_anchor   = (__LAST1__, :right, 2),
             right_anchor  = (:parent, :right),
-            middle_anchor = (__LAST__, :middle)
+            middle_anchor = (__LAST1__, :middle)
         )
 
         @connect(
@@ -156,13 +168,12 @@ function all_widgets()
 
         @tui_list_box(
             parent             = c,
-            border = true,
             data               = ["Item #$i" for i in 1:10],
             multiple_selection = true,
             number_of_lines    = 5,
             show_icon          = true,
-            left_anchor        = (__LAST1__, :left),
-            top_anchor         = (__LAST1__, :bottom),
+            left_anchor        = (__LAST2__, :left),
+            top_anchor         = (__LAST2__, :bottom),
         )
 
         @tui_label(

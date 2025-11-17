@@ -38,7 +38,6 @@ export get_current_item, get_selected_items
 
     # == Styling ===========================================================================
 
-    border::Bool = false
     show_icon::Bool = false
     item_icon::String = "[ ]"
     selected_item_icon::String = "[X]"
@@ -55,7 +54,7 @@ end
 
 function update_layout!(widget::WidgetListBox; force::Bool = false)
     if update_widget_layout!(widget; force = force)
-        @unpack begview, border, data, height, numlines, numlines₀ = widget
+        @unpack begview, data, height, numlines, numlines₀ = widget
 
         num_elements = length(data)
 
@@ -94,7 +93,6 @@ can_accept_focus(::WidgetListBox) = true
 function create_widget(
     ::Val{:list_box},
     layout::ObjectLayout;
-    border::Bool = false,
     data::Vector{String} = String[],
     multiple_selection::Bool = false,
     number_of_lines::Int = -1,
@@ -108,21 +106,13 @@ function create_widget(
     width_hint   = maximum(textwidth.(data))
     height_hint  = number_of_lines > 0 ? number_of_lines : num_elements
 
-    # If we have borders, we must increase the vertical and horizontal hints.
-    if border
-        width_hint  += 2
-        height_hint += 2
-    end
-
     if show_icon
         width_hint += max(textwidth(item_icon), textwidth(selected_item_icon)) + 1
     end
 
     # Create the widget.
-    list_box = WidgetListBox(
-        ;
+    list_box = WidgetListBox(;
         id                 = reserve_object_id(),
-        border             = border,
         data               = data,
         item_icon          = item_icon,
         layout             = layout,
@@ -141,7 +131,6 @@ function create_widget(
     @log DEBUG "create_widget" """
     WidgetListBox created:
       ID                 = $(list_box.id)
-      Border             = $(border)
       Item icon          = $(item_icon)
       Multiple selection = $(multiple_selection)
       Number of elements = $(length(data))
@@ -183,22 +172,16 @@ request_cursor(::WidgetListBox) = false
 
 function redraw!(widget::WidgetListBox)
     @unpack begview, buffer, = widget
-    @unpack border, current_item, data, item_icon, selected_item_icon, numlines = widget
+    @unpack current_item, data, item_icon, selected_item_icon, numlines = widget
     @unpack selected, show_icon, theme, width = widget
 
     NCurses.wclear(buffer)
 
-    if border
-        Δi = 1
-        Δj = 1
-    else
-        Δi = 0
-        Δj = 0
-    end
+    num_items = length(data)
 
-    for i in 0:numlines-1
+    for i in 0:(numlines - 1)
         # ID of the current item in the vectors.
-        id = clamp(begview + i + 1, 1, length(data))
+        id = clamp(begview + i + 1, 1, num_items)
 
         # Select which icon must be used for this item.
         if show_icon
@@ -224,11 +207,9 @@ function redraw!(widget::WidgetListBox)
         pad = Δ > 0 ? " " ^ Δ : ""
 
         @ncolor color_i buffer begin
-            NCurses.mvwprintw(buffer, i + Δi, Δj, str * pad)
+            NCurses.mvwprintw(buffer, i, 0, str * pad)
         end
     end
-
-    border && NCurses.wborder(buffer)
 
     return nothing
 end

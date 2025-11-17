@@ -164,7 +164,6 @@ function panels()
 
     list_box_2 = @tui_list_box(
         parent             = p.panels[2, 2],
-        border = true,
         data               = ["Item #$i" for i in 1:10],
         multiple_selection = true,
         number_of_lines    = 5,

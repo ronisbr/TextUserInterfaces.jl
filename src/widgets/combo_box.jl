@@ -70,7 +70,6 @@ function create_widget(
     list_box = create_widget(
         Val(:list_box),
         list_box_layout;
-        border     = false,
         data       = data,
         selectable = false,
         theme      = theme
