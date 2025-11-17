@@ -37,18 +37,11 @@ PrecompileTools.@setup_workload begin
                 top_anchor    = (:parent, :top),
             )
 
-            label = @tui_label(
-                parent      = con,
-                text        = "This is a label",
-                left_anchor = (:parent, :left),
-                top_anchor  = (:parent, :top)
-            )
-
             ansi_label = @tui_ansi_label(
                 parent      = con,
                 text        = "\e[35mThis is an ANSI label.",
                 left_anchor = (:parent, :left),
-                top_anchor  = (__LAST__, :bottom)
+                top_anchor  = (:parent, :top)
             )
 
             button = @tui_button(
@@ -56,6 +49,23 @@ PrecompileTools.@setup_workload begin
                 label       = "Button",
                 left_anchor = (:parent, :left),
                 top_anchor  = (__LAST__, :bottom),
+            )
+
+            dm = @tui_display_matrix(
+                parent       = con,
+                matrix       = randn(3, 3),
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                top_anchor   = (__LAST__, :bottom),
+            )
+            change_matrix!(dm, randn(3, 3))
+
+            combo_box = @tui_combo_box(
+                parent       = con,
+                data         = ["Option 1", "Option 2", "Option 3"],
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                top_anchor   = (__LAST__, :bottom),
             )
 
             hline = @tui_horizontal_line(
@@ -70,6 +80,13 @@ PrecompileTools.@setup_workload begin
                 left_anchor  = (:parent, :left),
                 right_anchor = (:parent, :right),
                 top_anchor   = (__LAST__, :bottom),
+            )
+
+            label = @tui_label(
+                parent      = con,
+                text        = "This is a label",
+                left_anchor = (:parent, :left),
+                top_anchor  = (__LAST__, :bottom)
             )
 
             lbox = @tui_list_box(
@@ -87,14 +104,13 @@ PrecompileTools.@setup_workload begin
             )
             set_value!(pbar, 50)
 
-            dm = @tui_display_matrix(
+            raw = @tui_raw_buffer(
                 parent       = con,
-                matrix       = randn(3, 3),
                 left_anchor  = (:parent, :left),
                 right_anchor = (:parent, :right),
                 top_anchor   = (__LAST__, :bottom),
+                height       = 5
             )
-            change_matrix!(dm, randn(3, 3))
         end
 
         # == Precompile Functions Related to TUI Update ====================================
