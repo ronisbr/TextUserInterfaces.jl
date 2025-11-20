@@ -4,7 +4,6 @@
 #
 ############################################################################################
 
-import .NCurses: init_color
 export ncurses_color, get_color_pair, modify_color, init_color_pair, set_color
 export unset_color
 
@@ -163,7 +162,7 @@ function modify_color(id::Int, r::Int, g::Int, b::Int)
         return NCurses.init_extended_color(id, r, g, b) == 0 ? id : -1
     end
 
-    @log warning "modify_color" "The terminal does not support color change."
+    @log WARNING "modify_color" "The terminal does not support color change."
     return -1
 end
 
@@ -189,7 +188,7 @@ defaults to the root window.
 unset_color(color::Int) = unset_color(tui.wins[1], color)
 
 function unset_color(win::Window, color::Int)
-    win.ptr != C_NULL && NCurses.wattroff(win.ptr, color)
+    win.ptr != C_NULL && NCurses.wattr_off(win.ptr, color, C_NULL)
     return nothing
 end
 
