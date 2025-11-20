@@ -9,7 +9,7 @@ function panels()
 
     w = create_window(
         border = true,
-        theme  = Theme(border = ncurses_color(243, :black)),
+        theme  = create_theme(border = ncurses_color(243, :black)),
         title  = " Panels ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),

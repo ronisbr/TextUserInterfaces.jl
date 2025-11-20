@@ -46,10 +46,10 @@ Create the default theme.
 function _create_default_theme()
     default   = ncurses_color(:white, :black)
     error     = ncurses_color(:red, 0)
-    highlight = ncurses_color(A_REVERSE)
+    highlight = ncurses_color(; reversed = true)
     selected  = ncurses_color(:yellow, 0)
     border    = default
-    title     = default
+    title     = ncurses_color(:white, :black; bold = true)
 
     return Theme(;
         default,
