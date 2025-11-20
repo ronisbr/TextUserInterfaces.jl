@@ -96,8 +96,8 @@ function create_widget(
     data::Vector{String} = String[],
     multiple_selection::Bool = false,
     number_of_lines::Int = -1,
-    item_icon::String = "[ ]",
-    selected_item_icon::String = "[X]",
+    item_icon::String = "□",
+    selected_item_icon::String = "■",
     selectable::Bool = true,
     show_icon::Bool = false,
     theme::Theme = tui.default_theme
