@@ -225,7 +225,7 @@ function _panels__draw_cell_border!(
 )
     @unpack theme, height, width = rb
 
-    theme.border >= 0 && NCurses.wattron(buffer, theme.border)
+    theme.border >= 0 && NCurses.wattr_on(buffer, theme.border, C_NULL)
 
     # == Top Line ==========================================================================
 

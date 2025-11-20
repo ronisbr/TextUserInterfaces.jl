@@ -70,11 +70,25 @@ for (f, r, v, j, c) in
             ["Cint"]
         ),
         (
+            :attr_off,
+            Cint,
+            ["attrs", "opts"],
+            ["Integer", "Ptr{Cvoid}"],
+            ["Cint", "Ptr{Cvoid}"]
+        ),
+        (
             :attron,
             Cint,
             ["attrs"],
             ["Integer"],
             ["Cint"]
+        ),
+        (
+            :attr_on,
+            Cint,
+            ["attrs", "opts"],
+            ["Integer", "Ptr{Cvoid}"],
+            ["Cint", "Ptr{Cvoid}"]
         ),
         (
             :beep,
@@ -281,6 +295,20 @@ for (f, r, v, j, c) in
             ["color", "r", "g", "b"],
             ["Integer", "Integer", "Integer", "Integer"],
             ["Cshort", "Cshort", "Cshort", "Cshort"]
+        ),
+        (
+            :init_extended_color,
+            Cint,
+            ["color", "r", "g", "b"],
+            ["Integer", "Integer", "Integer", "Integer"],
+            ["Cint", "Cint", "Cint", "Cint"]
+        ),
+        (
+            :init_extended_pair,
+            Cint,
+            ["pair", "f", "b"],
+            ["Integer", "Integer", "Integer"],
+            ["Cint", "Cint", "Cint"]
         ),
         (
             :init_pair,
@@ -528,11 +556,25 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Cint"]
         ),
         (
+            :wattr_off,
+            Cint,
+            ["win", "attrs", "opts"],
+            ["Ptr{WINDOW}", "Integer", "Ptr{Cvoid}"],
+            ["Ptr{WINDOW}", "Cint", "Ptr{Cvoid}"]
+        ),
+        (
             :wattron,
             Cint,
             ["win", "attrs"],
             ["Ptr{WINDOW}", "Integer"],
             ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wattr_on,
+            Cint,
+            ["win", "attrs", "opts"],
+            ["Ptr{WINDOW}", "Integer", "Ptr{Cvoid}"],
+            ["Ptr{WINDOW}", "Cint", "Ptr{Cvoid}"]
         ),
         (
             :wbkgd,

@@ -1,7 +1,7 @@
 name = "TextUserInterfaces"
 uuid = "2a09ff82-1be9-11e9-2ab7-19964783a84b"
-authors = ["Ronan Arraes Jardim Chagas <ronisbr@gmail.com>"]
 version = "0.0.1"
+authors = ["Ronan Arraes Jardim Chagas <ronisbr@gmail.com>"]
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -14,6 +14,7 @@ StringManipulation = "892a3eda-7b42-436c-8928-eab12a02cf0e"
 UnPack = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
 
 [compat]
+Ncurses_jll = "6.5.1"
 julia = "1.6"
 
 [extras]

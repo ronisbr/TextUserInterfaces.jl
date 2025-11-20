@@ -126,7 +126,7 @@ function init_color_pair(foreground::Int, background::Int)
 
     # Initialize the color pair.
     idx = length(tui.initialized_color_pairs) + 1
-    NCurses.init_pair(idx, foreground, background)
+    NCurses.init_extended_pair(idx, foreground, background)
     push!(tui.initialized_color_pairs, (foreground, background))
 
     return idx
@@ -160,7 +160,7 @@ end
 
 function modify_color(id::Int, r::Int, g::Int, b::Int)
     if NCurses.can_change_color() == 1
-        return init_color(id, r, g, b) == 0 ? id : -1
+        return NCurses.init_extended_color(id, r, g, b) == 0 ? id : -1
     end
 
     @log warning "modify_color" "The terminal does not support color change."
@@ -176,7 +176,7 @@ it defaults to the root window.
 set_color(color::Int) = set_color(tui.wins[1], color)
 
 function set_color(win::Window, color::Int)
-    win.ptr != C_NULL && NCurses.wattron(win.ptr, color)
+    win.ptr != C_NULL && NCurses.wattr_on(win.ptr, color, C_NULL)
     return nothing
 end
 
