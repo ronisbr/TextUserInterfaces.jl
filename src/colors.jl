@@ -40,7 +40,7 @@ end
 
 function ncurses_color(
     foreground::Symbol,
-    background::Int,
+    background::Integer,
     attrs::Integer = 0;
     kwargs...
 )
@@ -50,7 +50,7 @@ function ncurses_color(
 end
 
 function ncurses_color(
-    foreground::Int,
+    foreground::Integer,
     background::Symbol,
     attrs::Integer = 0;
     kwargs...
@@ -61,8 +61,8 @@ function ncurses_color(
 end
 
 function ncurses_color(
-    foreground::Int,
-    background::Int,
+    foreground::Integer,
+    background::Integer,
     attrs::Integer = 0;
     kwargs...
 )
@@ -73,20 +73,22 @@ end
 function ncurses_color(
     attrs::Integer = 0;
     bold::Bool = false,
+    reversed::Bool = false,
     underline::Bool = false
 )
     attrs |= bold ? A_BOLD : 0
+    attrs |= reversed ? A_REVERSE : 0
     attrs |= underline ? A_UNDERLINE : 0
     return signed(attrs)
 end
 
 """
-    get_color_pair(foreground::Int, background::Int) -> Int
+    get_color_pair(foreground::Integer, background::Integer) -> Int
 
 Return the ID of the color pair (`foreground`, `background`), or `nothing` if the color pair
 is not initialized.
 """
-function get_color_pair(foreground::Int, background::Int)
+function get_color_pair(foreground::Integer, background::Integer)
     return findfirst(
         x -> x == (foreground, background),
         tui.initialized_color_pairs
@@ -106,19 +108,19 @@ function init_color_pair(foreground::Symbol, background::Symbol)
     return init_color_pair(foreground_id, background_id)
 end
 
-function init_color_pair(foreground::Symbol, background::Int)
+function init_color_pair(foreground::Symbol, background::Integer)
     # Get the index related to the selected colors.
     foreground_id = _get_color_index(foreground)
     return init_color_pair(foreground_id, background)
 end
 
-function init_color_pair(foreground::Int, background::Symbol)
+function init_color_pair(foreground::Integer, background::Symbol)
     # Get the index related to the selected colors.
     background_id = _get_color_index(background)
     return init_color_pair(foreground, background_id)
 end
 
-function init_color_pair(foreground::Int, background::Int)
+function init_color_pair(foreground::Integer, background::Integer)
     # Check if the pair already exists.
     aux = get_color_pair(foreground, background)
     aux != nothing && return aux
