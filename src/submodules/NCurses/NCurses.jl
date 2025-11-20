@@ -85,11 +85,9 @@ function load_ncurses(dir::String)
     candidates = (
         "libncursesw",
         "libncursesw.so.6",
-        "libncursesw.so.5",
         "libncurses",
         "libncursesw",
         "libncurses.so.6",
-        "libncurses.so.5",
     )
 
     load_ncurses_library(dir, :libncurses, candidates)
@@ -108,8 +106,6 @@ function load_ncurses(dir::String)
         "libpanel",
         "libpanelw.so.6",
         "libpanel.so.6",
-        "libpanelw.so.5",
-        "libpanel.so.5"
     )
 
     load_ncurses_library(dir, :libpanel, candidates)
@@ -121,8 +117,6 @@ function load_ncurses(dir::String)
         "libform",
         "libformw.so.6",
         "libform.so.6",
-        "libformw.so.5",
-        "libform.so.5"
     )
 
     load_ncurses_library(dir, :libform, candidates)
@@ -134,8 +128,6 @@ function load_ncurses(dir::String)
         "libmenu",
         "libmenuw.so.6",
         "libmenu.so.6",
-        "libmenuw.so.5",
-        "libmenu.so.5"
     )
 
     load_ncurses_library(dir, :libmenu, candidates)
