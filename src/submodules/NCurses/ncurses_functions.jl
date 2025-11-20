@@ -521,6 +521,13 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", ["Cint" for _ in 1:4]...]
         ),
         (
+            :tigetflag,
+            Cint,
+            ["capname"],
+            ["String"],
+            ["Cstring"]
+        ),
+        (
             :touchwin,
             Cvoid,
             ["win"],
