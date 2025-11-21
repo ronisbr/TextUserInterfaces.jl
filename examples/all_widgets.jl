@@ -201,11 +201,18 @@ function all_widgets()
             return nothing
         end
 
+        list_box_theme = create_theme(;
+            default   = ncurses_color(:white, 240),
+            highlight = ncurses_color(:white, 240; reversed = true),
+            selected  = ncurses_color(:yellow, 240),
+        )
+
         @tui_combo_box(
-            parent      = c,
-            data        = ["Item #$i" for i in 1:10],
-            left_anchor = (__LAST1__, :left),
-            top_anchor  = (__LAST1__, :bottom),
+            parent         = c,
+            data           = ["Item #$i" for i in 1:10],
+            list_box_theme = list_box_theme,
+            left_anchor    = (__LAST1__, :left),
+            top_anchor     = (__LAST1__, :bottom),
         )
 
         @tui_label(

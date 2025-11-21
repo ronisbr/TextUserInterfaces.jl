@@ -21,6 +21,11 @@ export get_item
     # List box.
     list_box::Union{Nothing, WidgetListBox} = nothing
 
+    # == Styling ===========================================================================
+
+    icon::String  = "↓"
+    show_icon::Bool = true
+
     # == Signals ===========================================================================
 
     @signal item_changed
@@ -40,9 +45,12 @@ function create_widget(
     ::Val{:combo_box},
     layout::ObjectLayout;
     data::Vector{String} = String[],
+    icon::String  = "↓",
+    show_icon::Bool = true,
+    list_box_theme::Theme = tui.default_theme,
     theme::Theme = tui.default_theme
 )
-    width_hint   = maximum(textwidth.(data))
+    width_hint   = maximum(textwidth.(data)) + (show_icon ? textwidth(icon) + 1 : 0)
     height_hint  = 1
 
     # Create the combo box.
@@ -51,6 +59,8 @@ function create_widget(
         layout           = layout,
         theme            = theme,
         data             = data,
+        icon             = icon,
+        show_icon        = show_icon,
         horizontal_hints = Dict(:width => width_hint),
         vertical_hints   = Dict(:height => height_hint)
     )
@@ -72,7 +82,7 @@ function create_widget(
         list_box_layout;
         data       = data,
         selectable = false,
-        theme      = theme
+        theme      = list_box_theme
     )
 
     combo_box.list_box = list_box
@@ -108,6 +118,7 @@ request_cursor(::WidgetComboBox) = false
 
 function redraw!(widget::WidgetComboBox)
     @unpack buffer, current_item, data, list_box, width, theme = widget
+    @unpack icon, show_icon = widget
 
     NCurses.wclear(buffer)
 
@@ -116,10 +127,10 @@ function redraw!(widget::WidgetComboBox)
 
     # We will highlight the combo box if it is selected or if list box is opened.
     list_box_opened = !isnothing(get_parent(list_box))
-    color = (has_focus(widget) || list_box_opened) ? theme.selected : theme.default
+    color = (has_focus(widget) || list_box_opened) ? theme.highlight : theme.default
 
     # Get the string that will be printed.
-    str = data[current_item]
+    str = (show_icon ? "$icon " : "") * data[current_item]
     Δ = width - textwidth(str)
     pad = Δ > 0 ? " " ^ Δ : ""
 
