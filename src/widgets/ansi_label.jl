@@ -79,7 +79,7 @@ function redraw!(widget::WidgetAnsiLabel)
 
     NCurses.mvwprintw(buffer, 0, 0, "")
 
-    @inbounds for l in 1:length(aligned_text)
+    @inbounds for l in eachindex(aligned_text)
         line = aligned_text[l]
         line_colors = aligned_text_colors[l]
 
