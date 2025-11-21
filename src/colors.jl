@@ -147,12 +147,12 @@ If the color was initialized, it returns the color ID. Otherwise, it returns `-1
 """
 function modify_color(name::Symbol, id::Int, r::Int, g::Int, b::Int)
     # If the color name is defined, then just return.
-    if haskey(_ncurses_colors, name)
+    if haskey(_NCURSES_COLORS, name)
         return -1
     end
 
     if modify_color(id, r, g, b) != -1
-        push!(_ncurses_colors, name => id)
+        push!(_NCURSES_COLORS, name => id)
         return id
     end
 
@@ -204,8 +204,8 @@ end
 Return the index related to the `color`.
 """
 function _get_color_index(color::Symbol)
-    !haskey(_ncurses_colors, color) && error("Unknown color :$color.")
-    return _ncurses_colors[color]
+    !haskey(_NCURSES_COLORS, color) && error("Unknown color :$color.")
+    return _NCURSES_COLORS[color]
 end
 
 """
@@ -214,7 +214,7 @@ end
 Reset the color dictionary.
 """
 function _reset_color_dict()
-    empty!(_ncurses_colors)
-    merge!(_ncurses_colors, _default_ncurses_colors)
+    empty!(_NCURSES_COLORS)
+    merge!(_NCURSES_COLORS, _DEFAULT_NCURSES_COLORS)
     return nothing
 end
