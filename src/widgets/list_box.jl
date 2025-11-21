@@ -38,9 +38,11 @@ export get_current_item, get_selected_items
 
     # == Styling ===========================================================================
 
+    cursor_icon = "→"
+    show_cursor_icon::Bool = true
     show_icon::Bool = false
-    item_icon::String = "[ ]"
-    selected_item_icon::String = "[X]"
+    item_icon::String = "□"
+    selected_item_icon::String = "■"
 
     # == Signals ===========================================================================
 
@@ -93,6 +95,7 @@ can_accept_focus(::WidgetListBox) = true
 function create_widget(
     ::Val{:list_box},
     layout::ObjectLayout;
+    cursor_icon::String = "→",
     data::Vector{String} = String[],
     multiple_selection::Bool = false,
     number_of_lines::Int = -1,
@@ -100,10 +103,11 @@ function create_widget(
     selected_item_icon::String = "■",
     selectable::Bool = true,
     show_icon::Bool = false,
+    show_cursor_icon::Bool = true,
     theme::Theme = tui.default_theme
 )
     num_elements = length(data)
-    width_hint   = maximum(textwidth.(data))
+    width_hint   = maximum(textwidth.(data)) + (show_cursor_icon ? textwidth(cursor_icon) + 1 : 0)
     height_hint  = number_of_lines > 0 ? number_of_lines : num_elements
 
     if show_icon
@@ -113,6 +117,7 @@ function create_widget(
     # Create the widget.
     list_box = WidgetListBox(;
         id                 = reserve_object_id(),
+        cursor_icon        = cursor_icon,
         data               = data,
         item_icon          = item_icon,
         layout             = layout,
@@ -123,6 +128,7 @@ function create_widget(
         selected           = zeros(Bool, num_elements),
         selected_item_icon = selected_item_icon,
         show_icon          = show_icon,
+        show_cursor_icon   = show_cursor_icon,
         theme              = theme,
         horizontal_hints   = Dict(:width  => width_hint),
         vertical_hints     = Dict(:height => height_hint)
@@ -131,12 +137,14 @@ function create_widget(
     @log DEBUG "create_widget" """
     WidgetListBox created:
       ID                 = $(list_box.id)
+      Cursor icon        = $(cursor_icon)
       Item icon          = $(item_icon)
       Multiple selection = $(multiple_selection)
       Number of elements = $(length(data))
       Number of lines    = $(number_of_lines)
       Selectable         = $(selectable)
       Selected item icon = $(selected_item_icon)
+      Show cursor icon   = $(show_cursor_icon)
       Show item          = $(show_icon)"""
 
     # Return the created widget.
@@ -173,11 +181,16 @@ request_cursor(::WidgetListBox) = false
 function redraw!(widget::WidgetListBox)
     @unpack begview, buffer, = widget
     @unpack current_item, data, item_icon, selected_item_icon, numlines = widget
-    @unpack selected, show_icon, theme, width = widget
+    @unpack selected, show_icon, show_cursor_icon, cursor_icon, theme, width = widget
 
     NCurses.wclear(buffer)
 
     num_items = length(data)
+    cursor_icon_tw = textwidth(cursor_icon)
+
+    if !has_focus(widget)
+        cursor_icon = " " ^ cursor_icon_tw
+    end
 
     for i in 0:(numlines - 1)
         # ID of the current item in the vectors.
@@ -191,6 +204,12 @@ function redraw!(widget::WidgetListBox)
             icon = ""
         end
 
+        if show_cursor_icon
+            cursor = (begview + i == current_item) ? "$cursor_icon " : " " ^ (cursor_icon_tw + 1)
+        else
+            cursor = ""
+        end
+
         # Select which color the current item must be printed.
         color_i = selected[id] ? theme.selected : theme.default
 
@@ -202,7 +221,7 @@ function redraw!(widget::WidgetListBox)
 
         # Compute the padding after the text so that the entire field is filled with the
         # correct color.
-        str = icon * data[id]
+        str = cursor * icon * data[id]
         Δ   = width - length(str)
         pad = Δ > 0 ? " " ^ Δ : ""
 

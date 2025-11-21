@@ -143,12 +143,13 @@ function all_widgets()
         )
 
         @tui_list_box(
-            parent          = clb,
-            data            = ["Item #$i" for i in 1:10],
-            bottom_anchor   = (:parent, :bottom),
-            left_anchor     = (:parent, :left),
-            right_anchor    = (:parent, :right),
-            top_anchor      = (:parent, :top),
+            parent           = clb,
+            data             = ["Item #$i" for i in 1:10],
+            show_cursor_icon = false,
+            bottom_anchor    = (:parent, :bottom),
+            left_anchor      = (:parent, :left),
+            right_anchor     = (:parent, :right),
+            top_anchor       = (:parent, :top),
         )
 
         @tui_label(
