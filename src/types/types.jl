@@ -14,6 +14,31 @@ include("./signals.jl")
 include("./widgets.jl")
 include("./windows.jl")
 
+"""
+    mutable struct TextUserInterface
+
+Main structure that defines a text user interface.
+
+# Fields
+
+- `initialized::Bool`: If `true`, then the TUI is initialized.
+    (**Default** = `false`)
+- `stdscr::Ptr{WINDOW}`: Pointer to the standard NCurses window.
+    (**Default** = `Ptr{WINDOW}(0)`)
+- `windows::Vector{Window}`: Vector that contains all created windows.
+    (**Default** = `Window[]`)
+- `focused_window_id::Int`: ID of the focused window.
+    (**Default** = `0`)
+- `initialized_color_pairs::Vector{Tuple{Int, Int}}`: Vector that contains all initialized
+    color pairs.
+    (**Default** = `Tuple{Int, Int}[]`)
+- `default_theme::Theme`: Default theme of the TUI.
+    (**Default** = `Theme()`)
+
+# Signals
+
+- `keypressed`: Emitted when a key is pressed.
+"""
 @kwdef mutable struct TextUserInterface
     initialized::Bool = false
 

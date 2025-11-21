@@ -9,7 +9,7 @@ export Theme
 """
     struct Theme
 
-Defines a theme in the text user interface.
+Structure that defines a theme in the text user interface.
 
 # Fields
 

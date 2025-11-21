@@ -7,7 +7,7 @@
 """
     struct Signal
 
-Defines a signal.
+Structure that defines a signal.
 
 # Fields
 
