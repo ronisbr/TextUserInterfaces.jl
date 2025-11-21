@@ -12,6 +12,7 @@ export Window
     title_alignment::Symbol = :c
     position::Tuple{Int, Int} = (0, 0)
     has_border::Bool = false
+    border_style::Symbol = :default
     focusable::Bool = true
 
     # This variable stores if the user wants the buffer and view size to be locked. This is

@@ -21,6 +21,9 @@ Create a window.
     (**Default** = 0)
 - `border::Bool`: If `true`, the window will have a border.
     (**Default** = `true`)
+- `border_style::Symbol`: Style of the border. It can be `:default`, `:rounded`, or
+    `:double`.
+    (**Default** = `:default`)
 - `buffer_size::Tuple{Int, Int}`: Number of rows and columns in the window buffer. This will
     be automatically increased to, at least, fit the viewable part of the window.
     (**Default** = `(0, 0)`)
@@ -37,6 +40,7 @@ Create a window.
 """
 function create_window(;
     border::Bool = true,
+    border_style::Symbol = :default,
     buffer_size::Tuple{Int, Int} = (0, 0),
     focusable::Bool = true,
     layout::ObjectLayout = ObjectLayout(),
@@ -66,7 +70,7 @@ function create_window(;
 
     # Check if the user wants a border.
     border && @ncolor theme.border view begin
-        NCurses.wborder(view)
+        draw_border!(view; style = border_style)
     end
 
     # Create the buffer.
@@ -111,6 +115,7 @@ function create_window(;
         buffer_view_locked = buffer_view_locked,
         focusable          = focusable,
         has_border         = border,
+        border_style       = border_style,
         id                 = reserve_object_id(),
         layout             = layout,
         panel              = panel,

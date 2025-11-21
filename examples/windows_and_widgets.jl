@@ -33,15 +33,16 @@ function windows_and_widgets()
     @connect(tui, keypressed, keystroke_management)
 
     # Create the three windows:
-    for (title, title_alignment) in (
-        (" WINDOW 1 ", :l),
-        (" WINDOW 2 ", :c),
-        (" WINDOW 3 ", :r)
+    for (title, title_alignment, border_style) in (
+        (" WINDOW 1 ", :l, :default),
+        (" WINDOW 2 ", :c, :rounded),
+        (" WINDOW 3 ", :r, :heavy)
     )
         @tui_builder begin
             w = create_window(
                 layout          = ObjectLayout(top = x, left = y, height = 10, width = 56),
                 border          = true,
+                border_style    = border_style,
                 title           = title,
                 title_alignment = title_alignment
             )
