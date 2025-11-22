@@ -23,7 +23,8 @@ export get_item
 
     # == Styling ===========================================================================
 
-    icon::String  = "↓"
+    icon_closed::String  = "→"
+    icon_opened::String  = "↓"
     show_icon::Bool = true
 
     # == Signals ===========================================================================
@@ -45,13 +46,15 @@ function create_widget(
     ::Val{:combo_box},
     layout::ObjectLayout;
     data::Vector{String} = String[],
-    icon::String  = "↓",
+    icon_closed::String  = "→",
+    icon_opened::String  = "↓",
     show_icon::Bool = true,
     list_box_theme::Theme = tui.default_theme,
     theme::Theme = tui.default_theme
 )
-    width_hint   = maximum(textwidth.(data)) + (show_icon ? textwidth(icon) + 1 : 0)
-    height_hint  = 1
+    icon_size   = max(textwidth(icon_closed), textwidth(icon_opened))
+    width_hint  = maximum(textwidth.(data)) + (show_icon ? icon_size + 1 : 0)
+    height_hint = 1
 
     # Create the combo box.
     combo_box = WidgetComboBox(;
@@ -59,7 +62,8 @@ function create_widget(
         layout           = layout,
         theme            = theme,
         data             = data,
-        icon             = icon,
+        icon_closed      = icon_closed,
+        icon_opened      = icon_opened,
         show_icon        = show_icon,
         horizontal_hints = Dict(:width => width_hint),
         vertical_hints   = Dict(:height => height_hint)
@@ -118,7 +122,7 @@ request_cursor(::WidgetComboBox) = false
 
 function redraw!(widget::WidgetComboBox)
     @unpack buffer, current_item, data, list_box, width, theme = widget
-    @unpack icon, show_icon = widget
+    @unpack icon_closed, icon_opened, show_icon = widget
 
     NCurses.wclear(buffer)
 
@@ -129,8 +133,16 @@ function redraw!(widget::WidgetComboBox)
     list_box_opened = !isnothing(get_parent(list_box))
     color = (has_focus(widget) || list_box_opened) ? theme.highlight : theme.default
 
+    icon = if show_icon
+        icon_size = max(textwidth(icon_closed), textwidth(icon_opened))
+        t = list_box_opened ? widget.icon_opened : widget.icon_closed
+        lpad(t, icon_size) * " "
+    else
+        ""
+    end
+
     # Get the string that will be printed.
-    str = (show_icon ? "$icon " : "") * data[current_item]
+    str = icon * data[current_item]
     Δ = width - textwidth(str)
     pad = Δ > 0 ? " " ^ Δ : ""
 
