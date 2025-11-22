@@ -36,7 +36,7 @@ function all_widgets()
 
         @tui_ansi_label(
             parent      = c,
-            text        = "\e[1mThis \e[34mis a color \e[47mlabel.",
+            text        = "\e[1mThis \e[34mis a\ncolor \e[47mlabel with\nmul\e[0mtiple lines.",
             left_anchor = (:parent, :left),
             top_anchor  = (__LAST__, :bottom)
         )

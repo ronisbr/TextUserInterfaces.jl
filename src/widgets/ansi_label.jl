@@ -17,8 +17,7 @@ export change_text!
     text::String
 
     # Variables to store the parsed text and color to reduce the computational burden.
-    aligned_text::Vector{Vector{String}} = Vector{String}[]
-    aligned_text_colors::Vector{Vector{Int}} = Int[]
+    aligned_text::Vector{Vector{Pair{String, Int}}} = Vector{Pair{String, Int}}[]
 end
 
 ############################################################################################
@@ -59,7 +58,7 @@ function create_widget(
         layout           = layout,
         text             = text,
         theme            = theme,
-        horizontal_hints = Dict(:width => width),
+        horizontal_hints = Dict(:width  => width),
         vertical_hints   = Dict(:height => height)
     )
 
@@ -74,20 +73,20 @@ function create_widget(
 end
 
 function redraw!(widget::WidgetAnsiLabel)
-    @unpack buffer, theme, aligned_text, aligned_text_colors = widget
+    @unpack buffer, theme, aligned_text = widget
     NCurses.wclear(buffer)
 
     NCurses.mvwprintw(buffer, 0, 0, "")
 
     @inbounds for l in eachindex(aligned_text)
         line = aligned_text[l]
-        line_colors = aligned_text_colors[l]
+        line_number = l - firstindex(aligned_text) + 1
 
-        NCurses.mvwprintw(buffer, l - 1, 0, "")
+        NCurses.mvwprintw(buffer, line_number - 1, 0, "")
 
-        for i in 1:length(line)
-            @ncolor line_colors[i - 1 + begin] buffer begin
-                NCurses.wprintw(buffer, line[i - 1 + begin])
+        for (text, color) in line
+            @ncolor color buffer begin
+                NCurses.wprintw(buffer, text)
             end
         end
     end
@@ -120,7 +119,7 @@ By default, it uses the current alignment of `widget`.
 function change_text!(
     widget::WidgetAnsiLabel,
     new_text::AbstractString;
-    alignment = widget.alignment
+    alignment::Symbol = widget.alignment
 )
     widget.text      = new_text
     widget.alignment = alignment
@@ -144,68 +143,47 @@ function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
     # If the widget does not has a container, then we cannot align the text.
     isnothing(widget.container) && return nothing
 
-    @unpack alignment, buffer, text, width, aligned_text, aligned_text_colors = widget
+    @unpack alignment, buffer, text, width, aligned_text = widget
+
+    # First, we align the string in available width.
+    aligned_str = align_string_per_line(text, width, alignment)
 
     # Split the string in each line.
-    tokens = split(text, "\n")
+    tokens = split(aligned_str, '\n')
 
     # Empty the vectors with the string and decorations.
     empty!(aligned_text)
-    empty!(aligned_text_colors)
 
-    # Variable that will store the decorations of the previous line.
-    vd = nothing
+    # Variable that will store the previous decoration.
+    pd = Decoration()
 
     for line in tokens
-        # Formatted text.
-        text = ""
+        parsed_line = parse_ansi_string(line)
 
-        # Notice that if the ANSI escape sequence is not valid, the alignment will not be
-        # correct. This regex remove all ANSI escape sequences to count for the printable
-        # characters.
-        if (alignment == :r) || (alignment == :c)
-            printable_line = remove_decorations(line)
-            line_width     = textwidth(printable_line)
-        else
-            line_width = 0
-        end
+        line_decoration = Pair{String, Int}[]
 
-        # Align the current line accordingly.
-        if alignment == :r
-            col   = width - line_width - 1
-            text *= " "^col * line
-        elseif alignment == :c
-            col   = div(width - line_width, 2)
-            text *= " "^col * line
-        else
-            text *= line
-        end
+        for (t, d) in parsed_line
+            pd = update_decoration(pd, d)
 
-        # Get the decoration of the last line, if it exists.
-        decoration = (!isnothing(vd) && !isempty(vd)) ?
-            last(vd) :
-            ParseAnsiColors.Decoration()
+            if pd.reset
+                # Reset the decoration to default values.
+                pd = Decoration()
+            end
 
-        # Now, we need to parse ANSI escape sequences and build the decorations for this
-        # line.
-        vstr, vd = parse_ansi_string(text, decoration)
-        num_decorations = length(vd)
-
-        colors = Vector{Int}(undef, num_decorations)
-
-        @inbounds for i in 1:num_decorations
-            d = vd[i - 1 + begin]
-            c = ncurses_color(
-                d.foreground,
-                d.background;
-                bold      = d.bold,
-                underline = d.underline
+            # We are updating the decoration since the beginning. Hence, the properties
+            # `bold`, `underline`, and `reversed` are only on if they are active.
+            color = ncurses_color(
+                ansi_foreground_to_ncurses_color(pd.foreground),
+                ansi_background_to_ncurses_color(pd.background);
+                bold      = pd.bold      == StringManipulation.active,
+                underline = pd.underline == StringManipulation.active,
+                reversed  = pd.reversed  == StringManipulation.active
             )
-            colors[i - 1 + begin] = c
+
+            push!(line_decoration, t => color)
         end
 
-        push!(aligned_text, vstr)
-        push!(aligned_text_colors, colors)
+        push!(aligned_text, line_decoration)
     end
 
     update_layout!(widget)

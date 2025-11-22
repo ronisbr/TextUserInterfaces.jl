@@ -16,10 +16,6 @@ include("submodules/NCurses/NCurses.jl")
 using .NCurses
 export NCurses
 
-include("./submodules/ParseAnsiColors/ParseAnsiColors.jl")
-using .ParseAnsiColors
-export ParseAnsiColors
-
 ############################################################################################
 #                                          Macros                                          #
 ############################################################################################
