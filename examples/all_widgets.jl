@@ -253,7 +253,7 @@ function all_widgets()
             parent       = c,
             border       = true,
             border_style = :rounded,
-            title        = " Progress Bar",
+            title        = " Progress Bar ",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom),
