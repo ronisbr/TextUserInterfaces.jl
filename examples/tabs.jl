@@ -34,7 +34,7 @@ function tabs()
 
     @tui_builder begin
         function button_return_pressed(w; new_label, label_widget)
-            change_text!(label_widget, new_label)
+            change_label!(label_widget, new_label)
             return nothing
         end
 
@@ -61,7 +61,7 @@ function tabs()
 
         @tui_label(
             parent       = t.tabs[1],
-            text         = "",
+            label        = "",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom, 3),
@@ -104,7 +104,7 @@ function tabs()
         function combo_box_item_changed(w; label_widget)
             current_item = get_item(w)
             str = "Current item: $(current_item)."
-            change_text!(label_widget, str)
+            change_label!(label_widget, str)
             return nothing
         end
 
@@ -117,7 +117,7 @@ function tabs()
 
         @tui_label(
             parent        = t.tabs[3],
-            text          = "",
+            label         = "",
             left_anchor   = (__LAST__, :right, 2),
             right_anchor  = (:parent, :right),
             middle_anchor = (__LAST__, :middle)

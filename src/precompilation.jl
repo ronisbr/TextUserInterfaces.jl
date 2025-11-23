@@ -84,7 +84,7 @@ PrecompileTools.@setup_workload begin
 
             label = @tui_label(
                 parent      = con,
-                text        = "This is a label",
+                label       = "This is a label",
                 left_anchor = (:parent, :left),
                 top_anchor  = (__LAST__, :bottom)
             )

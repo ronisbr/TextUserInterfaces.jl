@@ -31,7 +31,7 @@ function panels()
 
     @tui_label(
         parent      = p.panels[1, 1],
-        text        = "This is a label.",
+        label       = "This is a label.",
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top)
     )
@@ -49,7 +49,7 @@ function panels()
 
     @tui_builder begin
         function button_return_pressed(w; new_label, label_widget)
-            change_text!(label_widget, new_label)
+            change_label!(label_widget, new_label)
             return nothing
         end
 
@@ -76,7 +76,7 @@ function panels()
 
         @tui_label(
             parent       = p.panels[1, 3],
-            text         = "",
+            label        = "",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__ID1__, :bottom, 3),
@@ -135,7 +135,7 @@ function panels()
         current_item   = get_current_item(w)
         selected_items = get_selected_items(w)
         str = "Current item: $(current_item), Selected items: $(selected_items)."
-        change_text!(label_widget, str)
+        change_label!(label_widget, str)
         return nothing
     end
 
@@ -149,7 +149,7 @@ function panels()
 
     list_box_1_information = @tui_label(
         parent       = p.panels[2, 2],
-        text         = "",
+        label        = "",
         left_anchor  = (:parent, :left),
         right_anchor = (:parent, :right),
         top_anchor   = (list_box_1, :bottom)
@@ -174,7 +174,7 @@ function panels()
 
     list_box_2_information = @tui_label(
         parent       = p.panels[2, 2],
-        text         = "",
+        label        = "",
         left_anchor  = (:parent, :left),
         right_anchor = (:parent, :right),
         top_anchor   = (list_box_2, :bottom)
@@ -193,7 +193,7 @@ function panels()
     function combo_box_item_changed(w; label_widget)
         current_item = get_item(w)
         str = "Current item: $(current_item)."
-        change_text!(label_widget, str)
+        change_label!(label_widget, str)
         return nothing
     end
 
@@ -206,7 +206,7 @@ function panels()
 
     combo_box_1_information = @tui_label(
         parent        = p.panels[2, 3],
-        text          = "",
+        label         = "",
         left_anchor   = (combo_box_1, :right, 2),
         right_anchor  = (:parent, :right),
         middle_anchor = (combo_box_1, :middle)

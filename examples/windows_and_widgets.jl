@@ -2,7 +2,7 @@ using TextUserInterfaces
 
 # Function to handle a return presse when a button is in focus.
 function button_return_pressed(w; new_label, label_widget)
-    change_text!(label_widget, new_label)
+    change_label!(label_widget, new_label)
 end
 
 # Functions to management special keystrokes in the TUI.
@@ -51,7 +51,7 @@ function windows_and_widgets()
 
             @tui_label(
                 parent = c,
-                text   = "The last pressed button was:",
+                label  = "The last pressed button was:",
                 height = 1,
                 left   = 2,
                 top    = 2
@@ -59,7 +59,7 @@ function windows_and_widgets()
 
             @tui_label(
                 parent        = c,
-                text          = "",
+                label         = "",
                 theme         = create_theme(default = ncurses_color(:yellow, :black)),
                 middle_anchor = (__LAST__, :middle),
                 left_anchor   = (__LAST__, :right, 1),

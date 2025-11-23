@@ -27,9 +27,29 @@ function all_widgets()
 
         @tui_label(
             parent      = c,
-            text        = "This is a label.",
+            label       = "This is a label.",
             left_anchor = (:parent, :left),
             top_anchor  = (:parent, :top)
+        )
+
+        @tui_label(
+            parent       = c,
+            label        = "This is a label with color but using `fill = false`.",
+            fill         = false,
+            theme        = create_theme(default = ncurses_color(:yellow, :blue)),
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom)
+        )
+
+        @tui_label(
+            parent       = c,
+            label        = "This is a label with color but using `fill = true`.",
+            fill         = true,
+            theme        = create_theme(default = ncurses_color(:yellow, :blue)),
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom)
         )
 
         # == ANSI Label ====================================================================
@@ -44,7 +64,7 @@ function all_widgets()
         # == Button ========================================================================
 
         function button_return_pressed(w; new_label, label_widget)
-            change_text!(label_widget, new_label)
+            change_label!(label_widget, new_label)
             return nothing
         end
 
@@ -71,7 +91,7 @@ function all_widgets()
 
         button_information = @tui_label(
             parent        = c,
-            text          = "",
+            label         = "",
             left_anchor   = (__LAST__, :right, 2),
             right_anchor  = (:parent, :right),
             middle_anchor = (__LAST__, :middle),
@@ -127,7 +147,7 @@ function all_widgets()
             current_item   = get_current_item(w)
             selected_items = get_selected_items(w)
             str = "Current item: $(current_item), Selected items: $(selected_items)."
-            change_text!(label_widget, str)
+            change_label!(label_widget, str)
             return nothing
         end
 
@@ -154,7 +174,7 @@ function all_widgets()
 
         @tui_label(
             parent        = c,
-            text          = "",
+            label         = "",
             left_anchor   = (__LAST1__, :right, 2),
             right_anchor  = (:parent, :right),
             middle_anchor = (__LAST1__, :middle)
@@ -179,7 +199,7 @@ function all_widgets()
 
         @tui_label(
             parent        = c,
-            text          = "",
+            label         = "",
             left_anchor   = (__LAST__, :right, 2),
             right_anchor  = (:parent, :right),
             middle_anchor = (__LAST__, :middle)
@@ -197,7 +217,7 @@ function all_widgets()
         function combo_box_item_changed(w; label_widget)
             current_item = get_item(w)
             str = "Current item: $(current_item)."
-            change_text!(label_widget, str)
+            change_label!(label_widget, str)
             return nothing
         end
 
@@ -217,7 +237,7 @@ function all_widgets()
 
         @tui_label(
             parent        = c,
-            text          = "",
+            label         = "",
             left_anchor   = (__LAST__, :right, 2),
             right_anchor  = (:parent, :right),
             middle_anchor = (__LAST__, :middle)

@@ -1,4 +1,4 @@
-using TextUserInterfaces
+label TextUserInterfaces
 
 ############################################################################################
 #                                        Constants                                         #
@@ -153,7 +153,7 @@ function tic_tac_toe()
 
     board = @tui_label(
         parent      = c,
-        text        = _BOARD,
+        label       = _BOARD,
         left_anchor = (:parent, :left, 5),
         top_anchor  = (:parent, :top, 2),
     )
@@ -165,7 +165,7 @@ function tic_tac_toe()
             parent      = c,
             alignment   = :c,
             fill        = true,
-            text        = "\n\n\n",
+            label       = "\n\n\n",
             left_anchor = Anchor(board, :left, (y - 1) * 8),
             top_anchor  = Anchor(board, :top, (x - 1) * 4),
             height      = 3,
@@ -179,14 +179,14 @@ function tic_tac_toe()
 
     current_player_info_label = @tui_label(
         parent = c,
-        text = "Current player:",
+        label = "Current player:",
         top_anchor = (board, :top),
         left_anchor = (board, :right, 2)
     )
 
     current_player_label = @tui_label(
         parent = c,
-        text = "Player 1 ($(_PLAYER_MARKS[1]))",
+        label = "Player 1 ($(_PLAYER_MARKS[1]))",
         top_anchor = (current_player_info_label, :top),
         left_anchor = (current_player_info_label, :right),
         width = 40,
@@ -199,7 +199,7 @@ function tic_tac_toe()
         parent = c,
         left_anchor = (board, :left),
         top_anchor = (board, :bottom, 2),
-        text = "",
+        label = "",
         width = 40
     )
 
