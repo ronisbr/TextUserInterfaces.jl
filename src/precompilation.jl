@@ -111,6 +111,14 @@ PrecompileTools.@setup_workload begin
                 top_anchor   = (__LAST__, :bottom),
                 height       = 5
             )
+
+            text = @tui_text(
+                parent       = con,
+                text         = "This is a text widget.\nIt can handle multiple lines of text.",
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                top_anchor   = (__LAST__, :bottom),
+            )
         end
 
         # == Precompile Functions Related to TUI Update ====================================

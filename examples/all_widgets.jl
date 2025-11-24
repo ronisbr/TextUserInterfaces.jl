@@ -36,7 +36,7 @@ function all_widgets()
             parent       = c,
             label        = "This is a label with color but using `fill = false`.",
             fill         = false,
-            theme        = create_theme(default = ncurses_color(:yellow, :blue)),
+            theme        = create_theme(default = ncurses_color(:black, :blue)),
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom)
@@ -46,10 +46,42 @@ function all_widgets()
             parent       = c,
             label        = "This is a label with color but using `fill = true`.",
             fill         = true,
-            theme        = create_theme(default = ncurses_color(:yellow, :blue)),
+            theme        = create_theme(default = ncurses_color(:black, :magenta)),
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom)
+        )
+
+        # == Text ==========================================================================
+
+        @tui_text(
+            parent       = c,
+            text         = "This is a text\nthat can have\nmultiple lines.",
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom)
+        )
+
+        @tui_text(
+            parent       = c,
+            alignment    = :c,
+            fill         = true,
+            text         = "This is a text\nthat can have\nmultiple lines.",
+            theme        = create_theme(default = ncurses_color(:black, :blue)),
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom)
+        )
+
+        @tui_text(
+            parent       = c,
+            alignment    = :r,
+            fill         = true,
+            theme        = create_theme(default = ncurses_color(:black, :magenta)),
+            text         = "This is a text\nthat can have\nmultiple lines.",
+            left_anchor  = (:parent, :left),
+            right_anchor = (:parent, :right),
+            top_anchor   = (__LAST__, :bottom),
         )
 
         # == ANSI Label ====================================================================

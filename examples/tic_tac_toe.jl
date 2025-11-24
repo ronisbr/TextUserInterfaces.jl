@@ -1,4 +1,4 @@
-label TextUserInterfaces
+using TextUserInterfaces
 
 ############################################################################################
 #                                        Constants                                         #
@@ -78,13 +78,13 @@ function check_victory(board_marks::Matrix{Int})
 end
 
 """
-    update_cursor!(fields::Matrix{WidgetLabel}, old_cursor_position::Vector{Int}, cursor_position::Vector{Int}, board_marks::Matrix{Int}) -> Nothing
+    update_cursor!(fields::Matrix{WidgetText}, old_cursor_position::Vector{Int}, cursor_position::Vector{Int}, board_marks::Matrix{Int}) -> Nothing
 
 Update the colors of the `fields` considering the current `cursor_position`, the
 `old_cursor_position`, and the `board_marks`.
 """
 function update_cursor!(
-    fields::Matrix{WidgetLabel},
+    fields::Matrix{WidgetText},
     old_cursor_position::Vector{Int},
     cursor_position::Vector{Int},
     board_marks::Matrix{Int}
@@ -115,12 +115,12 @@ end
 
 
 """
-    mark_field!(fields::Matrix{WidgetLabel}, cursor_position::Vector{Int}, current_player::Int) -> Nothing
+    mark_field!(fields::Matrix{WidgetText}, cursor_position::Vector{Int}, current_player::Int) -> Nothing
 
 Mark the field in `fields` at the `cursor_position` as played by the `current_player`.
 """
 function mark_field!(
-    fields::Matrix{WidgetLabel},
+    fields::Matrix{WidgetText},
     cursor_position::Vector{Int},
     current_player::Int
 )
@@ -151,9 +151,9 @@ function tic_tac_toe()
 
     # == Board =============================================================================
 
-    board = @tui_label(
+    board = @tui_text(
         parent      = c,
-        label       = _BOARD,
+        text        = _BOARD,
         left_anchor = (:parent, :left, 5),
         top_anchor  = (:parent, :top, 2),
     )
@@ -161,11 +161,11 @@ function tic_tac_toe()
     # == Fields ============================================================================
 
     fields = [
-        @tui_label(
+        @tui_text(
             parent      = c,
             alignment   = :c,
             fill        = true,
-            label       = "\n\n\n",
+            text        = "\n\n\n",
             left_anchor = Anchor(board, :left, (y - 1) * 8),
             top_anchor  = Anchor(board, :top, (x - 1) * 4),
             height      = 3,
@@ -261,7 +261,7 @@ function tic_tac_toe()
                 if r != 0
                     game_ended = true
                 else
-                    change_text!(
+                    change_label!(
                         current_player_label,
                         "Player $current_player ($(_PLAYER_MARKS[current_player]))"
                     )
@@ -272,11 +272,11 @@ function tic_tac_toe()
                 end
 
                 if r == -1
-                    change_text!(result, "No player won!")
+                    change_label!(result, "No player won!")
                 elseif r == 1
-                    change_text!(result, "Player 1 won!")
+                    change_label!(result, "Player 1 won!")
                 elseif r == 2
-                    change_text!(result, "Player 2 won!")
+                    change_label!(result, "Player 2 won!")
                 end
             end
         end
