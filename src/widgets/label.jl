@@ -47,8 +47,8 @@ function create_widget(
     layout::ObjectLayout;
     alignment = :l,
     fill::Bool = false,
+    label::String = "Label",
     theme::Theme = tui.default_theme,
-    label::String = "Label"
 )
     # Check the text to create the layout hints.
     height = 1
@@ -141,7 +141,7 @@ function _widget_label__align_label!(widget::WidgetLabel)
 
     @unpack alignment, label, width = widget
 
-    widget._aligned_label = align_string(label, width, alignment)
+    widget._aligned_label = align_string(escape_string(label), width, alignment)
 
     request_update!(widget)
 
