@@ -28,6 +28,8 @@ Structure that defines a window in the text user interface.
     (**Default** = `:default`)
 - `focusable::Bool`: If `true`, the window can receive focus.
     (**Default** = `true`)
+- `hidden::Bool`: If `true`, the window is hidden.
+    (**Default** = `false`)
 - `buffer_view_locked::Bool`: If `true`, the buffer and view sizes are locked.
     (**Default** = `true`)
 - `layout::ObjectLayout`: Layout configuration of the window.
@@ -60,6 +62,7 @@ Structure that defines a window in the text user interface.
     has_border::Bool = false
     border_style::Symbol = :default
     focusable::Bool = true
+    hidden::Bool = false
 
     # This variable stores if the user wants the buffer and view size to be locked. This is
     # useful when resizing the window.

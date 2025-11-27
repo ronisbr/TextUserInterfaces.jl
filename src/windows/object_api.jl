@@ -5,7 +5,7 @@
 #
 ############################################################################################
 
-can_accept_focus(win::Window) = win.focusable
+can_accept_focus(win::Window) = win.focusable && !win.hidden
 can_release_focus(win::Window) = true
 
 function destroy!(win::Window)

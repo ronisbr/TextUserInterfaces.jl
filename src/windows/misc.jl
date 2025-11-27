@@ -4,6 +4,37 @@
 #
 ############################################################################################
 
+export hide!, unhide!
+
+"""
+    hide!(win::Window) -> Nothing
+
+Hide the window `win`. When the window is hidden, it is not visible on the screen and cannot
+gain focus. If `win` has focus, the focus is moved to the next available window.
+"""
+function hide!(win::Window)
+    # If the window has focus, move the focus to the next available window.
+    focused_win = get_focused_window()
+    win === focused_win && move_focus_to_next_window()
+
+    win.hidden = true
+    NCurses.hide_panel(win.panel)
+
+    return nothing
+end
+
+"""
+    unhide!(win::Window) -> Nothing
+
+Unhide the window `win`.
+"""
+function unhide!(win::Window)
+    win.hidden = false
+    NCurses.show_panel(win.panel)
+
+    return nothing
+end
+
 """
     set_window_title!(win::Window, title::AbstractString, alignment::Symbol) -> Nothing
 

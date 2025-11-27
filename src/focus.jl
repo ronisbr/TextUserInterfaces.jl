@@ -63,7 +63,9 @@ function move_focus_to_window(window::Window)
         return nothing
     end
 
-    _change_focused_window(id)
+    # Only change the focus if the window can accept focus.
+    can_accept_focus(window) && _change_focused_window(id)
+
     return nothing
 end
 
