@@ -157,7 +157,7 @@ function _search_next_window_to_focus()
 
     focus_candidate_id = focused_window_id == 0 ? 1 : focused_window_id + 1
 
-    while true
+    while num_tries < num_windows
         if focus_candidate_id > num_windows
             focus_candidate_id = 1
         end
@@ -167,13 +167,8 @@ function _search_next_window_to_focus()
         # Check if the candidate can accept the focus.
         can_accept_focus(candidate_window) && return focus_candidate_id
 
-        num_tries += 1
-
-        # If the number of tries is equal the number of windows, no window can
-        # accept the focus.
-        num_tries == num_windows && return nothing
-
         focus_candidate_id = focus_candidate_id + 1
+        num_tries += 1
     end
 
     return nothing
@@ -196,7 +191,7 @@ function _search_previous_window_to_focus()
 
     focus_candidate_id = focused_window_id == 0 ? num_windows : focused_window_id - 1
 
-    while true
+    while num_tries < num_windows
         if focus_candidate_id <= 0
             focus_candidate_id = num_windows
         end
@@ -206,13 +201,8 @@ function _search_previous_window_to_focus()
         # Check if the candidate can accept the focus.
         can_accept_focus(candidate_window) && return focus_candidate_id
 
-        num_tries += 1
-
-        # If the number of tries is equal the number of windows, no window can
-        # accept the focus.
-        num_tries == num_windows && return nothing
-
         focus_candidate_id = focus_candidate_id - 1
+        num_tries += 1
     end
 
     return nothing
