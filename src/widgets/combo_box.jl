@@ -23,8 +23,8 @@ export get_item
 
     # == Styling ===========================================================================
 
-    icon_closed::String  = "→"
-    icon_opened::String  = "↓"
+    icon_closed::String = "▼"
+    icon_opened::String = "▲"
     show_icon::Bool = true
 
     # == Signals ===========================================================================
@@ -46,8 +46,8 @@ function create_widget(
     ::Val{:combo_box},
     layout::ObjectLayout;
     data::Vector{String} = String[],
-    icon_closed::String  = "→",
-    icon_opened::String  = "↓",
+    icon_closed::String = "▼",
+    icon_opened::String = "▲",
     show_icon::Bool = true,
     list_box_theme::Theme = tui.default_theme,
     theme::Theme = tui.default_theme
