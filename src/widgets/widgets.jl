@@ -209,7 +209,7 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
     parent = get_parent(widget)
 
     if !isnothing(parent)
-        # # Get the layout information of the window.
+        # Get the layout information of the window.
         height, width, top, left = process_object_layout(
             layout,
             parent;
