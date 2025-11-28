@@ -209,6 +209,7 @@ end
 
 function redraw!(container::WidgetContainer)
     @unpack border, border_style, buffer, update_needed, widgets, theme = container
+    @unpack height, width = container
 
     NCurses.wbkgd(buffer, theme.default)
     NCurses.wclear(buffer)
@@ -234,6 +235,16 @@ function redraw!(container::WidgetContainer)
     # Redraw all the widgets in the container if necessary.
     if update_needed
         for widget in widgets
+            wheight = get_height(widget)
+            wwidth  = get_width(widget)
+            wtop    = get_top(widget)
+            wleft   = get_left(widget)
+
+            # If we cannot draw the entire widget, skip it.
+            if ((wtop + wheight) > height) || ((wleft + wwidth) > width)
+                continue
+            end
+
             widget.hidden || redraw!(widget)
         end
     end
