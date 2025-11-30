@@ -87,8 +87,7 @@ Structure that defines a window in the text user interface.
     # Pointer to the window view, which is the window that is actually draw on screen.
     view::Ptr{WINDOW} = Ptr{WINDOW}(0)
 
-    # Origin of the view window with respect to the physical screen. This is useful for
-    # setting the cursor position when required.
+    # Origin of the view window with respect to the buffer.
     origin::Tuple{Int, Int} = (0, 0)
 
     # If `true`, then the view has changed and must be updated.
