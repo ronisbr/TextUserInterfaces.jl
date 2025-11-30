@@ -11,7 +11,7 @@ export Anchor, ObjectLayout
 ############################################################################################
 
 """
-	struct Anchor
+    struct Anchor
 
 This structure defines an anchor to another object. It should be used in one of the fields
 `*`_anchor of `ObjectLayout`.
@@ -24,13 +24,13 @@ This structure defines an anchor to another object. It should be used in one of 
 
 !!! info
 
-	`side` is one of the following symbols: `:left`, `:right`, `:top`, `:bottom`, `:center`,
-	or `:middle`.
+    `side` is one of the following symbols: `:left`, `:right`, `:top`, `:bottom`, `:center`,
+    or `:middle`.
 """
 struct Anchor
-	obj::Union{Object, Symbol}
-	side::Symbol
-	pad::Int
+    obj::Union{Object, Symbol}
+    side::Symbol
+    pad::Int
 end
 
 # Singleton that indicates that no anchor is available.
@@ -40,7 +40,7 @@ const _NO_ANCHOR = Anchor(:noobject, :noside, 0)
 Anchor(obj::Union{Object, Symbol}, side::Symbol) = Anchor(obj, side, 0)
 
 """
-	struct ObjectLayout
+    struct ObjectLayout
 
 This structure defines the layout of an object.
 
@@ -66,25 +66,35 @@ This structure defines the layout of an object.
     (**Default** = -1)
 - `width::Union{Int, String}`: Width of the object.
     (**Default** = -1)
+- `minimum_height::Int`: Minimum height of the object.
+    (**Default** = -1)
+- `minimum_width::Int`: Minimum width of the object.
+    (**Default** = -1)
 
 !!! info
 
-	If the absolute positioning arguments (`top`, `left`, `height`, and `width`) are
-	negative, it means that there is no information about them. Hence, the relative
-	arguments (anchors) must provide the missing information.
+    If the absolute positioning arguments (`top`, `left`, `height`, and `width`) are
+    negative, it means that there is no information about them. Hence, the relative
+    arguments (anchors) must provide the missing information.
 """
 @kwdef struct ObjectLayout
-	# Anchors (relative positioning).
-	bottom_anchor::Anchor = _NO_ANCHOR
-	left_anchor::Anchor   = _NO_ANCHOR
-	right_anchor::Anchor  = _NO_ANCHOR
-	top_anchor::Anchor    = _NO_ANCHOR
-	center_anchor::Anchor = _NO_ANCHOR
-	middle_anchor::Anchor = _NO_ANCHOR
+    # Anchors (relative positioning).
+    bottom_anchor::Anchor = _NO_ANCHOR
+    left_anchor::Anchor   = _NO_ANCHOR
+    right_anchor::Anchor  = _NO_ANCHOR
+    top_anchor::Anchor    = _NO_ANCHOR
+    center_anchor::Anchor = _NO_ANCHOR
+    middle_anchor::Anchor = _NO_ANCHOR
 
-	# Absolute positioning.
-	top::Union{Int, String}    = -1
-	left::Union{Int, String}   = -1
-	height::Union{Int, String} = -1
-	width::Union{Int, String}  = -1
+    # Absolute positioning.
+    top::Union{Int, String}    = -1
+    left::Union{Int, String}   = -1
+    height::Union{Int, String} = -1
+    width::Union{Int, String}  = -1
+
+    # Restrictions.
+    maximum_height::Int = typemax(Int)
+    maximum_width::Int  = typemax(Int)
+    minimum_height::Int = -1
+    minimum_width::Int  = -1
 end

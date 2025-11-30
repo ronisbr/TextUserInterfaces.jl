@@ -62,8 +62,8 @@ function create_widget(
         matrix           = matrix,
         layout           = layout,
         theme            = theme,
-        horizontal_hints = Dict(:width  => width),
-        vertical_hints   = Dict(:height => height)
+        horizontal_hints = Dict(:width  => width,  :minimum_width  => 23),
+        vertical_hints   = Dict(:height => height, :minimum_height => 5)
     )
 
     @log DEBUG "create_widget" """

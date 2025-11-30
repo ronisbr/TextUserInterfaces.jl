@@ -365,11 +365,13 @@ function all_widgets()
         # == Display Matrix ================================================================
 
         @tui_display_matrix(
-            parent       = c,
-            matrix       = rand(10, 10) * 1e4,
-            left_anchor  = (:parent, :left),
-            right_anchor = (:parent, :right),
-            top_anchor   = (__LAST4__, :bottom),
+            parent         = c,
+            matrix         = rand(10, 10) * 1e4,
+            maximum_height = 7,
+            width          = "50%",
+            bottom_anchor  = (:parent, :bottom),
+            left_anchor    = (:parent, :left),
+            top_anchor     = (__LAST4__, :bottom),
         )
 
         @connect(
@@ -414,12 +416,12 @@ function all_widgets()
         end
 
         @tui_raw_buffer(
-            parent       = c,
-            draw!        = raw_buffer_draw!,
-            height       = 3,
-            left_anchor  = (:parent, :left),
-            right_anchor = (:parent, :right),
-            top_anchor   = (__LAST__, :bottom),
+            parent        = c,
+            draw!         = raw_buffer_draw!,
+            bottom_anchor = (__LAST__, :bottom),
+            left_anchor   = (__LAST__, :right),
+            right_anchor  = (:parent, :right),
+            top_anchor    = (__LAST__, :top),
         )
     end
 

@@ -16,7 +16,11 @@ const _LAYOUT_ARGS = (
     :top,
     :left,
     :height,
-    :width
+    :width,
+    :maximum_height,
+    :maximum_width,
+    :minimum_height,
+    :minimum_width
 )
 
 const _LAYOUT_ANCHORS = (

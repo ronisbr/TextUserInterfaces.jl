@@ -52,7 +52,11 @@ function process_object_layout(
             layout.top,
             get(horizontal_hints, :left, layout.left)::Union{Int, String},
             layout.height,
-            get(horizontal_hints, :width, layout.width)::Union{Int, String}
+            get(horizontal_hints, :width, layout.width)::Union{Int, String},
+            layout.maximum_height,
+            layout.maximum_width,
+            layout.minimum_height,
+            layout.minimum_width
         )
 
         horizontal = _process_horizontal_info(layout)
@@ -75,7 +79,11 @@ function process_object_layout(
             get(vertical_hints, :top, layout.top)::Union{Int, String},
             layout.left,
             get(vertical_hints, :height, layout.height)::Union{Int, String},
-            layout.width
+            layout.width,
+            layout.maximum_height,
+            layout.maximum_width,
+            layout.minimum_height,
+            layout.minimum_width
         )
 
         vertical = _process_vertical_info(layout)
@@ -220,7 +228,7 @@ function process_object_layout(
 
     if width <= 0
         @log CRITICAL "process_object_layout" """
-            Wrong vertical size configuration leading to non-positive width position.
+            Wrong horizontal size configuration leading to non-positive width position.
 
             parent:
             @log_pad 4
@@ -230,8 +238,35 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("Wrong vertical size configuration leading to non-positive width position.")
+        error("Wrong horizontal size configuration leading to non-positive width position.")
     end
+
+    # == Restrictions ======================================================================
+
+    # Apply the restrictions from the hints.
+    height = min(
+        get(vertical_hints, :maximum_height, typemax(Int))::Int,
+        layout.maximum_height,
+        height
+    )
+
+    width = min(
+        get(horizontal_hints, :maximum_width, typemax(Int))::Int,
+        layout.maximum_width,
+        width
+    )
+
+    height = max(
+        get(vertical_hints, :minimum_height, 0)::Int,
+        layout.minimum_height,
+        height
+    )
+
+    width = max(
+        get(horizontal_hints, :minimum_width, 0)::Int,
+        layout.minimum_width,
+        width
+    )
 
     return height, width, top, left
 end
