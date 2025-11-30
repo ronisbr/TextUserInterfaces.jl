@@ -84,6 +84,69 @@ end
 ############################################################################################
 
 """
+    _draw_scrollbar!(window::Window) -> Nothing
+
+Draw the scrollbars for the `window` if it has a border.
+"""
+function _draw_scrollbar!(window::Window)
+    @unpack view, buffer, origin, has_border = window
+
+    !has_border && return nothing
+
+    # Save the current cursor position.
+    cury, curx = _get_window_cursor_position(window.view)
+
+    # Get the dimensions of the window.
+    nlines, ncols = _get_window_dimensions(view)
+    blines, bcols = _get_window_dimensions(buffer)
+
+    # Remove the borders.
+    nlines -= 2
+    ncols  -= 2
+
+    # Compute the size and position of the horizontal scrollbar.
+    hsb_size = max(1, round(Int, ncols * ncols / bcols))
+    hsb_pos  = round(Int, origin[2] * ncols / bcols)
+
+    # Compute the size and position of the vertical scrollbar.
+    vsb_size = max(1, round(Int, nlines * nlines / blines))
+    vsb_pos  = round(Int, origin[1] * nlines / blines)
+
+    # If the entire buffer fits in the view, no need to draw scrollbars.
+    draw_hsb = hsb_size < ncols
+    draw_vsb = vsb_size < nlines
+
+    # Draw the horizontal scrollbar.
+    draw_hsb && @ncolor window.theme.border view begin
+        for x in 1:hsb_size
+            NCurses.mvwprintw(
+                view,
+                nlines + 1,
+                hsb_pos + x,
+                "▄"
+            )
+        end
+    end
+
+    # Draw the vertical scrollbar.
+    draw_vsb && @ncolor window.theme.border view begin
+        for y in 1:vsb_size
+            NCurses.mvwprintw(
+                view,
+                vsb_pos + y,
+                ncols + 1,
+                "▐"
+            )
+        end
+    end
+
+    # Move the cursor to the original position.
+    NCurses.wmove(window.view, cury, curx)
+
+    return nothing
+end
+
+"""
     _get_window_coordinates(win::Ptr{WINDOW}) -> Int, Int
 
 Get the coordinates of the window `win` and return it on a tuple `(begy, begx)`. If the

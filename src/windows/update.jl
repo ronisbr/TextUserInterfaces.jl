@@ -13,7 +13,7 @@ Update the window with `id`.
 """
 function update_window(id::String)
     idx = findfirst(x -> x.id == id, tui.windows)
-    idx === nothing && error("The window `$id` was not found.")
+    isnothing(idx) && error("The window `$id` was not found.")
     return update!(tui.windows[idx])
 end
 
@@ -54,13 +54,9 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
         vcols -= 2
     end
 
-    if y + vlines >= blines
-        y = blines - vlines
-    end
-
-    if x + vcols  >= bcols
-        x = bcols  - vcols
-    end
+    # Clamp values.
+    y = clamp(y, 0, blines - vlines)
+    x = clamp(x, 0, bcols  - vcols)
 
     win.origin = (y, x)
 
@@ -120,9 +116,6 @@ function _window__update_view!(win::Window; force::Bool = false)
             dmaxcol,
             0
         )
-
-        # Tell ncurses to update the entire window.
-        # touchwin(win.view)
 
         # Mark that the buffer has been copied.
         win.view_needs_update = false

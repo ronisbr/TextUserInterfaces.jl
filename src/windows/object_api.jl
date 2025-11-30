@@ -54,8 +54,37 @@ get_inner_width(win::Window)  = win.buffer != C_NULL ? Int(NCurses.getmaxx(win.b
 get_inner_top(win::Window)    = win.buffer != C_NULL ? Int(NCurses.getbegy(win.buffer)) : -1
 
 function process_keystroke!(win::Window, k::Keystroke)
-    process_keystroke!(win.widget_container, k)
-    return :keystroke_processed
+    ret = process_keystroke!(win.widget_container, k)
+
+    ret == :keystroke_processed && return :keystroke_processed
+
+    Δ = k.shift ? 10 : 1
+
+    if (k.ktype == :right && k.alt)
+        o = win.origin
+        move_view!(win, o[1], o[2] + Δ)
+        return :keystroke_processed
+    end
+
+    if (k.ktype == :left && k.alt)
+        o = win.origin
+        move_view!(win, o[1], o[2] - Δ)
+        return :keystroke_processed
+    end
+
+    if (k.ktype == :down && k.alt)
+        o = win.origin
+        move_view!(win, o[1] + Δ, o[2])
+        return :keystroke_processed
+    end
+
+    if (k.ktype == :up && k.alt)
+        o = win.origin
+        move_view!(win, o[1] - Δ, o[2])
+        return :keystroke_processed
+    end
+
+    return :keystroke_notprocessed
 end
 
 function release_focus!(win::Window)
@@ -87,16 +116,24 @@ function sync_cursor(window::Window)
         # Get the cursor position on the `buffer` of the widget.
         cy, cx = _get_window_cursor_position(get_buffer(widget_container))
         by, bx = _get_window_coordinates(get_buffer(widget_container))
+        origin = window.origin
 
         # Compute the coordinates of the cursor with respect to the window.
-        y = by + cy
-        x = bx + cx
+        y = by + cy - origin[1]
+        x = bx + cx - origin[2]
 
         # If the window has a border, we must take this into account when updating the
         # cursor coordinates.
         if window.has_border
             y += 1
             x += 1
+        end
+
+        # If the cursor is outside the window, we will only hide to for now.
+        # TODO: Implement scrolling to make the cursor visible.
+        if ((y < 0) || (y >= get_height(window)) || (x < 0) || (x >= get_width(window)))
+            NCurses.curs_set(0)
+            return nothing
         end
 
         # Move the cursor.
@@ -127,6 +164,7 @@ function update!(win::Window; force::Bool = false)
     has_border && @ncolor theme.border view begin
         draw_border!(view; style = border_style)
         set_window_title!(win, title, title_alignment)
+        _draw_scrollbar!(win)
     end
 
     return nothing
