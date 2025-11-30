@@ -115,7 +115,7 @@ function create_window(;
         title = ""
     )
 
-    # # Create the window object and add to the global list.
+    # Create the window object and add to the global list.
     win = Window(;
         buffer             = buffer,
         buffer_view_locked = buffer_view_locked,
@@ -124,6 +124,8 @@ function create_window(;
         border_style       = border_style,
         id                 = reserve_object_id(),
         layout             = layout,
+        horizontal_hints   = horizontal_hints,
+        vertical_hints     = vertical_hints,
         panel              = panel,
         position           = position,
         title              = title,

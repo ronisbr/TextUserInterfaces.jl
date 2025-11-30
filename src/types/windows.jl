@@ -70,6 +70,8 @@ Structure that defines a window in the text user interface.
 
     # Object layout configuration.
     layout::ObjectLayout
+    horizontal_hints::Dict{Symbol, Any} = _WINDOW_HORIZONTAL_LAYOUT_HINTS
+    vertical_hints::Dict{Symbol, Any} = _WINDOW_VERTICAL_LAYOUT_HINTS
 
     # Window theme.
     theme::Theme

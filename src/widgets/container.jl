@@ -5,6 +5,7 @@
 ############################################################################################
 
 export add_widget!, remove_widget!
+export content_dimension_limits
 export move_focus_to_next_widget!, move_focus_to_previous_widget!
 
 ############################################################################################
@@ -299,6 +300,32 @@ function add_widget!(container::WidgetContainer, widget::Widget)
         Width  = $(widget.width)"""
 
     return nothing
+end
+
+"""
+    content_dimension_limits(widget::Widget) -> Int, Int
+
+Return the content dimension limits (height, width) of the `widget`.
+"""
+function content_dimension_limits(container::WidgetContainer)
+    max_height = 0
+    max_width  = 0
+
+    for widget in container.widgets
+        wh, ww = content_dimension_limits(widget)
+
+        max_height = max(max_height, wh)
+        max_width  = max(max_width,  ww)
+    end
+
+    return max_height, max_width
+end
+
+function content_dimension_limits(widget::Widget)
+    vertical   = get_top(widget) + get_height(widget)
+    horizontal = get_left(widget) + get_width(widget)
+
+    return vertical, horizontal
 end
 
 """

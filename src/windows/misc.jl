@@ -36,6 +36,32 @@ function unhide!(win::Window)
 end
 
 """
+    resize_buffer_to_fit_contents!(window::Window) -> Nothing
+
+Resize the buffer of the `window` to fit the contents of its widget container.
+"""
+function resize_buffer_to_fit_contents!(window::Window)
+    @unpack widget_container = window
+
+    isnothing(widget_container) && return nothing
+
+    max_height, max_width = content_dimension_limits(widget_container)
+
+    blines, bcols = _get_window_dimensions(window.buffer)
+
+    new_height = max(blines, max_height)
+    new_width  = max(bcols,  max_width)
+
+    if (new_height != blines) || (new_width != bcols)
+        window.buffer_view_locked = false
+        NCurses.wresize(window.buffer, new_height, new_width)
+        update_layout!(window; force = true)
+    end
+
+    return nothing
+end
+
+"""
     set_window_title!(win::Window, title::AbstractString, alignment::Symbol) -> Nothing
 
 Set the title of the window `win` to `title` considering the `alignment`.
