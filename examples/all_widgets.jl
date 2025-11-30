@@ -9,6 +9,7 @@ function all_widgets()
 
     w = create_window(
         border = true,
+        buffer_size = (200, 1000),
         theme  = create_theme(border = ncurses_color(243, :black)),
         title  = " All Widgets ",
         layout = ObjectLayout(
@@ -366,12 +367,11 @@ function all_widgets()
 
         @tui_display_matrix(
             parent         = c,
-            matrix         = rand(10, 10) * 1e4,
-            maximum_height = 7,
+            matrix         = randn(10, 10) * 1e4,
             width          = "50%",
-            bottom_anchor  = (:parent, :bottom),
             left_anchor    = (:parent, :left),
             top_anchor     = (__LAST4__, :bottom),
+            maximum_height = 7,
         )
 
         @connect(
@@ -379,7 +379,8 @@ function all_widgets()
             keypressed,
             (tui; keystroke) -> begin
                 if keystroke.value == "j"
-                    change_matrix!(__LAST__, rand(Int, 10, 10))
+                    change_matrix!(__LAST__, randn(10, 10))
+                    request_update!(__LAST__)
                 end
             end
         )
@@ -425,6 +426,7 @@ function all_widgets()
         )
     end
 
+
     # == Bottom Window =================================================================
 
     # Bottom window to show information.
@@ -457,6 +459,14 @@ function all_widgets()
     )
 
     # == Signals ===========================================================================
+
+    d = create_dialog(
+        Val(:message_box),
+        ObjectLayout();
+        title = "Welcome to TextUserInterfaces.jl!",
+        message = "This is an example showcasing all the available widgets."
+    )
+    show_dialog(d)
 
     app_main_loop(; exit_keys = [:F1, "\eq"])
 end

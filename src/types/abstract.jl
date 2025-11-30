@@ -26,3 +26,10 @@ abstract type Widget <: Object end
 Abstract type for all composed widgets.
 """
 abstract type ComposedWidget end
+
+"""
+    abstract type Dialog
+
+Abstract type for all dialogs.
+"""
+abstract type Dialog end

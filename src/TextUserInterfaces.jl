@@ -22,6 +22,7 @@ export NCurses
 
 include("./macros/signals.jl")
 include("./macros/colors.jl")
+include("./macros/dialogs.jl")
 include("./macros/widgets.jl")
 include("./macros/tui_builder.jl")
 
@@ -82,6 +83,8 @@ include("./windows/root_window.jl")
 include("./windows/update.jl")
 include("./windows/theme.jl")
 
+include("./dialogs/dialogs.jl")
+include("./dialogs/message_box.jl")
 
 ############################################################################################
 #                                     Global Variables                                     #

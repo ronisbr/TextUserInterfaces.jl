@@ -18,6 +18,7 @@ get_inner_top(rw::RootWindow)    = 0
 function Base.getproperty(rw::T, field::Symbol) where T<:RootWindow
     field == :height && return get_height(rw)
     field == :width  && return get_width(rw)
+    field == :id     && return 0
     error("$T has no field $field.")
 end
 

@@ -30,6 +30,8 @@ Create a window.
 - `focusable::Bool`: If `true`, the window can have focus. Otherwise, all focus request will
     be rejected.
     (**Default** = `true`)
+- `hidden::Bool`: If `true`, the window will be created hidden.
+    (**Default** = `false`)
 - `layout::ObjectLayout`: Layout configuration of the window.
     (**Default** = `ObjectLayout()`)
 - `horizontal_hints::Dict{Symbol, Any}`: Horizontal layout hints for the window.
@@ -47,6 +49,7 @@ function create_window(;
     border_style::Symbol = :default,
     buffer_size::Tuple{Int, Int} = (0, 0),
     focusable::Bool = true,
+    hidden::Bool = false,
     layout::ObjectLayout = ObjectLayout(),
     horizontal_hints::Dict{Symbol, Any} = _WINDOW_HORIZONTAL_LAYOUT_HINTS,
     theme::Theme = tui.default_theme,
@@ -144,6 +147,9 @@ function create_window(;
     border && set_window_title!(win, title, title_alignment)
     push!(tui.windows, win)
 
+    # Check if the user wants the window to be hidden.
+    hidden && hide!(win)
+
     # We need to update the window to update the container.
     update!(win)
 
@@ -155,6 +161,7 @@ function create_window(;
       Coordinate         = ($begin_y, $begin_x)
       Focusable          = $(win.focusable)
       Has border         = $(win.has_border)
+      Hidden             = $(win.hidden)
       Physical size      = ($nlines, $ncols)
       Title              = \"$(win.title)\"
       Title alignment    = $(win.title_alignment)"""
