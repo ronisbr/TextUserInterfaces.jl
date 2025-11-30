@@ -195,8 +195,8 @@ function update_layout!(win::Window; force::Bool = false)
         blines = nlines
         bcols  = ncols
     else
-        blines = max(nlines, get_height(win))
-        bcols  = max(ncols,  get_width(win))
+        blines = max(nlines, get_inner_height(win))
+        bcols  = max(ncols,  get_inner_width(win))
     end
 
     win_resize && NCurses.wresize(win.buffer, blines, bcols)
