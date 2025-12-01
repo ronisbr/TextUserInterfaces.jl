@@ -215,7 +215,7 @@ function update_layout!(win::Window; force::Bool = false)
 
     # Check if the user wants a border.
     win.has_border && @ncolor get_color(theme, :border) win.view begin
-        NCurses.wborder(win.view)
+        draw_border!(win.view; style = win.border_style)
     end
 
     # Recompute the required buffer size if the user wants a border in the
