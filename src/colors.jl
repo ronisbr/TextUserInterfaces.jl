@@ -133,67 +133,6 @@ function init_color_pair(foreground::Integer, background::Integer)
     return idx
 end
 
-"""
-    modify_color([name::Symbol, ]id::Int, r::Int, g::Int, b::Int) -> Int
-
-Modify the color ID `id` to the RGB value (`r`,`g`,`b`). If the symbol `name` is available,
-the user can select this color ID by using `name` instead of the `id`.
-
-If the color name `name` already exists, then nothing will be changed.
-
-Notice that the range for the RGB color components is `[0, 1000]`.
-
-If the color was initialized, it returns the color ID. Otherwise, it returns `-1`.
-"""
-function modify_color(name::Symbol, id::Int, r::Int, g::Int, b::Int)
-    # If the color name is defined, then just return.
-    if haskey(_NCURSES_COLORS, name)
-        return -1
-    end
-
-    if modify_color(id, r, g, b) != -1
-        push!(_NCURSES_COLORS, name => id)
-        return id
-    end
-
-    return -1
-end
-
-function modify_color(id::Int, r::Int, g::Int, b::Int)
-    if NCurses.can_change_color() == 1
-        return NCurses.init_extended_color(id, r, g, b) == 0 ? id : -1
-    end
-
-    @log WARNING "modify_color" "The terminal does not support color change."
-    return -1
-end
-
-"""
-    set_color([win::Window,] color::Int) -> Nothing
-
-Set the color of the window `win` to `color` (see `ncurses_color`). If `win` is omitted,
-it defaults to the root window.
-"""
-set_color(color::Int) = set_color(tui.wins[1], color)
-
-function set_color(win::Window, color::Int)
-    win.ptr != C_NULL && NCurses.wattr_on(win.ptr, color, C_NULL)
-    return nothing
-end
-
-"""
-    unset_color([win::Window,] color::Number) -> Nothing
-
-Unset the color `color` (see `ncurses_color`) in the window `win`. If `win` is omitted, it
-defaults to the root window.
-"""
-unset_color(color::Int) = unset_color(tui.wins[1], color)
-
-function unset_color(win::Window, color::Int)
-    win.ptr != C_NULL && NCurses.wattr_off(win.ptr, color, C_NULL)
-    return nothing
-end
-
 ############################################################################################
 #                                    Private Functions                                     #
 ############################################################################################
@@ -204,17 +143,5 @@ end
 Return the index related to the `color`.
 """
 function _get_color_index(color::Symbol)
-    !haskey(_NCURSES_COLORS, color) && error("Unknown color :$color.")
-    return _NCURSES_COLORS[color]
-end
-
-"""
-    _reset_color_dict() -> Nothing
-
-Reset the color dictionary.
-"""
-function _reset_color_dict()
-    empty!(_NCURSES_COLORS)
-    merge!(_NCURSES_COLORS, _DEFAULT_NCURSES_COLORS)
-    return nothing
+    return get(_XTERM_COLORS, color, 0)
 end

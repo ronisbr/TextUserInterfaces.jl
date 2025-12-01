@@ -33,7 +33,6 @@ function destroy_tui()
     @log DEBUG "destroy_tui" "TUI has been destroyed."
 
     # Reset all colors definitions.
-    _reset_color_dict()
     empty!(tui.initialized_color_pairs)
 
     # Reset the default theme.
