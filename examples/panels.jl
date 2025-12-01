@@ -9,7 +9,7 @@ function panels()
 
     w = create_window(
         border = true,
-        theme  = create_theme(border = ncurses_color(243, :black)),
+        theme  = Theme(:border => ncurses_color(243, :black)),
         title  = " Panels ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -247,7 +247,7 @@ function panels()
         top_anchor   = (:parent, :top),
         value        = 0,
         show_value   = true,
-        theme        = Theme(default = ncurses_color(:green, 246))
+        theme        = Theme(:default => ncurses_color(:green, 246))
     )
 
     # Raw Buffer
@@ -297,7 +297,7 @@ function panels()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(border = ncurses_color(243, :black)),
+        theme     = Theme(:border => ncurses_color(243, :black)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),
