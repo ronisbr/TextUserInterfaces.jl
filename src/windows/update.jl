@@ -18,13 +18,18 @@ function update_window(id::String)
 end
 
 """
-    update_all_windows()
+    update_all_windows(; kwargs...) -> Nothing
 
 Update all the windows.
+
+# Keywords
+
+- `force::Bool`: If `true`, force the update of all windows, even if they do not require it.
+    (**Default**: `false`)
 """
-function update_all_windows()
+function update_all_windows(; force::Bool = false)
     for win in tui.windows
-        update!(win)
+        update!(win; force = force)
     end
 
     return nothing
