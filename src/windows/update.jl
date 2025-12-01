@@ -60,8 +60,8 @@ function move_view!(win::Window, y::Int, x::Int; update::Bool = true)
     end
 
     # Clamp values.
-    y = clamp(y, 0, blines - vlines)
-    x = clamp(x, 0, bcols  - vcols)
+    y = clamp(y, 0, max(blines - vlines, 0))
+    x = clamp(x, 0, max(bcols  - vcols, 0))
 
     win.origin = (y, x)
 
@@ -100,16 +100,29 @@ function _window__update_view!(win::Window; force::Bool = false)
         cy, cx = _get_window_cursor_position(view)
 
         # Get view dimensions.
-        maxy, maxx = _get_window_dimensions(win.view)
+        vlines, vcols = _get_window_dimensions(win.view)
+
+        # Get buffer dimensions.
+        blines, bcols = _get_window_dimensions(win.buffer)
+
+        # Amount of buffer that is visible at origin.
+        availabel_lines = blines - origin[1]
+        availabel_cols  = bcols  - origin[2]
+
+        # Number of lines to be copied.
+        copy_lines = min(vlines - (has_border ? 2 : 0), availabel_lines)
+        copy_cols  = min(vcols  - (has_border ? 2 : 0), availabel_cols)
 
         # Copy contents.
         #
         # Notice that position of the copied rectangle depends on whether or not the window
         # has a border.
-        dminrow = has_border ? 1        : 0
-        dmincol = has_border ? 1        : 0
-        dmaxrow = has_border ? maxy - 2 : maxy - 1
-        dmaxcol = has_border ? maxx - 2 : maxx - 1
+        dminrow = has_border ? 1 : 0
+        dmincol = has_border ? 1 : 0
+        dmaxrow = dminrow + copy_lines - 1
+        dmaxcol = dmincol + copy_cols - 1
+
+        NCurses.wclear(view)
         NCurses.copywin(
             buffer,
             view,
