@@ -79,6 +79,8 @@ function process_keystroke(k::Keystroke)
     # The only activity we need to perform in the global focus manager is to
     # check for resizing events and pass the keystroke to the windows in focus.
     if k.ktype == :resize
+        NCurses.clear()
+
         for win in tui.windows
             # Here, we need to force the layout update. For some reason, if a window
             # occupies the entire screen, then NCurses automatically change the value
