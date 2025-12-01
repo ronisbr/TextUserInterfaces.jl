@@ -138,7 +138,6 @@ function sync_cursor(window::Window)
 
         # Move the cursor.
         NCurses.wmove(window.view, y, x)
-        NCurses.wnoutrefresh(window.view)
 
         # TODO: Limit the cursor position to the edge of the screen.
     else
@@ -161,7 +160,7 @@ function update!(win::Window; force::Bool = false)
     _window__update_view!(win)
 
     # Update the border and the title since the theme might change.
-    has_border && @ncolor theme.border view begin
+    has_border && @ncolor get_color(theme, :border) view begin
         draw_border!(view; style = border_style)
         set_window_title!(win, title, title_alignment)
         _draw_scrollbar!(win)
@@ -203,7 +202,6 @@ function update_layout!(win::Window; force::Bool = false)
     # will left a glitch on screen.
     if win_resize || win_move
         NCurses.wclear(win.view)
-        NCurses.wnoutrefresh(win.view)
     end
 
     # Resize window if necessary.
@@ -216,7 +214,7 @@ function update_layout!(win::Window; force::Bool = false)
     end
 
     # Check if the user wants a border.
-    win.has_border && @ncolor theme.border win.view begin
+    win.has_border && @ncolor get_color(theme, :border) win.view begin
         NCurses.wborder(win.view)
     end
 

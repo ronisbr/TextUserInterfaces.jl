@@ -104,7 +104,7 @@ function create_widget(
     selectable::Bool = true,
     show_icon::Bool = false,
     show_cursor_icon::Bool = true,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
     num_elements = length(data)
     width_hint   = maximum(textwidth.(data)) + (show_cursor_icon ? textwidth(cursor_icon) + 1 : 0)
@@ -211,12 +211,12 @@ function redraw!(widget::WidgetListBox)
         end
 
         # Select which color the current item must be printed.
-        color_i = selected[id] ? theme.selected : theme.default
+        color_i = get_color(theme, selected[id] ? :selected : :default)
 
         # If the item is the highlighted (the one that holds the cursor), the color must be
         # inverted.
         if (begview + i == current_item) && has_focus(widget)
-            color_i |= theme.highlight
+            color_i |= get_color(theme, :highlight)
         end
 
         # Compute the padding after the text so that the entire field is filled with the

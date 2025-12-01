@@ -43,7 +43,7 @@ function create_widget(
     ::Val{:display_matrix},
     layout::ObjectLayout;
     matrix::AbstractVecOrMat,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
     if matrix isa Vector
         r = length(matrix)
@@ -81,7 +81,7 @@ function redraw!(dm::WidgetDisplayMatrix)
 
     r = length(rendered_matrix)
 
-    @ncolor theme.border buffer begin
+    @ncolor get_color(theme, :border) buffer begin
         ll = largest_line + 3
 
         # Draw the corners.
@@ -95,7 +95,7 @@ function redraw!(dm::WidgetDisplayMatrix)
         NCurses.mvwvline(buffer, 1, ll, NCurses.ACS_(:VLINE), r)
     end
 
-    @ncolor theme.default buffer begin
+    @ncolor get_color(theme, :default) buffer begin
         @inbounds for l in eachindex(rendered_matrix)
             NCurses.mvwprintw(buffer, l, 2, rendered_matrix[l])
         end

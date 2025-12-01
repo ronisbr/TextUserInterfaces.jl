@@ -24,7 +24,7 @@ function create_widget(
     ::Val{:horizontal_line},
     layout::ObjectLayout;
     pattern::String = "─",
-    theme::Theme = tui.default_theme,
+    theme::Theme = Theme()
 )
     # Create the widget.
     line = WidgetHorizontalLine(;
@@ -57,7 +57,7 @@ function redraw!(widget::WidgetHorizontalLine)
         str *= pattern[(k - 1) % pw + 1]
     end
 
-    @ncolor theme.default buffer begin
+    @ncolor get_color(theme, :default) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, str)
     end
 

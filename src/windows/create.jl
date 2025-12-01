@@ -52,7 +52,7 @@ function create_window(;
     hidden::Bool = false,
     layout::ObjectLayout = ObjectLayout(),
     horizontal_hints::Dict{Symbol, Any} = _WINDOW_HORIZONTAL_LAYOUT_HINTS,
-    theme::Theme = tui.default_theme,
+    theme::Theme = Theme(),
     title::String = "",
     title_alignment::Symbol = :c,
     vertical_hints::Dict{Symbol, Any} = _WINDOW_VERTICAL_LAYOUT_HINTS,
@@ -78,7 +78,7 @@ function create_window(;
     view = NCurses.newwin(nlines, ncols, begin_y, begin_x)
 
     # Check if the user wants a border.
-    border && @ncolor theme.border view begin
+    border && @ncolor get_color(theme, :border) view begin
         draw_border!(view; style = border_style)
     end
 
@@ -102,7 +102,7 @@ function create_window(;
     buffer = NCurses.newpad(blines, bcols)
 
     # Set the window theme.
-    NCurses.wbkgd(buffer, theme.default)
+    NCurses.wbkgd(buffer, get_color(theme, :default))
 
     # Create the panel.
     panel = NCurses.new_panel(view)

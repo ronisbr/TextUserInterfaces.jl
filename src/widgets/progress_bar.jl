@@ -31,7 +31,7 @@ function create_widget(
     show_value::Bool = false,
     style::Symbol = :bar,
     value::Number = 0.0,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
 
     # Create the widget.
@@ -107,12 +107,12 @@ function _progress_bar__draw_with_bar_style!(widget::WidgetProgressBar)
     num_with_color = round(Int, width * value / 100)
 
     # Draw the background.
-    @ncolor (theme.default) buffer begin
+    @ncolor get_color(theme, :default) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, " "^width)
     end
 
     # Draw the progress.
-    @ncolor (theme.default | NCurses.A_REVERSE) buffer begin
+    @ncolor (get_color(theme, :default) | NCurses.A_REVERSE) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, " "^num_with_color)
     end
 
@@ -124,7 +124,7 @@ function _progress_bar__draw_with_bar_style!(widget::WidgetProgressBar)
 
         @inbounds for i in 1:length(progress_str)
             pos_i = str_pos + (i - 1)
-            color = theme.default
+            color = get_color(theme, :default)
 
             if pos_i < num_with_color
                 color |= NCurses.A_REVERSE
@@ -159,13 +159,13 @@ function _progress_bar__draw_with_line_sytle!(widget::WidgetProgressBar)
     num_with_color = round(Int, bar_width * value / 100)
 
     # Draw the background.
-    @ncolor theme.default buffer begin
+    @ncolor get_color(theme, :default) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, "━"^(bar_width))
         NCurses.mvwprintw(buffer, 0, bar_width, " "^(width - bar_width))
     end
 
     # Draw the progress.
-    @ncolor theme.selected buffer begin
+    @ncolor get_color(theme, :selected) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, "━"^num_with_color)
     end
 
@@ -175,7 +175,7 @@ function _progress_bar__draw_with_line_sytle!(widget::WidgetProgressBar)
         lstr         = length(progress_str)
         str_pos      = width - lstr + 1
 
-        @ncolor theme.default buffer begin
+        @ncolor get_color(theme, :default) buffer begin
             NCurses.mvwprintw(buffer, 0, str_pos, progress_str)
         end
     end

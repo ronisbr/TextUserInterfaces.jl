@@ -66,7 +66,7 @@ function create_panels!(
     columns::Int = 1,
     heights::Union{Nothing, Vector{Int}} = nothing,
     lines::Int = 1,
-    theme::Theme = tui.default_theme,
+    theme::Theme = Theme(),
     title_alignment::Symbol = :c,
     titles::Union{Nothing, Matrix{String}} = nothing,
     widths::Union{Nothing, Vector{Int}} = nothing
@@ -225,7 +225,9 @@ function _panels__draw_cell_border!(
 )
     @unpack theme, height, width = rb
 
-    theme.border >= 0 && NCurses.wattr_on(buffer, theme.border, C_NULL)
+    border_color = get_color(theme, :border)
+
+    border_color >= 0 && NCurses.wattr_on(buffer, border_color, C_NULL)
 
     # == Top Line ==========================================================================
 
@@ -285,7 +287,7 @@ function _panels__draw_cell_border!(
         right && NCurses.waddch(buffer, NCurses.ACS_(:LRCORNER))
     end
 
-    theme.border >= 0 && NCurses.wattroff(buffer, theme.border)
+    border_color >= 0 && NCurses.wattroff(buffer, border_color)
 
     return nothing
 end
@@ -318,21 +320,21 @@ function _panels__draw_cell_title!(
     tw = textwidth(title)
 
     if alignment == :l
-        @ncolor theme.title buffer begin
+        @ncolor get_color(theme, :title) buffer begin
             NCurses.mvwprintw(buffer, 0, 1, title)
         end
 
     elseif alignment == :c
         lpad = max(div(width - tw - right_cell, 2), 0)
 
-        @ncolor theme.title buffer begin
+        @ncolor get_color(theme, :title) buffer begin
             NCurses.mvwprintw(buffer, 0, lpad, title)
         end
 
     elseif alignment == :r
         lpad = max(width - tw, 0)
 
-        @ncolor theme.title buffer begin
+        @ncolor get_color(theme, :title) buffer begin
             NCurses.mvwprintw(buffer, 0, lpad - 1 - right_cell, title)
         end
     end

@@ -119,7 +119,7 @@ function create_widget(
     max_data_size::Int = 0,
     style::Symbol = :simple,
     validator::Function = _INPUT_FIELD_DEFAULT_VALIDATOR,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
     # Check arguments.
     if !haskey(_INPUT_FIELD_STYLE_HEIGHT, style)
@@ -195,7 +195,7 @@ function redraw!(widget::WidgetInputField)
     end
 
     # Check which color to apply to the widget
-    c = is_valid ? theme.default : theme.error
+    c = get_color(theme, is_valid ? :default : :error)
 
     if has_focus(widget)
         c |= NCurses.A_UNDERLINE

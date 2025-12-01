@@ -28,7 +28,7 @@ function create_widget(
     ::Val{:raw_buffer},
     layout::ObjectLayout;
     draw!::Function = _raw_buffer__default_draw!,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
     # Create the widget.
     raw_buffer = WidgetRawBuffer(;

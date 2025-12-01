@@ -43,7 +43,7 @@ function create_widget(
     ::Val{:ansi_label},
     layout::ObjectLayout;
     alignment = :l,
-    theme::Theme = tui.default_theme,
+    theme::Theme = Theme(),
     text::String = "Label"
 )
     # Check the text to create the layout hints.
@@ -73,7 +73,7 @@ function create_widget(
 end
 
 function redraw!(widget::WidgetAnsiLabel)
-    @unpack buffer, theme, aligned_text = widget
+    @unpack buffer, aligned_text = widget
     NCurses.wclear(buffer)
 
     NCurses.mvwprintw(buffer, 0, 0, "")

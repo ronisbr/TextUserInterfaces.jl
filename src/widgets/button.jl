@@ -48,7 +48,7 @@ function create_widget(
     layout::ObjectLayout;
     label::AbstractString = "Button",
     style::Symbol = :simple,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
     # Check arguments.
     if !haskey(_BUTTON_STYLE_HEIGHT, style)
@@ -127,7 +127,7 @@ function _widget_button__draw!(widget::WidgetButton, focused::Bool)
     @unpack buffer, width, label, style, theme = widget
 
     # Get the background color depending on the focus.
-    c = focused ? theme.highlight : theme.default
+    c = get_color(theme, focused ? :highlight : :default)
 
     if style == :none
         @ncolor c buffer begin

@@ -139,7 +139,7 @@ function create_widget(
     layout::ObjectLayout;
     border::Bool = false,
     border_style::Symbol = :default,
-    theme::Theme = tui.default_theme,
+    theme::Theme = Theme(),
     title::String = "",
     title_alignment::Symbol = :l,
 )
@@ -212,15 +212,15 @@ function redraw!(container::WidgetContainer)
     @unpack border, border_style, buffer, update_needed, widgets, theme = container
     @unpack height, width = container
 
-    NCurses.wbkgd(buffer, theme.default)
+    NCurses.wbkgd(buffer, get_color(theme, :default))
     NCurses.wclear(buffer)
 
     if border
-        @ncolor theme.border buffer begin
+        @ncolor get_color(theme, :border) buffer begin
             draw_border!(buffer; style = border_style)
         end
 
-        @ncolor theme.title buffer begin
+        @ncolor get_color(theme, :title) buffer begin
             _widget_container__draw_title!(container)
         end
     end

@@ -31,8 +31,15 @@ function initialize_tui()
         TUI initialized.
         Terminal $(NCurses.has_colors() == 1 ? "" : "does not ")have colors."""
 
+    # Reset all colors definitions.
+    _reset_color_dict()
+    empty!(tui.initialized_color_pairs)
+
+    # Reset the default theme.
+    empty!(tui.default_theme)
+    _fill_with_default_theme!(tui.default_theme)
+
     # Set the default theme.
-    tui.default_theme = _create_default_theme()
     set_window_theme!(tui.default_theme)
 
     return tui

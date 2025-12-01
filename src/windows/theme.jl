@@ -18,13 +18,13 @@ the background of the root window.
     update.
 """
 function set_window_theme!(theme::Theme)
-    NCurses.bkgd(theme.default)
+    NCurses.bkgd(get_color(theme, :default))
     return nothing
 end
 
 function set_window_theme!(window::Window, theme::Theme)
-    window.theme = theme
-    NCurses.wbkgd(window.buffer, theme.default)
+    window.theme = copy(theme)
+    NCurses.wbkgd(window.buffer, get_color(theme, :default))
     request_update!(window)
     return nothing
 end

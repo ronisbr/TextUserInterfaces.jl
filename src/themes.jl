@@ -4,34 +4,33 @@
 #
 ############################################################################################
 
-export create_theme
+export get_color, set_default_theme_color!
 
 ############################################################################################
 #                                     Public Functions                                     #
 ############################################################################################
 
 """
-    create_theme(; kwargs...)
+    get_color(theme::Theme, key::Symbol) -> Int
 
-Create a new theme using the default values but replacing the ones in the keywords
-`kwargs...`. The latter can be any field name available in [`Theme`](@ref).
+Get the color associated with `key` in the `theme`. If the `key` does not exist in `theme`,
+the color from the TUI default theme is returned.
 """
-function create_theme(;
-    default   = tui.default_theme.default,
-    error     = tui.default_theme.error,
-    highlight = tui.default_theme.highlight,
-    selected  = tui.default_theme.selected,
-    border    = tui.default_theme.border,
-    title     = tui.default_theme.title,
-)
-    return Theme(;
-        default,
-        error,
-        highlight,
-        selected,
-        border,
-        title,
-    )
+function get_color(theme::Theme, key::Symbol)
+    dt = tui.default_theme
+    !haskey(theme, key) && return get(dt, key, get(dt, :default, 0))
+    return theme[key]
+end
+
+"""
+    set_default_theme_color!(key::Symbol, color::Int) -> Nothing
+
+Set the color associated with `key` in the TUI default theme to `color`.
+"""
+function set_default_theme_color!(key::Symbol, color::Int)
+    tui.default_theme[key] = color
+    key == :default && set_window_theme!(tui.default_theme)
+    return nothing
 end
 
 ############################################################################################
@@ -39,24 +38,17 @@ end
 ############################################################################################
 
 """
-    _create_default_theme() -> Nothing
+    _fill_with_default_theme!(theme::Theme) -> Nothing
 
-Create the default theme.
+Fill `theme` with the default theme values.
 """
-function _create_default_theme()
-    default   = ncurses_color(:white, :black)
-    error     = ncurses_color(:red, 0)
-    highlight = ncurses_color(; reversed = true)
-    selected  = ncurses_color(:yellow, 0)
-    border    = default
-    title     = ncurses_color(:white, :black; bold = true)
+function _fill_with_default_theme!(theme)
+    theme[:default]   = ncurses_color(:white, :black)
+    theme[:error]     = ncurses_color(:red, :black)
+    theme[:highlight] = ncurses_color(; reversed = true)
+    theme[:selected]  = ncurses_color(:yellow, :black)
+    theme[:border]    = ncurses_color(:white, :black)
+    theme[:title]     = ncurses_color(:white, :black; bold = true)
 
-    return Theme(;
-        default,
-        error,
-        highlight,
-        selected,
-        border,
-        title,
-    )
+    return nothing
 end

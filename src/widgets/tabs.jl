@@ -45,7 +45,7 @@ function create_tabs!(
     border::Bool = false,
     num_tabs::Int = 1,
     tab_names::Union{Nothing, Vector{String}} = nothing,
-    theme::Theme = tui.default_theme
+    theme::Theme = Theme()
 )
     # == Check the Inputs ==================================================================
 
@@ -182,7 +182,7 @@ function _tabs__draw_border_and_tabline!(
     # == Draw the Border ===================================================================
 
     if border
-        @ncolor rb.theme.border buffer begin
+        @ncolor get_color(rb.theme, :border) buffer begin
             # Create a full border.
             NCurses.wborder(buffer)
 
@@ -198,7 +198,7 @@ function _tabs__draw_border_and_tabline!(
     NCurses.wmove(buffer, border ? 1 : 0, border ? 1 : 0)
 
     for i in 1:num_tabs
-        c = i == active_tab ? rb.theme.selected : rb.theme.default
+        c = get_color(rb.theme, i == active_tab ? :selected : :default)
 
         if border
             NCurses.waddch(buffer, ' ')
@@ -212,7 +212,7 @@ function _tabs__draw_border_and_tabline!(
         end
 
         if border
-            @ncolor rb.theme.border buffer begin
+            @ncolor get_color(rb.theme, :border) buffer begin
                 NCurses.waddch(buffer, ' ')
                 NCurses.waddch(buffer, NCurses.ACS_(:VLINE))
                 curx = Int64(NCurses.getcurx(buffer)) - 1

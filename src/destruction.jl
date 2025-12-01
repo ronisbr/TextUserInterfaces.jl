@@ -37,7 +37,7 @@ function destroy_tui()
     empty!(tui.initialized_color_pairs)
 
     # Reset the default theme.
-    tui.default_theme = Theme()
+    empty!(tui.default_theme)
 
     # Close log.
     file = logger.file

@@ -150,7 +150,7 @@ PrecompileTools.@setup_workload begin
         write(new_stdin, 'A')
         getkey(tui.stdscr)
 
-        # == Precompile All Functions Related to TUI Desctruction ==========================
+        # == Precompile All Functions Related to TUI Destruction ===========================
 
         destroy_tui()
     end

@@ -185,7 +185,7 @@ macro widget(ex)
             :(width::Int  = -1)
 
             # Widget theme.
-            :(theme::Theme = tui.default_theme)
+            :(theme::Theme = Theme())
 
             # Mark if the widget needs to be update.
             :(update_needed::Bool = true)

@@ -48,7 +48,7 @@ function create_widget(
     alignment = :l,
     fill::Bool = false,
     label::String = "Label",
-    theme::Theme = tui.default_theme,
+    theme::Theme = Theme()
 )
     # Check the text to create the layout hints.
     height = 1
@@ -81,9 +81,16 @@ function redraw!(widget::WidgetLabel)
     @unpack buffer, fill, theme, _aligned_label = widget
     NCurses.wclear(buffer)
 
-    fill && NCurses.wbkgd(buffer, theme.default)
+    color = get_color(theme, :default)
 
-    @ncolor theme.default buffer begin
+    @log DEBUG "redraw!" """
+    label = $(widget.label)
+    color = $color
+    """
+
+    fill && NCurses.wbkgd(buffer, color)
+
+    @ncolor color buffer begin
         NCurses.mvwprintw(buffer, 0, 0, _aligned_label)
     end
 

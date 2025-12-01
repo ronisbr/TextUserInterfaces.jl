@@ -49,8 +49,8 @@ function create_widget(
     icon_closed::String = "▼",
     icon_opened::String = "▲",
     show_icon::Bool = true,
-    list_box_theme::Theme = tui.default_theme,
-    theme::Theme = tui.default_theme
+    list_box_theme::Theme = Theme(),
+    theme::Theme = Theme()
 )
     icon_size   = max(textwidth(icon_closed), textwidth(icon_opened))
     width_hint  = maximum(textwidth.(data)) + (show_icon ? icon_size + 1 : 0)
@@ -131,7 +131,7 @@ function redraw!(widget::WidgetComboBox)
 
     # We will highlight the combo box if it is selected or if list box is opened.
     list_box_opened = !isnothing(get_parent(list_box))
-    color = (has_focus(widget) || list_box_opened) ? theme.highlight : theme.default
+    color = get_color(theme, (has_focus(widget) || list_box_opened) ? :highlight : :default)
 
     icon = if show_icon
         icon_size = max(textwidth(icon_closed), textwidth(icon_opened))
