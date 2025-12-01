@@ -63,6 +63,13 @@ for (f, r, v, j, c) in
             ["Cstring"]
         ),
         (
+            :assume_default_colors,
+            Cint,
+            ["fg", "bg"],
+            ["Integer", "Integer"],
+            ["Cint", "Cint"]
+        ),
+        (
             :attroff,
             Cint,
             ["attrs"],
@@ -533,6 +540,13 @@ for (f, r, v, j, c) in
             ["win"],
             ["Ptr{WINDOW}"],
             ["Ptr{WINDOW}"]
+        ),
+        (
+            :use_default_colors,
+            Cint,
+            [],
+            [],
+            []
         ),
         (
             :vline,

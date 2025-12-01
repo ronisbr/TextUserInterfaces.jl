@@ -19,7 +19,10 @@ function initialize_tui()
 
     tui.stdscr = NCurses.initscr()
     tui.initialized = true
-    NCurses.has_colors() == 1 && NCurses.start_color()
+    if NCurses.has_colors() == 1
+        NCurses.start_color()
+        NCurses.use_default_colors()
+    end
 
     # Do not echo keystrokes.
     NCurses.noecho()
