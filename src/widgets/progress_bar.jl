@@ -104,19 +104,21 @@ function _progress_bar__draw_with_bar_style!(widget::WidgetProgressBar)
     value = clamp(value, 0, 100)
 
     # Compute the number of spaces with decoration.
-    num_with_color = round(Int, width * value / 100)
+    num_with_style = round(Int, width * value / 100)
+
+    style = get_style(theme, :default)
 
     # Draw the background.
-    @ncolor get_color(theme, :default) buffer begin
+    @nstyle style buffer begin
         NCurses.mvwprintw(buffer, 0, 0, " "^width)
     end
 
     # Draw the progress.
-    @ncolor (get_color(theme, :default) | NCurses.A_REVERSE) buffer begin
-        NCurses.mvwprintw(buffer, 0, 0, " "^num_with_color)
+    @nstyle add_attribute(style, NCurses.A_REVERSE) buffer begin
+        NCurses.mvwprintw(buffer, 0, 0, " "^num_with_style)
     end
 
-    # Draw the progress value, if requested, considering the correct colors.
+    # Draw the progress value, if requested, considering the correct styles.
     if show_value
         progress_str = "$(round(Int, value)) %"
         lstr = length(progress_str)
@@ -124,13 +126,13 @@ function _progress_bar__draw_with_bar_style!(widget::WidgetProgressBar)
 
         @inbounds for i in 1:length(progress_str)
             pos_i = str_pos + (i - 1)
-            color = get_color(theme, :default)
+            style = get_style(theme, :default)
 
-            if pos_i < num_with_color
-                color |= NCurses.A_REVERSE
+            if pos_i < num_with_style
+                style = add_attribute(style, NCurses.A_REVERSE)
             end
 
-            @ncolor color buffer begin
+            @nstyle style buffer begin
                 c = progress_str[i - 1 + begin]
                 NCurses.mvwprintw(buffer, 0, pos_i, c == '%' ? "%%" : string(c))
             end
@@ -156,26 +158,26 @@ function _progress_bar__draw_with_line_sytle!(widget::WidgetProgressBar)
     value = clamp(value, 0, 100)
 
     # Compute the number of spaces with decoration.
-    num_with_color = round(Int, bar_width * value / 100)
+    num_with_style = round(Int, bar_width * value / 100)
 
     # Draw the background.
-    @ncolor get_color(theme, :default) buffer begin
+    @nstyle get_style(theme, :default) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, "━"^(bar_width))
         NCurses.mvwprintw(buffer, 0, bar_width, " "^(width - bar_width))
     end
 
     # Draw the progress.
-    @ncolor get_color(theme, :selected) buffer begin
-        NCurses.mvwprintw(buffer, 0, 0, "━"^num_with_color)
+    @nstyle get_style(theme, :selected) buffer begin
+        NCurses.mvwprintw(buffer, 0, 0, "━"^num_with_style)
     end
 
-    # Draw the progress value, if requested, considering the correct colors.
+    # Draw the progress value, if requested, considering the correct styles.
     if show_value
         progress_str = "$(round(Int, value)) %%"
         lstr         = length(progress_str)
         str_pos      = width - lstr + 1
 
-        @ncolor get_color(theme, :default) buffer begin
+        @nstyle get_style(theme, :default) buffer begin
             NCurses.mvwprintw(buffer, 0, str_pos, progress_str)
         end
     end

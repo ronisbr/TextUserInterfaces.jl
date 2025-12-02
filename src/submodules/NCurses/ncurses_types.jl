@@ -101,3 +101,9 @@ mutable struct WINDOW
     pad_right::NCURSES_SIZE_T
     yoffset::NCURSES_SIZE_T
 end
+
+mutable struct cchar_t
+    attr::attr_t
+    chars::NTuple{5, Cwchar_t}
+    color_pair::Cint
+end

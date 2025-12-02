@@ -225,69 +225,67 @@ function _panels__draw_cell_border!(
 )
     @unpack theme, height, width = rb
 
-    border_color = get_color(theme, :border)
+    border_style = get_style(theme, :border)
 
-    border_color >= 0 && NCurses.wattr_on(buffer, border_color, C_NULL)
+    @nstyle border_style buffer begin
+        # == Top Line ======================================================================
 
-    # == Top Line ==========================================================================
+        if top
+            if left
+                NCurses.waddch(buffer, NCurses.ACS_(:ULCORNER))
+            else
+                NCurses.waddch(buffer, NCurses.ACS_(:TTEE))
+            end
 
-    if top
-        if left
-            NCurses.waddch(buffer, NCurses.ACS_(:ULCORNER))
+        elseif left
+            NCurses.waddch(buffer, NCurses.ACS_(:LTEE))
+
         else
-            NCurses.waddch(buffer, NCurses.ACS_(:TTEE))
+            NCurses.waddch(buffer, NCurses.ACS_(:PLUS))
         end
 
-    elseif left
-        NCurses.waddch(buffer, NCurses.ACS_(:LTEE))
-
-    else
-        NCurses.waddch(buffer, NCurses.ACS_(:PLUS))
-    end
-
-    for _ in 2:(width - 1)
-        NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
-    end
-
-    if top && right
-        NCurses.waddch(buffer, NCurses.ACS_(:URCORNER))
-
-    elseif right
-        NCurses.waddch(buffer, NCurses.ACS_(:RTEE))
-
-    else
-        NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
-    end
-
-    # == Intermediate Borders ==============================================================
-
-    for i in 2:(height - 1)
-        NCurses.mvwaddch(buffer, i - 1, 0, NCurses.ACS_(:VLINE))
-        right && NCurses.mvwaddch(buffer, i - 1, width - 1, NCurses.ACS_(:VLINE))
-    end
-
-    # == Bottom Line =======================================================================
-
-    if !bottom
-        NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:VLINE))
-        right && NCurses.mvwaddch(buffer, height - 1, width - 1, NCurses.ACS_(:VLINE))
-
-    else
-        # Bottom line.
-        if left
-            NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:LLCORNER))
-        else
-            NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:BTEE))
-        end
-
-        for _ in 2:width
+        for _ in 2:(width - 1)
             NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
         end
 
-        right && NCurses.waddch(buffer, NCurses.ACS_(:LRCORNER))
-    end
+        if top && right
+            NCurses.waddch(buffer, NCurses.ACS_(:URCORNER))
 
-    border_color >= 0 && NCurses.wattroff(buffer, border_color)
+        elseif right
+            NCurses.waddch(buffer, NCurses.ACS_(:RTEE))
+
+        else
+            NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
+        end
+
+        # == Intermediate Borders ==========================================================
+
+        for i in 2:(height - 1)
+            NCurses.mvwaddch(buffer, i - 1, 0, NCurses.ACS_(:VLINE))
+            right && NCurses.mvwaddch(buffer, i - 1, width - 1, NCurses.ACS_(:VLINE))
+        end
+
+        # == Bottom Line ===================================================================
+
+        if !bottom
+            NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:VLINE))
+            right && NCurses.mvwaddch(buffer, height - 1, width - 1, NCurses.ACS_(:VLINE))
+
+        else
+            # Bottom line.
+            if left
+                NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:LLCORNER))
+            else
+                NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:BTEE))
+            end
+
+            for _ in 2:width
+                NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
+            end
+
+            right && NCurses.waddch(buffer, NCurses.ACS_(:LRCORNER))
+        end
+    end
 
     return nothing
 end
@@ -320,21 +318,21 @@ function _panels__draw_cell_title!(
     tw = textwidth(title)
 
     if alignment == :l
-        @ncolor get_color(theme, :title) buffer begin
+        @nstyle get_style(theme, :title) buffer begin
             NCurses.mvwprintw(buffer, 0, 1, title)
         end
 
     elseif alignment == :c
         lpad = max(div(width - tw - right_cell, 2), 0)
 
-        @ncolor get_color(theme, :title) buffer begin
+        @nstyle get_style(theme, :title) buffer begin
             NCurses.mvwprintw(buffer, 0, lpad, title)
         end
 
     elseif alignment == :r
         lpad = max(width - tw, 0)
 
-        @ncolor get_color(theme, :title) buffer begin
+        @nstyle get_style(theme, :title) buffer begin
             NCurses.mvwprintw(buffer, 0, lpad - 1 - right_cell, title)
         end
     end

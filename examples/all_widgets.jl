@@ -9,7 +9,7 @@ function all_widgets()
 
     w = create_window(
         border = true,
-        theme  = Theme(:border => ncurses_color(243, :black)),
+        theme  = Theme(:border => ncurses_style(243, :black)),
         title  = " All Widgets ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -36,7 +36,7 @@ function all_widgets()
             parent       = c,
             label        = "This is a label with color but using `fill = false`.",
             fill         = false,
-            theme        = Theme(:default => ncurses_color(:black, :blue)),
+            theme        = Theme(:default => ncurses_style(:black, :blue)),
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom)
@@ -46,7 +46,7 @@ function all_widgets()
             parent       = c,
             label        = "This is a label with color but using `fill = true`.",
             fill         = true,
-            theme        = Theme(:default => ncurses_color(:black, :magenta)),
+            theme        = Theme(:default => ncurses_style(:black, :purple)),
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom)
@@ -67,7 +67,7 @@ function all_widgets()
             alignment    = :c,
             fill         = true,
             text         = "This is a text\nthat can have\nmultiple lines.",
-            theme        = Theme(:default => ncurses_color(:black, :blue)),
+            theme        = Theme(:default => ncurses_style(:black, :blue)),
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
             top_anchor   = (__LAST__, :bottom)
@@ -77,7 +77,7 @@ function all_widgets()
             parent       = c,
             alignment    = :r,
             fill         = true,
-            theme        = Theme(:default => ncurses_color(:black, :magenta)),
+            theme        = Theme(:default => ncurses_style(:black, :purple)),
             text         = "This is a text\nthat can have\nmultiple lines.",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
@@ -254,9 +254,9 @@ function all_widgets()
         end
 
         list_box_theme = Theme(
-            :default   => ncurses_color(:white, 240),
-            :highlight => ncurses_color(:white, 240; reversed = true),
-            :selected  => ncurses_color(:yellow, 240),
+            :default   => ncurses_style(:white, 240),
+            :highlight => ncurses_style(:white, 240; reversed = true),
+            :selected  => ncurses_style(:yellow, 240),
         )
 
         @tui_combo_box(
@@ -431,7 +431,7 @@ function all_widgets()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => ncurses_color(243, :black)),
+        theme     = Theme(:border => ncurses_style(243, :black)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),

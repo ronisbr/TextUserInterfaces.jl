@@ -182,7 +182,7 @@ function _tabs__draw_border_and_tabline!(
     # == Draw the Border ===================================================================
 
     if border
-        @ncolor get_color(rb.theme, :border) buffer begin
+        @nstyle get_style(rb.theme, :border) buffer begin
             # Create a full border.
             NCurses.wborder(buffer)
 
@@ -198,7 +198,7 @@ function _tabs__draw_border_and_tabline!(
     NCurses.wmove(buffer, border ? 1 : 0, border ? 1 : 0)
 
     for i in 1:num_tabs
-        c = get_color(rb.theme, i == active_tab ? :selected : :default)
+        c = get_style(rb.theme, i == active_tab ? :selected : :default)
 
         if border
             NCurses.waddch(buffer, ' ')
@@ -207,12 +207,12 @@ function _tabs__draw_border_and_tabline!(
             NCurses.waddch(buffer, ' ')
         end
 
-        @ncolor c buffer begin
+        @nstyle c buffer begin
             NCurses.wprintw(buffer, (isnothing(tab_names) ? "Tab #$i" : tab_names[i]))
         end
 
         if border
-            @ncolor get_color(rb.theme, :border) buffer begin
+            @nstyle get_style(rb.theme, :border) buffer begin
                 NCurses.waddch(buffer, ' ')
                 NCurses.waddch(buffer, NCurses.ACS_(:VLINE))
                 curx = Int64(NCurses.getcurx(buffer)) - 1

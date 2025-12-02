@@ -6,4 +6,4 @@
 
 export Theme
 
-const Theme = Dict{Symbol, Int}
+const Theme = Dict{Symbol, NCursesStyle}

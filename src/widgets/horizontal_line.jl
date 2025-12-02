@@ -57,7 +57,7 @@ function redraw!(widget::WidgetHorizontalLine)
         str *= pattern[(k - 1) % pw + 1]
     end
 
-    @ncolor get_color(theme, :default) buffer begin
+    @nstyle get_style(theme, :default) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, str)
     end
 

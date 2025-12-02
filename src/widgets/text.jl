@@ -82,11 +82,11 @@ function redraw!(widget::WidgetText)
     @unpack buffer, fill, theme, _aligned_text = widget
     NCurses.wclear(buffer)
 
-    color = get_color(theme, :default)
+    style = get_style(theme, :default)
 
-    fill && NCurses.wbkgd(buffer, get_color(theme, :default))
+    fill && set_background_style!(buffer, style)
 
-    @ncolor get_color(theme, :default) buffer begin
+    @nstyle style buffer begin
         for (i, line) in enumerate(_aligned_text)
             NCurses.mvwprintw(buffer, i - 1, 0, line)
         end

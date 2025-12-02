@@ -81,16 +81,11 @@ function redraw!(widget::WidgetLabel)
     @unpack buffer, fill, theme, _aligned_label = widget
     NCurses.wclear(buffer)
 
-    color = get_color(theme, :default)
+    style = get_style(theme, :default)
 
-    @log DEBUG "redraw!" """
-    label = $(widget.label)
-    color = $color
-    """
+    fill && set_background_style!(buffer, style)
 
-    fill && NCurses.wbkgd(buffer, color)
-
-    @ncolor color buffer begin
+    @nstyle style buffer begin
         NCurses.mvwprintw(buffer, 0, 0, _aligned_label)
     end
 

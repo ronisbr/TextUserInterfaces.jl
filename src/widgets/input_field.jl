@@ -194,11 +194,11 @@ function redraw!(widget::WidgetInputField)
         return nothing
     end
 
-    # Check which color to apply to the widget
-    c = get_color(theme, is_valid ? :default : :error)
+    # Check which style to apply to the widget
+    s = get_style(theme, is_valid ? :default : :error)
 
     if has_focus(widget)
-        c |= NCurses.A_UNDERLINE
+        s = add_attribute(s, NCurses.A_UNDERLINE)
     end
 
     # Clear the internal buffer.
@@ -210,7 +210,7 @@ function redraw!(widget::WidgetInputField)
     if style == :simple
         NCurses.mvwprintw(internal_buffer, 0, 0, "[")
 
-        @ncolor c internal_buffer begin
+        @nstyle s internal_buffer begin
             NCurses.mvwprintw(internal_buffer, 0, 1, clear_str)
             NCurses.mvwprintw(internal_buffer, 0, 1, widget.rendered_view)
         end
@@ -218,14 +218,14 @@ function redraw!(widget::WidgetInputField)
         NCurses.mvwprintw(internal_buffer, 0, field_width + 1, "]")
 
     elseif style == :boxed
-        @ncolor c internal_buffer begin
+        @nstyle s internal_buffer begin
             NCurses.mvwprintw(internal_buffer, 1, 1, clear_str)
             NCurses.mvwprintw(internal_buffer, 1, 1, widget.rendered_view)
         end
 
         NCurses.wborder(internal_buffer)
     else
-        @ncolor c internal_buffer begin
+        @nstyle s internal_buffer begin
             NCurses.mvwprintw(internal_buffer, 0, 0, clear_str)
             NCurses.mvwprintw(internal_buffer, 0, 0, widget.rendered_view)
         end

@@ -93,7 +93,7 @@ function set_window_title!(win::Window, title::AbstractString, alignment::Symbol
                 Δx = 1
             end
 
-            @ncolor get_color(theme, :title) win.view begin
+            @nstyle get_style(theme, :title) win.view begin
                 NCurses.mvwprintw(win.view, 0, Δx, title_esc)
             end
         end
@@ -143,7 +143,7 @@ function _draw_scrollbar!(window::Window)
     draw_vsb = vsb_size < nlines
 
     # Draw the horizontal scrollbar.
-    draw_hsb && @ncolor get_color(window.theme, :border) view begin
+    draw_hsb && @nstyle get_style(window.theme, :border) view begin
         for x in 1:hsb_size
             NCurses.mvwprintw(
                 view,
@@ -155,7 +155,7 @@ function _draw_scrollbar!(window::Window)
     end
 
     # Draw the vertical scrollbar.
-    draw_vsb && @ncolor get_color(window.theme, :border) view begin
+    draw_vsb && @nstyle get_style(window.theme, :border) view begin
         for y in 1:vsb_size
             NCurses.mvwprintw(
                 view,

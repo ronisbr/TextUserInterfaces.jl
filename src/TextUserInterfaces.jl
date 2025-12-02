@@ -21,7 +21,7 @@ export NCurses
 ############################################################################################
 
 include("./macros/signals.jl")
-include("./macros/colors.jl")
+include("./macros/style.jl")
 include("./macros/dialogs.jl")
 include("./macros/widgets.jl")
 include("./macros/tui_builder.jl")
@@ -39,12 +39,12 @@ include("./types/types.jl")
 include("./logger.jl")
 
 include("./borders.jl")
-include("./colors.jl")
 include("./destruction.jl")
 include("./focus.jl")
 include("./initialization.jl")
 include("./main_loop.jl")
 include("./misc.jl")
+include("./styles.jl")
 include("./themes.jl")
 include("./update.jl")
 

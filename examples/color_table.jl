@@ -4,7 +4,7 @@ function color_container(
     parent::WidgetContainer,
     layout::ObjectLayout,
     text::String,
-    color::Int
+    decoration::NCursesStyle
 )
     c = create_widget(Val(:container), layout)
     add_widget!(parent, c)
@@ -29,7 +29,7 @@ function color_container(
             height = 1,
             fill = true,
             alignment = :c,
-            theme = Theme(:default => color),
+            theme = Theme(:default => decoration),
             label = "",
         )
     end
@@ -56,7 +56,7 @@ function color_table()
     w = create_window(
         border = true,
         border_style = :rounded,
-        theme  = Theme(:border => ncurses_color(:grey46, :black)),
+        theme  = Theme(:border => ncurses_style(:grey46, :transparent)),
         title  = " Color Table ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -90,6 +90,8 @@ function color_table()
             (prev_widget, :right, 1)
         end
 
+        decoration = ncurses_style(:black, cvalues[id])
+
         prev_widget = color_container(
             c,
             ObjectLayout(
@@ -98,8 +100,8 @@ function color_table()
                 width       = max_width,
                 height      = 2,
             ),
-            ckeys[id],
-            ncurses_color(:black, cvalues[id]),
+            string(ckeys[id]),
+            decoration
         )
     end
 

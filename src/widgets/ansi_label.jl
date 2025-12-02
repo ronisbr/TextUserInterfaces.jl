@@ -17,7 +17,7 @@ export change_text!
     text::String
 
     # Variables to store the parsed text and color to reduce the computational burden.
-    aligned_text::Vector{Vector{Pair{String, Int}}} = Vector{Pair{String, Int}}[]
+    aligned_text::Vector{Vector{Pair{String, NCursesStyle}}} = Vector{Pair{String, NCursesStyle}}[]
 end
 
 ############################################################################################
@@ -84,8 +84,8 @@ function redraw!(widget::WidgetAnsiLabel)
 
         NCurses.mvwprintw(buffer, line_number - 1, 0, "")
 
-        for (text, color) in line
-            @ncolor color buffer begin
+        for (text, style) in line
+            @nstyle style buffer begin
                 NCurses.wprintw(buffer, text)
             end
         end
@@ -160,7 +160,7 @@ function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
     for line in tokens
         parsed_line = parse_ansi_string(line)
 
-        line_decoration = Pair{String, Int}[]
+        line_decoration = Pair{String, NCursesStyle}[]
 
         for (t, d) in parsed_line
             pd = update_decoration(pd, d)
@@ -172,7 +172,7 @@ function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
 
             # We are updating the decoration since the beginning. Hence, the properties
             # `bold`, `underline`, and `reversed` are only on if they are active.
-            color = ncurses_color(
+            style = ncurses_style(
                 ansi_foreground_to_ncurses_color(pd.foreground),
                 ansi_background_to_ncurses_color(pd.background);
                 bold      = pd.bold      == StringManipulation.active,
@@ -180,7 +180,7 @@ function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
                 reversed  = pd.reversed  == StringManipulation.active
             )
 
-            push!(line_decoration, t => color)
+            push!(line_decoration, t => style)
         end
 
         push!(aligned_text, line_decoration)

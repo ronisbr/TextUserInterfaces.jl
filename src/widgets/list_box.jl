@@ -211,12 +211,14 @@ function redraw!(widget::WidgetListBox)
         end
 
         # Select which color the current item must be printed.
-        color_i = get_color(theme, selected[id] ? :selected : :default)
+        style_i = get_style(theme, selected[id] ? :selected : :default)
 
-        # If the item is the highlighted (the one that holds the cursor), the color must be
-        # inverted.
         if (begview + i == current_item) && has_focus(widget)
-            color_i |= get_color(theme, :highlight)
+            style_i = if selected[id]
+                add_attribute(get_style(theme, :selected), NCurses.A_REVERSE)
+            else
+                get_style(theme, :highlight)
+            end
         end
 
         # Compute the padding after the text so that the entire field is filled with the
@@ -225,7 +227,7 @@ function redraw!(widget::WidgetListBox)
         Δ   = width - length(str)
         pad = Δ > 0 ? " " ^ Δ : ""
 
-        @ncolor color_i buffer begin
+        @nstyle style_i buffer begin
             NCurses.mvwprintw(buffer, i, 0, str * pad)
         end
     end

@@ -96,7 +96,7 @@ function update_cursor!(
     if (x != -1) && (y != -1)
         m = board_marks[x, y]
         fields[x, y].theme = m != 0 ?
-            Theme(:default => ncurses_color(:black, _PLAYER_COLORS[m])) :
+            Theme(:default => ncurses_style(:black, _PLAYER_COLORS[m])) :
             Theme()
 
         request_update!(fields[x, y])
@@ -106,7 +106,7 @@ function update_cursor!(
     x, y = cursor_position
 
     if (x != -1) && (y != -1)
-        fields[x, y].theme = Theme(:default => ncurses_color(:black, :red))
+        fields[x, y].theme = Theme(:default => ncurses_style(:black, :red))
         request_update!(fields[x, y])
     end
 
@@ -190,7 +190,7 @@ function tic_tac_toe()
         top_anchor = (current_player_info_label, :top),
         left_anchor = (current_player_info_label, :right),
         width = 40,
-        theme = Theme(:default => ncurses_color(_PLAYER_COLORS[1], :black))
+        theme = Theme(:default => ncurses_style(_PLAYER_COLORS[1], :black))
     )
 
     # == Game Result =======================================================================
@@ -267,7 +267,7 @@ function tic_tac_toe()
                     )
 
                     current_player_label.theme = Theme(
-                        :default => ncurses_color(_PLAYER_COLORS[current_player], :black)
+                        :default => ncurses_style(_PLAYER_COLORS[current_player], :black)
                     )
                 end
 

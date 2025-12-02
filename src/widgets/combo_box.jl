@@ -131,7 +131,7 @@ function redraw!(widget::WidgetComboBox)
 
     # We will highlight the combo box if it is selected or if list box is opened.
     list_box_opened = !isnothing(get_parent(list_box))
-    color = get_color(theme, (has_focus(widget) || list_box_opened) ? :highlight : :default)
+    style = get_style(theme, (has_focus(widget) || list_box_opened) ? :highlight : :default)
 
     icon = if show_icon
         icon_size = max(textwidth(icon_closed), textwidth(icon_opened))
@@ -146,7 +146,7 @@ function redraw!(widget::WidgetComboBox)
     Δ = width - textwidth(str)
     pad = Δ > 0 ? " " ^ Δ : ""
 
-    @ncolor color buffer begin
+    @nstyle style buffer begin
         NCurses.mvwprintw(buffer, 0, 0, str * pad)
     end
 

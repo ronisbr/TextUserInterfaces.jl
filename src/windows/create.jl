@@ -78,7 +78,7 @@ function create_window(;
     view = NCurses.newwin(nlines, ncols, begin_y, begin_x)
 
     # Check if the user wants a border.
-    border && @ncolor get_color(theme, :border) view begin
+    border && @nstyle get_style(theme, :border) view begin
         draw_border!(view; style = border_style)
     end
 
@@ -102,7 +102,7 @@ function create_window(;
     buffer = NCurses.newpad(blines, bcols)
 
     # Set the window theme.
-    NCurses.wbkgd(buffer, get_color(theme, :default))
+    set_background_style!(buffer, get_style(theme, :default))
 
     # Create the panel.
     panel = NCurses.new_panel(view)

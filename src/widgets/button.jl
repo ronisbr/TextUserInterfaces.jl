@@ -126,11 +126,11 @@ accordingly.
 function _widget_button__draw!(widget::WidgetButton, focused::Bool)
     @unpack buffer, width, label, style, theme = widget
 
-    # Get the background color depending on the focus.
-    c = get_color(theme, focused ? :highlight : :default)
+    # Get the style depending on the focus.
+    s = get_style(theme, focused ? :highlight : :default)
 
     if style == :none
-        @ncolor c buffer begin
+        @nstyle s buffer begin
             NCurses.mvwprintw(buffer, 0, 0, label)
         end
     else
@@ -144,14 +144,14 @@ function _widget_button__draw!(widget::WidgetButton, focused::Bool)
             NCurses.mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
             NCurses.mvwprintw(buffer, 1, 0, "│")
 
-            @ncolor c buffer begin
+            @nstyle s buffer begin
                 NCurses.wprintw(buffer, " " * str * " ")
             end
 
             NCurses.wprintw(buffer, "│")
             NCurses.mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
         else
-            @ncolor c buffer begin
+            @nstyle s buffer begin
                 NCurses.mvwprintw(buffer, 0, 0, "[ " * str * " ]")
             end
         end

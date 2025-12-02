@@ -160,7 +160,7 @@ function update!(win::Window; force::Bool = false)
     _window__update_view!(win)
 
     # Update the border and the title since the theme might change.
-    has_border && @ncolor get_color(theme, :border) view begin
+    has_border && @nstyle get_style(theme, :border) view begin
         draw_border!(view; style = border_style)
         set_window_title!(win, title, title_alignment)
         _draw_scrollbar!(win)
@@ -214,7 +214,7 @@ function update_layout!(win::Window; force::Bool = false)
     end
 
     # Check if the user wants a border.
-    win.has_border && @ncolor get_color(theme, :border) win.view begin
+    win.has_border && @nstyle get_style(theme, :border) win.view begin
         draw_border!(win.view; style = win.border_style)
     end
 

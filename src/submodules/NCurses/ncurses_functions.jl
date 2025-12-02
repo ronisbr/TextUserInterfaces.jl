@@ -112,6 +112,13 @@ for (f, r, v, j, c) in
             ["Cint"]
         ),
         (
+            :bkgrnd,
+            Cint,
+            ["wch"],
+            ["Ptr{cchar_t}"],
+            ["Ptr{cchar_t}"]
+        ),
+        (
             :box,
             Cvoid,
             ["win", "verch", "horch"],
@@ -514,6 +521,13 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Cuchar"]
         ),
         (
+            :setcchar,
+            Cint,
+            ["wcval", "wch", "attrs", "color_pair", "opts"],
+            ["Ptr{cchar_t}", "Ptr{Cwchar_t}", "Integer", "Integer", "Ptr{Cvoid}"],
+            ["Ptr{cchar_t}", "Ptr{Cwchar_t}", "attr_t", "Cshort", "Ptr{Cvoid}"]
+        ),
+        (
             :start_color,
             Cint,
             [],
@@ -598,11 +612,25 @@ for (f, r, v, j, c) in
             ["Ptr{WINDOW}", "Cint", "Ptr{Cvoid}"]
         ),
         (
+            :wattr_set,
+            Cint,
+            ["win", "attrs", "pair", "opts"],
+            ["Ptr{WINDOW}", "Integer", "Integer", "Ptr{Cvoid}"],
+            ["Ptr{WINDOW}", "Cint", "Cint", "Ptr{Cvoid}"]
+        ),
+        (
             :wbkgd,
             Cint,
             ["win", "ch"],
             ["Ptr{WINDOW}", "Integer"],
             ["Ptr{WINDOW}", "Cint"]
+        ),
+        (
+            :wbkgrnd,
+            Cint,
+            ["win", "wch"],
+            ["Ptr{WINDOW}", "Ptr{cchar_t}"],
+            ["Ptr{WINDOW}", "Ptr{cchar_t}"]
         ),
         (
             :wborder,
@@ -631,6 +659,13 @@ for (f, r, v, j, c) in
             ["win"],
             ["Ptr{WINDOW}"],
             ["Ptr{WINDOW}"]
+        ),
+        (
+            :wcolor_set,
+            Cint,
+            ["win", "pair", "opts"],
+            ["Ptr{WINDOW}", "Integer", "Ptr{Cvoid}"],
+            ["Ptr{WINDOW}", "Cint", "Ptr{Cvoid}"]
         ),
         (
             :werase,

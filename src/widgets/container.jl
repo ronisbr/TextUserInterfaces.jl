@@ -212,15 +212,15 @@ function redraw!(container::WidgetContainer)
     @unpack border, border_style, buffer, update_needed, widgets, theme = container
     @unpack height, width = container
 
-    NCurses.wbkgd(buffer, get_color(theme, :default))
+    set_background_style!(buffer, get_style(theme, :default))
     NCurses.wclear(buffer)
 
     if border
-        @ncolor get_color(theme, :border) buffer begin
+        @nstyle get_style(theme, :border) buffer begin
             draw_border!(buffer; style = border_style)
         end
 
-        @ncolor get_color(theme, :title) buffer begin
+        @nstyle get_style(theme, :title) buffer begin
             _widget_container__draw_title!(container)
         end
     end

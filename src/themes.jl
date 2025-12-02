@@ -4,31 +4,31 @@
 #
 ############################################################################################
 
-export get_color, set_default_theme_color!
+export get_style, set_default_theme_style!, set_ncurses_default_colors
 
 ############################################################################################
 #                                     Public Functions                                     #
 ############################################################################################
 
 """
-    get_color(theme::Theme, key::Symbol) -> Int
+    get_style(theme::Theme, key::Symbol) -> Int
 
-Get the color associated with `key` in the `theme`. If the `key` does not exist in `theme`,
-the color from the TUI default theme is returned.
+Get the style associated with `key` in the `theme`. If the `key` does not exist in `theme`,
+the style from the TUI default theme is returned.
 """
-function get_color(theme::Theme, key::Symbol)
+function get_style(theme::Theme, key::Symbol)
     dt = tui.default_theme
     !haskey(theme, key) && return get(dt, key, get(dt, :default, 0))
     return theme[key]
 end
 
 """
-    set_default_theme_color!(key::Symbol, color::Int) -> Nothing
+    set_default_theme_style!(key::Symbol, style::Int) -> Nothing
 
-Set the color associated with `key` in the TUI default theme to `color`.
+Set the style associated with `key` in the TUI default theme to `style`.
 """
-function set_default_theme_color!(key::Symbol, color::Int)
-    tui.default_theme[key] = color
+function set_default_theme_style!(key::Symbol, style::Int)
+    tui.default_theme[key] = style
     key == :default && set_window_theme!(tui.default_theme)
     return nothing
 end
@@ -73,12 +73,12 @@ end
 Fill `theme` with the default theme values.
 """
 function _fill_with_default_theme!(theme)
-    theme[:default]   = ncurses_color(:white, -1)
-    theme[:error]     = ncurses_color(:red, -1)
-    theme[:highlight] = ncurses_color(; reversed = true)
-    theme[:selected]  = ncurses_color(:yellow, -1)
-    theme[:border]    = ncurses_color(:white, -1)
-    theme[:title]     = ncurses_color(:white, -1; bold = true)
+    theme[:default]   = ncurses_style(:white, -1)
+    theme[:error]     = ncurses_style(:red, -1)
+    theme[:highlight] = ncurses_style(; reversed = true)
+    theme[:selected]  = ncurses_style(:yellow, -1)
+    theme[:border]    = ncurses_style(:white, -1)
+    theme[:title]     = ncurses_style(:white, -1; bold = true)
 
     return nothing
 end
