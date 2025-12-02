@@ -60,7 +60,7 @@ function windows_and_widgets()
             @tui_label(
                 parent        = c,
                 label         = "",
-                theme         = Theme(:default => ncurses_style(:yellow, :transperent)),
+                theme         = Theme(:default => tui_style(colorant"yellow"; bold = true)),
                 middle_anchor = (__LAST__, :middle),
                 left_anchor   = (__LAST__, :right, 1),
                 width         = 10
@@ -120,7 +120,7 @@ function windows_and_widgets()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => ncurses_style(:grey42, :transparent)),
+        theme     = Theme(:border => tui_style(:gray42)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),

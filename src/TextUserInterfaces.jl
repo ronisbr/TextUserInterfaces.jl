@@ -4,9 +4,12 @@ using Dates
 using FileWatching
 using LinearAlgebra
 using StringManipulation
+using Reexport
 using UnPack
 
 import Base: getproperty, setproperty!, @kwdef
+
+@reexport using Colors
 
 ############################################################################################
 #                                        Submodules                                        #

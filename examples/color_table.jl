@@ -45,22 +45,23 @@ function color_table()
     logger.enabled = true
     logger.level = DEBUG
 
-    ckeys   = keys(TextUserInterfaces._XTERM_COLORS) |> collect
-    cvalues = values(TextUserInterfaces._XTERM_COLORS) |> collect
+    ckeys   = keys(TextUserInterfaces._XTERM_NAMES) |> collect
+    cvalues = values(TextUserInterfaces._XTERM_NAMES) |> collect
 
     ids = sortperm(cvalues)
 
-    ckeys = String.(ckeys[ids])
+    ckeys   = ckeys[ids]
+    sckeys  = string.(ckeys)
     cvalues = cvalues[ids]
 
-    max_width = maximum(length.(ckeys)) + 2
+    max_width = maximum(length.(sckeys)) + 2
 
     # == Main Window =======================================================================
 
     w = create_window(
         border = true,
         border_style = :rounded,
-        theme  = Theme(:border => ncurses_style(:grey46, :transparent)),
+        theme  = Theme(:border => tui_style(:red, :black)),
         title  = " Color Table ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -94,7 +95,7 @@ function color_table()
             (prev_widget, :right, 1)
         end
 
-        decoration = ncurses_style(:black, cvalues[id])
+        decoration = tui_style(:black, ckeys[id])
 
         prev_widget = color_container(
             c,
@@ -104,7 +105,7 @@ function color_table()
                 width       = max_width,
                 height      = 2,
             ),
-            string(ckeys[id]),
+            sckeys[id],
             decoration
         )
     end
@@ -114,7 +115,7 @@ function color_table()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => ncurses_style(243, :transparent)),
+        theme     = Theme(:border => tui_style(:grey46)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),

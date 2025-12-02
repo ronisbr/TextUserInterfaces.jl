@@ -16,10 +16,10 @@ macro nstyle(style, buffer, block)
     ex = quote
         color_pair = $style.color_pair
         attrs      = $style.attrs
+        cp_ref     = Ref{Cint}(color_pair)
+        cp_pointer = color_pair >= 0 ? Base.pointer_from_objref(cp_ref) : C_NULL
 
-        cp_pointer = color_pair >= 0 ? Base.pointer_from_objref(Ref{Cint}(color_pair)) : C_NULL
-
-        NCurses.wattr_set($buffer, attrs, 0, cp_pointer)
+        GC.@preserve cp_ref NCurses.wattr_set($buffer, attrs, 0, cp_pointer)
         $block
         NCurses.wattr_set($buffer, 0, 0, C_NULL)
     end

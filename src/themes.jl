@@ -73,12 +73,12 @@ end
 Fill `theme` with the default theme values.
 """
 function _fill_with_default_theme!(theme)
-    theme[:default]   = ncurses_style(:white, -1)
-    theme[:error]     = ncurses_style(:red, -1)
-    theme[:highlight] = ncurses_style(; reversed = true)
-    theme[:selected]  = ncurses_style(:yellow, -1)
-    theme[:border]    = ncurses_style(:white, -1)
-    theme[:title]     = ncurses_style(:white, -1; bold = true)
+    theme[:default]   = tui_style(:white)
+    theme[:error]     = tui_style(:red)
+    theme[:highlight] = tui_style(; reversed = true)
+    theme[:selected]  = tui_style(:yellow)
+    theme[:border]    = tui_style(:white)
+    theme[:title]     = tui_style(:white; bold = true)
 
     return nothing
 end

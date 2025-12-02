@@ -247,7 +247,7 @@ function panels()
         top_anchor   = (:parent, :top),
         value        = 0,
         show_value   = true,
-        theme        = Theme(:default => ncurses_style(:yellow, :grey23))
+        theme        = Theme(:default => ncurses_style("#ff00ff", "#fafafa"))
     )
 
     # Raw Buffer

@@ -172,9 +172,9 @@ function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
 
             # We are updating the decoration since the beginning. Hence, the properties
             # `bold`, `underline`, and `reversed` are only on if they are active.
-            style = ncurses_style(
-                ansi_foreground_to_ncurses_color(pd.foreground),
-                ansi_background_to_ncurses_color(pd.background);
+            style = tui_style(
+                ansi_foreground_to_colorant(pd.foreground),
+                ansi_background_to_colorant(pd.background);
                 bold      = pd.bold      == StringManipulation.active,
                 underline = pd.underline == StringManipulation.active,
                 reversed  = pd.reversed  == StringManipulation.active

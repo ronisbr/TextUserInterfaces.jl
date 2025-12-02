@@ -53,6 +53,7 @@ Main structure that defines a text user interface.
 
     # == Colors ============================================================================
 
+    true_color::Bool = false
     initialized_color_pairs::Vector{Tuple{Int, Int}} = Tuple{Int, Int}[]
 
     # == Default Theme =====================================================================
