@@ -17,11 +17,11 @@ macro nstyle(style, buffer, block)
         color_pair = $style.color_pair
         attrs      = $style.attrs
 
-        color_pair >= 0 && NCurses.wcolor_set($buffer, color_pair, C_NULL)
-        NCurses.wattr_on($buffer, attrs, C_NULL)
+        cp_pointer = color_pair >= 0 ? Base.pointer_from_objref(Ref{Cint}(color_pair)) : C_NULL
+
+        NCurses.wattr_set($buffer, attrs, 0, cp_pointer)
         $block
-        NCurses.wattr_off($buffer, attrs, C_NULL)
-        color_pair >= 0 && NCurses.wcolor_set($buffer, 0, C_NULL)
+        NCurses.wattr_set($buffer, 0, 0, C_NULL)
     end
 
     return esc(ex)
