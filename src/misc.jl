@@ -12,7 +12,7 @@ export obj_desc
 Convert an ANSI foreground color code in `ansi` to a ncurses color index.
 """
 function ansi_foreground_to_ncurses_color(ansi::String)
-    isempty(ansi) && return 7
+    isempty(ansi) && return -1
 
     tokens = split(ansi, ';')
 
@@ -21,9 +21,9 @@ function ansi_foreground_to_ncurses_color(ansi::String)
     if num_tokens == 1
         code = tryparse(Int, first(tokens), base = 10)
 
-        isnothing(code) && return 7
+        isnothing(code) && return -1
 
-              code == 39 && return 7
+              code == 39 && return -1
         30 <= code <= 37 && return code - 30
         90 <= code <= 97 && return code - 82
 
@@ -46,7 +46,7 @@ end
 Convert an ANSI background color code in `ansi` to a ncurses color index.
 """
 function ansi_background_to_ncurses_color(ansi::String)
-    isempty(ansi) && return 0
+    isempty(ansi) && return -1
 
     tokens = split(ansi, ';')
 
@@ -55,9 +55,9 @@ function ansi_background_to_ncurses_color(ansi::String)
     if num_tokens == 1
         code = tryparse(Int, first(tokens), base = 10)
 
-        isnothing(code) && return 0
+        isnothing(code) && return -1
 
-               code ==  49 && return 0
+               code ==  49 && return -1
          40 <= code <=  47 && return code - 40
         100 <= code <= 107 && return code - 82
 
