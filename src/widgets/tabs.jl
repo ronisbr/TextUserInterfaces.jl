@@ -72,8 +72,7 @@ function create_tabs!(
     # create the `tabs` structure first to assign the real drawing function.
     rb = create_widget(
         Val(:raw_buffer),
-        ObjectLayout(
-            ;
+        ObjectLayout(;
             bottom_anchor = Anchor(:parent, :bottom),
             left_anchor   = Anchor(:parent, :left),
             right_anchor  = Anchor(:parent, :right),
