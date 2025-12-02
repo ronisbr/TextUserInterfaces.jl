@@ -9,7 +9,7 @@ function all_widgets()
 
     w = create_window(
         border = true,
-        theme  = Theme(:border => ncurses_style(243, :black)),
+        theme  = Theme(:border => ncurses_style(:grey42, :transparent)),
         title  = " All Widgets ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -254,9 +254,9 @@ function all_widgets()
         end
 
         list_box_theme = Theme(
-            :default   => ncurses_style(:white, 240),
-            :highlight => ncurses_style(:white, 240; reversed = true),
-            :selected  => ncurses_style(:yellow, 240),
+            :default   => ncurses_style(:white,  :grey19),
+            :highlight => ncurses_style(:white,  :grey19; reversed = true),
+            :selected  => ncurses_style(:yellow, :grey19),
         )
 
         @tui_combo_box(
@@ -431,7 +431,7 @@ function all_widgets()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => ncurses_style(243, :black)),
+        theme     = Theme(:border => ncurses_style(:grey42, :transparent)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),

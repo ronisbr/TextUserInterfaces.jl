@@ -9,7 +9,7 @@ function panels()
 
     w = create_window(
         border = true,
-        theme  = Theme(:border => ncurses_style(243, :black)),
+        theme  = Theme(:border => ncurses_style(:grey42, :transparent)),
         title  = " Panels ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -247,7 +247,7 @@ function panels()
         top_anchor   = (:parent, :top),
         value        = 0,
         show_value   = true,
-        theme        = Theme(:default => ncurses_style(:green, 246))
+        theme        = Theme(:default => ncurses_style(:yellow, :grey23))
     )
 
     # Raw Buffer

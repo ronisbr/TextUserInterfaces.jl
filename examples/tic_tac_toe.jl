@@ -190,7 +190,7 @@ function tic_tac_toe()
         top_anchor = (current_player_info_label, :top),
         left_anchor = (current_player_info_label, :right),
         width = 40,
-        theme = Theme(:default => ncurses_style(_PLAYER_COLORS[1], :black))
+        theme = Theme(:default => ncurses_style(_PLAYER_COLORS[1], :transparent))
     )
 
     # == Game Result =======================================================================
@@ -267,7 +267,7 @@ function tic_tac_toe()
                     )
 
                     current_player_label.theme = Theme(
-                        :default => ncurses_style(_PLAYER_COLORS[current_player], :black)
+                        :default => ncurses_style(_PLAYER_COLORS[current_player], :transparent)
                     )
                 end
 
