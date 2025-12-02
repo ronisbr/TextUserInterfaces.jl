@@ -1,5 +1,7 @@
 using TextUserInterfaces
 
+# Create the container that holds the color label and shows a rectangle with the respective
+# color.
 function color_container(
     parent::WidgetContainer,
     layout::ObjectLayout,
@@ -11,26 +13,26 @@ function color_container(
 
     @tui_builder begin
         @tui_label(
-            parent = c,
-            top_anchor = (:parent, :top),
-            left_anchor = (:parent, :left),
+            parent       = c,
+            alignment    = :c,
+            fill         = true,
+            label        = text,
+            height       = 1,
+            left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
-            height = 1,
-            fill = true,
-            alignment = :c,
-            label = text,
+            top_anchor   = (:parent, :top),
         )
 
         @tui_label(
-            parent = c,
-            top_anchor = (__LAST__, :bottom),
-            left_anchor = (:parent, :left),
+            parent       = c,
+            alignment    = :c,
+            fill         = true,
+            height       = 1,
+            label        = "",
+            theme        = Theme(:default => decoration),
+            left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
-            height = 1,
-            fill = true,
-            alignment = :c,
-            theme = Theme(:default => decoration),
-            label = "",
+            top_anchor   = (__LAST__, :bottom),
         )
     end
 
@@ -52,6 +54,8 @@ function color_table()
     cvalues = cvalues[ids]
 
     max_width = maximum(length.(ckeys)) + 2
+
+    # == Main Window =======================================================================
 
     w = create_window(
         border = true,
@@ -104,6 +108,37 @@ function color_table()
             decoration
         )
     end
+
+    # == Bottom Window =================================================================
+
+    # Bottom window to show information.
+    bw = create_window(;
+        border    = true,
+        theme     = Theme(:border => ncurses_style(243, :transparent)),
+        focusable = false,
+        layout    = ObjectLayout(
+            bottom_anchor = Anchor(ROOT_WINDOW, :bottom),
+            left_anchor   = Anchor(ROOT_WINDOW, :left),
+            right_anchor  = Anchor(ROOT_WINDOW, :right),
+            height        = 3
+        ),
+    )
+
+    # Create a bottom window for the information.
+    cy  = "\e[33;1m"
+    cg  = "\e[38;5;243m"
+    cr  = "\e[0m"
+    sep = cg * " | " * cr
+
+    @tui_ansi_label(
+        parent        = bw.widget_container,
+        alignment     = :r,
+        bottom_anchor = (:parent, :bottom),
+        left_anchor   = (:parent, :left),
+        right_anchor  = (:parent, :right),
+        top_anchor    = (:parent, :top),
+        text          = cy * "[F1 | Alt + q]" * cr * " : Quit"
+    )
 
     app_main_loop(; exit_keys = [:F1, "\eq"])
 end
