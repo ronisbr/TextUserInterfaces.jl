@@ -127,6 +127,7 @@ function _widget_button__draw!(widget::WidgetButton, focused::Bool)
     @unpack buffer, width, label, style, theme = widget
 
     # Get the style depending on the focus.
+    b = get_style(theme, :border)
     s = get_style(theme, focused ? :highlight : :default)
 
     if style == :none
@@ -141,15 +142,19 @@ function _widget_button__draw!(widget::WidgetButton, focused::Bool)
         str = " "^pad * label * " "^(Δ - pad)
 
         if style == :boxed
-            NCurses.mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
-            NCurses.mvwprintw(buffer, 1, 0, "│")
+            @nstyle b buffer begin
+                NCurses.mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
+                NCurses.mvwprintw(buffer, 1, 0, "│")
+            end
 
             @nstyle s buffer begin
                 NCurses.wprintw(buffer, " " * str * " ")
             end
 
-            NCurses.wprintw(buffer, "│")
-            NCurses.mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
+            @nstyle b buffer begin
+                NCurses.wprintw(buffer, "│")
+                NCurses.mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
+            end
         else
             @nstyle s buffer begin
                 NCurses.mvwprintw(buffer, 0, 0, "[ " * str * " ]")

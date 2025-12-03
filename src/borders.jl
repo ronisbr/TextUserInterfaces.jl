@@ -16,12 +16,13 @@ Draw a border to `buffer`. The border style is selected by the keyword `style`.
     (**Default**: `:default`)
 """
 function draw_border!(buffer::Ptr{WINDOW}; style::Symbol = :default)
-    style == :rounded && return _borders__draw_rounded_border!(buffer)
+    # NOTE: We cannot use `wborder` because it will not work if we set a pair to a number
+    # larger than 256.
+    style == :rounded && return _borders__draw_generic_border!(buffer, "╭", "╮", "╰", "╯", "─", "│")
     style == :double  && return _borders__draw_generic_border!(buffer, "╔", "╗", "╚", "╝", "═", "║")
     style == :heavy   && return _borders__draw_generic_border!(buffer, "┏", "┓", "┗", "┛", "━", "┃")
 
-    NCurses.wborder(buffer)
-    return nothing
+    return _borders__draw_generic_border!(buffer, "┌", "┐", "└", "┘", "─", "│")
 end
 
 ############################################################################################
@@ -77,27 +78,6 @@ function _borders__draw_generic_border!(
             NCurses.mvwprintw(buffer, i - 1, w - 1, vline_str)
         end
     end
-
-    return nothing
-end
-
-"""
-    _borders__draw_rounded_border!(buffer::Ptr{WINDOW}) -> Nothing
-
-Draw a rounded border to the given `buffer`.
-"""
-function _borders__draw_rounded_border!(buffer::Ptr{WINDOW})
-    # When drawing a rounded borders, only the corners are UTF-8. Hence, we can draw a
-    # default border and replace the corners, which is considerably faster.
-    NCurses.wborder(buffer)
-
-    # Get the dimensions of the window.
-    h, w = _get_window_dimensions(buffer)
-
-    NCurses.mvwprintw(buffer, 0    , 0    , "╭")
-    NCurses.mvwprintw(buffer, 0    , w - 1, "╮")
-    NCurses.mvwprintw(buffer, h - 1, 0    , "╰")
-    NCurses.mvwprintw(buffer, h - 1, w - 1, "╯")
 
     return nothing
 end

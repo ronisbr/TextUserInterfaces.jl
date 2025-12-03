@@ -183,12 +183,13 @@ function _tabs__draw_border_and_tabline!(
     if border
         @nstyle get_style(rb.theme, :border) buffer begin
             # Create a full border.
-            NCurses.wborder(buffer)
+            draw_border!(buffer)
 
             # Draw the line between the tab bar and the tabs.
-            NCurses.mvwaddch(buffer, 2, 0,     NCurses.ACS_(:LTEE))
-            NCurses.mvwhline(buffer, 2, 1,     NCurses.ACS_(:HLINE), w - 2)
-            NCurses.mvwaddch(buffer, 2, w - 1, NCurses.ACS_(:RTEE))
+            line = repeat("─", w - 2)
+            NCurses.mvwprintw(buffer, 2, 0, "├")
+            NCurses.mvwprintw(buffer, 2, 1, line)
+            NCurses.mvwprintw(buffer, 2, w - 1, "┤")
         end
     end
 

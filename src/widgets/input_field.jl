@@ -223,7 +223,7 @@ function redraw!(widget::WidgetInputField)
             NCurses.mvwprintw(internal_buffer, 1, 1, widget.rendered_view)
         end
 
-        NCurses.wborder(internal_buffer)
+        draw_border!(internal_buffer)
     else
         @nstyle s internal_buffer begin
             NCurses.mvwprintw(internal_buffer, 0, 0, clear_str)
