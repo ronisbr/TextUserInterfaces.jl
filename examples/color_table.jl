@@ -6,7 +6,7 @@ function color_container(
     parent::WidgetContainer,
     layout::ObjectLayout,
     text::String,
-    decoration::NCursesStyle
+    decoration::TuiStyle
 )
     c = create_widget(Val(:container), layout)
     add_widget!(parent, c)
@@ -61,7 +61,7 @@ function color_table()
     w = create_window(
         border = true,
         border_style = :rounded,
-        theme  = Theme(:border => tui_style(:red, :black)),
+        theme  = Theme(:border => tui_style(:grey42)),
         title  = " Color Table ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -115,7 +115,7 @@ function color_table()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => tui_style(:grey46)),
+        theme     = Theme(:border => tui_style(:grey42)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),
