@@ -457,13 +457,16 @@ function all_widgets()
         text          = cy * "[F1 | Alt + q]" * cr * " : Quit"
     )
 
+    resize_buffer_to_fit_contents!(w)
+
     # == Signals ===========================================================================
 
     d = create_dialog(
         Val(:message_box),
         ObjectLayout();
-        title = "Welcome to TextUserInterfaces.jl!",
-        message = "This is an example showcasing all the available widgets."
+        title = " Welcome to TextUserInterfaces.jl! ",
+        message = "This is an example showcasing all the available widgets.",
+        border_style = :rounded,
     )
     show_dialog(d)
 
