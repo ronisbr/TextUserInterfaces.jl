@@ -4,45 +4,35 @@
 #
 ############################################################################################
 
-export change_tab!, create_tabs!, next_tab!, previous_tab!
+export change_tab!, get_tab_container, next_tab!, previous_tab!
 
 ############################################################################################
 #                                        Structure                                         #
 ############################################################################################
 
-mutable struct Tabs <: ComposedWidget
-    container::WidgetContainer
-    tabs::Vector{WidgetContainer}
-    active_tab::Int
-    border::Bool
-    num_tabs::Int
-    tab_names::Vector{String}
+@kwdef mutable struct Tabs <: ComposedWidget
+    container::Union{WidgetContainer}
+    theme::Theme
+
+    # == Variables Related To the Tabs =====================================================
+
+    tab_containers::Vector{WidgetContainer} = WidgetContainer[]
+    active_tab::Int = 1
+    border::Bool = false
+    border_style::Symbol = :default
+    num_tabs::Int = 1
+    tab_names::Vector{String} = String[]
 end
 
 ############################################################################################
-#                                     Public Functions                                     #
+#                                        Widget API                                        #
 ############################################################################################
 
-"""
-    create_tabs!(parent::WidgetContainer; kwargs...)
-
-Create a set of tabs in `parent`.
-
-# Keywords
-
-- `border::Bool`: If `true`, the tabs will be drawn with borders.
-    (**Default**: `false`)
-- `num_tabs::Int`: Number of tabs.
-    (**Default**: `1`)
-- `tab_names::Union{Nothing, Vector{String}}`: Names of the tabs. If it is `nothing`, we
-    will use "Tabs #i" for the *i*th tab.
-    (**Default**: `nothing`)
-- `theme::Theme`: Theme for the tabs.
-    (**Default**: `tui.default_theme`)
-"""
-function create_tabs!(
-    parent::WidgetContainer;
+function create_widget(
+    ::Val{:tabs},
+    layout::ObjectLayout;
     border::Bool = false,
+    border_style::Symbol = :default,
     num_tabs::Int = 1,
     tab_names::Union{Nothing, Vector{String}} = nothing,
     theme::Theme = Theme()
@@ -54,22 +44,43 @@ function create_tabs!(
     (!isnothing(tab_names) && length(tab_names) != num_tabs) &&
         error("The number of tab names must be equal to the number of tabs.")
 
-    # == Pre-Allocate the Variables ========================================================
+    container = create_widget(Val(:container), layout)
+    tab_names = isnothing(tab_names) ? ["Tab #$i" for i in 1:num_tabs] : tab_names
 
-    # Allocate the vectors.
-    tabs = Vector{WidgetContainer}(undef, num_tabs)
+    tabs = Tabs(;
+        container    = container,
+        theme        = theme,
+        border       = border,
+        border_style = border_style,
+        num_tabs     = num_tabs,
+        tab_names    = tab_names
+    )
+
+    sizehint!(tabs.tab_containers, num_tabs)
+
+    return tabs
+end
+
+############################################################################################
+#                                      Container API                                       #
+############################################################################################
+
+# We need a custom function when adding tabs to a container because we first need the main
+# container added to a parent before creating the other components.
+function add_widget!(parent::WidgetContainer, tabs::Tabs)
+    @unpack container, border, num_tabs, theme, tab_containers = tabs
 
     # == Create the Base Container =========================================================
 
-    # Create the main container.
-    container = create_widget(Val(:container), ObjectLayout())
+    # First, we need to add the base container so that we have access to its size.
     add_widget!(parent, container)
 
     # Create the raw buffer widget that will contain the tab bar and the border if the user
     # wants.
-    #
-    # NOTE: We only create the widget here with a dummy drawing function because we need to
-    # create the `tabs` structure first to assign the real drawing function.
+    function rb_draw!(rb::WidgetRawBuffer, buffer::Ptr{WINDOW})
+        return _tabs__draw_border_and_tabline!(rb, buffer, tabs)
+    end
+
     rb = create_widget(
         Val(:raw_buffer),
         ObjectLayout(;
@@ -77,45 +88,49 @@ function create_tabs!(
             left_anchor   = Anchor(:parent, :left),
             right_anchor  = Anchor(:parent, :right),
             top_anchor    = Anchor(:parent, :top)
-        );
-        theme = theme
+        ),
+        draw! = rb_draw!
     )
     add_widget!(container, rb)
 
     # == Create the Tabs ===================================================================
 
-    for i in eachindex(tabs)
-        tabs[i] = create_widget(
-            Val(:container),
-            ObjectLayout(
-                bottom_anchor = Anchor(:parent, :bottom, border ? -1 : 0),
-                left_anchor   = Anchor(:parent, :left,   border ?  1 : 0),
-                right_anchor  = Anchor(:parent, :right,  border ? -1 : 0),
-                top_anchor    = Anchor(:parent, :top,    border ?  3 : 1),
-            );
-        )
-        add_widget!(container, tabs[i])
-        hide!(tabs[i])
-    end
-
-    unhide!(tabs[1])
-
-    tabs = Tabs(
-        container,
-        tabs,
-        1,
-        border,
-        num_tabs,
-        isnothing(tab_names) ? ["Tab #$i" for i in 1:num_tabs] : tab_names
+    tab_layout = ObjectLayout(;
+        bottom_anchor = Anchor(:parent, :bottom, border ? -1 : 0),
+        left_anchor   = Anchor(:parent, :left, border ? 1 : 0),
+        right_anchor  = Anchor(:parent, :right, border ? -1 : 0),
+        top_anchor    = Anchor(:parent, :top, border ? 3 : 1),
     )
 
-    # Now we can create the real drawing function for the raw buffer.
-    rb.draw! = (rb::WidgetRawBuffer, buffer::Ptr{WINDOW}) -> begin
-        _tabs__draw_border_and_tabline!(rb, buffer, tabs)
+    for _ in 1:num_tabs
+        tab_i_container = create_widget(Val(:container), tab_layout)
+
+        add_widget!(container, tab_i_container)
+        hide!(tab_i_container)
+
+        push!(tab_containers, tab_i_container)
     end
 
-    return tabs
+    unhide!(tab_containers[begin])
+
+    return nothing
 end
+
+function remove_widget!(parent::WidgetContainer, tabs::Tabs)
+    @unpack container, tab_containers = tabs
+
+    for tc in tab_containers
+        remove_widget!(container, tc)
+    end
+
+    remove_widget!(parent, container)
+
+    return nothing
+end
+
+############################################################################################
+#                                     Public Functions                                     #
+############################################################################################
 
 """
     change_tab!(tabs::Tabs, tab_number::Int) -> Nothing
@@ -126,14 +141,29 @@ does nothing.
 function change_tab!(tabs::Tabs, tab_number::Int)
     ((tab_number <= 0) || (tab_number > tabs.num_tabs)) && return nothing
 
-    hide!(tabs.tabs[tabs.active_tab])
-    unhide!(tabs.tabs[tab_number])
+    active_tab_container      = get_tab_container(tabs, tabs.active_tab)
+    next_active_tab_container = get_tab_container(tabs, tab_number)
 
-    move_focus_to_widget!(tabs.container, tabs.tabs[tab_number])
+    hide!(active_tab_container)
+    unhide!(next_active_tab_container)
+
+    move_focus_to_widget!(tabs.container, next_active_tab_container)
 
     tabs.active_tab = tab_number
 
     return nothing
+end
+
+"""
+    get_tab_container(tabs::Tabs, tab_number::Int) -> WidgetContainer
+
+Get the container associated with tab ID `tab_number` in `tabs`.
+"""
+function get_tab_container(tabs::Tabs, tab_number::Int)
+    ((tab_number <= 0) || (tab_number > tabs.num_tabs)) &&
+        error("The active tab number is invalid.")
+
+    return tabs.tab_containers[tab_number + begin - 1]
 end
 
 """
@@ -172,18 +202,15 @@ function _tabs__draw_border_and_tabline!(
 )
     # == Unpack ============================================================================
 
-    w          = rb.width
-    active_tab = tabs.active_tab
-    border     = tabs.border
-    num_tabs   = tabs.num_tabs
-    tab_names  = tabs.tab_names
+    @unpack active_tab, border, border_style, num_tabs, tab_names = tabs
+    w = rb.width
 
     # == Draw the Border ===================================================================
 
     if border
         @nstyle get_style(rb.theme, :border) buffer begin
             # Create a full border.
-            draw_border!(buffer)
+            draw_border!(buffer, style = border_style)
 
             # Draw the line between the tab bar and the tabs.
             line = repeat("─", w - 2)
@@ -200,32 +227,34 @@ function _tabs__draw_border_and_tabline!(
     for i in 1:num_tabs
         c = get_style(rb.theme, i == active_tab ? :selected : :default)
 
-        if border
-            NCurses.waddch(buffer, ' ')
-        else
-            NCurses.waddch(buffer, '|')
-            NCurses.waddch(buffer, ' ')
-        end
+        !border && NCurses.wprintw(buffer, "|")
+        NCurses.wprintw(buffer, " ")
 
         @nstyle c buffer begin
-            NCurses.wprintw(buffer, (isnothing(tab_names) ? "Tab #$i" : tab_names[i]))
+            NCurses.wprintw(buffer, tab_names[i])
         end
 
-        if border
-            @nstyle get_style(rb.theme, :border) buffer begin
-                NCurses.waddch(buffer, ' ')
-                NCurses.waddch(buffer, NCurses.ACS_(:VLINE))
-                curx = Int64(NCurses.getcurx(buffer)) - 1
-                NCurses.mvwaddch(buffer, 0, curx, NCurses.ACS_(:TTEE))
-                NCurses.mvwaddch(buffer, 2, curx, NCurses.ACS_(:BTEE))
-                NCurses.wmove(buffer, 1, curx + 1)
-            end
-        else
-            NCurses.waddch(buffer, ' ')
+        NCurses.wprintw(buffer, " ")
+
+        border && @nstyle get_style(rb.theme, :border) buffer begin
+            NCurses.wprintw(buffer, "│")
+
+            curx = Int64(NCurses.getcurx(buffer)) - 1
+
+            NCurses.mvwprintw(buffer, 0, curx, "┬")
+            NCurses.mvwprintw(buffer, 2, curx, "┴")
+
+            NCurses.wmove(buffer, 1, curx + 1)
         end
     end
 
-    border || NCurses.waddch(buffer, '|')
+    !border && NCurses.wprintw(buffer, "|")
 
     return nothing
 end
+
+############################################################################################
+#                                         Helpers                                          #
+############################################################################################
+
+@create_widget_helper tabs

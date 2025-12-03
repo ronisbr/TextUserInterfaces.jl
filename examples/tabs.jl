@@ -23,11 +23,15 @@ function tabs()
 
     # == Create Tabs =======================================================================
 
-    t = create_tabs!(
-        c;
-        border = true,
-        num_tabs = 3,
-        theme  = Theme(:border => tui_style(:grey42, :transparent))
+    t = @tui_tabs(
+        parent        = c,
+        border        = true,
+        border_style  = :rounded,
+        num_tabs      = 3,
+        bottom_anchor = (:parent, :bottom),
+        left_anchor   = (:parent, :left),
+        right_anchor  = (:parent, :right),
+        top_anchor    = (:parent, :top)
     )
 
     # -- Tab 1 -----------------------------------------------------------------------------
@@ -39,28 +43,28 @@ function tabs()
         end
 
         @tui_button(
-            parent      = t.tabs[1],
+            parent      = get_tab_container(t, 1),
             style       = :simple,
             left_anchor = (:parent, :left),
             top_anchor  = (:parent, :top, 1),
         )
 
         @tui_button(
-            parent        = t.tabs[1],
+            parent        = get_tab_container(t, 1),
             style         = :boxed,
             left_anchor   = (__LAST__, :right),
             middle_anchor = (__LAST__, :middle),
         )
 
         @tui_button(
-            parent        = t.tabs[1],
+            parent        = get_tab_container(t, 1),
             style         = :none,
             left_anchor   = (__LAST__, :right),
             middle_anchor = (__LAST__, :middle),
         )
 
         @tui_label(
-            parent       = t.tabs[1],
+            parent       = get_tab_container(t, 1),
             label        = "",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
@@ -92,7 +96,7 @@ function tabs()
     # -- Tab 2 -----------------------------------------------------------------------------
 
     @tui_ansi_label(
-        parent      = t.tabs[2],
+        parent      = get_tab_container(t, 2),
         text        = "\e[1mThis \e[34mis a color \e[47mlabel\e[0m in Tab 2.",
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top)
@@ -109,14 +113,14 @@ function tabs()
         end
 
         @tui_combo_box(
-            parent      = t.tabs[3],
+            parent      = get_tab_container(t, 3),
             data        = ["Item #$i" for i in 1:10],
             left_anchor = (:parent, :left),
             top_anchor  = (:parent, :top),
         )
 
         @tui_label(
-            parent        = t.tabs[3],
+            parent        = get_tab_container(t, 3),
             label         = "",
             left_anchor   = (__LAST__, :right, 2),
             right_anchor  = (:parent, :right),
