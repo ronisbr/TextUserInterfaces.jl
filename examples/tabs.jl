@@ -9,7 +9,7 @@ function tabs()
 
     w = create_window(
         border = true,
-        theme  = Theme(:border => ncurses_style(:grey42, :transparent)),
+        theme  = Theme(:border => tui_style(:grey42, :transparent)),
         title  = " Tabs ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -27,7 +27,7 @@ function tabs()
         c;
         border = true,
         num_tabs = 3,
-        theme  = Theme(:border => ncurses_style(:grey42, :transparent))
+        theme  = Theme(:border => tui_style(:grey42, :transparent))
     )
 
     # -- Tab 1 -----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ function tabs()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => ncurses_style(:grey42, :transparent)),
+        theme     = Theme(:border => tui_style(:grey42, :transparent)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),
