@@ -17,7 +17,7 @@ export change_text!
     text::String
 
     # Variables to store the parsed text and color to reduce the computational burden.
-    aligned_text::Vector{Vector{Pair{String, NCursesStyle}}} = Vector{Pair{String, NCursesStyle}}[]
+    aligned_text::Vector{Vector{Pair{String, TuiStyle}}} = Vector{Pair{String, TuiStyle}}[]
 end
 
 ############################################################################################
@@ -160,7 +160,7 @@ function _widget_ansi_label__parse_ansi_text!(widget::WidgetAnsiLabel)
     for line in tokens
         parsed_line = parse_ansi_string(line)
 
-        line_decoration = Pair{String, NCursesStyle}[]
+        line_decoration = Pair{String, TuiStyle}[]
 
         for (t, d) in parsed_line
             pd = update_decoration(pd, d)

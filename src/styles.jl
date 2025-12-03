@@ -7,17 +7,17 @@
 export add_attribute, tui_style, get_color_pair, init_color_pair
 
 """
-    add_attribute(style::NCursesStyle, attr::Int) -> NCursesStyle
+    add_attribute(style::TuiStyle, attr::Int) -> TuiStyle
 
 Add the attribute `attr` to the given `style` and return the new style.
 """
-function add_attribute(style::NCursesStyle, attr::Integer)
-    new_style = NCursesStyle(style.attrs | attr, style.color_pair)
+function add_attribute(style::TuiStyle, attr::Integer)
+    new_style = TuiStyle(style.attrs | attr, style.color_pair)
     return new_style
 end
 
 """
-    tui_style([foreground, background,]; kwargs...) -> NCursesStyle
+    tui_style([foreground, background,]; kwargs...) -> TuiStyle
 
 Return an object that describe a style to be applied to the printed characters. The style
 consists in a `foreground` color, a `background` color, and a set of attributes.
@@ -61,7 +61,7 @@ function tui_style(
     attrs |= reversed  ? NCurses.A_REVERSE   : NCurses.attr_t(0)
     attrs |= underline ? NCurses.A_UNDERLINE : NCurses.attr_t(0)
 
-    return NCursesStyle(attrs, idp)
+    return TuiStyle(attrs, idp)
 end
 
 """
@@ -94,12 +94,12 @@ function init_color_pair(foreground::Integer, background::Integer)
 end
 
 """
-    set_background_style!([buffer::Ptr{WINDOW}, ]style::NCursesStyle) -> Nothing
+    set_background_style!([buffer::Ptr{WINDOW}, ]style::TuiStyle) -> Nothing
 
 Set the background of the `buffer` to the specified `style`. If `buffer` is omitted, the
 standard screen is used.
 """
-function set_background_style!(style::NCursesStyle)
+function set_background_style!(style::TuiStyle)
     @unpack attrs, color_pair = style
 
     t = NCurses.cchar_t(attrs, (0, 0, 0, 0, 0), color_pair)
@@ -110,7 +110,7 @@ function set_background_style!(style::NCursesStyle)
     return nothing
 end
 
-function set_background_style!(buffer::Ptr{WINDOW}, style::NCursesStyle)
+function set_background_style!(buffer::Ptr{WINDOW}, style::TuiStyle)
     @unpack attrs, color_pair = style
 
     t = NCurses.cchar_t(attrs, (0, 0, 0, 0, 0), color_pair)

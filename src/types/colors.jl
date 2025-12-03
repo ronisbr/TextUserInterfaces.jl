@@ -4,25 +4,6 @@
 #
 ############################################################################################
 
-export NCursesStyle
-
-"""
-    struct NCursesStyle
-
-Structure that defines a style to be applied to printed characters.
-
-# Fields
-
-- `attrs::NCurses.attr_t`: Attributes to be applied (bold, underline, etc.).
-    (**Default** = `0`)
-- `color_pair::Integer`: ID of the color pair to be applied.
-    (**Default** = `0`)
-"""
-@kwdef struct NCursesStyle
-    attrs::NCurses.attr_t = 0
-    color_pair::Int = 0
-end
-
 # Dictionary that converts the color name to color ID.
 const _XTERM_NAMES = Dict(
     :transparent         => -1,
