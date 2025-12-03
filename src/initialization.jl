@@ -32,7 +32,7 @@ function initialize_tui()
 
     @log DEBUG "initialize_tui" """
         TUI initialized.
-        Terminal $(NCurses.has_colors() == 1 ? "" : "does not ")have colors."""
+        Terminal $(NCurses.has_colors() == 1 ? "has" : "does not have") colors."""
 
     # Reset all definitions of color pairs.
     empty!(tui.initialized_color_pairs)
