@@ -9,7 +9,7 @@ function panels()
 
     w = create_window(
         border = true,
-        theme  = Theme(:border => ncurses_style(:grey42, :transparent)),
+        theme  = Theme(:border => tui_style(:grey42)),
         title  = " Panels ",
         layout = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom, -3),
@@ -21,11 +21,7 @@ function panels()
 
     c = w.widget_container
 
-    p = create_panels!(
-        c;
-        columns = 3,
-        lines = 3
-    )
+    p = create_panels!(c; columns = 3, lines = 3)
 
     # == Label =============================================================================
 
@@ -247,7 +243,7 @@ function panels()
         top_anchor   = (:parent, :top),
         value        = 0,
         show_value   = true,
-        theme        = Theme(:default => ncurses_style("#ff00ff", "#fafafa"))
+        theme        = Theme(:default => tui_style(colorant"#ff00ff", colorant"#fafafa"))
     )
 
     # Raw Buffer
@@ -297,7 +293,7 @@ function panels()
     # Bottom window to show information.
     bw = create_window(;
         border    = true,
-        theme     = Theme(:border => ncurses_style(243, :black)),
+        theme     = Theme(:border => tui_style(:grey42)),
         focusable = false,
         layout    = ObjectLayout(
             bottom_anchor = Anchor(ROOT_WINDOW, :bottom),
