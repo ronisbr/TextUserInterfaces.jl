@@ -56,19 +56,9 @@ function tui_style(
     # Initialize the color pair.
     idp = init_color_pair(fgid, bgid)
 
-    @log DEBUG "tui_style" """
-        Requested style:
-            Foreground: $foreground, $(fgid)
-            Background: $background, $(bgid)
-            Bold:       $bold
-            Reversed:   $reversed
-            Underline:  $underline
-            idp:        $idp
-    """
-
     # Set the attributes.
-    attrs = bold ? NCurses.A_BOLD : NCurses.attr_t(0)
-    attrs |= reversed ? NCurses.A_REVERSE : NCurses.attr_t(0)
+    attrs  = bold      ? NCurses.A_BOLD      : NCurses.attr_t(0)
+    attrs |= reversed  ? NCurses.A_REVERSE   : NCurses.attr_t(0)
     attrs |= underline ? NCurses.A_UNDERLINE : NCurses.attr_t(0)
 
     return NCursesStyle(attrs, idp)
@@ -137,14 +127,7 @@ end
 
 function _convert_colorant_to_24bit_color(colorant::Symbol)
     id = get(_XTERM_NAMES, colorant, -1)
-
-    colorant = if id == -1
-        nothing
-    else
-        str = first(_XTERM_COLORS[id + 1])
-        parse(Int, hex(RGB(str), :rrggbb); base = 16)
-    end
-
+    colorant = id == -1 ? nothing : first(_XTERM_COLORS[id + 1])
     return _convert_colorant_to_24bit_color(colorant)
 end
 
@@ -156,9 +139,7 @@ end
 
 function _convert_colorant_to_256_colors(colorant::Symbol)
     id = get(_XTERM_NAMES, colorant, -1)
-
     ((id == -1) || (id + 1 > length(_XTERM_COLORS))) && return -1
-
     return last(_XTERM_COLORS[id + 1])
 end
 
