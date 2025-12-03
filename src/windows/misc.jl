@@ -4,7 +4,7 @@
 #
 ############################################################################################
 
-export hide!, unhide!
+export hide!, unhide!, resize_buffer_to_fit_contents!, set_window_title!
 
 """
     hide!(win::Window) -> Nothing
