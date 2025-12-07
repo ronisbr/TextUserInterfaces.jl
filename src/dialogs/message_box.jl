@@ -17,17 +17,24 @@ const _MESSAGE_BOX__INFO_ICON = """
 │         │
 ╰─────────╯"""
 
-const _MESSAGE_BOX__ICON_WARNING = """
+const _MESSAGE_BOX__WARNING_ICON = """
 ╭─────────╮
 │         │
 │    !    │
 │         │
 ╰─────────╯"""
 
-const _MESSAGE_BOX__ICON_ERROR = """
+const _MESSAGE_BOX__ERROR_ICON = """
 ╭─────────╮
 │         │
 │    x    │
+│         │
+╰─────────╯"""
+
+const _MESSAGE_BOX__QUESTION_ICON = """
+╭─────────╮
+│         │
+│    ?    │
 │         │
 ╰─────────╯"""
 
@@ -41,10 +48,11 @@ function create_dialog(
     ::Val{:message_box},
     layout::ObjectLayout;
     border_style::Symbol = :single,
+    buttons::Vector{Pair{String, Symbol}} = ["OK" => :ok],
     icon_type::Symbol = :info,
     message::AbstractString = "Dialog Message",
     show_icon::Bool = true,
-    title::AbstractString = "Dialog Title",
+    title::AbstractString = "Dialog Title"
 )
     horizontal_hints = Dict(
         :center_anchor => Anchor(:parent, :center),
@@ -59,9 +67,11 @@ function create_dialog(
     # Select the icon and its color.
     # TODO: Make the color customizable.
     icon, icon_color = if icon_type == :warning
-        _MESSAGE_BOX__ICON_WARNING, tui_style(:yellow)
+        _MESSAGE_BOX__WARNING_ICON, tui_style(:yellow)
     elseif icon_type == :error
-        _MESSAGE_BOX__ICON_ERROR, tui_style(:red)
+        _MESSAGE_BOX__ERROR_ICON, tui_style(:red)
+    elseif icon_type == :question
+        _MESSAGE_BOX__QUESTION_ICON, tui_style(:cyan)
     else
         _MESSAGE_BOX__INFO_ICON, tui_style(:green)
     end
@@ -123,17 +133,32 @@ function create_dialog(
         top_anchor   = (content_container, :bottom),
     )
 
-    button = @tui_button(
-        parent       = window.widget_container,
-        label        = "OK",
-        right_anchor = (:parent, :right),
-        top_anchor   = (hl, :bottom),
-        width        = 10
-    )
-
     dialog = DialogMessageBox(; window = window)
 
-    @connect button return_pressed _message_box__ok_button_return_pressed (; dialog = dialog)
+    last_button = nothing
+    button_width = maximum(textwidth.(first.(buttons))) + 4
+
+    for (label, return_value) in buttons
+
+        right_anchor = isnothing(last_button) ?
+            Anchor(:parent, :right) :
+            Anchor(last_button, :left, -1)
+
+        last_button = @tui_button(
+            parent       = window.widget_container,
+            label        = label,
+            right_anchor = right_anchor,
+            top_anchor   = (hl, :bottom),
+            width        = button_width
+        )
+
+        @connect last_button return_pressed _message_box__button_return_pressed (;
+            dialog = dialog,
+            return_value = return_value,
+        )
+    end
+
+    tight_layout!(window)
 
     return dialog
 end
@@ -143,11 +168,16 @@ end
 ############################################################################################
 
 """
-    _message_box__ok_button_return_pressed(button::WidgetButton; kwargs...) -> Nothing
+    _message_box__button_return_pressed(button::WidgetButton; kwargs...) -> Nothing
 
-Handle the `return_pressed` signal of the OK button in a message box dialog.
+Handle the `return_pressed` signal of the buttons in a message box dialog.
 """
-function _message_box__ok_button_return_pressed(::WidgetButton; dialog::DialogMessageBox)
+function _message_box__button_return_pressed(
+    ::WidgetButton;
+    dialog::DialogMessageBox,
+    return_value::Symbol
+)
+    dialog.return_value = return_value
     close_dialog!(dialog)
     return nothing
 end
