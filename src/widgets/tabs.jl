@@ -11,7 +11,7 @@ export change_tab!, get_tab_container, next_tab!, previous_tab!
 ############################################################################################
 
 @kwdef mutable struct Tabs <: ComposedWidget
-    container::Union{WidgetContainer}
+    container::WidgetContainer
     theme::Theme
 
     # == Variables Related To the Tabs =====================================================
