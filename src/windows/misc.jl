@@ -4,7 +4,7 @@
 #
 ############################################################################################
 
-export hide!, unhide!, resize_buffer_to_fit_contents!, set_window_title!
+export hide!, unhide!, resize_buffer_to_fit_contents!, set_window_title!, tight_layout!
 
 """
     hide!(win::Window) -> Nothing
@@ -36,9 +36,14 @@ function unhide!(win::Window)
 end
 
 """
-    resize_buffer_to_fit_contents!(window::Window) -> Nothing
+    resize_buffer_to_fit_contents!(window::Window) -> Int, Int
 
 Resize the buffer of the `window` to fit the contents of its widget container.
+
+# Returns
+
+- `Int`: The new height of the buffer.
+- `Int`: The new width of the buffer.
 """
 function resize_buffer_to_fit_contents!(window::Window)
     @unpack widget_container = window
@@ -49,14 +54,39 @@ function resize_buffer_to_fit_contents!(window::Window)
 
     blines, bcols = _get_window_dimensions(window.buffer)
 
-    new_height = max(blines, max_height)
-    new_width  = max(bcols,  max_width)
-
-    if (new_height != blines) || (new_width != bcols)
+    if (max_height != blines) || (max_width != bcols)
         window.buffer_view_locked = false
-        NCurses.wresize(window.buffer, new_height, new_width)
+        NCurses.wresize(window.buffer, max_height, max_width)
         update_layout!(window; force = true)
     end
+
+    return max_height, max_width
+end
+
+"""
+    tight_layout!(window::Window) -> Nothing
+
+Add horizontal and vertical hints to the `window` (width and height) so that it fits tightly
+its content.
+
+!!! warning
+
+    This function only works if the layout of the window does not provide the width and
+    height, including using anchors.
+"""
+function tight_layout!(window::Window)
+    @unpack has_border, widget_container, horizontal_hints, vertical_hints = window
+
+    isnothing(widget_container) && return nothing
+
+    # Resize the buffer to fit the contents.
+    new_height, new_width = resize_buffer_to_fit_contents!(window)
+
+    # Add a new hints indicating the new window size.
+    horizontal_hints[:width] = new_width  + (has_border ? 2 : 0)
+    vertical_hints[:height]  = new_height + (has_border ? 2 : 0)
+
+    update_layout!(window; force = true)
 
     return nothing
 end
