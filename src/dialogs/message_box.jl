@@ -136,7 +136,7 @@ function create_dialog(
     dialog = DialogMessageBox(; window = window)
 
     last_button = nothing
-    button_width = maximum(textwidth.(first.(buttons))) + 4
+    button_width = min(10, maximum(textwidth.(first.(buttons))) + 4)
 
     for (label, return_value) in buttons
 
