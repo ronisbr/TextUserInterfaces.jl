@@ -136,6 +136,10 @@ function _change_focused_window(window_id::Int)
         # Move the window to the top.
         NCurses.top_panel(new_focused_window.panel)
 
+        # Ask for the container to focus in a widget if no widget is in focus.
+        isnothing(get_focused_widget(new_focused_window.widget_container)) &&
+            move_focus_to_next_widget!(new_focused_window.widget_container)
+
         @emit new_focused_window focus_acquired
     end
 
