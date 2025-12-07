@@ -7,6 +7,7 @@
 export add_widget!, remove_widget!
 export content_dimension_limits
 export move_focus_to_next_widget!, move_focus_to_previous_widget!
+export tight_layout!
 
 ############################################################################################
 #                                        Constants                                         #
@@ -436,6 +437,28 @@ function remove_widget!(container::WidgetContainer, widget::Widget)
 
     destroy_widget_buffer!(widget)
     request_update!(container)
+
+    return nothing
+end
+
+"""
+    tight_layout!(container::WidgetContainer) -> Nothing
+
+Add horizontal and vertical hints to the `container` (width and height) so that it fits
+tightly its content.
+
+!!! warning
+
+    This function only works if the layout of the container does not provide the width and
+    height, including using anchors.
+"""
+function tight_layout!(container::WidgetContainer)
+    max_height, max_width = content_dimension_limits(container)
+
+    container.horizontal_hints[:width] = max_width
+    container.vertical_hints[:height]  = max_height
+
+    update_layout!(container; force = true)
 
     return nothing
 end
