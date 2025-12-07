@@ -21,12 +21,21 @@ function panels()
 
     c = w.widget_container
 
-    p = create_panels!(c; columns = 3, lines = 3)
+    panels = @tui_panels(
+        parent = c,
+        columns = 3,
+        lines = 3,
+        titles = [
+            " Panel (1, 1) " " Panel (1, 2) " " Panel (1, 3) "
+            " Panel (2, 1) " " Panel (2, 2) " " Panel (2, 3) "
+            " Panel (3, 1) " " Panel (3, 2) " " Panel (3, 3) "
+        ],
+    )
 
     # == Label =============================================================================
 
     @tui_label(
-        parent      = p.panels[1, 1],
+        parent      = get_panel_container(panels, 1, 1),
         label       = "This is a label.",
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top)
@@ -35,7 +44,7 @@ function panels()
     # == ANSI Label ========================================================================
 
     @tui_ansi_label(
-        parent      = p.panels[1, 2],
+        parent      = get_panel_container(panels, 1, 2),
         text        = "\e[1mThis \e[34mis a color \e[47mlabel.",
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top)
@@ -50,28 +59,28 @@ function panels()
         end
 
         @tui_button(
-            parent      = p.panels[1, 3],
+            parent      = get_panel_container(panels, 1, 3),
             style       = :simple,
             left_anchor = (:parent, :left),
             top_anchor  = (:parent, :top, 1),
         )
 
         @tui_button(
-            parent        = p.panels[1, 3],
+            parent        = get_panel_container(panels, 1, 3),
             style         = :boxed,
             left_anchor   = (__LAST__, :right),
             middle_anchor = (__LAST__, :middle),
         )
 
         @tui_button(
-            parent        = p.panels[1, 3],
+            parent        = get_panel_container(panels, 1, 3),
             style         = :none,
             left_anchor   = (__LAST__, :right),
             middle_anchor = (__LAST__, :middle),
         )
 
         @tui_label(
-            parent       = p.panels[1, 3],
+            parent       = get_panel_container(panels, 1, 3),
             label        = "",
             left_anchor  = (:parent, :left),
             right_anchor = (:parent, :right),
@@ -104,21 +113,21 @@ function panels()
     # ======================================================================================
 
     input_field_1 = @tui_input_field(
-        parent      = p.panels[2, 1],
+        parent      = get_panel_container(panels, 2, 1),
         style       = :simple,
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top),
     )
 
     input_field_2 = @tui_input_field(
-        parent      = p.panels[2, 1],
+        parent      = get_panel_container(panels, 2, 1),
         style       = :boxed,
         left_anchor = (:parent, :left),
         top_anchor  = (input_field_1, :bottom)
     )
 
     input_field_3 = @tui_input_field(
-        parent      = p.panels[2, 1],
+        parent      = get_panel_container(panels, 2, 1),
         style       = :none,
         left_anchor = (:parent, :left),
         top_anchor  = (input_field_2, :bottom)
@@ -136,7 +145,7 @@ function panels()
     end
 
     list_box_1 = @tui_list_box(
-        parent          = p.panels[2, 2],
+        parent          = get_panel_container(panels, 2, 2),
         data            = ["Item #$i" for i in 1:10],
         number_of_lines = 5,
         left_anchor     = (:parent, :left),
@@ -144,7 +153,7 @@ function panels()
     )
 
     list_box_1_information = @tui_label(
-        parent       = p.panels[2, 2],
+        parent       = get_panel_container(panels, 2, 2),
         label        = "",
         left_anchor  = (:parent, :left),
         right_anchor = (:parent, :right),
@@ -159,7 +168,7 @@ function panels()
     )
 
     list_box_2 = @tui_list_box(
-        parent             = p.panels[2, 2],
+        parent             = get_panel_container(panels, 2, 2),
         data               = ["Item #$i" for i in 1:10],
         multiple_selection = true,
         number_of_lines    = 5,
@@ -169,7 +178,7 @@ function panels()
     )
 
     list_box_2_information = @tui_label(
-        parent       = p.panels[2, 2],
+        parent       = get_panel_container(panels, 2, 2),
         label        = "",
         left_anchor  = (:parent, :left),
         right_anchor = (:parent, :right),
@@ -194,14 +203,14 @@ function panels()
     end
 
     combo_box_1 = @tui_combo_box(
-        parent      = p.panels[2, 3],
+        parent      = get_panel_container(panels, 2, 3),
         data        = ["Item #$i" for i in 1:10],
         left_anchor = (:parent, :left),
         top_anchor  = (:parent, :top),
     )
 
     combo_box_1_information = @tui_label(
-        parent        = p.panels[2, 3],
+        parent        = get_panel_container(panels, 2, 3),
         label         = "",
         left_anchor   = (combo_box_1, :right, 2),
         right_anchor  = (:parent, :right),
@@ -219,14 +228,14 @@ function panels()
     # ======================================================================================
 
     hl1 = @tui_horizontal_line(
-        parent       = p.panels[3, 1],
+        parent       = get_panel_container(panels, 3, 1),
         top_anchor   = (:parent, :top),
         left_anchor  = (:parent, :left),
         right_anchor = (:parent, :right)
     )
 
     hl2 = @tui_horizontal_line(
-        parent       = p.panels[3, 1],
+        parent       = get_panel_container(panels, 3, 1),
         pattern      = "+-",
         top_anchor   = (hl1, :bottom),
         left_anchor  = (:parent, :left),
@@ -237,7 +246,7 @@ function panels()
     # ======================================================================================
 
     pb = @tui_progress_bar(
-        parent       = p.panels[3, 2],
+        parent       = get_panel_container(panels, 3, 2),
         left_anchor  = (:parent, :left),
         right_anchor = (:parent, :right),
         top_anchor   = (:parent, :top),
@@ -279,7 +288,7 @@ function panels()
     end
 
     rb = @tui_raw_buffer(
-        parent       = p.panels[3, 3],
+        parent       = get_panel_container(panels, 3, 3),
         draw!        = raw_buffer_draw!,
         top_anchor   = (:parent, :top),
         left_anchor  = (:parent, :left),

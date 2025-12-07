@@ -8,10 +8,10 @@
 export get_containers
 
 """
-    get_containers(cw::ComposedWidget) -> Vector{WidgetContainer}
+    get_container(cw::ComposedWidget) -> WidgetContainer
 
-Return the vector of containers of the composed widget `cw`.
+Return the container of the composed widget `cw`.
 """
-function get_containers(cw::ComposedWidget)
-    error("The function `get_containers` is not implemented by $(typeof(cw)).")
+function get_container(cw::ComposedWidget)
+    return cw.container
 end
