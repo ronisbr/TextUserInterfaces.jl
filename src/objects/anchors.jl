@@ -367,18 +367,18 @@ function _process_vertical_info(layout::ObjectLayout)
         error("Wrong vertical anchor type.")
     end
 
-    if (bottom_anchor != _NO_ANCHOR) && (top_anchor != _NO_ANCHOR)
-        vertical = :abottom_atop
-    elseif (bottom_anchor != _NO_ANCHOR) && ((top isa String) || (top >= 0))
-        vertical = :abottom_top
-    elseif (bottom_anchor != _NO_ANCHOR) && ((height isa String) || (height > 0))
-        vertical = :abottom_height
+    if ((top isa String) || (top >= 0)) && ((height isa String) || (height > 0))
+        vertical = :top_height
     elseif (top_anchor != _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :atop_height
+    elseif (bottom_anchor != _NO_ANCHOR) && ((height isa String) || (height > 0))
+        vertical = :abottom_height
     elseif (middle_anchor != _NO_ANCHOR) && ((height isa String) || (height > 0))
         vertical = :amiddle_height
-    elseif ((top isa String) || (top >= 0)) && ((height isa String) || (height > 0))
-        vertical = :top_height
+    elseif (bottom_anchor != _NO_ANCHOR) && ((top isa String) || (top >= 0))
+        vertical = :abottom_top
+    elseif (bottom_anchor != _NO_ANCHOR) && (top_anchor != _NO_ANCHOR)
+        vertical = :abottom_atop
     else
         vertical = :unknown
     end
@@ -418,18 +418,18 @@ function _process_horizontal_info(layout::ObjectLayout)
         error("Wrong vertical anchor type.")
     end
 
-    if (left_anchor != _NO_ANCHOR) && (right_anchor != _NO_ANCHOR)
-        horizontal = :aleft_aright
+    if ((left isa String) || (left >= 0)) && ((width isa String) || (width > 0))
+        horizontal = :left_width
     elseif (left_anchor != _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :aleft_width
     elseif (right_anchor != _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :aright_width
-    elseif (right_anchor != _NO_ANCHOR) && ((left isa String) || (left ≥ 0))
-        horizontal = :aright_left
     elseif (center_anchor != _NO_ANCHOR) && ((width isa String) || (width > 0))
         horizontal = :acenter_width
-    elseif ((left isa String) || (left >= 0)) && ((width isa String) || (width > 0))
-        horizontal = :left_width
+    elseif (right_anchor != _NO_ANCHOR) && ((left isa String) || (left ≥ 0))
+        horizontal = :aright_left
+    elseif (left_anchor != _NO_ANCHOR) && (right_anchor != _NO_ANCHOR)
+        horizontal = :aleft_aright
     else
         horizontal = :unknown
     end
