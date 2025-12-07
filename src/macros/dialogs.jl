@@ -23,6 +23,7 @@ macro dialog(ex)
         ex.args[3].args,
         [
             :(window::Window)
+            :(opened::Bool = false)
             :(return_value::Union{Nothing, Symbol} = nothing)
 
             # Signal emitted when the user closes the dialog and `return_value` is

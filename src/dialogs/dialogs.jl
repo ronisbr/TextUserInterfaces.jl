@@ -4,11 +4,22 @@
 #
 ############################################################################################
 
-export get_window, get_returned_value, show_dialog
+export close_dialog!, get_window, get_returned_value, show_dialog
 
 ############################################################################################
 #                                           API                                            #
 ############################################################################################
+
+"""
+    close_dialog!(dialog::Dialog) -> Nothing
+
+Close the `dialog`.
+"""
+function close_dialog!(dialog::Dialog)
+    dialog.opened = false
+    hide!(dialog.window)
+    return nothing
+end
 
 """
     get_returned_value(dialog::Dialog) -> Symbol
@@ -23,6 +34,13 @@ get_returned_value(dialog::Dialog) = dialog.return_value
 Return the window associated with the `dialog`.
 """
 get_window(dialog::Dialog) = dialog.window
+
+"""
+    is_dialog_open(dialog::Dialog) = dialog.open -> Bool
+
+Check if the `dialog` is open.
+"""
+is_dialog_open(dialog::Dialog) = dialog.opened
 
 """
     process_keystroke!(d::Dialog, k::Keystroke) -> Symbol
@@ -56,7 +74,9 @@ function show_dialog(dialog::Dialog)
 
     tui_update()
 
-    while true
+    dialog.opened = true
+
+    while is_dialog_open(dialog)
         k = getkey()
         process_keystroke!(dialog, k) == :close_dialog && break
         tui_update()
