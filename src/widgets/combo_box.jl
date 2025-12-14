@@ -58,15 +58,14 @@ function create_widget(
 
     # Create the combo box.
     combo_box = WidgetComboBox(;
-        id               = reserve_object_id(),
-        layout           = layout,
-        theme            = theme,
-        data             = data,
-        icon_closed      = icon_closed,
-        icon_opened      = icon_opened,
-        show_icon        = show_icon,
-        horizontal_hints = Dict(:width => width_hint),
-        vertical_hints   = Dict(:height => height_hint)
+        id           = reserve_object_id(),
+        layout       = layout,
+        layout_hints = Dict(:height => height_hint, :width => width_hint),
+        theme        = theme,
+        data         = data,
+        icon_closed  = icon_closed,
+        icon_opened  = icon_opened,
+        show_icon    = show_icon,
     )
 
     @log DEBUG "create_widget" """

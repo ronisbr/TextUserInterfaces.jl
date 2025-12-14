@@ -62,15 +62,14 @@ function create_widget(
 
     # Create the widget.
     label = WidgetText(;
-        id               = reserve_object_id(),
-        alignment        = alignment,
-        auto_wrap        = auto_wrap,
-        fill             = fill,
-        layout           = layout,
-        text             = esc_text,
-        theme            = theme,
-        horizontal_hints = Dict(:width  => width),
-        vertical_hints   = Dict(:height => height)
+        id           = reserve_object_id(),
+        alignment    = alignment,
+        auto_wrap    = auto_wrap,
+        fill         = fill,
+        layout       = layout,
+        text         = esc_text,
+        theme        = theme,
+        layout_hints = Dict(:height => height, :width  => width),
     )
 
     @log DEBUG "create_widget" """

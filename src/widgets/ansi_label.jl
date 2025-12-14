@@ -53,13 +53,12 @@ function create_widget(
 
     # Create the widget.
     label = WidgetAnsiLabel(;
-        id               = reserve_object_id(),
-        alignment        = alignment,
-        layout           = layout,
-        text             = text,
-        theme            = theme,
-        horizontal_hints = Dict(:width  => width),
-        vertical_hints   = Dict(:height => height)
+        id           = reserve_object_id(),
+        layout       = layout,
+        layout_hints = Dict(:height => height, :width  => width),
+        alignment    = alignment,
+        text         = text,
+        theme        = theme,
     )
 
     @log DEBUG "create_widget" """

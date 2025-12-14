@@ -176,8 +176,7 @@ function update_layout!(win::Window; force::Bool = false)
     height, width, top, left = process_object_layout(
         layout,
         ROOT_WINDOW;
-        horizontal_hints = win.horizontal_hints,
-        vertical_hints = win.vertical_hints
+        layout_hints = win.layout_hints,
     )
 
     # Assign to the variables that will be used to create the window.

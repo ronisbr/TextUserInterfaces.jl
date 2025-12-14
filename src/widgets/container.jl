@@ -14,13 +14,10 @@ export tight_layout!
 ############################################################################################
 
 # Hints for the widget container layout.
-const _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS = Dict(
-    :left_anchor  => Anchor(:parent, :left,   0),
-    :right_anchor => Anchor(:parent, :right,  0),
-)
-
-const _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS = Dict(
+const _WIDGET_CONTAINER_LAYOUT_HINTS = Dict(
     :bottom_anchor => Anchor(:parent, :bottom, 0),
+    :left_anchor   => Anchor(:parent, :left,   0),
+    :right_anchor  => Anchor(:parent, :right,  0),
     :top_anchor    => Anchor(:parent, :top,    0),
 )
 
@@ -146,15 +143,14 @@ function create_widget(
 )
     # Create the widget.
     container = WidgetContainer(;
+        id               = reserve_object_id(),
         layout           = layout,
+        layout_hints     = _WIDGET_CONTAINER_LAYOUT_HINTS,
         border           = border,
         border_style     = border_style,
-        horizontal_hints = _WIDGET_CONTAINER_HORIZONTAL_LAYOUT_HINTS,
-        id               = reserve_object_id(),
         theme            = theme,
         title            = title,
         title_alignment  = title_alignment,
-        vertical_hints   = _WIDGET_CONTAINER_VERTICAL_LAYOUT_HINTS
     )
 
     @log DEBUG "create_widget" """
@@ -444,8 +440,7 @@ end
 """
     tight_layout!(container::WidgetContainer) -> Nothing
 
-Add horizontal and vertical hints to the `container` (width and height) so that it fits
-tightly its content.
+Add layout hints to the `container` (width and height) so that it fits tightly its content.
 
 !!! warning
 
@@ -455,8 +450,8 @@ tightly its content.
 function tight_layout!(container::WidgetContainer)
     max_height, max_width = content_dimension_limits(container)
 
-    container.horizontal_hints[:width] = max_width
-    container.vertical_hints[:height]  = max_height
+    container.layout_hints[:width]  = max_width
+    container.layout_hints[:height] = max_height
 
     update_layout!(container; force = true)
 

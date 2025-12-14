@@ -28,12 +28,11 @@ function create_widget(
 )
     # Create the widget.
     line = WidgetHorizontalLine(;
-        id               = reserve_object_id(),
-        horizontal_hints = Dict(:width  => textwidth(pattern)),
-        layout           = layout,
-        pattern          = pattern,
-        theme            = theme,
-        vertical_hints   = Dict(:height => 1)
+        id           = reserve_object_id(),
+        layout       = layout,
+        layout_hints = Dict(:height => 1, :width  => textwidth(pattern)),
+        pattern      = pattern,
+        theme        = theme,
     )
 
     @log DEBUG "create_widget" """

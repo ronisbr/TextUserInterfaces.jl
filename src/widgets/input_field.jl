@@ -131,14 +131,13 @@ function create_widget(
 
     # Create the widget.
     input_field = WidgetInputField(;
-        id               = reserve_object_id(),
-        layout           = layout,
-        max_data_size    = max_data_size,
-        style            = style,
-        theme            = theme,
-        validator        = validator,
-        horizontal_hints = Dict(:width  => 30),
-        vertical_hints   = Dict(:height => _INPUT_FIELD_STYLE_HEIGHT[style])
+        id            = reserve_object_id(),
+        layout        = layout,
+        layout_hints  = Dict(:height => _INPUT_FIELD_STYLE_HEIGHT[style], :width => 30),
+        max_data_size = max_data_size,
+        style         = style,
+        theme         = theme,
+        validator     = validator,
     )
 
     @log DEBUG "create_widget" """

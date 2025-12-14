@@ -56,14 +56,20 @@ function create_widget(
     height = r + 2
     width  = 8c + 4
 
+    layout_hints = Dict(
+        :height         => height,
+        :minimum_height => 5,
+        :minimum_width  => 23,
+        :width          => width,
+    )
+
     # Create the widget.
     display_matrix = WidgetDisplayMatrix(;
-        id               = reserve_object_id(),
-        matrix           = matrix,
-        layout           = layout,
-        theme            = theme,
-        horizontal_hints = Dict(:width  => width,  :minimum_width  => 23),
-        vertical_hints   = Dict(:height => height, :minimum_height => 5)
+        id           = reserve_object_id(),
+        matrix       = matrix,
+        layout       = layout,
+        layout_hints = layout_hints,
+        theme        = theme,
     )
 
     @log DEBUG "create_widget" """
@@ -85,12 +91,14 @@ function redraw!(dm::WidgetDisplayMatrix)
         ll = largest_line + 3
 
         # Draw the corners.
+        # TODO: Use printw to allow for correct colors when using more than 256 pairs.
         NCurses.mvwaddch(buffer, 0,     0,  NCurses.ACS_(:ULCORNER))
         NCurses.mvwaddch(buffer, r + 1, 0,  NCurses.ACS_(:LLCORNER))
         NCurses.mvwaddch(buffer, 0,     ll, NCurses.ACS_(:URCORNER))
         NCurses.mvwaddch(buffer, r + 1, ll, NCurses.ACS_(:LRCORNER))
 
         # Draw the line.
+        # TODO: Use printw to allow for correct colors when using more than 256 pairs.
         NCurses.mvwvline(buffer, 1, 0,  NCurses.ACS_(:VLINE), r)
         NCurses.mvwvline(buffer, 1, ll, NCurses.ACS_(:VLINE), r)
     end

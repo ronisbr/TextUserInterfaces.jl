@@ -24,10 +24,9 @@ function create_widget(
 )
     # Create the widget.
     keystroke = WidgetKeystroke(;
-        id               = reserve_object_id(),
-        layout           = layout,
-        horizontal_hints = Dict(:width  => 20),
-        vertical_hints   = Dict(:height => 1)
+        id           = reserve_object_id(),
+        layout       = layout,
+        layout_hints = Dict(:height => 1, :width  => 20),
     )
 
     @log DEBUG "create_widget" "WidgetKeystroke created"

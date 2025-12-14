@@ -66,8 +66,7 @@ end
 """
     tight_layout!(window::Window) -> Nothing
 
-Add horizontal and vertical hints to the `window` (width and height) so that it fits tightly
-its content.
+Add layout hints to the `window` (width and height) so that it fits tightly its content.
 
 !!! warning
 
@@ -75,7 +74,7 @@ its content.
     height, including using anchors.
 """
 function tight_layout!(window::Window)
-    @unpack has_border, widget_container, horizontal_hints, vertical_hints = window
+    @unpack has_border, widget_container, layout_hints = window
 
     isnothing(widget_container) && return nothing
 
@@ -83,8 +82,8 @@ function tight_layout!(window::Window)
     new_height, new_width = resize_buffer_to_fit_contents!(window)
 
     # Add a new hints indicating the new window size.
-    horizontal_hints[:width] = new_width  + (has_border ? 2 : 0)
-    vertical_hints[:height]  = new_height + (has_border ? 2 : 0)
+    layout_hints[:width]  = new_width  + (has_border ? 2 : 0)
+    layout_hints[:height] = new_height + (has_border ? 2 : 0)
 
     update_layout!(window; force = true)
 

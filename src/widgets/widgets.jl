@@ -27,8 +27,7 @@ function create_widget_buffer!(widget::Widget)
         height, width, top, left = process_object_layout(
             widget.layout,
             parent;
-            horizontal_hints = widget.horizontal_hints,
-            vertical_hints = widget.vertical_hints
+            layout_hints = widget.layout_hints
         )
 
         # Create the buffer that will hold the contents.
@@ -204,7 +203,7 @@ Default function to update the `widget` layout. If `force` is set to true, the w
 be refreshed even if it is not needed.
 """
 function update_widget_layout!(widget::Widget; force::Bool=true)
-    @unpack layout, horizontal_hints, vertical_hints = widget
+    @unpack layout, layout_hints = widget
 
     parent = get_parent(widget)
 
@@ -213,8 +212,7 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
         height, width, top, left = process_object_layout(
             layout,
             parent;
-            horizontal_hints = horizontal_hints,
-            vertical_hints = vertical_hints
+            layout_hints = layout_hints
         )
 
         # Check if resize or move is required.

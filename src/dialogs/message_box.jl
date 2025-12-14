@@ -54,14 +54,11 @@ function create_dialog(
     show_icon::Bool = true,
     title::AbstractString = "Dialog Title"
 )
-    horizontal_hints = Dict(
+    layout_hints = Dict(
         :center_anchor => Anchor(:parent, :center),
-        :width         => 90
-    )
-
-    vertical_hints = Dict(
+        :height        => 10,
         :middle_anchor => Anchor(:parent, :middle),
-        :height        => 10
+        :width         => 90,
     )
 
     # Select the icon and its color.
@@ -78,13 +75,12 @@ function create_dialog(
 
     # Create the dialog window.
     window = create_window(;
-        border           = true,
-        border_style     = border_style,
-        horizontal_hints = horizontal_hints,
-        layout           = layout,
-        hidden           = true,
-        title            = title,
-        vertical_hints   = vertical_hints,
+        border       = true,
+        border_style = border_style,
+        layout       = layout,
+        layout_hints = layout_hints,
+        hidden       = true,
+        title        = title,
     )
 
     # We only want the container to have the same width of the parent window and start at 

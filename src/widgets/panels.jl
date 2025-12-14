@@ -151,8 +151,8 @@ function add_widget!(parent::WidgetContainer, panels::Panels)
         for j in 1:columns
             local panel_container_layout
 
-            left   = j == 1
-            right  = j == columns
+            left  = j == 1
+            right = j == columns
 
             if borders
                 top_anchor  = top  ? ptop_anchor  : Anchor(first_rw_on_last_line, :bottom)
@@ -189,7 +189,9 @@ function add_widget!(parent::WidgetContainer, panels::Panels)
 
                 if left
                     first_rw_on_current_line = rb
-                elseif right
+                end
+
+                if right
                     first_rw_on_last_line = first_rw_on_current_line
                 end
 
@@ -277,59 +279,42 @@ function _panels__draw_cell_border!(
         # == Top Line ======================================================================
 
         if top
-            if left
-                NCurses.waddch(buffer, NCurses.ACS_(:ULCORNER))
-            else
-                NCurses.waddch(buffer, NCurses.ACS_(:TTEE))
-            end
-
+            NCurses.wprintw(buffer, left ? "┌" : "┬")
         elseif left
-            NCurses.waddch(buffer, NCurses.ACS_(:LTEE))
-
+            NCurses.wprintw(buffer, "├")
         else
-            NCurses.waddch(buffer, NCurses.ACS_(:PLUS))
+            NCurses.wprintw(buffer, "┼")
         end
 
-        for _ in 2:(width - 1)
-            NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
-        end
+        hline = repeat("─", width - 2)
+        NCurses.wprintw(buffer, hline)
 
-        if top && right
-            NCurses.waddch(buffer, NCurses.ACS_(:URCORNER))
-
-        elseif right
-            NCurses.waddch(buffer, NCurses.ACS_(:RTEE))
-
+        if right
+            NCurses.wprintw(buffer, top ? "┐" : "┤")
         else
-            NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
+            NCurses.wprintw(buffer, "─")
         end
 
         # == Intermediate Borders ==========================================================
 
         for i in 2:(height - 1)
-            NCurses.mvwaddch(buffer, i - 1, 0, NCurses.ACS_(:VLINE))
-            right && NCurses.mvwaddch(buffer, i - 1, width - 1, NCurses.ACS_(:VLINE))
+            NCurses.mvwprintw(buffer, i - 1, 0, "│")
+            right && NCurses.mvwprintw(buffer, i - 1, width - 1, "│")
         end
 
         # == Bottom Line ===================================================================
 
         if !bottom
-            NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:VLINE))
-            right && NCurses.mvwaddch(buffer, height - 1, width - 1, NCurses.ACS_(:VLINE))
-
+            NCurses.mvwprintw(buffer, height - 1, 0, "│")
+            right && NCurses.mvwprintw(buffer, height - 1, width - 1, "│")
         else
             # Bottom line.
-            if left
-                NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:LLCORNER))
-            else
-                NCurses.mvwaddch(buffer, height - 1, 0, NCurses.ACS_(:BTEE))
-            end
+            NCurses.mvwprintw(buffer, height - 1, 0, left ? "└" : "┴")
 
-            for _ in 2:width
-                NCurses.waddch(buffer, NCurses.ACS_(:HLINE))
-            end
+            hline = repeat("─", width - 1)
+            NCurses.wprintw(buffer, hline)
 
-            right && NCurses.waddch(buffer, NCurses.ACS_(:LRCORNER))
+            right && NCurses.wprintw(buffer, "┘")
         end
     end
 

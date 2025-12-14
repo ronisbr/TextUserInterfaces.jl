@@ -34,15 +34,13 @@ Create a window.
     (**Default** = `false`)
 - `layout::ObjectLayout`: Layout configuration of the window.
     (**Default** = `ObjectLayout()`)
-- `horizontal_hints::Dict{Symbol, Any}`: Horizontal layout hints for the window.
-    (**Default** = `_WINDOW_HORIZONTAL_LAYOUT_HINTS`)
+- `layout_hints::Dict{Symbol, Any}`: Layout hints for the window.
+    (**Default** = `_WINDOW_LAYOUT_HINTS`)
 - `title::String`: Title of the window, which will only be printed if `border` is
     `true`.
     (**Default** = "")
 - `title_alignment::Symbol`: Title alignment. It can be `:l`, `:c`, or `:r`.
     (**Default** = `:c`)
-- `vertical_hints::Dict{Symbol, Any}`: Vertical layout hints for the window.
-    (**Default** = `_WINDOW_VERTICAL_LAYOUT_HINTS`)
 """
 function create_window(;
     border::Bool = true,
@@ -51,11 +49,10 @@ function create_window(;
     focusable::Bool = true,
     hidden::Bool = false,
     layout::ObjectLayout = ObjectLayout(),
-    horizontal_hints::Dict{Symbol, Any} = _WINDOW_HORIZONTAL_LAYOUT_HINTS,
+    layout_hints::Dict{Symbol, Any} = _WINDOW_LAYOUT_HINTS,
     theme::Theme = Theme(),
     title::String = "",
     title_alignment::Symbol = :c,
-    vertical_hints::Dict{Symbol, Any} = _WINDOW_VERTICAL_LAYOUT_HINTS,
 )
     # Check if the TUI has been initialized.
     !tui.initialized && error("The text user interface was not initialized.")
@@ -64,8 +61,7 @@ function create_window(;
     height, width, top, left = process_object_layout(
         layout,
         ROOT_WINDOW;
-        horizontal_hints = horizontal_hints,
-        vertical_hints = vertical_hints
+        layout_hints = layout_hints,
     )
 
     # Assign to the variables that will be used to create the window.
@@ -127,8 +123,7 @@ function create_window(;
         border_style       = border_style,
         id                 = reserve_object_id(),
         layout             = layout,
-        horizontal_hints   = horizontal_hints,
-        vertical_hints     = vertical_hints,
+        layout_hints       = layout_hints,
         panel              = panel,
         position           = position,
         title              = title,

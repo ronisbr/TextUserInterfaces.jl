@@ -58,15 +58,19 @@ function create_widget(
         style = :simple
     end
 
+    layout_hints = Dict(
+        :height => _BUTTON_STYLE_HEIGHT[style],
+        :width  => textwidth(label) + _BUTTON_STYLE_WIDTH[style]
+    )
+
     # Create the widget.
     button = WidgetButton(;
-        id               = reserve_object_id(),
-        label            = label,
-        layout           = layout,
-        style            = style,
-        theme            = theme,
-        horizontal_hints = Dict(:width  => textwidth(label) + _BUTTON_STYLE_WIDTH[style]),
-        vertical_hints   = Dict(:height => _BUTTON_STYLE_HEIGHT[style])
+        id           = reserve_object_id(),
+        layout       = layout,
+        layout_hints = layout_hints,
+        label        = label,
+        style        = style,
+        theme        = theme,
     )
 
     @log DEBUG "create_widget" """

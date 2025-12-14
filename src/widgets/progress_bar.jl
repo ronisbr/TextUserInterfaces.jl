@@ -36,14 +36,13 @@ function create_widget(
 
     # Create the widget.
     progress_bar = WidgetProgressBar(;
-        id               = reserve_object_id(),
-        layout           = layout,
-        show_value       = show_value,
-        style            = style,
-        value            = value,
-        theme            = theme,
-        horizontal_hints = Dict(:width  => 30),
-        vertical_hints   = Dict(:height => 1),
+        id           = reserve_object_id(),
+        layout       = layout,
+        layout_hints = Dict(:height => 1, :width  => 30),
+        show_value   = show_value,
+        style        = style,
+        value        = value,
+        theme        = theme,
     )
 
     @log DEBUG "create_widget" """

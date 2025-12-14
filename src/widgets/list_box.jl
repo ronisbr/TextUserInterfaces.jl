@@ -117,10 +117,11 @@ function create_widget(
     # Create the widget.
     list_box = WidgetListBox(;
         id                 = reserve_object_id(),
+        layout             = layout,
+        layout_hints       = Dict(:height => height_hint, :width  => width_hint),
         cursor_icon        = cursor_icon,
         data               = data,
         item_icon          = item_icon,
-        layout             = layout,
         multiple_selection = multiple_selection,
         numlines           = number_of_lines,
         numlines₀          = number_of_lines,
@@ -130,8 +131,6 @@ function create_widget(
         show_icon          = show_icon,
         show_cursor_icon   = show_cursor_icon,
         theme              = theme,
-        horizontal_hints   = Dict(:width  => width_hint),
-        vertical_hints     = Dict(:height => height_hint)
     )
 
     @log DEBUG "create_widget" """

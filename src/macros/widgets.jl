@@ -174,9 +174,8 @@ macro widget(ex)
             # Configuration related to the size and position of the widget.
             :(layout::ObjectLayout = ObjectLayout())
 
-            # Horizontal and vertical hints for the object layout.
-            :(horizontal_hints::Dict{Symbol, Any} = Dict())
-            :(vertical_hints::Dict{Symbol, Any} = Dict())
+            # Layout hints for the object layout.
+            :(layout_hints::Dict{Symbol, Any} = Dict())
 
             # Current size and position of the widget.
             :(top::Int    = -1)

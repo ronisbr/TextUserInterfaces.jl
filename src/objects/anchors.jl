@@ -11,9 +11,11 @@ export process_object_layout
 ############################################################################################
 
 """
-    process_object_layout(layout::ObjectLayout, parent) -> Int, Int, Int, Int
+    process_object_layout(layout::ObjectLayout, parent; kwargs...) -> Int, Int, Int, Int
 
-Process the object `layout` considering its `parent`.
+Process the object `layout` considering its `parent`. The keyword `layout_hints` can be used
+to provide additional layout information in case the `layout` object has insufficient data
+to compute the final layout.
 
 # Returns
 
@@ -25,8 +27,7 @@ Process the object `layout` considering its `parent`.
 function process_object_layout(
     layout::ObjectLayout,
     parent::Object;
-    horizontal_hints::Dict{Symbol, Any} = Dict{Symbol, Any}(),
-    vertical_hints::Dict{Symbol, Any} = Dict{Symbol, Any}()
+    layout_hints::Dict{Symbol, Any} = Dict{Symbol, Any}()
 )
     @nospecialize parent
 
@@ -38,21 +39,21 @@ function process_object_layout(
     if horizontal == :unknown
         # Previously, we used the helper from Parameters.jl:
         #
-        #    layout = ObjectLayout(layout; horizontal_hints...)
+        #    layout = ObjectLayout(layout; layout_hints...)
         #
         # However, it was leading to a huge number of runtime dispatches. Hence, we selected
         # this verbose way to improve the performance.
         layout = ObjectLayout(
             layout.bottom_anchor,
-            get(horizontal_hints, :left_anchor, layout.left_anchor)::Anchor,
-            get(horizontal_hints, :right_anchor, layout.right_anchor)::Anchor,
+            get(layout_hints, :left_anchor, layout.left_anchor)::Anchor,
+            get(layout_hints, :right_anchor, layout.right_anchor)::Anchor,
             layout.top_anchor,
-            get(horizontal_hints, :center_anchor, layout.center_anchor)::Anchor,
+            get(layout_hints, :center_anchor, layout.center_anchor)::Anchor,
             layout.middle_anchor,
             layout.top,
-            get(horizontal_hints, :left, layout.left)::Union{Int, String},
+            get(layout_hints, :left, layout.left)::Union{Int, String},
             layout.height,
-            get(horizontal_hints, :width, layout.width)::Union{Int, String},
+            get(layout_hints, :width, layout.width)::Union{Int, String},
             layout.maximum_height,
             layout.maximum_width,
             layout.minimum_height,
@@ -65,20 +66,20 @@ function process_object_layout(
     if vertical == :unknown
         # Previously, we used the helper from Parameters.jl:
         #
-        #    layout = ObjectLayout(layout; vertical_hints...)
+        #    layout = ObjectLayout(layout; layout_hints...)
         #
         # However, it was leading to a huge number of runtime dispatches. Hence, we selected
         # this verbose way to improve the performance.
         layout = ObjectLayout(
-            get(vertical_hints, :bottom_anchor, layout.bottom_anchor)::Anchor,
+            get(layout_hints, :bottom_anchor, layout.bottom_anchor)::Anchor,
             layout.left_anchor,
             layout.right_anchor,
-            get(vertical_hints, :top_anchor, layout.top_anchor)::Anchor,
+            get(layout_hints, :top_anchor, layout.top_anchor)::Anchor,
             layout.center_anchor,
-            get(vertical_hints, :middle_anchor, layout.middle_anchor)::Anchor,
-            get(vertical_hints, :top, layout.top)::Union{Int, String},
+            get(layout_hints, :middle_anchor, layout.middle_anchor)::Anchor,
+            get(layout_hints, :top, layout.top)::Union{Int, String},
             layout.left,
-            get(vertical_hints, :height, layout.height)::Union{Int, String},
+            get(layout_hints, :height, layout.height)::Union{Int, String},
             layout.width,
             layout.maximum_height,
             layout.maximum_width,
@@ -245,25 +246,25 @@ function process_object_layout(
 
     # Apply the restrictions from the hints.
     height = min(
-        get(vertical_hints, :maximum_height, typemax(Int))::Int,
+        get(layout_hints, :maximum_height, typemax(Int))::Int,
         layout.maximum_height,
         height
     )
 
     width = min(
-        get(horizontal_hints, :maximum_width, typemax(Int))::Int,
+        get(layout_hints, :maximum_width, typemax(Int))::Int,
         layout.maximum_width,
         width
     )
 
     height = max(
-        get(vertical_hints, :minimum_height, 0)::Int,
+        get(layout_hints, :minimum_height, 0)::Int,
         layout.minimum_height,
         height
     )
 
     width = max(
-        get(horizontal_hints, :minimum_width, 0)::Int,
+        get(layout_hints, :minimum_width, 0)::Int,
         layout.minimum_width,
         width
     )
