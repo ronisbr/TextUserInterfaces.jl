@@ -178,10 +178,11 @@ macro widget(ex)
             :(layout_hints::Dict{Symbol, Any} = Dict())
 
             # Current size and position of the widget.
-            :(top::Int    = -1)
-            :(left::Int   = -1)
-            :(height::Int = -1)
-            :(width::Int  = -1)
+            :(top::Int           = -1)
+            :(left::Int          = -1)
+            :(height::Int        = -1)
+            :(width::Int         = -1)
+            :(layout_valid::Bool = true)
 
             # Widget theme.
             :(theme::Theme = Theme())

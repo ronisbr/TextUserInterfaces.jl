@@ -58,7 +58,7 @@ function create_window(;
     !tui.initialized && error("The text user interface was not initialized.")
 
     # Get the layout information of the window.
-    height, width, top, left = process_object_layout(
+    layout_valid, height, width, top, left = process_object_layout(
         layout,
         ROOT_WINDOW;
         layout_hints = layout_hints,
@@ -124,6 +124,7 @@ function create_window(;
         id                 = reserve_object_id(),
         layout             = layout,
         layout_hints       = layout_hints,
+        layout_valid       = layout_valid,
         panel              = panel,
         position           = position,
         title              = title,

@@ -173,7 +173,7 @@ function update_layout!(win::Window; force::Bool = false)
     @unpack layout, theme = win
 
     # Get the layout information of the window.
-    height, width, top, left = process_object_layout(
+    layout_valid, height, width, top, left = process_object_layout(
         layout,
         ROOT_WINDOW;
         layout_hints = win.layout_hints,

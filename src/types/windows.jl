@@ -33,6 +33,10 @@ Structure that defines a window in the text user interface.
 - `buffer_view_locked::Bool`: If `true`, the buffer and view sizes are locked.
     (**Default** = `true`)
 - `layout::ObjectLayout`: Layout configuration of the window.
+- `layout_valid::Bool`: Flag indicating if the layout is valid.
+    (**Default** = `true`)
+- `layout_hints::Dict{Symbol, Any}`: Layout hints for the object layout.
+    (**Default** = `_WINDOW_LAYOUT_HINTS`)
 - `theme::Theme`: Theme of the window.
 - `buffer::Ptr{WINDOW}`: Pointer to the window buffer.
     (**Default** = `Ptr{WINDOW}(0)`)
@@ -70,6 +74,7 @@ Structure that defines a window in the text user interface.
 
     # Object layout configuration.
     layout::ObjectLayout
+    layout_valid::Bool = true
     layout_hints::Dict{Symbol, Any} = _WINDOW_LAYOUT_HINTS
 
     # Window theme.

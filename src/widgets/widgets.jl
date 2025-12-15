@@ -24,7 +24,7 @@ function create_widget_buffer!(widget::Widget)
 
     # Compute the widget true position based on the configuration.
     if !isnothing(parent)
-        height, width, top, left = process_object_layout(
+        layout_valid, height, width, top, left = process_object_layout(
             widget.layout,
             parent;
             layout_hints = widget.layout_hints
@@ -36,14 +36,16 @@ function create_widget_buffer!(widget::Widget)
     else
         # TODO: Should this be an error?
         buffer = Ptr{WINDOW}(0)
+        return nothing
     end
 
     # Update the variables in the widget.
-    widget.buffer = buffer
-    widget.height = height
-    widget.width  = width
-    widget.left   = left
-    widget.top    = top
+    widget.buffer       = buffer
+    widget.layout_valid = layout_valid
+    widget.height       = height
+    widget.width        = width
+    widget.left         = left
+    widget.top          = top
 
     return nothing
 end
@@ -177,7 +179,7 @@ If `force` is `true`, then the widget will be updated even if it is not needed.
 """
 function update!(widget::Widget; force::Bool = false)
     if widget.update_needed || force
-        widget.hidden || redraw!(widget)
+        (!widget.hidden && widget.layout_valid) && redraw!(widget)
         widget.update_needed = false
         return true
     end
@@ -209,7 +211,7 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
 
     if !isnothing(parent)
         # Get the layout information of the window.
-        height, width, top, left = process_object_layout(
+        layout_valid, height, width, top, left = process_object_layout(
             layout,
             parent;
             layout_hints = layout_hints
@@ -228,7 +230,7 @@ function update_widget_layout!(widget::Widget; force::Bool=true)
         end
 
         # Repack values.
-        @pack! widget = height, width, top, left
+        @pack! widget = layout_valid, height, width, top, left
 
         # Check if we need to recreate the widget.
         update_needed = widget_resize || widget_move || force

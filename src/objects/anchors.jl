@@ -19,6 +19,7 @@ to compute the final layout.
 
 # Returns
 
+- `Bool`: Flag indicating if the layout is valid.
 - `Int`: The object height.
 - `Int`: The object width.
 - `Int`: The top position with respect to the parent object.
@@ -30,6 +31,9 @@ function process_object_layout(
     layout_hints::Dict{Symbol, Any} = Dict{Symbol, Any}()
 )
     @nospecialize parent
+
+    # Flag to indicate if the layout is valid.
+    layout_valid = true
 
     # Process the horizontal and vertical layout information.
     horizontal = _process_horizontal_info(layout)
@@ -131,8 +135,9 @@ function process_object_layout(
         top    = middle - div(height, 2)
 
     elseif vertical == :unknown
-        @log CRITICAL "process_object_layout" """
+        @log WARNING "process_object_layout" """
             It was not possible to guess the vertical layout of the object.
+            The layout will be mark as invalid.
 
             parent:
             @log_pad 4
@@ -142,12 +147,13 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("It was not possible to guess the vertical layout of the object.")
+        layout_valid = false
     end
 
     if top < 0
-        @log CRITICAL "process_object_layout" """
+        @log WARNING "process_object_layout" """
             Wrong vertical size configuration leading to negative top position.
+            The layout will be mark as invalid.
 
             parent:
             @log_pad 4
@@ -157,12 +163,13 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("Wrong vertical size configuration leading to negative top position.")
+        layout_valid = false
     end
 
     if height <= 0
-        @log CRITICAL "process_object_layout" """
-            Wrong vertical size configuration leading to negative top position.
+        @log WARNING "process_object_layout" """
+            Wrong vertical size configuration leading to negative height.
+            It will be set to 1.
 
             parent:
             @log_pad 4
@@ -172,7 +179,7 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("Wrong vertical size configuration leading to negative top position.")
+        height = 1
     end
 
     # == Horizontal ========================================================================
@@ -198,8 +205,9 @@ function process_object_layout(
         left   = center - div(width,2)
 
     elseif horizontal == :unknown
-        @log CRITICAL "process_object_layout" """
+        @log WARNING "process_object_layout" """
             It was not possible to guess the horizontal layout of the object.
+            The layout will be mark as invalid.
 
             parent:
             @log_pad 4
@@ -209,12 +217,13 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("It was not possible to guess the horizontal layout of the object.")
+        layout_valid = false
     end
 
     if left < 0
-        @log CRITICAL "process_object_layout" """
+        @log WARNING "process_object_layout" """
             Wrong vertical size configuration leading to negative left position.
+            The layout will be mark as invalid.
 
             parent:
             @log_pad 4
@@ -224,12 +233,13 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("Wrong vertical size configuration leading to negative left position.")
+        layout_valid = false
     end
 
     if width <= 0
-        @log CRITICAL "process_object_layout" """
+        @log WARNING "process_object_layout" """
             Wrong horizontal size configuration leading to non-positive width position.
+            It will be set to 1.
 
             parent:
             @log_pad 4
@@ -239,7 +249,7 @@ function process_object_layout(
             @log_pad 4
             $(_str(layout))"""
 
-        error("Wrong horizontal size configuration leading to non-positive width position.")
+        width = 1
     end
 
     # == Restrictions ======================================================================
@@ -269,7 +279,7 @@ function process_object_layout(
         width
     )
 
-    return height, width, top, left
+    return layout_valid, height, width, top, left
 end
 
 ############################################################################################
