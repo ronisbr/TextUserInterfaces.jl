@@ -90,17 +90,18 @@ function redraw!(dm::WidgetDisplayMatrix)
     @nstyle get_style(theme, :border) buffer begin
         ll = largest_line + 3
 
-        # Draw the corners.
-        # TODO: Use printw to allow for correct colors when using more than 256 pairs.
-        NCurses.mvwaddch(buffer, 0,     0,  NCurses.ACS_(:ULCORNER))
-        NCurses.mvwaddch(buffer, r + 1, 0,  NCurses.ACS_(:LLCORNER))
-        NCurses.mvwaddch(buffer, 0,     ll, NCurses.ACS_(:URCORNER))
-        NCurses.mvwaddch(buffer, r + 1, ll, NCurses.ACS_(:LRCORNER))
+        # Draw the corners using Unicode box-drawing characters.
+        # This works correctly with extended color pairs (more than 256 pairs).
+        NCurses.mvwprintw(buffer, 0,     0,  "┌")
+        NCurses.mvwprintw(buffer, r + 1, 0,  "└")
+        NCurses.mvwprintw(buffer, 0,     ll, "┐")
+        NCurses.mvwprintw(buffer, r + 1, ll, "┘")
 
-        # Draw the line.
-        # TODO: Use printw to allow for correct colors when using more than 256 pairs.
-        NCurses.mvwvline(buffer, 1, 0,  NCurses.ACS_(:VLINE), r)
-        NCurses.mvwvline(buffer, 1, ll, NCurses.ACS_(:VLINE), r)
+        # Draw the vertical lines.
+        for i in 1:r
+            NCurses.mvwprintw(buffer, i, 0,  "│")
+            NCurses.mvwprintw(buffer, i, ll, "│")
+        end
     end
 
     @nstyle get_style(theme, :default) buffer begin
