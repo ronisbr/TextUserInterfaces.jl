@@ -5,7 +5,7 @@
 #
 ############################################################################################
 
-export get_containers
+export get_container
 
 """
     get_container(cw::ComposedWidget) -> WidgetContainer
