@@ -106,7 +106,7 @@ Otherwise, the widget will be created and returned, but not added to any parent.
                         # `widget`.
                         push!(
                             expr_signals,
-                            :(@connect(widget, $(a.args[2].args...)))
+                            :(@connect(__widget, $(a.args[2].args...)))
                         )
 
                     else
@@ -119,21 +119,21 @@ Otherwise, the widget will be created and returned, but not added to any parent.
             if !has_parent
                 create_widget_expr = quote
                     let
-                        layout = ObjectLayout(; $(expr_layout...))
-                        widget = create_widget(Val($ws), layout; $(expr_kwargs...))
+                        __layout = ObjectLayout(; $(expr_layout...))
+                        __widget = create_widget(Val($ws), __layout; $(expr_kwargs...))
                         $(expr_signals...)
-                        widget
+                        __widget
                     end
                 end
 
             else
                 create_widget_expr = quote
                     let
-                        layout = ObjectLayout(; $(expr_layout...))
-                        widget = create_widget(Val($ws), layout; $(expr_kwargs...))
-                        add_widget!($parent, widget)
+                        __layout = ObjectLayout(; $(expr_layout...))
+                        __widget = create_widget(Val($ws), __layout; $(expr_kwargs...))
+                        add_widget!($parent, __widget)
                         $(expr_signals...)
-                        widget
+                        __widget
                     end
                 end
             end
