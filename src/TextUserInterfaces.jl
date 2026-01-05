@@ -71,6 +71,7 @@ include("./widgets/list_box.jl")
 include("./widgets/object_api.jl")
 include("./widgets/progress_bar.jl")
 include("./widgets/raw_buffer.jl")
+include("./widgets/row_layout.jl")
 include("./widgets/widgets.jl")
 include("./widgets/text.jl")
 
