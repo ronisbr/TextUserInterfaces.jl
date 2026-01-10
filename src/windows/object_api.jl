@@ -148,8 +148,7 @@ function sync_cursor(window::Window)
 end
 
 function update!(win::Window; force::Bool = false)
-    @unpack buffer, widget_container, view, theme, title, title_alignment = win
-    @unpack border_style, has_border = win
+    @unpack buffer, widget_container = win
 
     force && NCurses.wclear(buffer)
 
@@ -158,13 +157,6 @@ function update!(win::Window; force::Bool = false)
     update!(widget_container; force = force) && request_update!(win)
 
     _window__update_view!(win)
-
-    # Update the border and the title since the theme might change.
-    has_border && @nstyle get_style(theme, :border) view begin
-        draw_border!(view; style = border_style)
-        set_window_title!(win, title, title_alignment)
-        _draw_scrollbar!(win)
-    end
 
     return nothing
 end

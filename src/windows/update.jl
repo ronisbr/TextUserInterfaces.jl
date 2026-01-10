@@ -93,9 +93,10 @@ It returns `true` if the view has been updated or `false` otherwise.
     (**Default**: `false`)
 """
 function _window__update_view!(win::Window; force::Bool = false)
-    @unpack has_border, buffer, view, origin = win
-
     if win.view_needs_update || force
+        @unpack has_border, buffer, view, origin, theme, title, title_alignment = win
+        @unpack border_style, has_border = win
+
         # We need to save the cursor position to restore later.
         cy, cx = _get_window_cursor_position(view)
 
@@ -134,6 +135,13 @@ function _window__update_view!(win::Window; force::Bool = false)
             dmaxcol,
             0
         )
+
+        # Update the border and the title since the theme might change.
+        has_border && @nstyle get_style(theme, :border) view begin
+            draw_border!(view; style = border_style)
+            set_window_title!(win, title, title_alignment)
+            _draw_scrollbar!(win)
+        end
 
         # Mark that the buffer has been copied.
         win.view_needs_update = false
