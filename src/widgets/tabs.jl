@@ -142,7 +142,8 @@ function add_widget!(parent::WidgetContainer, tabs::Tabs)
             right_anchor  = Anchor(:parent, :right),
             top_anchor    = Anchor(:parent, :top)
         ),
-        draw! = rb_draw!
+        draw! = rb_draw!,
+        theme = theme
     )
     add_widget!(container, rb)
 
@@ -261,10 +262,10 @@ function _tabs__draw_border_and_tabline!(
     # == Draw the Border ===================================================================
 
     if border
-        @nstyle get_style(rb.theme, :border) buffer begin
-            # Create a full border.
-            draw_border!(buffer, style = border_style)
+        # Create a full border.
+        draw_border!(buffer; style = border_style, theme = rb.theme)
 
+        @nstyle get_style(rb.theme, :border) buffer begin
             # Draw the line between the tab bar and the tabs.
             line = repeat("─", w - 2)
             NCurses.mvwprintw(buffer, 2, 0, "├")
