@@ -15,14 +15,31 @@ Draw a border to `buffer`. The border style is selected by the keyword `style`.
     `:heavy`.
     (**Default**: `:default`)
 """
-function draw_border!(buffer::Ptr{WINDOW}; style::Symbol = :default)
+function draw_border!(
+    buffer::Ptr{WINDOW};
+    style::Symbol = :default,
+    theme::Theme = Theme(),
+    title::String = "",
+    title_alignment::Symbol = :l,
+)
     # NOTE: We cannot use `wborder` because it will not work if we set a pair to a number
     # larger than 256.
-    style == :rounded && return _borders__draw_generic_border!(buffer, "╭", "╮", "╰", "╯", "─", "│")
-    style == :double  && return _borders__draw_generic_border!(buffer, "╔", "╗", "╚", "╝", "═", "║")
-    style == :heavy   && return _borders__draw_generic_border!(buffer, "┏", "┓", "┗", "┛", "━", "┃")
+    @nstyle get_style(theme, :border) buffer begin
+        if style == :rounded
+            _borders__draw_generic_border!(buffer, "╭", "╮", "╰", "╯", "─", "│")
+        elseif style == :double
+            _borders__draw_generic_border!(buffer, "╔", "╗", "╚", "╝", "═", "║")
+        elseif style == :heavy
+            _borders__draw_generic_border!(buffer, "┏", "┓", "┗", "┛", "━", "┃")
+        else
+            _borders__draw_generic_border!(buffer, "┌", "┐", "└", "┘", "─", "│")
+        end
+    end
 
-    return _borders__draw_generic_border!(buffer, "┌", "┐", "└", "┘", "─", "│")
+    # Draw the title if needed.
+    !isempty(title) && _borders__draw_title!(buffer, title, title_alignment, style, theme)
+
+    return nothing
 end
 
 ############################################################################################
@@ -76,6 +93,72 @@ function _borders__draw_generic_border!(
         else
             NCurses.mvwprintw(buffer, i - 1, 0,     vline_str)
             NCurses.mvwprintw(buffer, i - 1, w - 1, vline_str)
+        end
+    end
+
+    return nothing
+end
+
+"""
+    _borders__draw_title!(buffer::Ptr{WINDOW}, title::String, title_alignment::Symbol, style::Symbol) -> Nothing
+
+Draw the title `title` to the `buffer` using the given `title_alignment` and border `style`.
+"""
+function _borders__draw_title!(
+    buffer::Ptr{WINDOW},
+    title::String,
+    title_alignment::Symbol,
+    style::Symbol,
+    theme::Theme
+)
+    # Get the dimensions of the window.
+    _, w = _get_window_dimensions(buffer)
+
+    # If the width is too small, do nothing.
+    (w < 6) && return nothing
+
+    # Escape the title string to avoid problems.
+    esc_title    = escape_string(title)
+    esc_title_tw = textwidth(esc_title)
+
+    # Check if we need to clamp the title.
+    if esc_title_tw + 6 > w
+        esc_title, _  = right_crop(esc_title, esc_title_tw + 7 - w)
+        esc_title    *= "…"
+        esc_title_tw  = textwidth(esc_title)
+    end
+
+    # Compute the position to draw the title.
+    pos = if title_alignment == :c
+        div(w - (esc_title_tw + 4), 2)
+    elseif title_alignment == :r
+        w - (esc_title_tw + 4) - 1
+    else
+        1
+    end
+
+    # Draw the title.
+    @nstyle get_style(theme, :border) buffer begin
+        if style == :double
+            NCurses.mvwprintw(buffer, 0, pos, "╡ ")
+        elseif style == :heavy
+            NCurses.mvwprintw(buffer, 0, pos, "┫ ")
+        else
+            NCurses.mvwprintw(buffer, 0, pos, "┤ ")
+        end
+    end
+
+    @nstyle get_style(theme, :title) buffer begin
+        NCurses.wprintw(buffer, esc_title)
+    end
+
+    @nstyle get_style(theme, :border) buffer begin
+        if style == :double
+            NCurses.wprintw(buffer, " ╞")
+        elseif style == :heavy
+            NCurses.wprintw(buffer, " ┣")
+        else
+            NCurses.wprintw(buffer, " ├")
         end
     end
 

@@ -204,10 +204,6 @@ function update_layout!(win::Window; force::Bool = false)
         win.position = (begin_y, begin_x)
     end
 
-    # Check if the user wants a border.
-    win.has_border && @nstyle get_style(theme, :border) win.view begin
-        draw_border!(win.view; style = win.border_style)
-    end
 
     # Recompute the required buffer size if the user wants a border in the
     # window.
@@ -228,7 +224,14 @@ function update_layout!(win::Window; force::Bool = false)
 
     win_resize && NCurses.wresize(win.buffer, blines, bcols)
 
-    win.has_border && set_window_title!(win, win.title, win.title_alignment)
+    # Check if the user wants a border.
+    win.has_border && draw_border!(
+        win.view;
+        style           = win.border_style,
+        theme           = theme,
+        title           = win.title,
+        title_alignment = win.title_alignment
+    )
 
     if win_resize || win_move || force
         # Here, we need to update the layout of the container because the window changed.

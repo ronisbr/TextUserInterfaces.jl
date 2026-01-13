@@ -26,9 +26,9 @@ function panels()
         columns = 3,
         lines = 3,
         titles = [
-            " Panel (1, 1) " " Panel (1, 2) " " Panel (1, 3) "
-            " Panel (2, 1) " " Panel (2, 2) " " Panel (2, 3) "
-            " Panel (3, 1) " " Panel (3, 2) " " Panel (3, 3) "
+            "Panel (1, 1)" "Panel (1, 2) " "Panel (1, 3)"
+            "Panel (2, 1)" "Panel (2, 2) " "Panel (2, 3)"
+            "Panel (3, 1)" "Panel (3, 2) " "Panel (3, 3)"
         ],
     )
 

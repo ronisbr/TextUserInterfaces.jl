@@ -207,20 +207,18 @@ end
 
 function redraw!(container::WidgetContainer)
     @unpack border, border_style, buffer, update_needed, widgets, theme = container
-    @unpack height, width = container
+    @unpack height, width, title, title_alignment = container
 
     set_background_style!(buffer, get_style(theme, :default))
     NCurses.wclear(buffer)
 
-    if border
-        @nstyle get_style(theme, :border) buffer begin
-            draw_border!(buffer; style = border_style)
-        end
-
-        @nstyle get_style(theme, :title) buffer begin
-            _widget_container__draw_title!(container)
-        end
-    end
+    border && draw_border!(
+        buffer;
+        style           = border_style,
+        theme           = theme,
+        title           = title,
+        title_alignment = title_alignment
+    )
 
     # Check if any widget must be redrawn.
     for widget in widgets

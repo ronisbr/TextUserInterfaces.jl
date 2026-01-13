@@ -137,9 +137,14 @@ function _window__update_view!(win::Window; force::Bool = false)
         )
 
         # Update the border and the title since the theme might change.
-        has_border && @nstyle get_style(theme, :border) view begin
-            draw_border!(view; style = border_style)
-            set_window_title!(win, title, title_alignment)
+        if has_border
+            draw_border!(
+                view;
+                style           = border_style,
+                theme           = theme,
+                title           = title,
+                title_alignment = title_alignment,
+            )
             _draw_scrollbar!(win)
         end
 

@@ -398,6 +398,42 @@ function _panels__draw_cell_title!(
         end
     end
 
+    # If the width is too small, do nothing.
+    (width < 6) && return nothing
+
+    # Escape the title string to avoid problems.
+    esc_title    = escape_string(title)
+    esc_title_tw = textwidth(esc_title)
+
+    # Check if we need to clamp the title.
+    if esc_title_tw + 6 > width
+        esc_title, _  = right_crop(esc_title, esc_title_tw + 7 - width)
+        esc_title    *= "…"
+        esc_title_tw  = textwidth(esc_title)
+    end
+
+    # Compute the position to draw the title.
+    pos = if alignment == :c
+        div(width - (esc_title_tw + 4), 2)
+    elseif alignment == :r
+        width - (esc_title_tw + 4) - 1
+    else
+        1
+    end
+
+    # Draw the title.
+    @nstyle get_style(theme, :border) buffer begin
+        NCurses.mvwprintw(buffer, 0, pos, "┤ ")
+    end
+
+    @nstyle get_style(theme, :title) buffer begin
+        NCurses.wprintw(buffer, esc_title)
+    end
+
+    @nstyle get_style(theme, :border) buffer begin
+        NCurses.wprintw(buffer, " ├")
+    end
+
     return nothing
 end
 

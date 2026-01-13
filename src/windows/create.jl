@@ -73,11 +73,6 @@ function create_window(;
     # Create the window.
     view = NCurses.newwin(nlines, ncols, begin_y, begin_x)
 
-    # Check if the user wants a border.
-    border && @nstyle get_style(theme, :border) view begin
-        draw_border!(view; style = border_style)
-    end
-
     # Create the buffer.
     buffer_view_locked = false
     blines = buffer_size[1]
@@ -140,7 +135,17 @@ function create_window(;
 
     set_window_theme!(win, theme)
 
-    border && set_window_title!(win, title, title_alignment)
+    # Check if the user wants a border.
+    border && @nstyle get_style(theme, :border) view begin
+        draw_border!(
+            view;
+            style           = border_style,
+            theme           = theme,
+            title           = title,
+            title_alignment = title_alignment,
+        )
+    end
+
     push!(tui.windows, win)
 
     # Check if the user wants the window to be hidden.
