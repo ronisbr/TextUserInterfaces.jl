@@ -192,7 +192,7 @@ function _progress_bar__draw_with_line_sytle!(widget::WidgetProgressBar)
     num_with_style = round(Int, bar_width * value / 100)
 
     # Draw the background.
-    @nstyle get_style(theme, :default) buffer begin
+    @nstyle get_style(theme, :border) buffer begin
         NCurses.mvwprintw(buffer, 0, 0, "━"^(bar_width))
         NCurses.mvwprintw(buffer, 0, bar_width, " "^(width - bar_width))
     end
