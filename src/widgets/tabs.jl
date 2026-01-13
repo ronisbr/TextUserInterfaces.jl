@@ -10,6 +10,39 @@ export change_tab!, get_tab_container, next_tab!, previous_tab!
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct Tabs <: ComposedWidget
+
+Store a tabbed container widget that allows organizing content into multiple switchable
+tabs.
+
+# Functions
+
+    change_tab!(tabs::Tabs, tab_number::Int) -> Nothing
+
+Change the active tab in `tabs` to `tab_number`. If `tab_number` is invalid, this function
+does nothing.
+
+    get_tab_container(tabs::Tabs, tab_number::Int) -> WidgetContainer
+
+Get the container associated with tab ID `tab_number` in `tabs`.
+
+    next_tab!(tabs::Tabs) -> Nothing
+
+Activate the next tab in `tabs`.
+
+    previous_tab!(tabs::Tabs) -> Nothing
+
+Activate the previous tab in `tabs`.
+
+    get_container(cw::Tabs) -> WidgetContainer
+
+Return the main container of the tabs widget `cw`.
+
+# Signals
+
+This widget does not have signals.
+"""
 @kwdef mutable struct Tabs <: ComposedWidget
     container::WidgetContainer
     theme::Theme

@@ -10,6 +10,19 @@ export WidgetButton
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetButton
+
+Store a button widget that can be clicked by pressing the return key when focused.
+
+# Functions
+
+This widget does not have public functions.
+
+# Signals
+
+- `return_pressed`: Emitted when the return key is pressed while the button has focus.
+"""
 @widget mutable struct WidgetButton
     label::String
     style::Symbol

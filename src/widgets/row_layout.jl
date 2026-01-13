@@ -18,6 +18,22 @@ _ROW_LAYOUT__DEFAULT_RIGHT_ANCHOR  = Anchor(:parent, :right)
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct RowLayout <: ComposedWidget
+
+Arrange widgets horizontally in a row layout, automatically managing the anchors between
+widgets.
+
+# Functions
+
+    get_container(cw::RowLayout) -> WidgetContainer
+
+Return the container of the row layout `cw`.
+
+# Signals
+
+This widget does not have signals.
+"""
 struct RowLayout <: ComposedWidget
     container::WidgetContainer
     widgets::Vector{Widget}

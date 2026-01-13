@@ -11,6 +11,23 @@ export get_text
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetInputField
+
+Store an input field widget that allows the user to type and edit text with cursor
+navigation support.
+
+# Functions
+
+    get_text(widget::WidgetInputField) -> String
+
+Return a string with the text in the input field `widget`.
+
+# Signals
+
+- `return_pressed`: Emitted when the return key is pressed while the input field has focus.
+- `text_changed`: Emitted when the text in the input field changes.
+"""
 @widget mutable struct WidgetInputField
     # Data array that contains the input to the field.
     data::Vector{Char} = Char[]

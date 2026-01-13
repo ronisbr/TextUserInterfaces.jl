@@ -11,6 +11,27 @@ export get_current_item, get_selected_items
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetListBox
+
+Store a list box widget that displays a scrollable list of items with optional selection
+support.
+
+# Functions
+
+    get_current_item(widget::WidgetListBox) -> Union{String, Nothing}
+
+Return the current item in the list box `widget`.
+
+    get_selected_items(widget::WidgetListBox) -> Vector{String}
+
+Return an array with the selected items in the list box `widget`.
+
+# Signals
+
+- `esc_pressed`: Emitted when the escape key is pressed while the list box has focus.
+- `return_pressed`: Emitted when the return key is pressed while the list box has focus.
+"""
 @widget mutable struct WidgetListBox
     # List box data.
     data::Vector{String}

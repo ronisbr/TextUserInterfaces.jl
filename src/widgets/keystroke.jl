@@ -8,6 +8,19 @@
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetKeystroke
+
+Store a widget that displays the current keystroke pressed by the user.
+
+# Functions
+
+This widget does not have public functions.
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetKeystroke
     k::Keystroke = Keystroke(value = "None", ktype = :none)
 end

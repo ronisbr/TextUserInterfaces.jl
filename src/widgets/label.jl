@@ -11,6 +11,23 @@ export change_label!
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetLabel
+
+Store a single-line label widget to display static text with alignment support.
+
+# Functions
+
+    change_label!(widget::WidgetLabel, new_label::AbstractString; alignment::Symbol = widget.alignment) -> Nothing
+
+Change the label of the widget `widget` to `new_label`. The label alignment in the widget
+can be selected by the keyword `alignment`, which can be `:l` (left), `:c` (center), or
+`:r` (right).
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetLabel
     # Input label data from the user.
     alignment::Symbol

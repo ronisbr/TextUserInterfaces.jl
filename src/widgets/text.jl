@@ -11,6 +11,24 @@ export change_text!
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetText
+
+Store a multi-line text widget to display static text with alignment and optional automatic
+word wrapping support.
+
+# Functions
+
+    change_text!(widget::WidgetText, new_text::AbstractString; alignment::Symbol = widget.alignment) -> Nothing
+
+Change the text of the widget `widget` to `new_text`. The text alignment in the widget can
+be selected by the keyword `alignment`, which can be `:l` (left), `:c` (center), or `:r`
+(right).
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetText
     # Input label data from the user.
     alignment::Symbol

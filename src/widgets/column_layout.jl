@@ -18,6 +18,22 @@ _COLUMN_LAYOUT__DEFAULT_RIGHT_ANCHOR  = Anchor(:parent, :right)
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct ColumnLayout <: ComposedWidget
+
+Arrange widgets vertically in a column layout, automatically managing the anchors between
+widgets.
+
+# Functions
+
+    get_container(cw::ColumnLayout) -> WidgetContainer
+
+Return the container of the column layout `cw`.
+
+# Signals
+
+This widget does not have signals.
+"""
 struct ColumnLayout <: ComposedWidget
     container::WidgetContainer
     widgets::Vector{Widget}

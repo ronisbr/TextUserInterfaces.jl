@@ -7,6 +7,52 @@
 export WidgetContainer
 
 # We need to define the widget container here because `Window` depends on it.
+"""
+    struct WidgetContainer
+
+Store a container widget that holds other widgets with optional border and focus management
+support.
+
+# Functions
+
+    add_widget!(container::WidgetContainer, widget::Widget) -> Nothing
+
+Add the `widget` to the `container`.
+
+    remove_widget!(container::WidgetContainer, widget::Widget) -> Nothing
+
+Remove the `widget` from the `container`.
+
+    content_dimension_limits(container::WidgetContainer) -> Tuple{Int, Int}
+
+Return the content dimension limits (height, width) of the `container`.
+
+    move_focus_to_next_widget!(container::WidgetContainer; cyclic::Bool = false) -> Bool
+
+Move the focus in `container` to the next widget. This function returns `true` if it was
+possible to acquire focus or `false` otherwise.
+
+    move_focus_to_previous_widget!(container::WidgetContainer; cyclic::Bool = false) -> Bool
+
+Move the focus in `container` to the previous widget. This function returns `true` if it was
+possible to acquire focus or `false` otherwise.
+
+    move_focus_to_widget!(container::WidgetContainer, widget::Widget) -> Nothing
+
+Move the focus of the `container` to the `widget`.
+
+    get_focused_widget(container::WidgetContainer) -> Union{Nothing, Widget}
+
+Return the current widget in focus. If no widget is in focus, return `nothing`.
+
+    tight_layout!(container::WidgetContainer) -> Nothing
+
+Add layout hints to the `container` (width and height) so that it fits tightly its content.
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetContainer
     border::Bool = false
     border_style::Symbol = :default

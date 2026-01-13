@@ -11,6 +11,21 @@ export change_matrix!
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetDisplayMatrix
+
+Store a widget to display a matrix or vector with automatic formatting and border rendering.
+
+# Functions
+
+    change_matrix!(dm::WidgetDisplayMatrix, new_matrix::AbstractVecOrMat) -> Nothing
+
+Change the matrix of the widget `dm` to `new_matrix`.
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetDisplayMatrix
     # Input label data from the user.
     matrix::VecOrMat

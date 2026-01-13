@@ -10,6 +10,19 @@ export WidgetRawBuffer
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetRawBuffer
+
+Store a raw buffer widget that allows custom drawing using a user-defined function.
+
+# Functions
+
+This widget does not have public functions.
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetRawBuffer
     draw!::Function
 end

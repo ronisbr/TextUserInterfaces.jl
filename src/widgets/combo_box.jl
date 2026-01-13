@@ -11,6 +11,21 @@ export get_item
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetComboBox
+
+Store a combo box widget that allows the user to select one item from a dropdown list.
+
+# Functions
+
+    get_item(widget::WidgetComboBox) -> String
+
+Return the selected item in the combo box `widget`.
+
+# Signals
+
+- `item_changed`: Emitted when the selected item in the combo box changes.
+"""
 @widget mutable struct WidgetComboBox
     # List box data.
     data::Vector{String}

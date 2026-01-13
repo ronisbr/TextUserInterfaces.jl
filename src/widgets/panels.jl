@@ -11,6 +11,27 @@ export get_panel_container
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct Panels <: ComposedWidget
+
+Store a grid of panel containers with optional borders and titles, allowing the organization
+of widgets in a matrix layout.
+
+# Functions
+
+    get_panel_container(panels::Panels, line::Int, column::Int) -> WidgetContainer
+
+Return the container of the panel located at the given `line` and `column` in the set of
+`panels`.
+
+    get_container(cw::Panels) -> WidgetContainer
+
+Return the main container of the panels widget `cw`.
+
+# Signals
+
+This widget does not have signals.
+"""
 @kwdef struct Panels <: ComposedWidget
     container::WidgetContainer
     theme::Theme

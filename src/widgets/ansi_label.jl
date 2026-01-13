@@ -11,6 +11,24 @@ export change_text!
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetAnsiLabel
+
+Store a label widget with ANSI escape sequence support, allowing colored and styled text
+display.
+
+# Functions
+
+    change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment::Symbol = widget.alignment) -> Nothing
+
+Change the text of the ANSI label `widget` to `new_text`. The text alignment in the widget
+can be selected by the keyword `alignment`, which can be `:l` (left), `:c` (center), or
+`:r` (right).
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetAnsiLabel
     # Input label data from the user.
     alignment::Symbol

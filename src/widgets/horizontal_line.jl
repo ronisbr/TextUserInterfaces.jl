@@ -8,6 +8,19 @@
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetHorizontalLine
+
+Store a horizontal line widget that renders a repeating pattern across its width.
+
+# Functions
+
+This widget does not have public functions.
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetHorizontalLine
     pattern::String = "─"
 end

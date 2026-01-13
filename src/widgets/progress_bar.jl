@@ -11,6 +11,21 @@ export set_value!
 #                                        Structure                                         #
 ############################################################################################
 
+"""
+    struct WidgetProgressBar
+
+Store a progress bar widget that displays a visual representation of a percentage value.
+
+# Functions
+
+    set_value!(progress_bar::WidgetProgressBar, value::Number) -> Nothing
+
+Set the `value` of the `progress_bar`. The value is clamped between 0 and 100.
+
+# Signals
+
+This widget does not have signals.
+"""
 @widget mutable struct WidgetProgressBar
     show_value::Bool = false
     style::Symbol = :bar
