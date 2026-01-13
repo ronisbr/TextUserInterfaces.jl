@@ -15,7 +15,13 @@ Store a widget that displays the current keystroke pressed by the user.
 
 # Functions
 
-This widget does not have public functions.
+    create_widget(Val(:keystroke), layout::ObjectLayout; kwargs...)
+
+Create a keystroke widget.
+
+## Keywords
+
+This widget does not have keywords.
 
 # Signals
 

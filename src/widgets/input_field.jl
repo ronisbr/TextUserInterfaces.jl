@@ -19,6 +19,24 @@ navigation support.
 
 # Functions
 
+    create_widget(Val(:input_field), layout::ObjectLayout; kwargs...)
+
+Create an input field widget.
+
+## Keywords
+
+- `max_data_size::Int`: Maximum allowed data size. If `0`, there is no limit.
+    (**Default**: `0`)
+- `style::Symbol`: Input field style (`:boxed`, `:simple`, or `:none`).
+    (**Default**: `:simple`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+- `validator::Function`: Function to validate the input. It must receive a `String` and
+    return a `Bool`.
+    (**Default**: `str -> true`)
+
+---
+
     get_text(widget::WidgetInputField) -> String
 
 Return a string with the text in the input field `widget`.

@@ -19,6 +19,40 @@ of widgets in a matrix layout.
 
 # Functions
 
+    create_widget(Val(:panels), layout::ObjectLayout; kwargs...)
+
+Create a panels widget.
+
+## Keywords
+
+- `borders::Bool`: Whether to draw borders around the panels.
+    (**Default**: `true`)
+- `columns::Int`: Number of columns in the set of panels.
+    (**Default**: `1`)
+- `heights::Union{Nothing, Vector{Int}}`: Vector with the heights of each line in the set
+    of panels. It must have `lines` number of elements. Each element describes the line
+    height in terms of the percentage of the parent height. If `nothing`, the algorithm
+    will use the same height for each line.
+    (**Default**: `nothing`)
+- `lines::Int`: Number of lines in the set of panels.
+    (**Default**: `1`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+- `title_alignment::Symbol`: Title alignment (`:l` for left, `:c` for center, `:r` for
+    right).
+    (**Default**: `:c`)
+- `titles::Union{Nothing, Matrix{String}}`: Titles of each panel cell passed as a matrix
+    of `String`s with dimensions `lines` × `columns`. If `nothing`, the cells will have no
+    title. Notice that we draw the titles only if `borders` is `true`.
+    (**Default**: `nothing`)
+- `widths::Union{Nothing, Vector{Int}}`: Vector with the widths of each column in the set
+    of panels. It must have `columns` number of elements. Each element describes the
+    column width in terms of the percentage of the parent width. If `nothing`, the
+    algorithm will use the same width for each column.
+    (**Default**: `nothing`)
+
+---
+
     get_panel_container(panels::Panels, line::Int, column::Int) -> WidgetContainer
 
 Return the container of the panel located at the given `line` and `column` in the set of
@@ -51,31 +85,6 @@ end
 #                                        Widget API                                        #
 ############################################################################################
 
-# - `borders::Bool`: If `true`, borders will be drawn around the panels.
-#  (**Default**: true)
-# - `columns::Int`: Number of columns in the set of panels.
-#  (**Default**: 1)
-# - `heights::Union{Nothing, Vector{Int}}`: Vector with the heights of each line in the set of
-#     panels. It must have `lines` number of elements. Each element describe the line height
-#     in terms in terms of the percentage of the `parent` height. If it is `nothing`, the
-#     algorithm will use the same height for each line.
-#     (**Default**: `nothing`)
-# - `lines::Int`: Number of lines in the set of panels.
-#     (**Default**: 1)
-# - `theme::Theme`: Default theme for the panels.
-#     (**Default**: tui.default_theme)
-# - `titles::Union{Nothing, Matrix{String}}`: Titles of each panel cell passed as a matrix of
-#     `String`s with dimensions `lines` × `columns`. If it is `nothing`, the cells will have
-#     no title. Notice that we draw the tiltes only if `borders` is `true`.
-#     (**Default**: nothing)
-# - `title_alignment::Symbol`: Title alignment, it can be `:l` for left, `:c` for center, or
-#     `:r` for right.
-#     (**Default**: :c)
-# - `widths::Vector{Int}`: Vector with the widths of each line in the set of panels. It must
-#     have `columns` number of elements. Each element describe the column width in terms in
-#     terms of the percentage of the `parent` width. If it is `nothing`, the algorithm will
-#     use the same height for each line.
-#    (**Default**: `nothing`)
 function create_widget(
     ::Val{:panels},
     layout::ObjectLayout;

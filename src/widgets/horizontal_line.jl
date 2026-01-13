@@ -15,7 +15,16 @@ Store a horizontal line widget that renders a repeating pattern across its width
 
 # Functions
 
-This widget does not have public functions.
+    create_widget(Val(:horizontal_line), layout::ObjectLayout; kwargs...)
+
+Create a horizontal line widget.
+
+## Keywords
+
+- `pattern::String`: Pattern to repeat across the width.
+    (**Default**: `"─"`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
 
 # Signals
 

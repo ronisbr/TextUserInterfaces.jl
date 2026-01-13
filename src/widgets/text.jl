@@ -19,6 +19,25 @@ word wrapping support.
 
 # Functions
 
+    create_widget(Val(:text), layout::ObjectLayout; kwargs...)
+
+Create a text widget.
+
+## Keywords
+
+- `alignment::Symbol`: Text alignment (`:l` for left, `:c` for center, `:r` for right).
+    (**Default**: `:l`)
+- `auto_wrap::Bool`: Whether to automatically wrap text.
+    (**Default**: `false`)
+- `fill::Bool`: Whether to fill the background with the default style.
+    (**Default**: `false`)
+- `text::String`: Text to display.
+    (**Default**: `"Text"`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     change_text!(widget::WidgetText, new_text::AbstractString; alignment::Symbol = widget.alignment) -> Nothing
 
 Change the text of the widget `widget` to `new_text`. The text alignment in the widget can

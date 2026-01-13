@@ -18,6 +18,26 @@ tabs.
 
 # Functions
 
+    create_widget(Val(:tabs), layout::ObjectLayout; kwargs...)
+
+Create a tabs widget.
+
+## Keywords
+
+- `border::Bool`: Whether to draw a border around the tabs.
+    (**Default**: `false`)
+- `border_style::Symbol`: Border style.
+    (**Default**: `:default`)
+- `num_tabs::Int`: Number of tabs.
+    (**Default**: `1`)
+- `tab_names::Union{Nothing, Vector{String}}`: Names of each tab. If `nothing`, the names
+    will be `"Tab #1"`, `"Tab #2"`, etc.
+    (**Default**: `nothing`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     change_tab!(tabs::Tabs, tab_number::Int) -> Nothing
 
 Change the active tab in `tabs` to `tab_number`. If `tab_number` is invalid, this function

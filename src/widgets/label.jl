@@ -18,6 +18,23 @@ Store a single-line label widget to display static text with alignment support.
 
 # Functions
 
+    create_widget(Val(:label), layout::ObjectLayout; kwargs...)
+
+Create a label widget.
+
+## Keywords
+
+- `alignment::Symbol`: Text alignment (`:l` for left, `:c` for center, `:r` for right).
+    (**Default**: `:l`)
+- `fill::Bool`: Whether to fill the background with the default style.
+    (**Default**: `false`)
+- `label::String`: Text to display in the label.
+    (**Default**: `"Label"`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     change_label!(widget::WidgetLabel, new_label::AbstractString; alignment::Symbol = widget.alignment) -> Nothing
 
 Change the label of the widget `widget` to `new_label`. The label alignment in the widget

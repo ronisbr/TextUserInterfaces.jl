@@ -17,7 +17,18 @@ Store a button widget that can be clicked by pressing the return key when focuse
 
 # Functions
 
-This widget does not have public functions.
+    create_widget(Val(:button), layout::ObjectLayout; kwargs...)
+
+Create a button widget.
+
+## Keywords
+
+- `label::AbstractString`: Button label.
+    (**Default**: `"Button"`)
+- `style::Symbol`: Button style (`:boxed`, `:simple`, or `:none`).
+    (**Default**: `:simple`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
 
 # Signals
 

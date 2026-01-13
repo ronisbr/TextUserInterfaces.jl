@@ -19,6 +19,21 @@ display.
 
 # Functions
 
+    create_widget(Val(:ansi_label), layout::ObjectLayout; kwargs...)
+
+Create an ANSI label widget.
+
+## Keywords
+
+- `alignment::Symbol`: Text alignment (`:l` for left, `:c` for center, `:r` for right).
+    (**Default**: `:l`)
+- `text::String`: Text to display in the label.
+    (**Default**: `"Label"`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     change_text!(widget::WidgetAnsiLabel, new_text::AbstractString; alignment::Symbol = widget.alignment) -> Nothing
 
 Change the text of the ANSI label `widget` to `new_text`. The text alignment in the widget

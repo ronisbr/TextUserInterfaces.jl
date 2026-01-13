@@ -26,6 +26,22 @@ widgets.
 
 # Functions
 
+    create_widget(Val(:column_layout), layout::ObjectLayout; kwargs...)
+
+Create a column layout widget.
+
+## Keywords
+
+- `expander::Union{Int, Nothing}`: Index of the widget that will expand to fill the
+    remaining space. If `nothing`, the last widget will expand.
+    (**Default**: `nothing`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+- `widgets::AbstractVector`: Vector of widgets to arrange in the column layout.
+    (**Required**)
+
+---
+
     get_container(cw::ColumnLayout) -> WidgetContainer
 
 Return the container of the column layout `cw`.

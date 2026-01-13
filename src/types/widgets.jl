@@ -15,6 +15,26 @@ support.
 
 # Functions
 
+    create_widget(Val(:container), layout::ObjectLayout; kwargs...)
+
+Create a container widget.
+
+## Keywords
+
+- `border::Bool`: Whether to draw a border around the container.
+    (**Default**: `false`)
+- `border_style::Symbol`: Border style.
+    (**Default**: `:default`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+- `title::String`: Title to display in the border.
+    (**Default**: `""`)
+- `title_alignment::Symbol`: Title alignment (`:l` for left, `:c` for center, `:r` for
+    right).
+    (**Default**: `:l`)
+
+---
+
     add_widget!(container::WidgetContainer, widget::Widget) -> Nothing
 
 Add the `widget` to the `container`.

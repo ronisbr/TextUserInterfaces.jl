@@ -18,6 +18,23 @@ Store a progress bar widget that displays a visual representation of a percentag
 
 # Functions
 
+    create_widget(Val(:progress_bar), layout::ObjectLayout; kwargs...)
+
+Create a progress bar widget.
+
+## Keywords
+
+- `show_value::Bool`: Whether to display the percentage value.
+    (**Default**: `false`)
+- `style::Symbol`: Progress bar style (`:bar` or `:line`).
+    (**Default**: `:bar`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+- `value::Number`: Initial value of the progress bar (0-100).
+    (**Default**: `0.0`)
+
+---
+
     set_value!(progress_bar::WidgetProgressBar, value::Number) -> Nothing
 
 Set the `value` of the `progress_bar`. The value is clamped between 0 and 100.

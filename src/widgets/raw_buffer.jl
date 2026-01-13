@@ -17,7 +17,17 @@ Store a raw buffer widget that allows custom drawing using a user-defined functi
 
 # Functions
 
-This widget does not have public functions.
+    create_widget(Val(:raw_buffer), layout::ObjectLayout; kwargs...)
+
+Create a raw buffer widget.
+
+## Keywords
+
+- `draw!::Function`: Function to draw the widget. It must receive a `WidgetRawBuffer` and
+    a `Ptr{WINDOW}` and return `nothing`.
+    (**Default**: `(rb, buffer) -> nothing`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
 
 # Signals
 

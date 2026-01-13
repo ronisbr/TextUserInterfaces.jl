@@ -18,6 +18,27 @@ Store a combo box widget that allows the user to select one item from a dropdown
 
 # Functions
 
+    create_widget(Val(:combo_box), layout::ObjectLayout; kwargs...)
+
+Create a combo box widget.
+
+## Keywords
+
+- `data::Vector{String}`: Items to display in the combo box.
+    (**Default**: `String[]`)
+- `icon_closed::String`: Icon to display when the combo box is closed.
+    (**Default**: `"▼"`)
+- `icon_opened::String`: Icon to display when the combo box is opened.
+    (**Default**: `"▲"`)
+- `list_box_theme::Theme`: Theme for the dropdown list box.
+    (**Default**: `Theme()`)
+- `show_icon::Bool`: Whether to show the open/close icon.
+    (**Default**: `true`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     get_item(widget::WidgetComboBox) -> String
 
 Return the selected item in the combo box `widget`.

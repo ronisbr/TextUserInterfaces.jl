@@ -18,6 +18,19 @@ Store a widget to display a matrix or vector with automatic formatting and borde
 
 # Functions
 
+    create_widget(Val(:display_matrix), layout::ObjectLayout; kwargs...)
+
+Create a display matrix widget.
+
+## Keywords
+
+- `matrix::AbstractVecOrMat`: Matrix or vector to display.
+    (**Required**)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     change_matrix!(dm::WidgetDisplayMatrix, new_matrix::AbstractVecOrMat) -> Nothing
 
 Change the matrix of the widget `dm` to `new_matrix`.

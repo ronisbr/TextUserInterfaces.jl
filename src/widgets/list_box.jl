@@ -19,6 +19,35 @@ support.
 
 # Functions
 
+    create_widget(Val(:list_box), layout::ObjectLayout; kwargs...)
+
+Create a list box widget.
+
+## Keywords
+
+- `cursor_icon::String`: Icon to display at the current item.
+    (**Default**: `"→"`)
+- `data::Vector{String}`: Items to display in the list box.
+    (**Default**: `String[]`)
+- `item_icon::String`: Icon to display for unselected items.
+    (**Default**: `"□"`)
+- `multiple_selection::Bool`: Whether to allow multiple selection.
+    (**Default**: `false`)
+- `number_of_lines::Int`: Number of lines to display. If `-1`, display all items.
+    (**Default**: `-1`)
+- `selectable::Bool`: Whether the items are selectable.
+    (**Default**: `true`)
+- `selected_item_icon::String`: Icon to display for selected items.
+    (**Default**: `"■"`)
+- `show_cursor_icon::Bool`: Whether to show the cursor icon.
+    (**Default**: `true`)
+- `show_icon::Bool`: Whether to show the item icons.
+    (**Default**: `false`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+
+---
+
     get_current_item(widget::WidgetListBox) -> Union{String, Nothing}
 
 Return the current item in the list box `widget`.

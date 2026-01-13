@@ -26,6 +26,22 @@ widgets.
 
 # Functions
 
+    create_widget(Val(:row_layout), layout::ObjectLayout; kwargs...)
+
+Create a row layout widget.
+
+## Keywords
+
+- `expander::Union{Int, Nothing}`: Index of the widget that will expand to fill the
+    remaining space. If `nothing`, the last widget will expand.
+    (**Default**: `nothing`)
+- `theme::Theme`: Theme for the widget.
+    (**Default**: `Theme()`)
+- `widgets::AbstractVector`: Vector of widgets to arrange in the row layout.
+    (**Required**)
+
+---
+
     get_container(cw::RowLayout) -> WidgetContainer
 
 Return the container of the row layout `cw`.
