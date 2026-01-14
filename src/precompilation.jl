@@ -123,6 +123,20 @@ PrecompileTools.@setup_workload begin
             )
         end
 
+        # == Precompile Functions Related to Style =========================================
+
+        tui_style(colorant"#FFFFFF", colorant"#000000")
+        tui_style(colorant"#FFFFFF", :transparent)
+        tui_style(:white, colorant"#000000")
+
+        TextUserInterfaces._convert_colorant_to_24bit_color(:red)
+        TextUserInterfaces._convert_colorant_to_24bit_color(nothing)
+        TextUserInterfaces._convert_colorant_to_24bit_color(colorant"#FFFFFF")
+
+        TextUserInterfaces._convert_colorant_to_256_colors(:blue)
+        TextUserInterfaces._convert_colorant_to_256_colors(nothing)
+        TextUserInterfaces._convert_colorant_to_256_colors(colorant"#FFFFFF")
+
         # == Precompile Functions Related to TUI Update ====================================
 
         # Create the keycodes to process the information.
@@ -151,6 +165,10 @@ PrecompileTools.@setup_workload begin
         getkey()
         write(new_stdin, 'A')
         getkey(tui.stdscr)
+
+        # == Precompile Dialogs ============================================================
+
+        d = create_dialog(Val(:message_box), ObjectLayout())
 
         # == Precompile All Functions Related to TUI Destruction ===========================
 
