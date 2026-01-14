@@ -7,6 +7,8 @@
 import PrecompileTools
 
 PrecompileTools.@setup_workload begin
+    get(ENV, "TERM", "unknown") == "unknown" && return nothing
+
     # We must load the NCurses libraries first.
     __init__()
 
