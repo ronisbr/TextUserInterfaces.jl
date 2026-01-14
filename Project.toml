@@ -25,6 +25,7 @@ Ncurses_jll = "6.5.1"
 PrecompileTools = "1"
 Reexport = "1.2.2"
 StringManipulation = "0.4.2"
+UnPack = "1"
 julia = "1.12"
 
 [extras]
