@@ -4,7 +4,7 @@ TextUserInterfaces.jl Changelog
 Version 0.1.0
 -------------
 
-- [BREAKING][badge-breaking] Beta release of the package. There were many breaking changes
+- ![BREAKING][badge-breaking] Beta release of the package. There were many breaking changes
   compared to the initial development versions. Check the examples in the folder `examples/`
   for usage.
 
