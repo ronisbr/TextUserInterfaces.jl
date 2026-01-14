@@ -1,6 +1,11 @@
 TextUserInterfaces.jl Changelog
 ===============================
 
+Version 0.1.1
+-------------
+
+- ![Enhancement][badge-enhancement] Add more precompilation statements.
+
 Version 0.1.0
 -------------
 
