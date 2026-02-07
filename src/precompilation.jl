@@ -23,7 +23,7 @@ PrecompileTools.@setup_workload begin
 
     PrecompileTools.@compile_workload begin
 
-        # == Precompile Initializaion Functions ============================================
+        # == Precompile Initialization Functions ===========================================
 
         initialize_tui()
 
@@ -123,7 +123,87 @@ PrecompileTools.@setup_workload begin
             )
         end
 
+        # == Precompile Composed Widgets =================================================
+
+        win_layouts = create_window(title = "Layouts", border = false)
+
+        @tui_builder begin
+            con2 = @tui_container(
+                parent        = win_layouts.widget_container,
+                border        = false,
+                bottom_anchor = (:parent, :bottom),
+                left_anchor   = (:parent, :left),
+                right_anchor  = (:parent, :right),
+                top_anchor    = (:parent, :top),
+            )
+
+            rl_w1 = @tui_label(label = "Left")
+            rl_w2 = @tui_button(label = "Right")
+
+            row = @tui_row_layout(
+                parent       = con2,
+                widgets      = [rl_w1, rl_w2],
+                top_anchor   = (:parent, :top),
+                left_anchor  = (:parent, :left),
+                right_anchor = (:parent, :right),
+                height       = 1
+            )
+
+            cl_w1 = @tui_label(label = "Top")
+            cl_w2 = @tui_input_field()
+
+            col = @tui_column_layout(
+                parent        = con2,
+                widgets       = [cl_w1, cl_w2],
+                top_anchor    = (get_container(row), :bottom),
+                left_anchor   = (:parent, :left),
+                right_anchor  = (:parent, :right),
+                bottom_anchor = (:parent, :bottom)
+            )
+        end
+
+        win_tabs = create_window(title = "Tabs")
+
+        @tui_builder begin
+            tabs = @tui_tabs(
+                parent        = win_tabs.widget_container,
+                num_tabs      = 2,
+                border        = true,
+                top_anchor    = (:parent, :top),
+                left_anchor   = (:parent, :left),
+                right_anchor  = (:parent, :right),
+                bottom_anchor = (:parent, :bottom)
+            )
+        end
+
+        change_tab!(tabs, 2)
+        next_tab!(tabs)
+        previous_tab!(tabs)
+        get_tab_container(tabs, 1)
+
+        win_panels = create_window(title = "Panels")
+
+        @tui_builder begin
+            panels = @tui_panels(
+                parent        = win_panels.widget_container,
+                lines         = 2,
+                columns       = 2,
+                borders       = true,
+                titles        = ["A" "B"; "C" "D"],
+                top_anchor    = (:parent, :top),
+                left_anchor   = (:parent, :left),
+                right_anchor  = (:parent, :right),
+                bottom_anchor = (:parent, :bottom)
+            )
+        end
+
+        p11 = get_panel_container(panels, 1, 1)
+        @tui_label(parent = p11, label = "P11")
+
         # == Precompile Functions Related to Style =========================================
+
+        set_window_theme!(win, tui.default_theme)
+        set_window_title!(win, "Window", :r)
 
         tui_style(colorant"#FFFFFF", colorant"#000000")
         tui_style(colorant"#FFFFFF", :transparent)
@@ -165,6 +245,7 @@ PrecompileTools.@setup_workload begin
         getkey()
         write(new_stdin, 'A')
         getkey(tui.stdscr)
+        getkey(tui.stdscr, block = false)
 
         # == Precompile Dialogs ============================================================
 
