@@ -25,7 +25,8 @@ Create a button widget.
 
 - `label::AbstractString`: Button label.
     (**Default**: `"Button"`)
-- `style::Symbol`: Button style (`:boxed`, `:simple`, or `:none`).
+- `style::Symbol`: Button style. Possible values are: `:boxed`, `:boxed_double`,
+    `:boxed_heavy`, `:boxed_rounded`, `:simple`, and `:none`.
     (**Default**: `:simple`)
 - `theme::Theme`: Theme for the widget.
     (**Default**: `Theme()`)
@@ -45,16 +46,22 @@ end
 
 # Conversion dictionary between style and height.
 const _BUTTON_STYLE_HEIGHT = Dict(
-    :boxed  => 3,
-    :simple => 1,
-    :none   => 1
+    :boxed         => 3,
+    :boxed_double  => 3,
+    :boxed_heavy   => 3,
+    :boxed_rounded => 3,
+    :simple        => 1,
+    :none          => 1
 )
 
 # Conversion dictionary between style and width that must be added to the label length.
 const _BUTTON_STYLE_WIDTH = Dict(
-    :boxed  => 4,
-    :simple => 4,
-    :none   => 0
+    :boxed         => 4,
+    :boxed_double  => 4,
+    :boxed_heavy   => 4,
+    :boxed_rounded => 4,
+    :simple        => 4,
+    :none          => 0
 )
 
 ############################################################################################
@@ -154,41 +161,49 @@ accordingly.
 function _widget_button__draw!(widget::WidgetButton, focused::Bool)
     @unpack buffer, width, label, style, theme = widget
 
-    # Get the style depending on the focus.
-    b = get_style(theme, :border)
-    s = get_style(theme, focused ? :highlight : :default)
-
     if style == :none
+        s = get_style(theme, focused ? :highlight : :default)
+
         @nstyle s buffer begin
             NCurses.mvwprintw(buffer, 0, 0, label)
         end
-    else
-        # Center the label in the button.
-        w   = width
-        Δ   = w - 4 - length(label)
-        pad = div(Δ, 2)
-        str = " "^pad * label * " "^(Δ - pad)
 
-        if style == :boxed
-            @nstyle b buffer begin
-                NCurses.mvwprintw(buffer, 0, 0, "┌" * "─"^(w - 2) * "┐")
-                NCurses.mvwprintw(buffer, 1, 0, "│")
-            end
-
-            @nstyle s buffer begin
-                NCurses.wprintw(buffer, " " * str * " ")
-            end
-
-            @nstyle b buffer begin
-                NCurses.wprintw(buffer, "│")
-                NCurses.mvwprintw(buffer, 2, 0, "└" * "─"^(w - 2) * "┘")
-            end
-        else
-            @nstyle s buffer begin
-                NCurses.mvwprintw(buffer, 0, 0, "[ " * str * " ]")
-            end
-        end
+        return nothing
     end
+
+    # Center the label in the button.
+    w   = width
+    Δ   = w - length(label)
+    pad = div(Δ, 2)
+    str = " "^pad * label * " "^(Δ - pad)
+
+    Δy = style == :simple ? 0 : 1
+
+    @nstyle s buffer begin
+        NCurses.mvwprintw(buffer, Δy, 0, str)
+    end
+
+    if style == :simple
+        b = get_style(theme, :border)
+
+        @nstyle b buffer begin
+            NCurses.mvwprintw(buffer, 0, 0,     "[ ")
+            NCurses.mvwprintw(buffer, 0, w - 2, " ]")
+        end
+        return nothing
+    end
+
+    border_style = if style == :boxed_double
+        :double
+    elseif style == :boxed_heavy
+        :heavy
+    elseif style == :boxed_rounded
+        :rounded
+    else
+        :default
+    end
+
+    draw_border!(buffer; style = border_style, theme = theme)
 
     return nothing
 end

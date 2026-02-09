@@ -40,7 +40,7 @@ function windows_and_widgets()
     )
         @tui_builder begin
             w = create_window(
-                layout          = ObjectLayout(top = x, left = y, height = 10, width = 56),
+                layout          = ObjectLayout(top = x, left = y, height = 14, width = 56),
                 border          = true,
                 border_style    = border_style,
                 title           = title,
@@ -82,7 +82,7 @@ function windows_and_widgets()
             @tui_button(
                 parent        = c,
                 label         = "Button 2",
-                style         = :boxed,
+                style         = :none,
                 middle_anchor = (__LAST__, :middle),
                 center_anchor = (:parent, :center),
                 signal        = (
@@ -95,13 +95,52 @@ function windows_and_widgets()
             @tui_button(
                 parent        = c,
                 label         = "Button 3",
-                style         = :none,
+                style         = :boxed,
                 middle_anchor = (__LAST__, :middle),
                 right_anchor  = (:parent,  :right),
                 signal        = (
                     return_pressed,
                     button_return_pressed,
                     (label_widget = __ID2__, new_label = "Button 3")
+                )
+            )
+
+            @tui_button(
+                parent      = c,
+                label       = "Button 4",
+                style       = :boxed_rounded,
+                top_anchor  = (__LAST2__, :bottom, 2),
+                left_anchor = (:parent, :left),
+                signal      = (
+                    return_pressed,
+                    button_return_pressed,
+                    (label_widget = __ID2__, new_label = "Button 4")
+                )
+            )
+
+            @tui_button(
+                parent        = c,
+                label         = "Button 5",
+                style         = :boxed_double,
+                middle_anchor = (__LAST__,  :middle),
+                center_anchor = (__LAST2__, :center),
+                signal        = (
+                    return_pressed,
+                    button_return_pressed,
+                    (label_widget = __ID2__, new_label = "Button 5")
+                )
+            )
+
+            @tui_button(
+                parent        = c,
+                label         = "Button 6",
+                style         = :boxed_heavy,
+                middle_anchor = (__LAST__,  :middle),
+                right_anchor  = (:parent,  :right),
+                signal        = (
+                    return_pressed,
+                    button_return_pressed,
+                    (label_widget = __ID2__, new_label = "Button 6")
                 )
             )
         end
